@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <!-- 抓application.yml中的設定參數 -->
+    <springProperty scope="context" name="logPath" source="logging.file.path" defaultValue="logs/"/>
+    <!-- log 路徑 -->
+    <property name="LOG_PATH" value="${logPath}"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--用ThresholdFilter過濾ERROR以上級別才顯示在terminal上~-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <!-- 印出Log的格式 -->
+            <!-- %d{YYYY-MM-dd HH: mm:ss.SSS} log 時間 -->
+            <!-- %thread 執行緒名字 -->
+            <!-- %highlight 顯示高亮顏色 -->
+            <!-- %-5level log級別且顯示5個字，靠左對齊 -->
+            <!-- %logger log的名字 -->
+            <!-- %msg log訊息 -->
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %yellow(%logger) %boldYellow(=>) %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root>
+        <!--把appender加上去-->
+        <appender-ref ref="console"/>
+    </root>
+
+</configuration>
