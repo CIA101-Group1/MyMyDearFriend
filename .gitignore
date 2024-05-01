@@ -37,5 +37,5 @@ build/
 .DS_Store
 
 ### 啟動開發環境設定檔 ###
-/mmdf-frontend/src/main/resources/application-dev.yml
-/mmdf-backend/src/main/resources/application-dev.yml
+/mmdf-web/src/main/resources/application-dev.yml
+/mmdf-admin/src/main/resources/application-dev.yml

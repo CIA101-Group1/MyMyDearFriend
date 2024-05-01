@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: "mmdf-web"
+  profiles:
+    active: "@profileActive@"
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  # redis快取設定
+  data:
+    redis:
+      jedis:
+        pool:
+          max-active: 8
+          max-wait: "-1ms"
+          max-idle: 8
+          min-idle: 2
+      repositories:
+        enabled: false
+    elasticsearch:
+      repositories:
+        enabled: false
+  quartz:
+    # 將任務等儲存化到資料庫
+    job-store-type: jdbc
+    # 程式結束時會等待quartz相關的內容結束
+    wait-for-jobs-to-complete-on-shutdown: true
+    # QuartzScheduler啟動時更新己存在的Job
+    overwrite-existing-jobs: true
+    # 預設不要自動啟動，先初始化完再啟動
+    auto-startup: false
+    jdbc:
+      initialize-schema: always
+      schema: "classpath:quartz-schema.sql"
+    # quartz設定參數
+    properties:
+      org:
+        quartz:
+          # scheduler相關
+          scheduler:
+            # scheduler的例項名
+            instanceName: mmdf-scheduler
+            instanceId: AUTO
+            batchTriggerAcquisitionMaxCount: 10
+          # 持久化相關
+          jobStore:
+            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            # 表示資料庫中相關表是QRTZ_開頭的
+            tablePrefix: QRTZ_
+            isClustered: true
+            useProperties: false
+            acquireTriggersWithinLock: true
+          # 執行緒池相關
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            # 執行緒數
+            threadCount: 10
+            # 執行緒優先順序
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+logging:
+  config: classpath:logback.xml
+
+server:
+  port: 8002
+  shutdown: graceful

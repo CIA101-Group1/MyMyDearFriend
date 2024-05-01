@@ -4,16 +4,16 @@
 
 環境需求: java17
 
-將`mmdf-backend`、`mmdf-frontend`
+將`mmdf-admin`、`mmdf-web`
 專案內src/main/resource中的application-prd.yml複製一份取名叫做application-dev.yml。
 
 調整application-dev.yml中的參數為自己系統環境。
 
 執行maven clean install，可增加`-Dmaven.test.skip=true`參數略過進行單元測試，即可取得產出可執行jar檔於個服務目錄下target/內。
 
-`mmdf-backend`啟動可以至[MmdfBackendApplication.java](mmdf-backend/src/main/java/com/tibame/group1/backend/MmdfBackendApplication.java)執行main方法，並且將profile指定為dev啟動即可。
+`mmdf-admin`以至[MmdfAdminApplication.java](mmdf-admin/src/main/java/com/tibame/group1/admin/MmdfAdminApplication.java)執行main方法，並且將profile指定為dev啟動即可。
 
-`mmdf-frontend`啟動可以至[MmdfFrontendApplication.java](mmdf-frontend/src/main/java/com/tibame/group1/frontend/MmdfFrontendApplication.java)執行main方法，並且將profile指定為dev啟動即可。
+`mmdf-web`啟動可以至[MmdfWebApplication.java](mmdf-web/src/main/java/com/tibame/group1/web/MmdfWebApplication.java)執行main方法，並且將profile指定為dev啟動即可。
 
 如果要變更運行環境，於對應服務專案下要執行指令後加入-P指定運行yml檔。
 

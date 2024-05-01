@@ -24,8 +24,8 @@
     <modules>
         <module>mmdf-common</module>
         <module>mmdf-db</module>
-        <module>mmdf-backend</module>
-        <module>mmdf-frontend</module>
+        <module>mmdf-admin</module>
+        <module>mmdf-web</module>
     </modules>
 
     <!-- 啟動指定設定檔 -->
