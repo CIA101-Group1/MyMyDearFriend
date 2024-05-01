@@ -115,7 +115,7 @@ public class ApiExceptionHandler {
         return new ResDTO<>(StatusCode.FILE_TOO_BIG);
     }
 
-    /** 時間錯誤處理 */
+    /** 時間或日期格式錯誤處理 */
     @ExceptionHandler(DateException.class)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
@@ -166,7 +166,7 @@ public class ApiExceptionHandler {
         return res;
     }
 
-    /** 登入驗證碼錯誤 */
+    /** 登入驗證碼錯誤處理 */
     @ExceptionHandler(AuthorizationException.class)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody

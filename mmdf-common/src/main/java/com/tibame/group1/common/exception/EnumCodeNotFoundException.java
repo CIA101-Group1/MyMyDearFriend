@@ -1,6 +1,7 @@
 package com.tibame.group1.common.exception;
 
-public class EnumCodeNotFoundException extends Exception{
+/** 類別代碼錯誤 */
+public class EnumCodeNotFoundException extends Exception {
 
     public EnumCodeNotFoundException(String message) {
         super(message);

@@ -1,6 +1,7 @@
 package com.tibame.group1.common.exception;
 
-public class AlreadyExistException extends Exception{
+/** 資料已存在錯誤 */
+public class AlreadyExistException extends Exception {
 
     public AlreadyExistException(String message) {
         super(message);
