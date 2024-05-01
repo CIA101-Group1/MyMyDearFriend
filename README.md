@@ -23,8 +23,8 @@
 * docker -> 專案DockerFile包image腳本
 * mmdf-common -> 共用服務
 * mmdf-db -> 資料庫服務
-* mmdf-backend -> 後台服務，服務預設port為8001
-* mmdf-frontend -> 前台服務，服務預設port為8002
+* mmdf-admin -> 後台服務，服務預設port為8001
+* mmdf-web -> 前台服務，服務預設port為8002
 
 ## 目錄結構
 
