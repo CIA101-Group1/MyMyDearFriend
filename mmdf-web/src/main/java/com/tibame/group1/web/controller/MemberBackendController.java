@@ -66,9 +66,9 @@ public class MemberBackendController {
         return res;
     }
 
-    @GetMapping("sendVerifyEmail")
+    @GetMapping("member/sendVerifyEmail")
     @CheckLogin(isVerified = false)
-    public @ResponseBody ResDTO<?> sendVerifyEmail(
+    public @ResponseBody ResDTO<?> memberSendVerifyEmail(
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
             throws CheckRequestErrorException {
         memberService.sendVerifyEmail(loginSource);
