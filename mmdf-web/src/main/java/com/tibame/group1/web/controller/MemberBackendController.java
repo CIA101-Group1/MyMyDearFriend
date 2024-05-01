@@ -1,7 +1,7 @@
 package com.tibame.group1.web.controller;
 
 import com.tibame.group1.common.dto.ResDTO;
-import com.tibame.group1.common.dto.frontend.*;
+import com.tibame.group1.common.dto.web.*;
 import com.tibame.group1.common.exception.AuthorizationException;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;

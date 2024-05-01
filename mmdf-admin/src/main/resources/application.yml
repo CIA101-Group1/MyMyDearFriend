@@ -7,6 +7,12 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+  thymeleaf:
+    cache: false
+    # 設定去templates資料夾找html檔案
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
   # redis快取設定
   data:
     redis:

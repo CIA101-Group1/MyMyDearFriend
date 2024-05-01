@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.springframework.data.annotation.Immutable;
+
 import java.util.Date;
 
 @Getter
@@ -16,6 +18,7 @@ import java.util.Date;
             @Index(name = "member_account_index", columnList = "member_account", unique = true),
             @Index(name = "email_index", columnList = "email", unique = true),
         })
+@Immutable
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

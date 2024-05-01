@@ -1,4 +1,4 @@
-package com.tibame.group1.common.dto.frontend;
+package com.tibame.group1.common.dto.web;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
