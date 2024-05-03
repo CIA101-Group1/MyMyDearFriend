@@ -4,16 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Immutable;
 
 @Getter
 @Setter
 @Entity
-@Table(
-        name = "general_product",
-        indexes = {
-                @Index(name = "general_product", columnList = "member_account", unique = true),
-        })
+@Table(name = "general_product")
 public class ProductEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
