@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product: Home</title>
+    <style>
+        table#table-1 {
+            width: 450px;
+            background-color: #CCCCFF;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 3px ridge Gray;
+            height: 80px;
+            text-align: center;
+        }
+        table#table-1 h4 {
+            color: red;
+            display: block;
+            margin-bottom: 1px;
+        }
+        h4 {
+            color: blue;
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+
+<table id="table-1">
+    <tr><td><h3>Product: Home</h3><h4>( MVC )</h4></td></tr>
+</table>
+
+<p>This is the Home page for MMDFProduct: Home</p>
+
+<h3>資料查詢:</h3>
+
+<ul>
+    <li><a href='listAllProduct_byDAO.html'>List</a> all Products</li>
+
+    <li>
+        <form method="post" action="product.do">
+            <b>輸入商品編號:</b>
+            <input type="text" name="productId">
+            <input type="hidden" name="action" value="getOne_For_Display">
+            <input type="submit" value="送出">
+        </form>
+    </li>
+
+    <li>
+        <form method="post" action="product.do">
+            <b>選擇商品編號:</b>
+            <select size="1" name="productId">
+                <!-- Options will be dynamically generated -->
+            </select>
+            <input type="hidden" name="action" value="getOne_For_Display">
+            <input type="submit" value="送出">
+        </form>
+    </li>
+
+    <li>
+        <form method="post" action="product.do">
+            <b>選擇商品名稱:</b>
+            <select size="1" name="productId">
+                <!-- Options will be dynamically generated -->
+            </select>
+            <input type="hidden" name="action" value="getOne_For_Display">
+            <input type="submit" value="送出">
+        </form>
+    </li>
+</ul>
+
+<h3>商品目錄</h3>
+
+<ul>
+    <li><a href='addProduct.html'>新增</a>商品</li>
+</ul>
+
+<script>
+    function fun1(){
+        var productId = document.querySelector('input[name="productId"]').value;
+        if (productId == "") {
+            alert("請輸入商品編號!");
+        } else if (isNaN(productId)) {
+            alert("商品編號格式不正確!");
+        } else if (productId > 10) {
+            alert("尚無此商品編號");
+        } else {
+            document.querySelector('form[name="form1"]').submit();
+        }
+    }
+</script>
+
+</body>
+</html>

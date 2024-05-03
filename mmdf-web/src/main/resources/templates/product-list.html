@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>商品資料新增 - addProduct</title>
+
+    <style>
+        table#table-1 {
+            background-color: #CCCCFF;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        table#table-1 h4 {
+            color: red;
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        h4 {
+            color: blue;
+            display: inline;
+        }
+    </style>
+
+    <style>
+        table {
+            width: 450px;
+            background-color: white;
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
+
+        table, th, td {
+            border: 0px solid #CCCCFF;
+        }
+
+        th, td {
+            padding: 1px;
+        }
+    </style>
+
+</head>
+<body background-color =white>
+
+<table id="table-1">
+    <tr>
+        <td>
+            <h3>商品資料新增 - addProduct</h3>
+        </td>
+        <td>
+            <h4>
+                <a href="product-select.html">回首頁</a>
+            </h4>
+        </td>
+    </tr>
+</table>
+
+<h3>資料新增:</h3>
+
+<FORM METHOD="post" ACTION="mmdf/web/" name="form1">
+    <table>
+
+        <tr>
+            <td>商品名稱:</td>
+            <td><input type="TEXT" name="name" size="45" /></td>
+        </tr>
+        <tr>
+            <td>價格:</td>
+            <td><input type="TEXT" name="price" size="45" /></td>
+        </tr>
+        <tr>
+            <td>數量:</td>
+            <td><input type="TEXT" name="quantity" size="45" /></td>
+        </tr>
+        <tr>
+            <td>商品描述:</td>
+            <td><input type="TEXT" name="description" size="45" /></td>
+        </tr>
+
+        <tr>
+            <td>分類:<b>*</b></td>
+            <td><select size="1" name="categoryId"></select></td>
+        </tr>
+        <tr>
+            <td>賣家編號:<b>*</b></td>
+<!--            <td><select size="1" name="sellerId"></select></td>-->
+            <td><select size="1" id="sellerId" name="sellerId"></select></td>
+        </tr>
+
+        <tr>
+            <td>審核狀態:<b>*</b></td>
+            <td><select size="1" name="reviewStatus"></select></td>
+        </tr>
+        <tr>
+            <td>上架編號:<b>*</b></td>
+            <td>
+                <select name="productStatus">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
+
+            </td>
+        </tr>
+
+    </table>
+    <br> <input type="hidden" name="action" value="insert"> <input
+        type="submit" value="送出新增">
+</FORM>
+
+<script>
+    // 假設您有一個包含賣家編號的陣列
+    var sellerIds = [1, 2, 3, 4, 5];
+    // 獲取下拉選單元素
+    var select = document.getElementById('sellerId');
+    // 為每個賣家編號生成一個選項
+    for (var i = 0; i < sellerIds.length; i++) {
+        var option = document.createElement('option');
+        option.value = sellerIds[i];
+        option.text = sellerIds[i];
+        select.add(option);
+    }
+    $(document).ready(function(){
+        $("option").click(function(){
+            $.ajax({
+                url: '/mmdf/web/ProductController',
+                type: 'POST',
+                data: { message: "Hello, Controller!" },
+                success: function(response){
+                    alert(response);
+                }
+            });
+        });
+    });
+
+</script>
+
+</body>
+
+</html>
