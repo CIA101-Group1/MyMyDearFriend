@@ -14,17 +14,17 @@ import java.util.Date;
 @Entity
 @Table(name = "general_order")
 @Immutable
-public class GeneralOrderEntity {
+public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Integer id;
+    private Integer orderId;
 
     @Column(name = "buyer_id")
-    private Integer buyer;
+    private Integer buyerId;
 
     @Column(name = "seller_id")
-    private Integer seller;
+    private Integer sellerId;
 
     @Column(name = "member_coupon_id1")
     private Integer memberCouponId1;

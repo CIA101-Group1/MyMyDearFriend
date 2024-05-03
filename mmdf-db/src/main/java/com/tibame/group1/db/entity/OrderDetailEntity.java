@@ -12,14 +12,14 @@ import org.springframework.data.annotation.Immutable;
 @Entity
 @Table(name = "general_order_detail")
 @Immutable
-public class GeneralOrderDetailEntity {
+public class OrderDetailEntity {
     @Id
     @Column(name = "order_id", nullable = false)
-    private Integer order;
+    private Integer orderId;
 
     @Id
     @Column(name = "product_id", nullable = false)
-    private Integer product;
+    private Integer productId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
