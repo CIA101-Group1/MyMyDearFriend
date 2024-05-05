@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductCreateResDTO {
+public class ProductImgUpdateResDTO {
 
-    private Integer productId;
+    private Integer imageId;
 
 }
