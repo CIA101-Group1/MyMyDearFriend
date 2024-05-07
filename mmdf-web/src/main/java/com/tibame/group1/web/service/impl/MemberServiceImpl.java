@@ -11,7 +11,6 @@ import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
-import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.MemberService;
 
@@ -305,7 +304,7 @@ public class MemberServiceImpl implements MemberService {
                 .setTitle("My my dear friend 會員驗證信")
                 .addContent(
                         config.getWebURL()
-                                + "/mmdf/web/member/verify?verifyCode="
+                                + "/member/verify?verifyCode="
                                 + jwtService.encodeEmailVerify(emailVerifySource))
                 .setIsHtml(false)
                 .setSenderName("My my dear friend 管理員")
