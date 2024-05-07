@@ -9,26 +9,26 @@ public class MemberFrontendController {
 
     @GetMapping("/test-index")
     public String index() {
-        return "test-index";
+        return "/member/test-index";
     }
 
     @GetMapping("member/login")
     public String memberLogin() {
-        return "member-login";
+        return "/member/member-login";
     }
 
     @GetMapping("member/detail")
     public String memberDetail() {
-        return "member-detail";
+        return "/member/member-detail";
     }
 
     @GetMapping("member/create")
     public String memberCreate() {
-        return "member-create";
+        return "/member/member-create";
     }
 
     @GetMapping("member/verify")
     public String memberVerify() {
-        return "member-verify";
+        return "/member/member-verify";
     }
 }
