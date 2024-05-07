@@ -2,11 +2,13 @@
 <html lang="zh-tw">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>會員登入</title>
 </head>
 <body>
 <h2>登入頁面</h2>
 <form id="loginForm">
+    <div id="errorMessage" style="color: red;"></div>
     <label for="memberAccount">帳號:</label>
     <input type="text" id="memberAccount" name="memberAccount"><br><br>
     <label for="cid">密碼:</label>
@@ -16,37 +18,54 @@
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 <script>
+    let userData = {};
+    let errorMessage = "";
     $(document).ready(function () {
         $('#loginForm').submit(function (e) {
             e.preventDefault(); // 防止表單提交
-            let memberAccount = $('#memberAccount').val(); // 獲取使用者名稱
-            let cid = $('#cid').val(); // 獲取密碼
+            errorMessage = "";
+            let memberAccount = $('#memberAccount').val();
+            if (memberAccount === "") {
+                errorMessage += "<li>請輸入帳號</li>";
+            }
+            let cid = $('#cid').val();
+            if (cid === "") {
+                errorMessage += "<li>請輸入密碼</li>";
+            }
 
-            // 將使用者名稱和密碼組成JSON數據
-            let userData = {
+            if (errorMessage !== "") {
+                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+                return;
+            }
+
+            userData = {
                 memberAccount: memberAccount,
                 cid: cid
             };
 
+            $("#errorMessage").text("");
+
             $.ajax({
-                url: '/mmdf/web/api/member/login',
+                url: "/mmdf/web/api/member/login",
                 method: "post",
-                contentType: 'application/json',
+                contentType: "application/json",
                 data: JSON.stringify(userData),
                 success(response) {
                     // 登入成功後的處理
                     if (apiResponseJSON(response)) {
                         switch (response.data.status) {
-                            case "1":
-                                alert('登入成功！');
-                                window.data.location.href = "/mmdf/web/index";
-                                break;
                             case "0":
-                                alert('登入成功！(提醒：信箱尚未驗證)');
+                                alert("登入成功！(提醒：信箱尚未驗證)");
+                                localStorage.setItem("authorization", response.data.authorization);
+                                window.location.href = "/mmdf/web/index";
+                                break;
+                            case "1":
+                                alert("登入成功！");
+                                localStorage.setItem("authorization", response.data.authorization);
                                 window.location.href = "/mmdf/web/index";
                                 break;
                             case "-1":
-                                alert('帳號或密碼錯誤，請重試');
+                                alert("帳號或密碼錯誤，請重試");
                                 break;
                         }
                     } else {
@@ -54,8 +73,7 @@
                     }
                 },
                 error(xhr, status, error) {
-                    // 登入失敗後的處理
-                    alert('伺服器連線失敗: ' + error);
+                    alert("伺服器連線失敗: " + error);
                 }
             });
         });

@@ -7,4 +7,6 @@ import lombok.Setter;
 @Setter
 public class MemberCreateResDTO {
     private Integer memberId;
+
+    private String authorization;
 }

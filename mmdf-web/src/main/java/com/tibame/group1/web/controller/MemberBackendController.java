@@ -24,7 +24,8 @@ public class MemberBackendController {
 
     @PostMapping("member/create")
     public @ResponseBody ResDTO<MemberCreateResDTO> memberCreate(
-            @Valid @RequestBody MemberCreateReqDTO req) throws DateException, IOException {
+            @Valid @RequestBody MemberCreateReqDTO req)
+            throws DateException, IOException, CheckRequestErrorException {
         ResDTO<MemberCreateResDTO> res = new ResDTO<>();
         res.setData(memberService.memberCreate(req));
         return res;

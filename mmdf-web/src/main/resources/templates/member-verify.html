@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信箱驗證</title>
+</head>
+<body>
+<h2>信箱驗證</h2>
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    // 獲取 URL 中的查詢字符串
+    let queryString = window.location.search;
+    // 將查詢字符串轉換為對象形式
+    let params = new URLSearchParams(queryString);
+    // 獲取特定參數的值
+    let verifyCode = params.get("verifyCode");
+    userData["verifyCode"] = verifyCode;
+    $(document).ready(function () {
+        $.ajax({
+            url: "/mmdf/web/api/member/verify",
+            method: "post",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            contentType: "application/json",
+            data: JSON.stringify(userData),
+            success(response) {
+                if (apiResponseJSON(response)) {
+                    switch (response.data.status) {
+                        case "0":
+                            alert("驗證碼過期，請重試...");
+                            window.location.href = "/mmdf/web/index";
+                            break;
+                        case "1":
+                            alert("驗證成功！");
+                            window.location.href = "/mmdf/web/index";
+                            break;
+                        case "-1":
+                            alert("驗證碼錯誤！");
+                            window.location.href = "/mmdf/web/index";
+                            break;
+                        case "-2":
+                            alert("驗證碼失效，該信箱已驗證過！");
+                            window.location.href = "/mmdf/web/index";
+                            break;
+                    }
+                } else {
+                    alert("驗證失敗");
+                }
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

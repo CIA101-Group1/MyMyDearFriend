@@ -7,13 +7,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("mmdf/web/")
 public class MemberFrontendController {
 
-    @GetMapping("/index")
-    public String welcome() {
-        return "index";
+    @GetMapping("/test-index")
+    public String index() {
+        return "test-index";
     }
 
     @GetMapping("member/login")
-    public String memberHello() {
+    public String memberLogin() {
         return "member-login";
+    }
+
+    @GetMapping("member/detail")
+    public String memberDetail() {
+        return "member-detail";
+    }
+
+    @GetMapping("member/create")
+    public String memberCreate() {
+        return "member-create";
+    }
+
+    @GetMapping("member/verify")
+    public String memberVerify() {
+        return "member-verify";
     }
 }
