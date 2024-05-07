@@ -163,7 +163,7 @@
         if (validateForm()) {
             $("#errorMessage").text("");
             $.ajax({
-                url: "/mmdf/web/api/member/create",
+                url: "/api/member/create",
                 method: "post",
                 contentType: "application/json",
                 data: JSON.stringify(userData),
@@ -171,7 +171,7 @@
                     if (apiResponseJSON(response)) {
                         alert("註冊成功，請至信箱完成驗證");
                         localStorage.setItem("authorization", response.data.authorization);
-                        window.location.href = "/mmdf/web/index";
+                        window.location.href = "/test-index";
                     }
                 },
                 error(xhr, status, error) {

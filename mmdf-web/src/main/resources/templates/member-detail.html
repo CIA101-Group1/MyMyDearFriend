@@ -117,7 +117,7 @@
 
     // 頁面載入完成，向後端請求會員資料並填入表單
     $.ajax({
-        url: "/mmdf/web/api/member/detail",
+        url: "/api/member/detail",
         method: "get",
         headers: {
             "authorization": localStorage.getItem("authorization")
@@ -164,7 +164,7 @@
         if (validateForm()) {
             $("#errorMessage").text("");
             $.ajax({
-                url: "/mmdf/web/api/member/edit",
+                url: "/api/member/edit",
                 method: "post",
                 headers: {
                     "authorization": localStorage.getItem("authorization")

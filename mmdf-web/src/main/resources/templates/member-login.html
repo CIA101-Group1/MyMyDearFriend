@@ -46,7 +46,7 @@
             $("#errorMessage").text("");
 
             $.ajax({
-                url: "/mmdf/web/api/member/login",
+                url: "/api/member/login",
                 method: "post",
                 contentType: "application/json",
                 data: JSON.stringify(userData),
@@ -57,12 +57,12 @@
                             case "0":
                                 alert("登入成功！(提醒：信箱尚未驗證)");
                                 localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/mmdf/web/index";
+                                window.location.href = "/test-index";
                                 break;
                             case "1":
                                 alert("登入成功！");
                                 localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/mmdf/web/index";
+                                window.location.href = "/test-index";
                                 break;
                             case "-1":
                                 alert("帳號或密碼錯誤，請重試");

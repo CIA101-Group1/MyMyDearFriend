@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("mmdf/web/api/")
+@RequestMapping("api/")
 public class MemberBackendController {
 
     @Autowired private MemberService memberService;

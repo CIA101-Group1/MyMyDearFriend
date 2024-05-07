@@ -20,7 +20,7 @@
     userData["verifyCode"] = verifyCode;
     $(document).ready(function () {
         $.ajax({
-            url: "/mmdf/web/api/member/verify",
+            url: "/api/member/verify",
             method: "post",
             headers: {
                 "authorization": localStorage.getItem("authorization")
@@ -32,19 +32,19 @@
                     switch (response.data.status) {
                         case "0":
                             alert("驗證碼過期，請重試...");
-                            window.location.href = "/mmdf/web/index";
+                            window.location.href = "/test-index";
                             break;
                         case "1":
                             alert("驗證成功！");
-                            window.location.href = "/mmdf/web/index";
+                            window.location.href = "/test-index";
                             break;
                         case "-1":
                             alert("驗證碼錯誤！");
-                            window.location.href = "/mmdf/web/index";
+                            window.location.href = "/test-index";
                             break;
                         case "-2":
                             alert("驗證碼失效，該信箱已驗證過！");
-                            window.location.href = "/mmdf/web/index";
+                            window.location.href = "/test-index";
                             break;
                     }
                 } else {
