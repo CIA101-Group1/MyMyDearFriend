@@ -6,7 +6,7 @@ import com.tibame.group1.common.exception.AuthorizationException;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;
 import com.tibame.group1.web.annotation.CheckLogin;
-import com.tibame.group1.web.dto.LoginSourceDTO;
+import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.web.service.MemberService;
 
 import jakarta.validation.Valid;

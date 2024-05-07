@@ -11,7 +11,7 @@ import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
-import com.tibame.group1.web.dto.LoginSourceDTO;
+import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.MemberService;
 
