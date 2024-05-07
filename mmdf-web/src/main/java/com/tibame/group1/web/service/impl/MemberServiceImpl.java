@@ -11,7 +11,7 @@ import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
-import com.tibame.group1.web.dto.LoginSourceDTO;
+import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.MemberService;
 
@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberCreateResDTO memberCreate(MemberCreateReqDTO req)
-            throws DateException, IOException {
+            throws DateException, IOException, CheckRequestErrorException {
         MemberEntity member = new MemberEntity();
         member.setMemberAccount(req.getMemberAccount());
         member.setCid(CommonUtils.encryptToMD5(req.getCid()));
@@ -70,6 +70,13 @@ public class MemberServiceImpl implements MemberService {
         member = memberRepository.save(member);
         MemberCreateResDTO resDTO = new MemberCreateResDTO();
         resDTO.setMemberId(member.getMemberId());
+        LoginSourceDTO loginSource = new LoginSourceDTO();
+        loginSource.setMemberId(member.getMemberId());
+        loginSource.setName(member.getName());
+        loginSource.setEmail(member.getEmail());
+        loginSource.setIsVerified(member.getIsVerified());
+        sendVerifyEmail(loginSource);
+        resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
         return resDTO;
     }
 
@@ -87,7 +94,7 @@ public class MemberServiceImpl implements MemberService {
             throw new CheckRequestErrorException("查無此會員資料");
         }
         MemberDetailResDTO resDTO = new MemberDetailResDTO();
-        resDTO.setMemberId(member.getMemberId());
+        resDTO.setMemberId(String.valueOf(member.getMemberId()));
         resDTO.setMemberAccount(member.getMemberAccount());
         resDTO.setCid(member.getCid());
         resDTO.setName(member.getName());
@@ -108,14 +115,14 @@ public class MemberServiceImpl implements MemberService {
                         : DateUtils.dateToSting(member.getVerifiedTime()));
         resDTO.setJoinTime(
                 null == member.getJoinTime() ? "" : DateUtils.dateToSting(member.getJoinTime()));
-        resDTO.setWalletAmount(member.getWalletAmount());
-        resDTO.setWalletAvailableAmount(member.getWalletAvailableAmount());
+        resDTO.setWalletAmount(String.valueOf(member.getWalletAmount()));
+        resDTO.setWalletAvailableAmount(String.valueOf(member.getWalletAvailableAmount()));
         resDTO.setWalletCid(member.getWalletCid());
         resDTO.setWalletQuestion(member.getWalletQuestion());
         resDTO.setWalletAnswer(member.getWalletAnswer());
         resDTO.setSellerStatus(member.getSellerStatus());
-        resDTO.setScoreNumber(member.getScoreNumber());
-        resDTO.setScoreSum(member.getScoreSum());
+        resDTO.setScoreNumber(String.valueOf(member.getScoreNumber()));
+        resDTO.setScoreSum(String.valueOf(member.getScoreSum()));
         resDTO.setImageBase64(
                 null == member.getImage() ? null : ConvertUtils.bytesToBase64(member.getImage()));
         return resDTO;
@@ -129,16 +136,13 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void memberEdit(MemberEditReqDTO req, LoginSourceDTO loginSource)
-            throws CheckRequestErrorException, IOException {
+            throws CheckRequestErrorException {
         MemberEntity member = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         if (null == member) {
             throw new CheckRequestErrorException("查無此會員資料");
         }
         if (null != req.getMemberAccount()) {
             member.setMemberAccount(req.getMemberAccount());
-        }
-        if (null != req.getCid()) {
-            member.setCid(CommonUtils.encryptToMD5(req.getCid()));
         }
         if (null != req.getName()) {
             member.setName(req.getName());
@@ -157,15 +161,6 @@ public class MemberServiceImpl implements MemberService {
         }
         if (null != req.getAddress()) {
             member.setAddress(req.getAddress());
-        }
-        if (null != req.getWalletCid()) {
-            member.setWalletCid(req.getWalletCid());
-        }
-        if (null != req.getWalletQuestion()) {
-            member.setWalletQuestion(req.getWalletQuestion());
-        }
-        if (null != req.getWalletAnswer()) {
-            member.setWalletAnswer(req.getWalletAnswer());
         }
         if (null != req.getImageBase64()) {
             member.setImage(
@@ -209,7 +204,6 @@ public class MemberServiceImpl implements MemberService {
             // 信箱尚未驗證，，把response的狀態設定成"0"，表示信箱尚未驗證
             resDTO.setStatus(LoginResDTO.Status.EMAIL_NOT_VERIFIED.getCode());
         }
-        // 到此表示帳號密碼正確，且會員信箱已驗證
         // 下一步要產登入驗證碼，用在後面需要登入的頁面，讓前端使用
         // 先設定loginSource裡面代的基本資訊
         LoginSourceDTO loginSource = new LoginSourceDTO();
@@ -236,15 +230,22 @@ public class MemberServiceImpl implements MemberService {
                     jwtService.decodeEmailVerify(req.getVerifyCode());
             MemberEntity member =
                     memberRepository.findById(emailVerifySource.getMemberId()).orElse(null);
+            // 找不到使用者
             if (null == member) {
-                resDTO.setStatus(MemberVerifyResDTO.Status.USER_NOT_FOUND.getCode());
+                resDTO.setStatus(MemberVerifyResDTO.Status.VERIFY_CODE_ERROR.getCode());
                 return resDTO;
             }
+            // 超過信箱驗證碼存活時間，驗證碼過期
             if (DateUtils.addMinute(
                             member.getVerifySendingTime(),
                             config.getEmailVerifyCodeSurvivalMinute())
                     .before(new Date())) {
                 resDTO.setStatus(MemberVerifyResDTO.Status.VERIFY_CODE_EXPIRED.getCode());
+                return resDTO;
+            }
+            // 該會員已驗證過
+            if (member.getIsVerified()) {
+                resDTO.setStatus(MemberVerifyResDTO.Status.VERIFY_CODE_INVALID.getCode());
                 return resDTO;
             }
 
@@ -281,7 +282,7 @@ public class MemberServiceImpl implements MemberService {
             // 若還在冷卻時間內，則不寄送驗證信
             if (DateUtils.addSecond(
                             member.getVerifySendingTime(), config.getEmailSendingCooldownSecond())
-                    .before(new Date())) {
+                    .after(new Date())) {
                 throw new CheckRequestErrorException(
                         "冷卻時間為" + config.getEmailSendingCooldownSecond() + "秒，請稍後再試");
             }
@@ -298,9 +299,14 @@ public class MemberServiceImpl implements MemberService {
      * @param member 收件者memberEntity
      */
     private void sendVerificationEmail(MemberEntity member) {
+        EmailVerifySourceDTO emailVerifySource = new EmailVerifySourceDTO();
+        emailVerifySource.setMemberId(member.getMemberId());
         EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
                 .setTitle("My my dear friend 會員驗證信")
-                .addContent("驗證連結") // TODO: 產生驗證連結
+                .addContent(
+                        config.getWebURL()
+                                + "/mmdf/web/member/verify?verifyCode="
+                                + jwtService.encodeEmailVerify(emailVerifySource))
                 .setIsHtml(false)
                 .setSenderName("My my dear friend 管理員")
                 .addSends(member.getEmail())
@@ -316,13 +322,5 @@ public class MemberServiceImpl implements MemberService {
                                 log.info("寄送驗證信失敗，錯誤資訊：" + e.getMessage());
                             }
                         });
-    }
-
-    public static void main(String[] args) {
-        JwtService jwtService = new JwtService();
-        EmailVerifySourceDTO emailVerifySource = new EmailVerifySourceDTO();
-        emailVerifySource.setMemberId(35);
-        String encodedEmailVerify = jwtService.encodeEmailVerify(emailVerifySource);
-        System.out.println(encodedEmailVerify);
     }
 }

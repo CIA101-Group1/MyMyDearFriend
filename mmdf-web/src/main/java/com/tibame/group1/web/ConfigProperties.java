@@ -58,4 +58,10 @@ public class ConfigProperties extends com.tibame.group1.common.ConfigProperties 
 
     /** 發送驗證信間隔時間 */
     private Integer emailSendingCooldownSecond;
+
+    /** 測試用信箱驗證連結 */
+    private String emailVerifyLink;
+
+    /** web 網址 */
+    private String webURL;
 }

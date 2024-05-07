@@ -6,7 +6,6 @@ import com.tibame.group1.common.exception.AuthorizationException;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;
 import com.tibame.group1.web.annotation.CheckLogin;
-import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -17,14 +16,15 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("mmdf/web/api/")
+@RequestMapping("api/")
 public class MemberBackendController {
 
     @Autowired private MemberService memberService;
 
     @PostMapping("member/create")
     public @ResponseBody ResDTO<MemberCreateResDTO> memberCreate(
-            @Valid @RequestBody MemberCreateReqDTO req) throws DateException, IOException {
+            @Valid @RequestBody MemberCreateReqDTO req)
+            throws DateException, IOException, CheckRequestErrorException {
         ResDTO<MemberCreateResDTO> res = new ResDTO<>();
         res.setData(memberService.memberCreate(req));
         return res;
@@ -66,9 +66,9 @@ public class MemberBackendController {
         return res;
     }
 
-    @GetMapping("sendVerifyEmail")
+    @GetMapping("member/sendVerifyEmail")
     @CheckLogin(isVerified = false)
-    public @ResponseBody ResDTO<?> sendVerifyEmail(
+    public @ResponseBody ResDTO<?> memberSendVerifyEmail(
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
             throws CheckRequestErrorException {
         memberService.sendVerifyEmail(loginSource);

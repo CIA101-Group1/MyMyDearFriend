@@ -1,22 +1,34 @@
 package com.tibame.group1.web.controller;
 
-import org.springframework.ui.Model;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("mmdf/web/")
+@Controller
+@RequestMapping("/")
 public class MemberFrontendController {
 
+    @GetMapping("/test-index")
+    public String index() {
+        return "/member/test-index";
+    }
+
     @GetMapping("member/login")
-    public String memberLogin(Model model) {
-        return "member-login"; // 要導入的html
+    public String memberLogin() {
+        return "/member/member-login";
     }
 
     @GetMapping("member/detail")
-    public String memberLogin(
-            Model model,
-            @RequestParam("memberAccount") String memberAccount,
-            @RequestParam("cid") String cid) {
-        return "member-detail"; // 要導入的html
+    public String memberDetail() {
+        return "/member/member-detail";
+    }
+
+    @GetMapping("member/create")
+    public String memberCreate() {
+        return "/member/member-create";
+    }
+
+    @GetMapping("member/verify")
+    public String memberVerify() {
+        return "/member/member-verify";
     }
 }
