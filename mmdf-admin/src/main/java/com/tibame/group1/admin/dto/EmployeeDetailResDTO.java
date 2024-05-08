@@ -14,6 +14,8 @@ public class EmployeeDetailResDTO {
 
     private String employeePassword;
 
+    private String employeeName;
+
     private String employeeEmail;
 
     private String employeePhone;
