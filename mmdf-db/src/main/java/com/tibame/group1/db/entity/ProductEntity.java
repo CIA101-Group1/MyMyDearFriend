@@ -1,8 +1,11 @@
 package com.tibame.group1.db.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 
 @Getter
@@ -38,5 +41,19 @@ public class ProductEntity {
 
         @Column(name = "product_status", nullable = false)
         private Integer productStatus;
+
+//        public ProductEntity(){
+//        }
+
+//        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "productImgEntity")
+//        @OrderBy("productId asc")
+//        @JsonIgnore
+//        private Set<ProductEntity> getProducts() {
+//                return this.products;
+//        }
+//
+//        private void setProducts(Set<ProductEntity> products) {
+//                this.products = products;
+//        }
 
 }

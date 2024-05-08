@@ -11,13 +11,11 @@ import lombok.Setter;
 @Setter
 public class ProductImgCreateReqDTO {
 
-    private Integer productId;
+    @NotEmpty(message = "商品編號請勿空白")
+    private String productId;
 
     @NotEmpty(message = "請載入商品圖片以便審查及觀看")
     @Size(min = 1, message = "圖片大小：請提供至少 1byte")
-    private byte[] image;
-
-//    @CheckLogin
-//    public Integer getMemberId() {return null;}
+    private String image;
 
 }

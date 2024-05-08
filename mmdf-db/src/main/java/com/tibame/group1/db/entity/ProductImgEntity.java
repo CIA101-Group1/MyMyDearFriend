@@ -23,7 +23,7 @@ public class ProductImgEntity {
     private byte[] image;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "general_product", referencedColumnName = "productId")
+//    @JoinColumn(name = "general_product", referencedColumnName = "productId", insertable = false, updatable = false)
 //    private ProductEntity productEntity;
 
 
