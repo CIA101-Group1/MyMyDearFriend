@@ -1,3 +1,10 @@
 package com.tibame.group1.web.controller;
 
-public class OrderFrontendController {}
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("mmdf/web/")
+public class OrderFrontendController {
+
+}

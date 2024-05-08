@@ -3,11 +3,9 @@ package com.tibame.group1.web.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 
-import java.net.Inet4Address;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
