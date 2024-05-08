@@ -17,9 +17,9 @@ public class MemberVerifyResDTO {
 
         VERIFY_SUCCESS("1", "驗證成功"),
 
-        USER_NOT_FOUND("-1", "找不到對應使用者"),
+        VERIFY_CODE_ERROR("-1", "驗證碼錯誤"),
 
-        VERIFY_CODE_ERROR("-2", "驗證碼錯誤");
+        VERIFY_CODE_INVALID("-2", "驗證碼失效");
 
         private final String code;
 

@@ -1,0 +1,96 @@
+<!doctype html>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>會員中心</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- my account start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <h3>Account details </h3>
+                            <div class="login">
+                                <div class="login_form_container">
+                                    <div class="account_login_form">
+                                        <form action="#">
+                                            <p>Already have an account? <a href="#">Log in instead!</a></p>
+                                            <div class="input-radio">
+                                                    <span class="custom-radio"><input type="radio" value="1"
+                                                                                      name="id_gender"> Mr.</span>
+                                                <span class="custom-radio"><input type="radio" value="1"
+                                                                                  name="id_gender"> Mrs.</span>
+                                            </div>
+                                            <br>
+                                            <label>First Name</label>
+                                            <input type="text" name="first-name">
+                                            <label>Last Name</label>
+                                            <input type="text" name="last-name">
+                                            <label>Email</label>
+                                            <input type="text" name="email-name">
+                                            <label>Password</label>
+                                            <input type="password" name="user-password">
+                                            <label>Birthdate</label>
+                                            <input type="text" placeholder="MM/DD/YYYY" value="" name="birthday">
+                                            <span class="example">
+                                                    (E.g.: 05/31/1970)
+                                                </span>
+                                            <br>
+                                            <span class="custom_checkbox">
+                                                    <input type="checkbox" value="1" name="optin">
+                                                    <label>Receive offers from our partners</label>
+                                                </span>
+                                            <br>
+                                            <span class="custom_checkbox">
+                                                    <input type="checkbox" value="1" name="newsletter">
+                                                    <label>Sign up for our newsletter<br><em>You may unsubscribe at any
+                                                            moment. For that purpose, please find our contact info in
+                                                            the legal notice.</em></label>
+                                                </span>
+                                            <div class="save_button primary_btn default_button">
+                                                <button type="submit">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- my account end   -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+</body>
+</html>

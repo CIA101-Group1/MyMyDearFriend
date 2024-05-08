@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberDetailResDTO {
-    private Integer memberId;
+    private String memberId;
 
     private String memberAccount;
 
@@ -34,9 +34,9 @@ public class MemberDetailResDTO {
 
     private String joinTime;
 
-    private Integer walletAmount;
+    private String walletAmount;
 
-    private Integer walletAvailableAmount;
+    private String walletAvailableAmount;
 
     private String walletCid;
 
@@ -46,9 +46,9 @@ public class MemberDetailResDTO {
 
     private Boolean sellerStatus;
 
-    private Integer scoreNumber;
+    private String scoreNumber;
 
-    private Integer scoreSum;
+    private String scoreSum;
 
     private String imageBase64;
 }
