@@ -6,7 +6,7 @@ import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.annotation.CheckLogin;
-import com.tibame.group1.web.dto.LoginSourceDTO;
+import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 
 import jakarta.servlet.http.HttpServletRequest;
