@@ -28,6 +28,7 @@ public class CouponServiceImpl implements CouponService {
         coupon.setDateStart(DateUtils.stringToDate(req.getDateStart(),DateUtils.DEFAULT_WEB_DATE_FORMAT));
         coupon.setDateEnd(DateUtils.stringToDate(req.getDateEnd(),DateUtils.DEFAULT_WEB_DATE_FORMAT));
         coupon.setAddable(Integer.valueOf(req.getAddable()));
+        coupon.setLivemode(Integer.valueOf(req.getLivemode()));
 
     coupon = couponRepository.save(coupon);
     CouponCreateResDTO res = new CouponCreateResDTO();

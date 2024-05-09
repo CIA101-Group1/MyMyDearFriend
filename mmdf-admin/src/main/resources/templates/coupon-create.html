@@ -37,6 +37,10 @@
         <input type="number" id="addable" name="addable" min="0" max="1">
     </div>
     <div>
+        <label for="livemode">激活狀態：</label>
+        <input type="number" id="livemode" name="livemode" min="0" max="1">
+    </div>
+    <div>
         <button type="button" id="saveBtn">送出</button>
     </div>
 </form>
@@ -90,6 +94,10 @@
             errorMessage += "<li>可否疊加：0代表可以疊加 / 1代表不能疊加</li>";
         }
 
+        let livemode = $("#livemode").val().trim();
+        if (livemode === "" || !/^[01]$/.test(livemode)) {
+            errorMessage += "<li>可否疊加：0代表可以疊加 / 1代表不能疊加</li>";
+        }
 
         // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
         if (errorMessage !== "") {
@@ -105,7 +113,8 @@
             number: number,
             dateStart: dateStart,
             dateEnd: dateEnd,
-            addable: addable
+            addable: addable,
+            livemode: livemode
         };
         return true;
     }

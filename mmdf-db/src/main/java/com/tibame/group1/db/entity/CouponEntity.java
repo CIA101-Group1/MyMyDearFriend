@@ -44,6 +44,10 @@ public class CouponEntity {
        @Column(name = "addable", nullable = false)
        private Integer addable;
 
+       @Column(name = "livemode", nullable = false)
+       private Integer livemode;
+
+
 }
 
 

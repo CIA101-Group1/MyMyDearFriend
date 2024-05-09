@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+
 
 @Getter
 @Setter
@@ -47,4 +47,9 @@ public class CouponCreateReqDTO {
     @Pattern(regexp = "^[01]$",
             message = "可否疊加：0代表可以疊加 / 1代表不能疊加")
     private String addable;
+
+    @NotEmpty(message = "請填上0或1 , (0代表可以使用 / 1代表不能使用)")
+    @Pattern(regexp = "^[01]$",
+            message = "激活狀態：0代表可以使用 / 1代表不能使用")
+    private String livemode;
 }

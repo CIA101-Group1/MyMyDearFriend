@@ -20,6 +20,7 @@ public class CouponBackendController {
         ResDTO<CouponCreateResDTO> res = new ResDTO<>();
         System.out.println("有傳輸成功");
         res.setData(couponService.couponCreate(req));
+        System.out.println("有傳輸成功01");
         return res;
     }
 }
