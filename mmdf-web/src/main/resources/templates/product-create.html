@@ -162,26 +162,7 @@
             if (description === "" || !/^.{0,200}$/.test(description)) {
                 errorMessage += "<li>商品描述：格式錯誤，且長度必需在0到200之間</li>";
             }
-            let memberId = $("#sellerId").val();
-
-            let reviewStatus = $("#reviewStatus").val();
-
-            let productStatus = $("#productStatus").val();
-
-            // test get file from filepond
-
-
-            // var file = pond.getFile().file;
-            // var reader = new FileReader();
-            // let fileContent;
-            //
-            // reader.onload = function(event) {
-            //     fileContent = event.target.result;
-            //     console.log("fileContent", fileContent);
-            //
-            // };
-            //
-            // reader.readAsText(file);
+            /** productImg */
             let file = pond.getFile().file; // 獲取上傳的文件
             let image;
 
@@ -203,22 +184,6 @@
                 };
                 reader.readAsDataURL(file);
             }
-            /** productImg */
-
-            // let image = $("#filepond")[0].files[0]; // 獲取上傳的文件
-
-            // if (image) {
-            //     let imageSize = image.size / 1024 / 1024; // 轉換為MB
-            //     if (imageSize > 3) {
-            //         errorMessage += "<li>商品圖片：檔案大小超過3MB</li>";
-            //     }
-            //     let imageType = image.type;
-            //     if (imageType !== 'image/jpeg' && imageType !== 'image/png') {
-            //         errorMessage += "<li>商品圖片：檔案類型必須為jpeg或png</li>";
-            //     }
-            // } else {
-            //     errorMessage += "<li>商品圖片：必須上傳一張圖片</li>";
-            // }
 
             if (errorMessage !== "") {
                 document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";

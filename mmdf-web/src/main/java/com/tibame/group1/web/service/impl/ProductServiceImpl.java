@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service  //
@@ -71,8 +70,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) {
 
-
-//        byte[] imageData = req.getImage().getBytes();
         ProductEntity product = new ProductEntity();
         product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
         product.setCategoryId(Integer.valueOf(req.getCategoryId()));
@@ -80,14 +77,10 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
-//            product.setProductImgs(req.getImage().getBytes());
 
-
-//        productImg.setImage(imageData);
-//
-//        product.getProductImgs().add(productImg);
         product = productRepository.save(product);
 
+//     productImg
         ProductImgEntity productImg = new ProductImgEntity();
         productImg.setImage(StringUtils.isEmpty(req.getImage()) ? null : ConvertUtils.base64ToBytes(req.getImage()));
         productImg.setProductId(product.getProductId());
@@ -98,7 +91,6 @@ public class ProductServiceImpl implements ProductService {
         resDTO.setProductId(product.getProductId());
         return resDTO;
 
-//        return null;
     }
 
     @Override

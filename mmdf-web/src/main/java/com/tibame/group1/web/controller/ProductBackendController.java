@@ -2,7 +2,6 @@ package com.tibame.group1.web.controller;
 
 import com.tibame.group1.common.dto.ResDTO;
 import com.tibame.group1.common.dto.web.LoginSourceDTO;
-import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -54,15 +53,6 @@ public class ProductBackendController {
         res.setData(productService.productCreate(req, loginSource));
         return res;
     }
-
-//    @PostMapping("product/create")
-//    @CheckLogin
-//    public @ResponseBody ResDTO<ProductCreateResDTO> productCreate2(
-//            @Valid @RequestBody ProductCreateReqDTO req) throws IOException {
-//        ResDTO<ProductCreateResDTO> res = new ResDTO<>();
-////        res.setData(productService.productCreate(req, loginSource));
-//        return res;
-//    }
 
     @GetMapping("product/getAll")
     public @ResponseBody ResDTO<List<ProductEntity>> productGetAll() throws IOException {
