@@ -1,4 +1,4 @@
-package com.tibame.group1.common.dto.web;
+package com.tibame.group1.web.dto;
 
 import lombok.Getter;
 import lombok.Setter;
