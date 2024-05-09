@@ -1,5 +1,8 @@
 package com.tibame.group1.web.service.impl;
 
+import com.tibame.group1.common.dto.web.LoginSourceDTO;
+import com.tibame.group1.common.utils.ConvertUtils;
+import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service  //
@@ -30,7 +34,9 @@ public class ProductServiceImpl implements ProductService {
     private ProductCategoryRepository productCategoryRepository;
 
 
-    /** productCategory */
+    /**
+     * productCategory
+     */
 
     @Override
     public ProductCategoryCreateResDTO productCategoryCreate(ProductCategoryCreateReqDTO req) {
@@ -41,6 +47,7 @@ public class ProductServiceImpl implements ProductService {
         resDTO.setCategoryId(product.getCategoryId());
         return resDTO;
     }
+
     @Override
     public List<ProductCategoryEntity> productCategoryGetAll() {
         return productCategoryRepository.findAll();
@@ -57,10 +64,15 @@ public class ProductServiceImpl implements ProductService {
         return resDTO;
     }
 
-    /** product */
+    /**
+     * product
+     */
 
     @Override
     public ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) {
+
+
+//        byte[] imageData = req.getImage().getBytes();
         ProductEntity product = new ProductEntity();
         product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
         product.setCategoryId(Integer.valueOf(req.getCategoryId()));
@@ -68,16 +80,25 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
-        if(Integer.parseInt(req.getReviewStatus()) >= 0 && Integer.parseInt(req.getReviewStatus()) <= 2 ) {  //競標狀態
-            product.setReviewStatus(Integer.valueOf(req.getReviewStatus()));
-        }
-        if(Integer.parseInt(req.getProductStatus()) >= 0 && Integer.parseInt(req.getProductStatus()) <= 1 ) {
-            product.setProductStatus(Integer.valueOf(req.getProductStatus()));
-        }
+//            product.setProductImgs(req.getImage().getBytes());
+
+
+//        productImg.setImage(imageData);
+//
+//        product.getProductImgs().add(productImg);
         product = productRepository.save(product);
+
+        ProductImgEntity productImg = new ProductImgEntity();
+        productImg.setImage(StringUtils.isEmpty(req.getImage()) ? null : ConvertUtils.base64ToBytes(req.getImage()));
+        productImg.setProductId(product.getProductId());
+
+        productImgRepository.save(productImg);
+
         ProductCreateResDTO resDTO = new ProductCreateResDTO();
         resDTO.setProductId(product.getProductId());
         return resDTO;
+
+//        return null;
     }
 
     @Override
@@ -94,12 +115,6 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
-        if(Integer.parseInt(req.getReviewStatus()) >= 0 && Integer.parseInt(req.getReviewStatus()) <= 2 ) {  //競標狀態
-            product.setReviewStatus(Integer.valueOf(req.getReviewStatus()));
-        }
-        if(Integer.parseInt(req.getProductStatus()) >= 0 && Integer.parseInt(req.getProductStatus()) <= 1 ) {
-            product.setProductStatus(Integer.valueOf(req.getProductStatus()));
-        }
         product = productRepository.save(product);
         ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
         resDTO.setProductId(product.getProductId());
@@ -133,7 +148,9 @@ public class ProductServiceImpl implements ProductService {
 //    }
 
 
-    /**  productImg */
+    /**
+     * productImg
+     */
 
     @Override
     public ProductImgCreateResDTO productImgCreate(ProductImgCreateReqDTO req, LoginSourceDTO loginSource) {

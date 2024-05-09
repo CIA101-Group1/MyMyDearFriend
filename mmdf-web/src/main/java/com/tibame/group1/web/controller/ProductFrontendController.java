@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class ProductFrontendController {
 
-    @GetMapping("product/list")
+    @GetMapping("product/create")
     public String productCreate() {
-        return "product-list"; // 要導入的html
+        return "product-create"; // 要導入的html
     }
 
     @GetMapping("product/select")

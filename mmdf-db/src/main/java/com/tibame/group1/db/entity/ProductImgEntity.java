@@ -1,10 +1,13 @@
 package com.tibame.group1.db.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import org.springframework.data.annotation.Immutable;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,9 +25,8 @@ public class ProductImgEntity {
     @Column(name = "image")
     private byte[] image;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "general_product", referencedColumnName = "productId", insertable = false, updatable = false)
-//    private ProductEntity productEntity;
-
+    @ManyToOne
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    private ProductEntity productEntity;
 
 }

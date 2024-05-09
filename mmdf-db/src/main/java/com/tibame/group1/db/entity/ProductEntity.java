@@ -2,9 +2,12 @@ package com.tibame.group1.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -13,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "general_product")
 public class ProductEntity {
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "product_id", nullable = false)
@@ -36,24 +40,14 @@ public class ProductEntity {
         @Column(name = "quantity", nullable = false)
         private Integer quantity;
 
-        @Column(name = "review_status", nullable = false)
+        @Column(name = "review_status")
         private Integer reviewStatus;
 
-        @Column(name = "product_status", nullable = false)
+        @Column(name = "product_status")
         private Integer productStatus;
 
-//        public ProductEntity(){
-//        }
-
-//        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "productImgEntity")
-//        @OrderBy("productId asc")
-//        @JsonIgnore
-//        private Set<ProductEntity> getProducts() {
-//                return this.products;
-//        }
-//
-//        private void setProducts(Set<ProductEntity> products) {
-//                this.products = products;
-//        }
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "productEntity")
+        @OrderBy("productId asc")
+        private Set<ProductImgEntity> productImgs = new HashSet<>();
 
 }
