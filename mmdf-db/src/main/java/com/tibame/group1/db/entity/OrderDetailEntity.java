@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Immutable;
 @Getter
 @Setter
 @Entity
+@IdClass(OrderDetailPK.class)
 @Table(name = "general_order_detail")
 @Immutable
 public class OrderDetailEntity {

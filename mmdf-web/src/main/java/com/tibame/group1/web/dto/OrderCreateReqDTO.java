@@ -1,19 +1,18 @@
 package com.tibame.group1.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class OrderCreateReqDTO {
-
-    @NotNull
-    private Integer buyerId;
-
     @NotNull
     private Integer sellerId;
 
@@ -39,4 +38,7 @@ public class OrderCreateReqDTO {
 
     @NotBlank(message = "地址請勿空白")
     private String address;
+
+    @NotEmpty
+    private List<OrderBuyProductDTO> buyProductList;
 }

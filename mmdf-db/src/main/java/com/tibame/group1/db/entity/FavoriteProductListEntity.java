@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Immutable;
 @Getter
 @Setter
 @Entity
+@IdClass(FavoriteProductListPK.class)
 @Table(name = "favorite_product_list")
 @Immutable
 public class FavoriteProductListEntity {
