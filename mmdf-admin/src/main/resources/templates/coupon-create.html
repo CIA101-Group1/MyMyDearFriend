@@ -1,10 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增優惠卷</title>
 </head>
 <body>
-新增優惠卷
+<h2>新增優惠卷</h2>
+<form id="createForm">
+    <div id="errorMessage" style="color: red;"></div>
+    <div>
+        <label for="title">優惠卷名稱：</label>
+        <input type="text" id="title" name="title">
+    </div>
+    <div>
+        <label for="lowPrice">最低價格：</label>
+        <input type="number" id="lowPrice" name="lowPrice" min="1000" max="15000">
+    </div>
+    <div>
+        <label for="discount">折扣金額：</label>
+        <input type="number" id="discount" name="discount" min="100" max="2000">
+    </div>
+    <div>
+        <label for="number">發行數量：</label>
+        <input type="number" id="number" name="number" min="0" max="99999">
+    </div>
+    <div>
+        <label for="dateStart">起始時間：</label>
+        <input type="date" id="dateStart" name="dateStart">
+    </div>
+    <div>
+        <label for="dateEnd">結束時間：</label>
+        <input type="date" id="dateEnd" name="dateEnd">
+    </div>
+    <div>
+        <label for="addable">能否疊加：</label>
+        <input type="number" id="addable" name="addable" min="0" max="1">
+    </div>
+    <div>
+        <button type="button" id="saveBtn">送出</button>
+    </div>
+</form>
+
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+
+
+<script>
+
+    let userData = {};
+    let errorMessage = "";
+
+    function validateForm() {
+        userData = {};
+        errorMessage = "";
+
+        let title = $("#title").val().trim();
+        if (title === "" || !/^[(一-龥)a-zA-Z0-9_]{1,30}$/.test(title)) {
+            errorMessage += "<li>優惠卷名字：只能是中、英文字母、數字和_ , 且長度必需在1到30之間</li>";
+        }
+
+        let lowPrice = $("#lowPrice").val().trim();
+        if (lowPrice === "" || !/^(0|1[0-4]?[0-9]{1,3}|15000)$/.test(lowPrice)) {
+            errorMessage += "<li>最低金額：只能是正整數數字 , 且金額不能高於15000 , 低於1000</li>";
+        }
+
+        let discount = $("#discount").val().trim();
+        if (discount === "" || !/^(1000|1[0-9]{3}|2000)$/.test(discount)) {
+            errorMessage += "<li>折扣金額：只能是正整數數字 , 且金額不能高於2000 , 低於100</li>";
+        }
+
+        let number = $("#number").val().trim();
+        if (number === "" || !/^(0|[1-9]\d{0,4})$/.test(number)) {
+            errorMessage += "<li>優惠卷數量：只能是正整數數字 , 且數量不能高於99999</li>";
+        }
+
+        let dateStart = $("#dateStart").val().trim()
+        if (dateStart === "" || !/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(dateStart)) {
+            errorMessage += "<li>起始時間：格式須為以下參考：2099年-12月-31日-23:59</li>";
+        }
+
+        let dateEnd = $("#dateEnd").val().trim();
+        console.log(dateEnd)
+        if (dateEnd === "" || !/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(dateEnd)) {
+            errorMessage += "<li>起始時間：格式須為以下參考：2099年-12月-31日-23:59</li>";
+        }
+
+        let addable = $("#addable").val().trim();
+        if (addable === "" || !/^[01]$/.test(addable)) {
+            errorMessage += "<li>可否疊加：0代表可以疊加 / 1代表不能疊加</li>";
+        }
+
+
+        // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
+        if (errorMessage !== "") {
+            document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+            return false;
+        }
+
+        // 若所有檢查通過，設置好回傳的物件並回傳 true
+        userData = {
+            title: title,
+            lowPrice: lowPrice,
+            discount: discount,
+            number: number,
+            dateStart: dateStart,
+            dateEnd: dateEnd,
+            addable: addable
+        };
+        return true;
+    }
+
+
+    $("#saveBtn").click(function () {
+        console.log("TEST");
+        if (validateForm()) {
+            $("#errorMessage").text("");
+            $.ajax({
+                url: "/api/coupon/create",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+
+                    if (apiResponseJSON(response)) {
+                        alert("完成一張優惠卷新增");
+                        window.location.href = "/api/coupon/list";
+                    }
+                },
+                error(xhr, status, error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

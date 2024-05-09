@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("mmdf/web/api/")
+@RequestMapping("api/")
 public class CouponBackendController {
 
     @Autowired
@@ -18,6 +18,7 @@ public class CouponBackendController {
     @PostMapping("coupon/create")
     public @ResponseBody ResDTO<CouponCreateResDTO> couponCreate(@RequestBody CouponCreateReqDTO req) throws DateException {
         ResDTO<CouponCreateResDTO> res = new ResDTO<>();
+        System.out.println("有傳輸成功");
         res.setData(couponService.couponCreate(req));
         return res;
     }

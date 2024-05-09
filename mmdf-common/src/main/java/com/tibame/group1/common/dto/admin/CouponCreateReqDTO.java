@@ -32,14 +32,16 @@ public class CouponCreateReqDTO {
     private String number;
 
     @NotEmpty(message = "起始時間請勿空白")
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])$",
-            message = "起始時間：格式須為以下參考：2099年-12月-31日-23:59")
-    private String time_start;
+    @Pattern(
+            regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$",
+            message = "時間格式必須為西元年月日(yyyymmdd)")
+    private String dateStart;
 
     @NotEmpty(message = "結束時間請勿空白")
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])$",
-            message = "結束時間：格式須為以下參考：2099年-12月-31日-23:59")
-    private String time_end;
+    @Pattern(
+            regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$",
+            message = "時間格式必須為西元年月日(yyyymmdd)")
+    private String dateEnd;
 
     @NotEmpty(message = "請填上0或1 , (0代表可以疊加 / 1代表不能疊加)")
     @Pattern(regexp = "^[01]$",

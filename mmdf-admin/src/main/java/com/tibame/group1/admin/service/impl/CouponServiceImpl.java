@@ -25,8 +25,8 @@ public class CouponServiceImpl implements CouponService {
         coupon.setLowPrice(Integer.valueOf(req.getLowPrice()));
         coupon.setDiscount(Integer.valueOf(req.getDiscount()));
         coupon.setNumber(Integer.valueOf(req.getNumber()));
-        coupon.setTime_start(DateUtils.stringToDate(req.getTime_start(),DateUtils.DEFAULT_DATE_MINUTE_FORMAT));
-        coupon.setTime_end(DateUtils.stringToDate(req.getTime_end(),DateUtils.DEFAULT_DATE_MINUTE_FORMAT));
+        coupon.setDateStart(DateUtils.stringToDate(req.getDateStart(),DateUtils.DEFAULT_WEB_DATE_FORMAT));
+        coupon.setDateEnd(DateUtils.stringToDate(req.getDateEnd(),DateUtils.DEFAULT_WEB_DATE_FORMAT));
         coupon.setAddable(Integer.valueOf(req.getAddable()));
 
     coupon = couponRepository.save(coupon);

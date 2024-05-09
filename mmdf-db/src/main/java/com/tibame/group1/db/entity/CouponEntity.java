@@ -35,11 +35,11 @@ public class CouponEntity {
        @Column(name = "number", nullable = false)
        private Integer number;
 
-       @Column(name = "timeStart", nullable = false)
-       private Date time_start;
+       @Column(name = "date_start", nullable = false)
+       private Date dateStart;
 
-       @Column(name = "timeEnd", nullable = false)
-       private Date time_end;
+       @Column(name = "date_end", nullable = false)
+       private Date dateEnd;
 
        @Column(name = "addable", nullable = false)
        private Integer addable;
