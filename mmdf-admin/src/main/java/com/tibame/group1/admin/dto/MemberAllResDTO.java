@@ -1,11 +1,12 @@
-package com.tibame.group1.common.dto.web;
+package com.tibame.group1.admin.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDetailResDTO {
+public class MemberAllResDTO {
+
     private String memberId;
 
     private String memberAccount;

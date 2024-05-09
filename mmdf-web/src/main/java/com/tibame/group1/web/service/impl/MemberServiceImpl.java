@@ -11,7 +11,7 @@ import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
-import com.tibame.group1.common.dto.web.LoginSourceDTO;
+import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.MemberService;
 
@@ -96,7 +96,6 @@ public class MemberServiceImpl implements MemberService {
         MemberDetailResDTO resDTO = new MemberDetailResDTO();
         resDTO.setMemberId(String.valueOf(member.getMemberId()));
         resDTO.setMemberAccount(member.getMemberAccount());
-        resDTO.setCid(member.getCid());
         resDTO.setName(member.getName());
         resDTO.setPhone(member.getPhone());
         resDTO.setEmail(member.getEmail());
@@ -105,21 +104,6 @@ public class MemberServiceImpl implements MemberService {
         resDTO.setCity(member.getCity());
         resDTO.setAddress(member.getAddress());
         resDTO.setIsVerified(member.getIsVerified());
-        resDTO.setVerificationSendingTime(
-                null == member.getVerifySendingTime()
-                        ? ""
-                        : DateUtils.dateToSting(member.getVerifySendingTime()));
-        resDTO.setVerifiedTime(
-                null == member.getVerifiedTime()
-                        ? ""
-                        : DateUtils.dateToSting(member.getVerifiedTime()));
-        resDTO.setJoinTime(
-                null == member.getJoinTime() ? "" : DateUtils.dateToSting(member.getJoinTime()));
-        resDTO.setWalletAmount(String.valueOf(member.getWalletAmount()));
-        resDTO.setWalletAvailableAmount(String.valueOf(member.getWalletAvailableAmount()));
-        resDTO.setWalletCid(member.getWalletCid());
-        resDTO.setWalletQuestion(member.getWalletQuestion());
-        resDTO.setWalletAnswer(member.getWalletAnswer());
         resDTO.setSellerStatus(member.getSellerStatus());
         resDTO.setScoreNumber(String.valueOf(member.getScoreNumber()));
         resDTO.setScoreSum(String.valueOf(member.getScoreSum()));
@@ -305,7 +289,7 @@ public class MemberServiceImpl implements MemberService {
                 .setTitle("My my dear friend 會員驗證信")
                 .addContent(
                         config.getWebURL()
-                                + "/mmdf/web/member/verify?verifyCode="
+                                + "/member/verify?verifyCode="
                                 + jwtService.encodeEmailVerify(emailVerifySource))
                 .setIsHtml(false)
                 .setSenderName("My my dear friend 管理員")
