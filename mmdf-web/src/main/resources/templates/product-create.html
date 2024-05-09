@@ -162,6 +162,7 @@
             if (description === "" || !/^.{0,200}$/.test(description)) {
                 errorMessage += "<li>商品描述：格式錯誤，且長度必需在0到200之間</li>";
             }
+
             /** productImg */
             let file = pond.getFile().file; // 獲取上傳的文件
             let image;

@@ -24,4 +24,5 @@ public class ProductImgEntity {
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private ProductEntity productEntity;
 
+
 }
