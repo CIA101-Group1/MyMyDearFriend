@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service  //
+@Service
 @Transactional(rollbackOn = Exception.class)
 @Slf4j
 public class ProductServiceImpl implements ProductService {
