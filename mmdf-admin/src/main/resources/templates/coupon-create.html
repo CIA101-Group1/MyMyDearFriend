@@ -129,6 +129,9 @@
                 method: "post",
                 contentType: "application/json",
                 data: JSON.stringify(userData),
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
                 success(response) {
 
                     if (apiResponseJSON(response)) {

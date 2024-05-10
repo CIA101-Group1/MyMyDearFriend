@@ -9,6 +9,4 @@ import org.springframework.stereotype.Repository;
 
 public interface CouponRepository extends JpaRepository<CouponEntity, Integer> {
 
-    @Query("SELECT c FROM CouponEntity c WHERE c.couponID = :couponID")
-    CouponEntity findByCouponID(@Param("couponID") String couponID);
 }
