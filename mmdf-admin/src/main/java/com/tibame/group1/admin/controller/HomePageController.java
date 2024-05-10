@@ -10,9 +10,4 @@ public class HomePageController {
     public String getHomePage(Model model) {
         return "home";
     }
-    @GetMapping("/hello")
-    public String hello() {
-        return "hello";
-    }
-
 }
