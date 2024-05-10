@@ -2,22 +2,29 @@ package com.tibame.group1.db.entity;
 
 import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 import org.springframework.data.annotation.Immutable;
 
-@Getter
-@Setter
+import java.io.Serializable;
+
+@Data
 @Entity
-@IdClass(FavoriteProductListPK.class)
+@IdClass(FavoriteProductListEntity.FavoriteProductListPK.class)
 @Table(name = "favorite_product_list")
 @Immutable
 public class FavoriteProductListEntity {
     @Id
     @Column(name = "member_id", nullable = false)
-    private Integer member;
+    private Integer memberId;
 
     @Id
     @Column(name = "product_id", nullable = false)
-    private Integer product;
+    private Integer productId;
+
+    @Data
+    public static class FavoriteProductListPK implements Serializable {
+        private Integer memberId;
+        private Integer productId;
+    }
 }

@@ -2,25 +2,32 @@ package com.tibame.group1.db.entity;
 
 import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 import org.springframework.data.annotation.Immutable;
 
-@Getter
-@Setter
+import java.io.Serializable;
+
+@Data
 @Entity
-@IdClass(ShoppingCartPK.class)
+@IdClass(ShoppingCartEntity.ShoppingCartPK.class)
 @Table(name = "shopping_cart")
 @Immutable
 public class ShoppingCartEntity {
     @Id
     @Column(name = "member_id", nullable = false)
-    private Integer member;
+    private Integer memberId;
 
     @Id
     @Column(name = "product_id", nullable = false)
-    private Integer product;
+    private Integer productId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Data
+    public static class ShoppingCartPK implements Serializable {
+        private Integer memberId;
+        private Integer productId;
+    }
 }

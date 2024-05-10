@@ -2,15 +2,15 @@ package com.tibame.group1.db.entity;
 
 import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import org.springframework.data.annotation.Immutable;
 
-@Getter
-@Setter
+import java.io.Serializable;
+
+@Data
 @Entity
-@IdClass(OrderDetailPK.class)
+@IdClass(OrderDetailEntity.OrderDetailPK.class)
 @Table(name = "general_order_detail")
 @Immutable
 public class OrderDetailEntity {
@@ -27,4 +27,10 @@ public class OrderDetailEntity {
 
     @Column(name = "price", nullable = false)
     private Integer price;
+
+    @Data
+    public static class OrderDetailPK implements Serializable {
+        private Integer orderId;
+        private Integer productId;
+    }
 }
