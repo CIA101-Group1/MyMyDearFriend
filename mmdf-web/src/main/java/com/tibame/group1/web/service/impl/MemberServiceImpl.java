@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
         member.setImage(
                 StringUtils.isEmpty(req.getImageBase64())
                         ? null
-                        : ConvertUtils.base64ToBytes(req.getImageBase64()));
+                        : ConvertUtils.base64ToBytes(req.getImageBase64().split(",")[1]));
         member = memberRepository.save(member);
         MemberCreateResDTO resDTO = new MemberCreateResDTO();
         resDTO.setMemberId(member.getMemberId());
