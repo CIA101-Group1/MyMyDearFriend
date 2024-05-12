@@ -3,6 +3,7 @@ package com.tibame.group1.web.service.impl;
 import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
+import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -94,8 +97,48 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductEntity> productGetAll() {
-        return productRepository.findAll();
+        List<ProductEntity> result = productRepository.findAll();
+        return result;
     }
+
+//    @Override
+//    public List<ProductCompoundResDTO> findProductsByCompound(
+//            String productId, String sellerId, String categoryId, String name,
+//            String description, String price, String reviewStatus, String productStatus
+////            , ProductCategoryEntity productCategory, MemberEntity memberEntity
+//    ) {
+//        // 根據指定的條件查詢產品資料
+//        List<ProductEntity> products = productRepository.findByCompound(
+//                productId, sellerId, categoryId, name, description, price,
+//                reviewStatus, productStatus
+////                , productCategory, memberEntity
+//        );
+//
+//        // 將 Entity 轉換為 DTO
+//        return products.stream()
+//                .map(this::productCompoundDTO)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private ProductCompoundResDTO productCompoundDTO(ProductEntity product) {
+//        ProductCompoundResDTO dto = new ProductCompoundResDTO();
+//        dto.setProductId(String.valueOf(product.getProductId()));
+//        dto.setSellerId(String.valueOf(product.getSellerId()));
+//        dto.setCategoryId(String.valueOf(product.getCategoryId()));
+//        dto.setName(product.getName());
+//        dto.setDescription(product.getDescription());
+//        dto.setPrice(String.valueOf(product.getPrice()));
+//        dto.setReviewStatus(String.valueOf(product.getReviewStatus()));
+//        dto.setProductStatus(String.valueOf(product.getProductStatus()));
+//
+//        ProductCategoryEntity productCategory = new ProductCategoryEntity();
+//        productCategory.setCategoryId(product.getCategoryId());
+//
+//        MemberEntity memberEntity = new MemberEntity();
+//        memberEntity.setMemberId(memberEntity.getMemberId());
+//
+//        return dto;
+//    }
 
     @Override
     public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
@@ -168,6 +211,46 @@ public class ProductServiceImpl implements ProductService {
         ProductImgUpdateResDTO resDTO = new ProductImgUpdateResDTO();
         resDTO.setImageId(productImg.getImageId());
         return resDTO;
+    }
+
+    /***/
+    @Override
+    public ProductEntity getOneProduct(Integer productId) {
+        Optional<ProductEntity> optional = productRepository.findById(productId);
+        return optional.orElse(null);
+    }
+
+    @Override
+    public ProductCategoryEntity getOneCategory(Integer productId) {
+        Optional<ProductCategoryEntity> optional = productCategoryRepository.findById(productId);
+        return optional.orElse(null);
+    }
+
+    @Override
+    public ProductImgEntity getOneProductImg(Integer productId) {
+        Optional<ProductImgEntity> optional = productImgRepository.findById(productId);
+        return optional.orElse(null);
+    }
+
+    @Override
+    public List<ProductEntity> getAll() {
+        //        return empRepository.findAll();
+        List<ProductEntity> result = productRepository.findAll();
+        return result;
+    }
+
+    @Override
+    public List<ProductCategoryEntity> getAllCategory() {
+        //        return empRepository.findAll();
+        List<ProductCategoryEntity> result = productCategoryRepository.findAll();
+        return result;
+    }
+
+    @Override
+    public List<ProductImgEntity> getAllProductImg() {
+        //        return empRepository.findAll();
+        List<ProductImgEntity> result = productImgRepository.findAll();
+        return result;
     }
 
 }

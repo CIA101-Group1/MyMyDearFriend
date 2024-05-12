@@ -1,6 +1,7 @@
 package com.tibame.group1.web.service;
 
 import com.tibame.group1.common.dto.web.LoginSourceDTO;
+import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -25,6 +26,12 @@ public interface ProductService {
 
     List<ProductEntity> productGetAll() throws IOException;
 
+//    List<ProductCompoundResDTO> findProductsByCompound(
+//            String productId, String sellerId, String categoryId, String name,
+//            String description, String price, String reviewStatus, String productStatus
+////            , ProductCategoryEntity productCategory, MemberEntity memberEntity
+//    );
+
     ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
 //    ProductGetOneResDTO productGetOne(ProductGetOneReqDTO req) throws CheckRequestErrorException;
@@ -36,5 +43,13 @@ public interface ProductService {
     List<ProductImgEntity> productImgGetAll() throws IOException;
 
     ProductImgUpdateResDTO productImgUpdate(ProductImgUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
+
+    ProductEntity getOneProduct(Integer productId);
+    ProductCategoryEntity getOneCategory(Integer productId);
+    ProductImgEntity getOneProductImg(Integer productId);
+
+    List<ProductEntity> getAll();
+    List<ProductCategoryEntity> getAllCategory();
+    List<ProductImgEntity> getAllProductImg();
 
 }

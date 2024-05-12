@@ -8,8 +8,10 @@ import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.*;
 import com.tibame.group1.web.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -60,6 +62,27 @@ public class ProductBackendController {
         res.setData(productService.productGetAll());
         return res;
     }
+
+//    @GetMapping("product/compound")
+//    public @ResponseBody ResDTO<List<ProductGetOneResDTO>> productCompound(HttpServletRequest req) throws IOException {
+//        String productId = String.valueOf(Integer.parseInt(req.getParameter("productId")));
+//        String sellerId = String.valueOf(Integer.parseInt(req.getParameter("sellerId")));
+//        String categoryId = String.valueOf(Integer.parseInt(req.getParameter("categoryId")));
+//        String name = req.getParameter("name");
+//        String description = req.getParameter("description");
+//        Integer price = Integer.parseInt(req.getParameter("price"));
+//        Integer reviewStatus = Integer.parseInt(req.getParameter("reviewStatus"));
+//        Integer productStatus = Integer.parseInt(req.getParameter("productStatus"));
+//
+//            // 可以添加其他查詢條件
+//
+//            List<ProductGetOneResDTO> products = productService.findByCompound(
+//                    productId, sellerId, categoryId, name, description, price,
+//                    reviewStatus, productStatus, productCategory, memberEntity
+//            );
+//            return ResponseEntity.ok(products);
+//        }
+//    }
 
     @PostMapping("product/update")
     @CheckLogin

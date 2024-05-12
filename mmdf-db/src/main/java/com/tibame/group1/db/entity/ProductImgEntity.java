@@ -1,4 +1,5 @@
 package com.tibame.group1.db.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class ProductImgEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @JsonIgnore
     private ProductEntity productEntity;
 
 

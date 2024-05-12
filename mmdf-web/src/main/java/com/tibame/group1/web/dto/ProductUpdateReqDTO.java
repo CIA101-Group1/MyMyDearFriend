@@ -17,14 +17,12 @@ public class ProductUpdateReqDTO {
     private String categoryId;
 
     @NotEmpty(message = "商品名稱請勿空白")
-    @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z]{1,20}$",
-            message = "商品名稱：只能是中、英文字母，且長度必需在1到20之間")
+    @Pattern(regexp = "^.{1,20}$",
+            message = "商品名稱：格式錯誤，且長度必需在1到20之間")
     private String name;
 
-    @Pattern(regexp =  "^\\p{L}{0,200}$",
+    @Pattern(regexp =  "^.{0,200}$",
             message = "商品描述：格式錯誤，且長度必需在0到200之間")
-//    @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z]{0,200}$",
-//            message = "商品描述：格式錯誤，只能是中、英文字母，且長度必需在0到200之間")
     private String description;
 
     @NotEmpty(message = "價格：請勿空白")
@@ -37,10 +35,10 @@ public class ProductUpdateReqDTO {
             message = "數量：請填入0-9數字，最多10個位數")
     private String quantity;
 
-    @NotEmpty(message = "上下架：請勿空白")
-    private String reviewStatus;
+//    @NotEmpty(message = "上下架：請勿空白")
+//    private String reviewStatus;
 
-    @NotEmpty(message = "審核狀態：請勿空白")
-    private String productStatus;
+//    @NotEmpty(message = "審核狀態：請勿空白")
+//    private String productStatus;
 
 }

@@ -1,6 +1,10 @@
 package com.tibame.group1.web.controller;
 
+import com.tibame.group1.db.entity.ProductEntity;
+import com.tibame.group1.web.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 //@RestController
@@ -11,13 +15,37 @@ public class ProductFrontendController {
 
     @GetMapping("product/create")
     public String productCreate() {
-        return "product-create"; // 要導入的html
+        return "/product/product-create"; // 要導入的html
+    }
+
+    @GetMapping("product/1")
+    public String productPage() {return "/product/product-page";
     }
 
     @GetMapping("product/select")
-    public String productselect() {
-        return "product-select";
-    }
+    public String productGetAll() {return "/product/product-select"; }
 
+//    @GetMapping("product/update")
+//    public String productUpdate() {return "/product/product-update"; // 要導入的html
+//    }
+
+//    @GetMapping("product/compound")
+//    public String productCompound() {
+//        return "/product/product-compound"; // 要導入的html
+//    }
+
+//    @GetMapping("/product/update/{productId}")
+//    public String productUpdate(Model model) {
+//        return "/product/product-update";
+//    }
+
+    @Autowired
+    private ProductService productService;
+    @GetMapping("/product/update/{productId}")
+    public String updateProductForm(@PathVariable("productId") String productId, Model model) {
+        ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
+        model.addAttribute("productEntity", productEntity);
+        return "/product/product-update";
+    }
 
 }

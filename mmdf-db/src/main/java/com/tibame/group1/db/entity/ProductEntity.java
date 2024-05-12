@@ -47,4 +47,8 @@ public class ProductEntity {
         @OrderBy("productId asc")
         private Set<ProductImgEntity> productImgs = new HashSet<>();
 
+        @ManyToOne
+        @JoinColumn(name = "category_id", insertable = false, updatable = false)
+        private ProductCategoryEntity productCategoryEntity;
+
 }
