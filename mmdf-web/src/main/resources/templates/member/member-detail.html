@@ -20,7 +20,7 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        #memberId, #birth, #twPersonId, #score {
+        #birth, #twPersonId, #score {
             display: inline-block;
         }
 
@@ -47,7 +47,7 @@
 <!--breadcrumb-->
 <th:block th:replace="~{/fragments/breadcrumb}"/>
 
-<!-- my account start  -->
+<!-- main start  -->
 <section class="main_content_area">
     <div class="container">
         <div class="account_dashboard">
@@ -59,17 +59,13 @@
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="account-details">
-                            <h3>Account details </h3>
+                            <h3>會員資料</h3>
                             <div class="login">
                                 <div class="login_form_container">
                                     <div class="account_login_form">
                                         <!-- 我的 Code -->
                                         <form id="memberForm">
                                             <div id="errorMessage" style="color: red;"></div>
-                                            <div>
-                                                <label for="memberId">會員編號：</label>
-                                                <div id="memberId"></div>
-                                            </div>
                                             <div>
                                                 <label for="memberAccount">帳號：</label>
                                                 <input type="text" id="memberAccount" name="memberAccount">
@@ -152,8 +148,7 @@
         </div>
     </div>
 </section>
-<!-- my account end   -->
-
+<!-- main end   -->
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
@@ -191,7 +186,6 @@
                             alert("查無此會員資料");
                             break;
                         case "1":
-                            $("#memberId").text(response.data.memberId);
                             $("#memberAccount").val(response.data.memberAccount);
                             $("#name").val(response.data.name);
                             $("#phone").val(response.data.phone);
@@ -210,14 +204,14 @@
                                     $("#score").text(score);
                                 }
                             } else {
-                                $("#score").text("無");
+                                $("#score").text("無，尚未啟用賣家資格");
                             }
 
                             let base64Image = response.data.imageBase64;
                             $("#profile-image").attr("src", "data:image/jpeg;base64," + base64Image);
 
                             if (response.data.isVerified) {
-                                $("#email").after('<span class="verified"> (已驗證)</span>');
+                                $("#email").after('<div class="verified"> (信箱已驗證)</div>');
                             } else {
                                 $("#email").after('<button type="button" id="verifyBtn" onclick="sendVerifyEmail()"> 尚未驗證，點我發送驗證信</button>');
                                 $("#verifyBtn").after('<span id="countdownTimer"></span>');

@@ -36,7 +36,7 @@
                                 <div class="cart_gallery">
                                     <div class="cart_item">
                                         <div class="cart_img">
-                                            <a href="#"><img src="assets/img/s-product/product.jpg" alt=""></a>
+                                            <a href="#"><img src="/assets/img/s-product/product.jpg" alt=""></a>
                                         </div>
                                         <div class="cart_info">
                                             <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="cart_item">
                                         <div class="cart_img">
-                                            <a href="#"><img src="assets/img/s-product/product2.jpg" alt=""></a>
+                                            <a href="#"><img src="/assets/img/s-product/product2.jpg" alt=""></a>
                                         </div>
                                         <div class="cart_info">
                                             <a href="#">impedit dolor sed soluta natus voluptas.</a>
@@ -101,10 +101,10 @@
                                     </ul>
                                 </div>
                                 <div class="dropdown_links_list">
-                                    <h3><img src="assets/img/icon/language.png" alt=""> English</h3>
+                                    <h3><img src="/assets/img/icon/language.png" alt=""> English</h3>
                                     <ul>
-                                        <li><a href="#"><img src="assets/img/icon/language.png" alt=""> English</a></li>
-                                        <li><a href="#"><img src="assets/img/icon/language2.png" alt=""> Germany</a>
+                                        <li><a href="#"><img src="/assets/img/icon/language.png" alt=""> English</a></li>
+                                        <li><a href="#"><img src="/assets/img/icon/language2.png" alt=""> Germany</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -213,7 +213,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-2">
                         <div class="logo">
-                            <a href="/home"><img src="assets/img/logo/logo.png" alt=""></a>
+                            <a href="/home"><img src="/assets/img/logo/logo.png" alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-8">
@@ -305,7 +305,7 @@
                                     <div class="cart_gallery">
                                         <div class="cart_item">
                                             <div class="cart_img">
-                                                <a href="#"><img src="assets/img/s-product/product.jpg" alt=""></a>
+                                                <a href="#"><img src="/assets/img/s-product/product.jpg" alt=""></a>
                                             </div>
                                             <div class="cart_info">
                                                 <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
@@ -317,7 +317,7 @@
                                         </div>
                                         <div class="cart_item">
                                             <div class="cart_img">
-                                                <a href="#"><img src="assets/img/s-product/product2.jpg" alt=""></a>
+                                                <a href="#"><img src="/assets/img/s-product/product2.jpg" alt=""></a>
                                             </div>
                                             <div class="cart_info">
                                                 <a href="#">impedit dolor sed soluta natus voluptas.</a>
@@ -360,31 +360,37 @@
                             </div>
                             <!-- 會員 -->
                             <div class="header_account-list top_links">
-                                <a href="/member/member-home"><i class="icon icon-User"></i></a>
+                                <a href="/member/detail"><i class="icon icon-User"></i></a>
                                 <div class="dropdown_links">
                                     <div class="dropdown_links_list">
-                                        <h3>$Currency</h3>
+                                        <h3>會員中心</h3>
                                         <ul>
-                                            <li><a href="#">€ Euro</a></li>
-                                            <li><a href="#">£ Pound Sterling</a></li>
-                                            <li><a href="#">$ US Dollar</a></li>
+                                            <li><a href="/member/detail">修改會員資料</a></li>
+                                            <li><a href="#">忘記密碼</a></li>
+                                            <li><a href="#">test</a></li>
                                         </ul>
                                     </div>
                                     <div class="dropdown_links_list">
-                                        <h3><img src="assets/img/icon/language.png" alt=""> English</h3>
+                                        <h3>我的錢包</h3>
                                         <ul>
-                                            <li><a href="#"><img src="assets/img/icon/language.png" alt=""> English</a>
+                                            <li><a href="#">錢包管理</a>
                                             </li>
-                                            <li><a href="#"><img src="assets/img/icon/language2.png" alt=""> Germany</a>
+                                            <li><a href="#">test</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="dropdown_links_list">
-                                        <h3>$Currency</h3>
+                                        <h3>優惠券</h3>
                                         <ul>
-                                            <li><a href="#">€ Euro</a></li>
-                                            <li><a href="#">£ Pound Sterling</a></li>
-                                            <li><a href="#">$ US Dollar</a></li>
+                                            <li><a href="#">我的優惠券</a></li>
+                                            <li><a href="#">test</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown_links_list">
+                                        <h3></h3>
+                                        <ul>
+                                            <li id="sign-in"><a href="/member/login">登入</a></li>
+                                            <li id="sign-out" style="display: none;"><a href="/">登出</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -397,3 +403,6 @@
     </div>
 </header>
 <!--header area end-->
+<!--js-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="/js/icon-member.js"></script>

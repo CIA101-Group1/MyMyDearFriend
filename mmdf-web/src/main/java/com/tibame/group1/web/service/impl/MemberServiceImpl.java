@@ -68,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
         member.setWalletAnswer(req.getWalletAnswer());
         member.setSellerStatus(false);
         if (!StringUtils.isEmpty(req.getImageBase64())) {
-            if (FileUtils.ImageFormatChecker(req.getImageBase64().split(",")[1])) {
+            if (!FileUtils.ImageFormatChecker(req.getImageBase64().split(",")[1])) {
                 resDTO.setStatus(MemberCreateResDTO.Status.IMAGE_FORMAT_ERROR.getCode());
                 return resDTO;
             } else {
@@ -102,7 +102,6 @@ public class MemberServiceImpl implements MemberService {
             resDTO.setStatus(MemberDetailResDTO.Status.MEMBER_NOTFOUND.getCode());
             return resDTO;
         }
-        resDTO.setMemberId(String.valueOf(member.getMemberId()));
         resDTO.setMemberAccount(member.getMemberAccount());
         resDTO.setName(member.getName());
         resDTO.setPhone(member.getPhone());
@@ -113,8 +112,8 @@ public class MemberServiceImpl implements MemberService {
         resDTO.setAddress(member.getAddress());
         resDTO.setIsVerified(member.getIsVerified());
         resDTO.setSellerStatus(member.getSellerStatus());
-        resDTO.setScoreNumber(String.valueOf(member.getScoreNumber()));
-        resDTO.setScoreSum(String.valueOf(member.getScoreSum()));
+        resDTO.setScoreNumber(member.getScoreNumber());
+        resDTO.setScoreSum(member.getScoreSum());
         resDTO.setImageBase64(
                 null == member.getImage() ? null : ConvertUtils.bytesToBase64(member.getImage()));
         resDTO.setStatus(MemberDetailResDTO.Status.QUERY_SUCCESS.getCode());

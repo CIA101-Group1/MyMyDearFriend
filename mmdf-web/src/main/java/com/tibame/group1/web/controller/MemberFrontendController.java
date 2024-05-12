@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class MemberFrontendController {
 
-    @GetMapping("/test-index")
-    public String index() {
-        return "/member/test-index";
-    }
-
     @GetMapping("member/login")
     public String memberLogin() {
         return "/member/member-login";

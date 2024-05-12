@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊會員</title>
     <!--Filepond JS-->
@@ -13,7 +14,10 @@
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
           rel="stylesheet"/>
-
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
     <style>
         .dropdown select, .dropdown input {
             border: 1px solid #ccc;
@@ -27,80 +31,117 @@
     </style>
 </head>
 <body>
-<h2>註冊會員</h2>
-<form id="createForm">
-    <div id="errorMessage" style="color: red;"></div>
-    <div>
-        <label for="memberAccount">帳號：</label>
-        <input type="text" id="memberAccount" name="memberAccount">
-    </div>
-    <div>
-        <label for="cid">密碼：</label>
-        <input type="password" id="cid" name="cid">
-    </div>
-    <div>
-        <label for="name">姓名：</label>
-        <input type="text" id="name" name="name">
-    </div>
-    <div>
-        <label for="phone">電話：</label>
-        <input type="tel" id="phone" name="phone">
-    </div>
-    <div>
-        <label for="email">電子郵件：</label>
-        <input type="email" id="email" name="email">
-    </div>
-    <div>
-        <label for="birth">生日：</label>
-        <input type="date" id="birth" name="birth">
-    </div>
-    <div>
-        <label for="twPersonId">身份證字號：</label>
-        <input type="text" id="twPersonId" name="twPersonId">
-    </div>
-    <div class="dropdown">
-        <label for="county_box">地址：</label>
-        <select name="city" id="county_box">
-            <option value="">選擇縣市</option>
-        </select>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
 
-        <label for="district_box"></label>
-        <select name="district" id="district_box">
-            <option value="">選擇鄉鎮市區</option>
-        </select>
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
 
-        <label for="address"></label>
-        <input type="text" id="address" name="name" placeholder="請接續填寫剩餘地址資訊">
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <h3>填寫會員資料</h3>
+                            <div class="login">
+                                <div class="login_form_container">
+                                    <div class="account_login_form">
+                                        <!-- 我的 Code -->
+                                        <form id="createForm">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <div>
+                                                <label for="memberAccount">帳號：</label>
+                                                <input type="text" id="memberAccount" name="memberAccount">
+                                            </div>
+                                            <div>
+                                                <label for="cid">密碼：</label>
+                                                <input type="password" id="cid" name="cid">
+                                            </div>
+                                            <div>
+                                                <label for="name">姓名：</label>
+                                                <input type="text" id="name" name="name">
+                                            </div>
+                                            <div>
+                                                <label for="phone">電話：</label>
+                                                <input type="tel" id="phone" name="phone">
+                                            </div>
+                                            <div>
+                                                <label for="email">電子郵件：</label>
+                                                <input type="email" id="email" name="email">
+                                            </div>
+                                            <div>
+                                                <label for="birth">生日：</label>
+                                                <input type="date" id="birth" name="birth">
+                                            </div>
+                                            <div>
+                                                <label for="twPersonId">身份證字號：</label>
+                                                <input type="text" id="twPersonId" name="twPersonId">
+                                            </div>
+                                            <div class="dropdown">
+                                                <label for="county_box">地址：</label>
+                                                <select name="city" id="county_box">
+                                                    <option value="">選擇縣市</option>
+                                                </select>
+
+                                                <label for="district_box"></label>
+                                                <select name="district" id="district_box">
+                                                    <option value="">選擇鄉鎮市區</option>
+                                                </select>
+
+                                                <label for="address"></label>
+                                                <input type="text" id="address" name="name"
+                                                       placeholder="請接續填寫剩餘地址資訊">
+                                            </div>
+                                            <div>
+                                                <label for="walletCid">錢包密碼：</label>
+                                                <input type="password" id="walletCid" name="walletCid">
+                                            </div>
+                                            <div>
+                                                <label for="walletQuestion">錢包密碼提示問題：</label>
+                                                <input type="text" id="walletQuestion" name="walletQuestion">
+                                            </div>
+                                            <div>
+                                                <label for="walletAnswer">錢包密碼提示答案：</label>
+                                                <input type="text" id="walletAnswer" name="walletAnswer">
+                                            </div>
+                                            <div id="imgErrorMsg" style="color: red;"></div>
+                                            <div class="form-group">
+                                                <label for="filepond">會員大頭照:</label>
+                                                <input
+                                                        id="filepond"
+                                                        type="file"
+                                                        class="filepond"
+                                                        name="upFiles"
+                                                        data-max-file-size="3MB"
+                                                        data-max-files="5"
+                                                        accept="image/jpg, image/jpeg, image/png"
+                                                />
+                                            </div>
+                                            <div>
+                                                <button type="button" id="saveBtn">送出</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="walletCid">錢包密碼：</label>
-        <input type="password" id="walletCid" name="walletCid">
-    </div>
-    <div>
-        <label for="walletQuestion">錢包密碼提示問題：</label>
-        <input type="text" id="walletQuestion" name="walletQuestion">
-    </div>
-    <div>
-        <label for="walletAnswer">錢包密碼提示答案：</label>
-        <input type="text" id="walletAnswer" name="walletAnswer">
-    </div>
-    <div id="imgErrorMsg" style="color: red;"></div>
-    <div class="form-group">
-        <label for="filepond">會員大頭照:</label>
-        <input
-                id="filepond"
-                type="file"
-                class="filepond"
-                name="upFiles"
-                data-max-file-size="3MB"
-                data-max-files="5"
-                accept="image/jpg, image/jpeg, image/png"
-        />
-    </div>
-    <div>
-        <button type="button" id="saveBtn">送出</button>
-    </div>
-</form>
+</section>
+<!-- main end   -->
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+<!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 <script src="/js/address-of-tw.js"></script>
@@ -250,7 +291,7 @@
                         case "1":
                             alert("註冊成功，請至信箱完成驗證");
                             localStorage.setItem("authorization", response.data.authorization);
-                            // window.location.href = "/test-index";
+                            window.location.href = "/";
                             break;
                         case "-1":
                             alert("上傳檔案格式錯誤");

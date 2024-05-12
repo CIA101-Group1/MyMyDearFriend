@@ -6,10 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDetailResDTO {
-    private String memberId;
-
-    private String memberAccount;
+public class MemberDetailResDTO {private String memberAccount;
 
     private String name;
 
@@ -29,9 +26,9 @@ public class MemberDetailResDTO {
 
     private Boolean sellerStatus;
 
-    private String scoreNumber;
+    private Integer scoreNumber;
 
-    private String scoreSum;
+    private Integer scoreSum;
 
     private String imageBase64;
 
