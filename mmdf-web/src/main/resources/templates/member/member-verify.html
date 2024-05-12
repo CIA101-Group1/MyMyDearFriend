@@ -32,23 +32,20 @@
                     switch (response.data.status) {
                         case "0":
                             alert("驗證碼過期，請重試...");
-                            window.location.href = "/test-index";
                             break;
                         case "1":
                             alert("驗證成功！");
-                            window.location.href = "/test-index";
+                            window.location.href = "/member/detail";
                             break;
                         case "-1":
                             alert("驗證碼錯誤！");
-                            window.location.href = "/test-index";
                             break;
                         case "-2":
                             alert("驗證碼失效，該信箱已驗證過！");
-                            window.location.href = "/test-index";
                             break;
                     }
                 } else {
-                    alert("驗證失敗");
+                    alert(response.message);
                 }
             },
             error(xhr, status, error) {
