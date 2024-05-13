@@ -11,6 +11,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Immutable
+@Table(name = "employee")
 public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
