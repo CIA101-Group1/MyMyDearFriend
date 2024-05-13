@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginReqDTO {
+public class AdminLoginReqDTO {
 
     @NotEmpty(message = "帳號請勿空白")
     private String employeeAccount;
