@@ -26,4 +26,9 @@ public class MemberFrontendController {
     public String memberVerify() {
         return "/member/member-verify";
     }
+
+    @GetMapping("member/cidReset")
+    public String memberCidReset() {
+        return "/member/member-cid-reset";
+    }
 }

@@ -74,4 +74,12 @@ public class MemberBackendController {
         res.setData(memberService.sendVerifyEmail(loginSource));
         return res;
     }
+
+    @PostMapping("member/cidForget")
+    public @ResponseBody ResDTO<MemberCidForgetResDTO> memberCidForget(
+            @Valid @RequestBody MemberCidForgetReqDTO req) {
+        ResDTO<MemberCidForgetResDTO> res = new ResDTO<>();
+        res.setData(memberService.memberCidForget(req));
+        return res;
+    }
 }

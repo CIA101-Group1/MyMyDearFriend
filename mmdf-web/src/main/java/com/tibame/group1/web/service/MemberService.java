@@ -21,4 +21,6 @@ public interface MemberService {
     MemberVerifyResDTO memberVerify(MemberVerifyReqDTO req) throws AuthorizationException;
 
     SendVerifyEmailResDTO sendVerifyEmail(LoginSourceDTO loginSource);
+
+    MemberCidForgetResDTO memberCidForget(MemberCidForgetReqDTO req);
 }
