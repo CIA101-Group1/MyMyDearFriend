@@ -42,10 +42,10 @@ public class JwtService {
                             .build()
                             .parseSignedClaims(authorization)
                             .getPayload();
-            AdminLoginSourceDTO loginSource = new AdminLoginSourceDTO();
-            loginSource.setEmployeeId(claims.get("employeeId",Integer.class));
-            loginSource.setEmployeeName(claims.get("employeeName",String.class));
-            return loginSource;
+            AdminLoginSourceDTO adminLoginSource = new AdminLoginSourceDTO();
+            adminLoginSource.setEmployeeId(claims.get("employeeId",Integer.class));
+            adminLoginSource.setEmployeeName(claims.get("employeeName",String.class));
+            return adminLoginSource;
         }catch (Exception e){
             throw new AuthorizationException("登入驗證碼檢驗失敗");
         }
