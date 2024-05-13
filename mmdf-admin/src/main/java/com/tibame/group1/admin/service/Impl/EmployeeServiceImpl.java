@@ -54,9 +54,9 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
 
     @Override
-    public EmployeeDetailResDTO employeeDetail(LoginSourceDTO loginSource)
+    public EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException {
-        EmployeeEntity employee = employeeRepository.findById(loginSource.getEmployeeId()).orElse(null);
+        EmployeeEntity employee = employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
         if (null == employee) {
             throw new CheckRequestErrorException("查無此員工資料");
         }
@@ -78,9 +78,9 @@ public class EmployeeServiceImpl implements EmployeeService {
      * 只有管理員能修改資料，目前先寫為員工自行更新自己的資料，待新增權限後修改
      */
     @Override
-    public void employeeEdit(EmployeeEditReqDTO req, LoginSourceDTO loginSource)
+    public void employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException {
-        EmployeeEntity employee = employeeRepository.findById(loginSource.getEmployeeId()).orElse(null);
+        EmployeeEntity employee = employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
         if (null == employee) {
             throw new CheckRequestErrorException("查無此會員資料");
         }
@@ -110,7 +110,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * 員工登入後台
      */
     @Override
-    public LoginResDTO employeeLogin(LoginReqDTO req) throws IOException{
+    public LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException{
         LoginResDTO resDTO = new LoginResDTO();
         //用輸入的帳號去資料庫撈相同的帳號的那一筆
         EmployeeEntity employee = employeeRepository.findByEmployeeAccount(req.getEmployeeAccount());
@@ -138,11 +138,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         /*密碼正確後，下一步要產登入驗證碼，用在後面需要登入的頁面
         先設定loginSource裡面代的基本資訊
          */
-        LoginSourceDTO loginSource = new LoginSourceDTO();
-        loginSource.setEmployeeId(employee.getEmployeeId());
-        loginSource.setEmployeeName(employee.getEmployeeName());
+        AdminLoginSourceDTO adminLoginSource = new AdminLoginSourceDTO();
+        adminLoginSource.setEmployeeId(employee.getEmployeeId());
+        adminLoginSource.setEmployeeName(employee.getEmployeeName());
         //用jwt產生驗證碼，塞進去response
-        resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
+        resDTO.setAuthorization(jwtService.encodeLogin(adminLoginSource));
         return resDTO;
 
     }
