@@ -12,9 +12,9 @@ public interface EmployeeService {
 
     EmployeeCreateResDTO employeeCreate(EmployeeCreateReqDTO req) throws DateException, IOException;
 
-    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO loginSource) throws CheckRequestErrorException;
+    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException;
 
-    void employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO loginSource)
+    void employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException;
 
     LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException;
