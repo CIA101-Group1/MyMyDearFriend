@@ -1,6 +1,6 @@
 package com.tibame.group1.admin.service;
 
-import com.tibame.group1.admin.dto.LoginSourceDTO;
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.common.exception.AuthorizationException;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,10 @@ public class JwtService {
     /**
      * 產生登入驗證碼
      */
-    public String encodeLogin(LoginSourceDTO loginSource){
+    public String encodeLogin(AdminLoginSourceDTO adminLoginSource){
         return Jwts.builder()
-                .claim("employeeId",loginSource.getEmployeeId())
-                .claim("employeeName",loginSource.getEmployeeName())
+                .claim("employeeId",adminLoginSource.getEmployeeId())
+                .claim("employeeName",adminLoginSource.getEmployeeName())
                 .subject("登入憑證")
                 .issuedAt(new Date())
                 .signWith(createSecretKey())
@@ -32,7 +32,7 @@ public class JwtService {
     /**
      * 拆解登入驗證碼
      */
-    public LoginSourceDTO decodeLogin(String authorization) throws AuthorizationException{
+    public AdminLoginSourceDTO decodeLogin(String authorization) throws AuthorizationException{
         try{
             SecretKeySpec secretKey = createSecretKey();
             Claims claims =
@@ -42,7 +42,7 @@ public class JwtService {
                             .build()
                             .parseSignedClaims(authorization)
                             .getPayload();
-            LoginSourceDTO loginSource = new LoginSourceDTO();
+            AdminLoginSourceDTO loginSource = new AdminLoginSourceDTO();
             loginSource.setEmployeeId(claims.get("employeeId",Integer.class));
             loginSource.setEmployeeName(claims.get("employeeName",String.class));
             return loginSource;
