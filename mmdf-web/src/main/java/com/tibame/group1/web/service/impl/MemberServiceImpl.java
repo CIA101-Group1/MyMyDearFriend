@@ -9,6 +9,7 @@ import com.tibame.group1.common.utils.*;
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
+import com.tibame.group1.web.dto.CidResetVerifySourceDTO;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
@@ -262,9 +263,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 系統寄送驗證信
+     * 系統寄送會員信箱驗證信
      *
      * @param loginSource 登入憑證
+     * @return 寄送結果狀態
      */
     @Override
     public SendVerifyEmailResDTO sendVerifyEmail(LoginSourceDTO loginSource) {
@@ -286,7 +288,8 @@ public class MemberServiceImpl implements MemberService {
         if (null != member.getVerifySendingTime()) {
             // 若還在冷卻時間內，則不寄送驗證信
             if (DateUtils.addSecond(
-                            member.getVerifySendingTime(), config.getEmailSendingCooldownSecond())
+                            member.getVerifySendingTime(),
+                            config.getEmailVerifySendingCooldownSecond())
                     .after(new Date())) {
                 resDTO.setStatus(SendVerifyEmailResDTO.Status.COOLDOWN_TIME_ERROR.getCode());
                 return resDTO;
@@ -301,7 +304,42 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 寄送驗證信方法
+     * 系統寄送重設密碼驗證信
+     *
+     * @param req 註冊信箱
+     * @return 寄送狀態
+     */
+    @Override
+    public MemberCidForgetResDTO memberCidForget(MemberCidForgetReqDTO req) {
+        MemberCidForgetResDTO resDTO = new MemberCidForgetResDTO();
+        // 先檢查所填email是否是某一筆會員的資料
+        if (!memberRepository.existsByEmail(req.getEmail())) { // 不是會員
+            resDTO.setStatus(MemberCidForgetResDTO.Status.EMAIL_NOTFOUND.getCode());
+            return resDTO;
+        }
+        // 是會員
+        MemberEntity member = memberRepository.findByEmail(req.getEmail());
+        // 檢查上一次送出重設密碼請求的時間，若不為空表示有要求寄過驗證信
+        if (null != member.getCidResetSendingTime()) {
+            // 若還在冷卻時間內，則不寄送驗證信
+            if (DateUtils.addSecond(
+                            member.getCidResetSendingTime(),
+                            config.getCidResetSendingCooldownSecond())
+                    .after(new Date())) {
+                resDTO.setStatus(MemberCidForgetResDTO.Status.COOLDOWN_TIME_ERROR.getCode());
+                return resDTO;
+            }
+        }
+        // cidResetSendingTime為空(表示為第一次送出重設密碼請求)，或是不為空但已超過冷卻時間
+        sendCidResetVerify(member);
+        member.setCidResetSendingTime(new Date());
+        memberRepository.save(member);
+        resDTO.setStatus(MemberCidForgetResDTO.Status.EMAIL_SEND_SUCCESS.getCode());
+        return resDTO;
+    }
+
+    /**
+     * 寄送會員信箱驗證信方法
      *
      * @param member 收件者memberEntity
      */
@@ -327,6 +365,37 @@ public class MemberServiceImpl implements MemberService {
                             @Override
                             public void onSentError(EmailException e) {
                                 log.info("寄送驗證信失敗，錯誤資訊：" + e.getMessage());
+                            }
+                        });
+    }
+
+    /**
+     * 寄送重設密碼驗證信方法
+     *
+     * @param member 收件者memberEntity
+     */
+    private void sendCidResetVerify(MemberEntity member) {
+        CidResetVerifySourceDTO cidResetVerifySource = new CidResetVerifySourceDTO();
+        cidResetVerifySource.setCidResetVerifyUUID(CommonUtils.generateUUID());
+        EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
+                .setTitle("My my dear friend 重設密碼驗證信")
+                .addContent(
+                        config.getWebURL()
+                                + "/member/cidReset?verifyCode="
+                                + jwtService.encodeCidResetVerify(cidResetVerifySource))
+                .setIsHtml(false)
+                .setSenderName("My my dear friend 管理員")
+                .addSends(member.getEmail())
+                .doSendOnThread(
+                        new EmailSentListener() {
+                            @Override
+                            public void onSentSuccess() {
+                                log.info("寄送重設密碼驗證信成功");
+                            }
+
+                            @Override
+                            public void onSentError(EmailException e) {
+                                log.info("寄送重設密碼驗證信失敗，錯誤資訊：" + e.getMessage());
                             }
                         });
     }

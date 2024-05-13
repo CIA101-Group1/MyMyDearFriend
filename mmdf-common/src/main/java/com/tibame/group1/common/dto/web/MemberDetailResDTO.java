@@ -6,7 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDetailResDTO {private String memberAccount;
+public class MemberDetailResDTO {
+    private String memberAccount;
 
     private String name;
 
