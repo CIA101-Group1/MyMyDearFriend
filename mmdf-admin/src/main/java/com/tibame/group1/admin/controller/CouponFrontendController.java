@@ -18,4 +18,9 @@ public class CouponFrontendController {
         return "coupon-create";
     }
 
+    @GetMapping("coupon/all")
+    public String couponAll() {
+        return "coupon-all";
+    }
+
 }

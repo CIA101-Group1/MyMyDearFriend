@@ -29,7 +29,7 @@ public class CouponBackendController {
         return res;
     }
 
-    @PostMapping("coupon/all")
+    @RequestMapping("coupon/all")
     public @ResponseBody ResDTO<CouponResDTO> couponAll(
             @RequestBody CouponAllReqDTO req,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
