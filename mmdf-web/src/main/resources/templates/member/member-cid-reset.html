@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信箱驗證</title>
+    <title>重設密碼驗證</title>
     <!--Filepond JS-->
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -21,7 +21,7 @@
     <th:block th:replace="~{/fragments/css}"/>
 </head>
 <body>
-<h2>信箱驗證</h2>
+<h2>重設密碼驗證</h2>
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
@@ -40,7 +40,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="account-details">
-                            <h3>信箱驗證</h3>
+                            <h3>重設密碼驗證</h3>
                             <div class="login">
                                 <div class="login_form_container">
                                     <div class="account_login_form">
@@ -75,41 +75,41 @@
     // 獲取特定參數的值
     let verifyCode = params.get("verifyCode");
     userData["verifyCode"] = verifyCode;
-    $(document).ready(function () {
-        $.ajax({
-            url: "/api/member/verify",
-            method: "post",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            contentType: "application/json",
-            data: JSON.stringify(userData),
-            success(response) {
-                if (apiResponseJSON(response)) {
-                    switch (response.data.status) {
-                        case "0":
-                            alert("驗證碼過期，請重試...");
-                            break;
-                        case "1":
-                            alert("驗證成功！");
-                            window.location.href = "/member/detail";
-                            break;
-                        case "-1":
-                            alert("驗證碼錯誤！");
-                            break;
-                        case "-2":
-                            alert("驗證碼失效，該信箱已驗證過！");
-                            break;
-                    }
-                } else {
-                    alert(response.message);
-                }
-            },
-            error(xhr, status, error) {
-                alert("伺服器連線失敗: " + error);
-            }
-        });
-    });
+    // $(document).ready(function () {
+    //     $.ajax({
+    //         url: "/api/member/verify",
+    //         method: "post",
+    //         headers: {
+    //             "authorization": localStorage.getItem("authorization")
+    //         },
+    //         contentType: "application/json",
+    //         data: JSON.stringify(userData),
+    //         success(response) {
+    //             if (apiResponseJSON(response)) {
+    //                 switch (response.data.status) {
+    //                     case "0":
+    //                         alert("驗證碼過期，請重試...");
+    //                         break;
+    //                     case "1":
+    //                         alert("驗證成功！");
+    //                         window.location.href = "/member/detail";
+    //                         break;
+    //                     case "-1":
+    //                         alert("驗證碼錯誤！");
+    //                         break;
+    //                     case "-2":
+    //                         alert("驗證碼失效，該信箱已驗證過！");
+    //                         break;
+    //                 }
+    //             } else {
+    //                 alert(response.message);
+    //             }
+    //         },
+    //         error(xhr, status, error) {
+    //             alert("伺服器連線失敗: " + error);
+    //         }
+    //     });
+    // });
 
 </script>
 </body>

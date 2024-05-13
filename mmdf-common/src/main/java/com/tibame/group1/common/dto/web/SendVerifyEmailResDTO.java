@@ -6,21 +6,20 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberCreateResDTO {
-    private String memberId;
-
-    private String authorization;
+public class SendVerifyEmailResDTO {
 
     private String status;
 
     @AllArgsConstructor
     @Getter
     public enum Status {
-        CREATE_SUCCESS("1", "新增成功"),
+        ALREADY_VERIFIED("0", "此信箱已完成驗證"),
 
-        IMAGE_FORMAT_ERROR("-1", "上傳檔案格式錯誤"),
+        SEND_SUCCESS("1", "寄送成功"),
 
-        EXIST_ACCOUNT("-2", "該帳號已存在");
+        MEMBER_NOTFOUND("-1", "查無此會員資料"),
+
+        COOLDOWN_TIME_ERROR("-2", "冷卻時間為30秒，請稍後再試");
 
         private final String code;
 

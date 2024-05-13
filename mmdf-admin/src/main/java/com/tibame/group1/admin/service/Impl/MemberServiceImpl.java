@@ -50,7 +50,6 @@ public class MemberServiceImpl implements MemberService {
             resDTO.setPhone(member.getPhone());
             resDTO.setEmail(member.getEmail());
             resDTO.setBirth(DateUtils.dateToSting(member.getBirth()));
-            resDTO.setTwPersonId(member.getTwPersonId());
             resDTO.setCity(member.getCity());
             resDTO.setAddress(member.getAddress());
             resDTO.setIsVerified(member.getIsVerified());
