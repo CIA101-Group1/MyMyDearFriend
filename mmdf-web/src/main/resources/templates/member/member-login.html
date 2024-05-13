@@ -1,20 +1,75 @@
 <!DOCTYPE html>
-<html lang="zh-tw">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>會員登入</title>
+    <!--Filepond JS-->
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet"/>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
 </head>
 <body>
-<h2>登入頁面</h2>
-<form id="loginForm">
-    <div id="errorMessage" style="color: red;"></div>
-    <label for="memberAccount">帳號:</label>
-    <input type="text" id="memberAccount" name="memberAccount"><br><br>
-    <label for="cid">密碼:</label>
-    <input type="password" id="cid" name="cid"><br><br>
-    <button type="submit">登入</button>
-</form>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <h3>登入</h3>
+                            <div class="login">
+                                <div class="login_form_container">
+                                    <div class="account_login_form">
+                                        <!-- 我的 Code -->
+                                        <form id="loginForm">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <label for="memberAccount">帳號:</label>
+                                            <input type="text" id="memberAccount" name="memberAccount"><br><br>
+                                            <label for="cid">密碼:</label>
+                                            <input type="password" id="cid" name="cid"><br><br>
+                                            <button type="submit">登入</button>
+                                            <button id="member-create" type="button">註冊</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end   -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 <script>
@@ -57,25 +112,29 @@
                             case "0":
                                 alert("登入成功！(提醒：信箱尚未驗證)");
                                 localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/test-index";
+                                window.location.href = "/";
                                 break;
                             case "1":
                                 alert("登入成功！");
                                 localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/test-index";
+                                window.location.href = "/";
                                 break;
                             case "-1":
                                 alert("帳號或密碼錯誤，請重試");
                                 break;
                         }
                     } else {
-                        alert("登入失敗");
+                        alert(response.message);
                     }
                 },
                 error(xhr, status, error) {
                     alert("伺服器連線失敗: " + error);
                 }
             });
+        });
+
+        $("#member-create").click(function () {
+            window.location.href = "/member/create";
         });
     });
 </script>

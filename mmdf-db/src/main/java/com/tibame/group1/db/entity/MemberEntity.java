@@ -16,7 +16,7 @@ import java.util.Date;
         name = "member",
         indexes = {
             @Index(name = "member_account_index", columnList = "member_account", unique = true),
-            @Index(name = "email_index", columnList = "email", unique = true),
+            @Index(name = "email_index", columnList = "email"),
             @Index(name = "is_verified_index", columnList = "is_verified"),
             @Index(name = "seller_status_index", columnList = "seller_status")
         })

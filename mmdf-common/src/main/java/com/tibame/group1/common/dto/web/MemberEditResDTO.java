@@ -6,21 +6,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberCreateResDTO {
-    private String memberId;
-
-    private String authorization;
+public class MemberEditResDTO {
 
     private String status;
 
     @AllArgsConstructor
     @Getter
     public enum Status {
-        CREATE_SUCCESS("1", "新增成功"),
+        EDIT_SUCCESS("1", "修改成功"),
 
-        IMAGE_FORMAT_ERROR("-1", "上傳檔案格式錯誤"),
+        EXIST_ACCOUNT("-1", "該帳號已存在"),
 
-        EXIST_ACCOUNT("-2", "該帳號已存在");
+        MEMBER_NOTFOUND("-2", "查無此會員資料");
 
         private final String code;
 
