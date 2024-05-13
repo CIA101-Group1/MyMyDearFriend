@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginSourceDTO {
+public class AdminLoginSourceDTO {
 
     public static final String ATTRIBUTE = "loginSource";
 
