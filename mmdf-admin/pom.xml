@@ -66,6 +66,11 @@
             <groupId>com.tibame.group1</groupId>
             <artifactId>mmdf-db</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

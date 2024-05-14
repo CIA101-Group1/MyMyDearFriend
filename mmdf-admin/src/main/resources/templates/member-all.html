@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>後台管理員查詢會員資料</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <title>查詢會員資料</title>
+    <th:block th:replace="~{/fragments/css}"/>
 </head>
-<body>
-<h2>會員資料列表</h2>
+<body class="sb-nav-fixed">
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
 
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">會員資料列表</h1>
+                <!-- 我的code -->
+            </div>
+        </main>
+    </div>
+</div>
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 </body>

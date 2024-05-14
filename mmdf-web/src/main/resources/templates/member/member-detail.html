@@ -1,71 +1,273 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>會員資料管理</title>
+    <title>Account Details</title>
+    <!--Filepond JS-->
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet"/>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
     <style>
-        #memberId, #birth, #twPersonId, #score {
+        #birth, #twPersonId, #score {
             display: inline-block;
+        }
+
+        img {
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        .dropdown select, .dropdown input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        .dropdown select:focus, .dropdown input:focus {
+            outline: none;
         }
     </style>
 </head>
 <body>
-<h2>會員資料</h2>
-<form id="memberForm">
-    <div id="errorMessage" style="color: red;"></div>
-    <div>
-        <label for="memberId">會員編號：</label>
-        <div id="memberId"></div>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <h3>會員資料</h3>
+                            <div class="login">
+                                <div class="login_form_container">
+                                    <div class="account_login_form">
+                                        <!-- 我的 Code -->
+                                        <form id="memberForm">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <div>
+                                                <label for="memberAccount">帳號：</label>
+                                                <input type="text" id="memberAccount" name="memberAccount">
+                                            </div>
+                                            <div>
+                                                <label for="name">姓名：</label>
+                                                <input type="text" id="name" name="name">
+                                            </div>
+                                            <div>
+                                                <label for="phone">電話：</label>
+                                                <input type="tel" id="phone" name="phone">
+                                            </div>
+                                            <div>
+                                                <label for="email">電子郵件：</label>
+                                                <input type="email" id="email" name="email">
+                                            </div>
+                                            <div>
+                                                <label for="birth">生日：</label>
+                                                <div id="birth"></div>
+                                            </div>
+                                            <div>
+                                                <label for="twPersonId">身份證字號：</label>
+                                                <div id="twPersonId"></div>
+                                            </div>
+                                            <div class="dropdown">
+                                                <label for="county_box">地址：</label>
+                                                <select name="city" id="county_box">
+                                                    <option value="">選擇縣市</option>
+                                                </select>
+
+                                                <label for="district_box"></label>
+                                                <select name="district" id="district_box">
+                                                    <option value="">選擇鄉鎮市區</option>
+                                                </select>
+
+                                                <label for="address"></label>
+                                                <input type="text" id="address" name="name"
+                                                       placeholder="請接續填寫剩餘地址資訊">
+                                            </div>
+                                            <div>
+                                                <label for="score">我的評分：</label>
+                                                <div id="score"></div>
+                                            </div>
+
+                                            <!-- 顯示大頭照和修改按鈕 -->
+                                            <div id="profile-image-container">
+                                                <!-- 已存在的大頭照 -->
+                                                <label for="profile-image">會員大頭照：</label>
+                                                <img id="profile-image" src="" alt="會員大頭照">
+                                                <!-- 修改按鈕 -->
+                                                <button type="button" id="modify-button">修改</button>
+                                                <!-- 移除按鈕 -->
+                                                <button type="button" id="remove-button" style="display: none;">移除
+                                                </button>
+                                            </div>
+
+                                            <!-- 上傳檔案的區塊 -->
+                                            <div id="upload-section" style="display: none;">
+                                                <label for="filepond">更新大頭照：</label>
+                                                <input
+                                                        id="filepond"
+                                                        type="file"
+                                                        class="filepond"
+                                                        name="upFiles"
+                                                        data-max-file-size="3MB"
+                                                        data-max-files="5"
+                                                />
+                                            </div>
+                                            <div>
+                                                <button type="button" id="saveBtn">儲存</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="memberAccount">帳號：</label>
-        <input type="text" id="memberAccount" name="memberAccount">
-    </div>
-    <div>
-        <label for="name">姓名：</label>
-        <input type="text" id="name" name="name">
-    </div>
-    <div>
-        <label for="phone">電話：</label>
-        <input type="tel" id="phone" name="phone">
-    </div>
-    <div>
-        <label for="email">電子郵件：</label>
-        <input type="email" id="email" name="email">
-    </div>
-    <div>
-        <label for="birth">生日：</label>
-        <div id="birth"></div>
-    </div>
-    <div>
-        <label for="twPersonId">身份證字號：</label>
-        <div id="twPersonId"></div>
-    </div>
-    <div>
-        <label for="city">縣市：</label>
-        <input type="text" id="city" name="city">
-    </div>
-    <div>
-        <label for="address">地址：</label>
-        <input type="text" id="address" name="address">
-    </div>
-    <div>
-        <label for="score">我的評分：</label>
-        <div id="score"></div>
-    </div>
-    <div>
-        <button type="button" id="saveBtn">儲存</button>
-    </div>
-</form>
+</section>
+<!-- main end   -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
+<script src="/js/address-of-tw.js"></script>
 <script>
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    let inputElement = document.querySelector("#filepond");
+    let pond = FilePond.create(inputElement);
+    pond.setOptions({
+        required: false,
+        storeAsFile: true,
+        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br>',
+        itemInsertLocation: "after",
+        imagePreviewHeight: "150px",
+        imagePreviewTransparencyIndicator: "grid",
+    });
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/member/detail",
+            method: "get",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                if (apiResponseJSON(response)) {
+                    switch (response.data.status) {
+                        case "-1":
+                            alert("查無此會員資料");
+                            break;
+                        case "1":
+                            $("#memberAccount").val(response.data.memberAccount);
+                            $("#name").val(response.data.name);
+                            $("#phone").val(response.data.phone);
+                            $("#email").val(response.data.email);
+                            $("#birth").text(response.data.birth);
+                            $("#twPersonId").text(response.data.twPersonId);
+                            fillAddress(response.data.address);
+
+                            let scoreNumber = response.data.scoreNumber;
+                            let scoreSum = response.data.scoreSum;
+                            if (scoreNumber !== null) {
+                                let number = parseInt(scoreNumber);
+                                let sum = parseInt(scoreSum);
+                                if (number !== 0) {
+                                    let score = sum / number;
+                                    $("#score").text(score);
+                                }
+                            } else {
+                                $("#score").text("無，尚未啟用賣家資格");
+                            }
+
+                            let base64Image = response.data.imageBase64;
+                            $("#profile-image").attr("src", "data:image/jpeg;base64," + base64Image);
+
+                            if (response.data.isVerified) {
+                                $("#email").after('<div class="verified"> (信箱已驗證)</div>');
+                            } else {
+                                $("#email").after('<button type="button" id="verifyBtn" onclick="sendVerifyEmail()"> 尚未驗證，點我發送驗證信</button>');
+                                $("#verifyBtn").after('<span id="countdownTimer"></span>');
+                                $("#countdownTimer").after('<span id="verifyMessage"></span>')
+                            }
+                            break;
+                    }
+                } else {
+                    alert(response.message);
+                }
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+
+        // 當修改按鈕被點擊時
+        $("#modify-button").click(function () {
+            // 隱藏修改按鈕
+            $(this).hide();
+            // 顯示上傳檔案的區塊
+            $("#upload-section").show();
+            // 顯示移除按鈕
+            $("#remove-button").show();
+        });
+
+        // 當選擇新的圖片後
+        $("#filepond").change(function () {
+            let file;
+            if (pond.getFile() !== null) {
+                // 獲取所選檔案
+                file = pond.getFile().file;
+                // 讀取圖片檔案
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    // 更新已存在大頭照的 src 屬性，顯示新選擇的圖片
+                    $("#profile-image").attr("src", e.target.result);
+                };
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // 當移除按鈕被點擊時
+        $("#remove-button").click(function () {
+            // 將已存在大頭照的 src 屬性設置為空，移除大頭照
+            $("#profile-image").attr("src", "");
+            // 隱藏移除按鈕
+            $(this).hide();
+        });
+    });
+
+    // 點擊儲存按鈕，向後端發送修改後的資料
     let userData = {};
     let errorMessage = "";
 
-    function validateForm() {
-        userData = {};
+    $("#saveBtn").click(function () {
         errorMessage = "";
         let memberAccount = $("#memberAccount").val().trim();
         if (memberAccount === "" || !/^[A-Za-z0-9_]{2,20}$/.test(memberAccount)) {
@@ -87,14 +289,46 @@
             errorMessage += "<li>請填寫正確的電子郵件格式</li>";
         }
 
-        let city = $("#city").val().trim();
-        if (city === "") {
-            errorMessage += "<li>請填寫縣市</li>";
-        }
-
+        // 獲取縣市和鄉鎮市區的值
+        let county = $("#county_box").val();
+        let district = $("#district_box").val();
         let address = $("#address").val().trim();
+        // 檢查是否選擇了縣市和鄉鎮市區
+        if (county === "" || district === "") {
+            errorMessage += "<li>請選擇縣市和鄉鎮市區</li>";
+        }
         if (address === "") {
             errorMessage += "<li>請填寫地址</li>";
+        }
+        let fullAddress = county + "_" + district + "_" + address;
+
+        if (pond.getFile() !== null) { // 有圖片
+            let file = pond.getFile().file;
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let imageBase64 = e.target.result;
+                userData = {
+                    memberAccount: memberAccount,
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    city: county,
+                    address: fullAddress,
+                    imageBase64: imageBase64
+                };
+                saveUserData();
+            };
+            reader.readAsDataURL(file);
+        } else { // 沒有圖片
+            userData = {
+                memberAccount: memberAccount,
+                name: name,
+                phone: phone,
+                email: email,
+                city: county,
+                address: fullAddress
+            };
+            saveUserData();
         }
 
         // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
@@ -102,67 +336,9 @@
             document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
             return false;
         }
+        $("#errorMessage").text("");
 
-        // 若所有檢查通過，設置好回傳的物件並回傳 true
-        userData = {
-            memberAccount: memberAccount,
-            name: name,
-            phone: phone,
-            email: email,
-            city: city,
-            address: address
-        };
-        return true;
-    }
-
-    // 頁面載入完成，向後端請求會員資料並填入表單
-    $.ajax({
-        url: "/api/member/detail",
-        method: "get",
-        headers: {
-            "authorization": localStorage.getItem("authorization")
-        },
-        success(response) {
-            if (apiResponseJSON(response)) {
-                $("#memberId").text(response.data.memberId);
-                $("#memberAccount").val(response.data.memberAccount);
-                $("#name").val(response.data.name);
-                $("#phone").val(response.data.phone);
-                $("#email").val(response.data.email);
-                $("#birth").text(response.data.birth);
-                $("#twPersonId").text(response.data.twPersonId);
-                $("#city").val(response.data.city);
-                $("#address").val(response.data.address);
-
-                let scoreNumber = response.data.scoreNumber;
-                let scoreSum = response.data.scoreSum;
-                if (scoreNumber !== null) {
-                    let number = parseInt(scoreNumber);
-                    let sum = parseInt(scoreSum);
-                    if (number !== 0) {
-                        let score = sum / number;
-                        $("#score").text(score);
-                    }
-                } else {
-                    $("#score").text("無");
-                }
-
-                if (response.data.isVerified) {
-                    $("#email").after('<span class="verified"> (已驗證)</span>');
-                } else {
-                    $("#email").after('<button type="button" onclick="sendVerifyEmail()"> 尚未驗證，點我發送驗證信</button>');
-                }
-            }
-        },
-        error(xhr, status, error) {
-            alert("伺服器連線失敗: " + error);
-        }
-    });
-
-    // 點擊儲存按鈕，向後端發送修改後的資料
-    $("#saveBtn").click(function () {
-        if (validateForm()) {
-            $("#errorMessage").text("");
+        function saveUserData() {
             $.ajax({
                 url: "/api/member/edit",
                 method: "post",
@@ -173,8 +349,20 @@
                 data: JSON.stringify(userData),
                 success(response) {
                     if (apiResponseJSON(response)) {
-                        alert("修改成功");
-                        location.reload();
+                        switch (response.data.status) {
+                            case "1":
+                                alert("修改成功");
+                                location.reload();
+                                break;
+                            case "-1":
+                                alert("該帳號已存在，請重試");
+                                break;
+                            case "-2":
+                                alert("查無此會員資料");
+                                break;
+                        }
+                    } else {
+                        alert(response.message);
                     }
                 },
                 error(xhr, status, error) {
@@ -191,17 +379,81 @@
             headers: {
                 "authorization": localStorage.getItem("authorization")
             },
+            beforeSend() {
+                // 在發送請求前禁用按鈕
+                $("#verifyBtn").prop("disabled", true);
+                // 顯示提示訊息
+                $("#verifyMessage").text(" 請至信箱點擊驗證連結").css("display", "inline-block").show();
+                $("#countdownTimer").show();
+                startCountdown(30);
+            },
             success(response) {
                 if (apiResponseJSON(response)) {
-                    alert("發送成功");
+                    switch (response.data.status) {
+                        case "0":
+                            alert("此信箱已完成驗證");
+                            break;
+                        case "1":
+                            alert("發送成功，完成驗證後請重新整理頁面");
+                            break;
+                        case "-1":
+                            alert("查無此會員資料");
+                            break;
+                        case "-2":
+                            alert("冷卻時間為30秒，請稍後再試");
+                            break;
+                    }
                 } else {
-                    console.log(response);
+                    alert(response);
                 }
             },
             error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
             }
-        })
+        });
+
     }
+
+    function startCountdown(durationInSeconds) {
+        let timerElement = $("#countdownTimer");
+        let endTime = Date.now() + durationInSeconds * 1000;
+
+        function updateTimer() {
+            let remainingTime = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+            let seconds = remainingTime % 60;
+
+            timerElement.text("冷卻時間：" + seconds + " 秒");
+
+            if (remainingTime <= 0) {
+                clearInterval(timerInterval);
+                $("#countdownTimer").hide();
+                $("#verifyMessage").hide();
+                // 冷卻時間結束後重新啟用按鈕
+                $("#verifyBtn").prop("disabled", false);
+            }
+        }
+
+        updateTimer();
+        let timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function fillAddress(addressString) {
+        // 解析完整地址字串
+        let splitAddress = addressString.split("_");
+        // 獲取縣市、鄉鎮市區和地址
+        let county = splitAddress[0];
+        let district = splitAddress[1];
+        let address = splitAddress[2];
+
+        // 將縣市和鄉鎮市區選擇到下拉選單中
+        $("#county_box").val(county);
+        populateDistricts(county);
+        $("#district_box").val(district);
+
+        // 將地址填入後面的輸入框中
+        $("#address").val(address);
+    }
+
 </script>
 </body>
 </html>

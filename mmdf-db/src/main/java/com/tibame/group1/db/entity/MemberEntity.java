@@ -67,10 +67,10 @@ public class MemberEntity {
     private Date joinTime;
 
     @Column(name = "wallet_amount")
-    private Integer walletAmount = 0;
+    private Integer walletAmount;
 
     @Column(name = "wallet_available_amount")
-    private Integer walletAvailableAmount = 0;
+    private Integer walletAvailableAmount;
 
     @Column(name = "wallet_cid", nullable = false, length = 20)
     private String walletCid;
@@ -92,4 +92,10 @@ public class MemberEntity {
 
     @Column(name = "image", columnDefinition = "mediumblob")
     private byte[] image;
+
+    @Column(name = "cid_reset_sending_time")
+    private Date cidResetSendingTime;
+
+    @Column(name = "cid_reset_verify_uuid")
+    private String cidResetVerifyUUID;
 }

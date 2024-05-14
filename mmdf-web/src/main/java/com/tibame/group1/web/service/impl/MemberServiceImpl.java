@@ -2,7 +2,6 @@ package com.tibame.group1.web.service.impl;
 
 import com.tibame.group1.common.dto.web.*;
 import com.tibame.group1.common.exception.AuthorizationException;
-import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;
 import com.tibame.group1.common.exception.EmailException;
 import com.tibame.group1.common.listener.EmailSentListener;
@@ -10,6 +9,7 @@ import com.tibame.group1.common.utils.*;
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
+import com.tibame.group1.web.dto.CidResetVerifySourceDTO;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
@@ -44,8 +44,13 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberCreateResDTO memberCreate(MemberCreateReqDTO req)
-            throws DateException, IOException, CheckRequestErrorException {
+            throws DateException, IOException {
+        MemberCreateResDTO resDTO = new MemberCreateResDTO();
         MemberEntity member = new MemberEntity();
+        if (null != memberRepository.findByMemberAccount(req.getMemberAccount())) {
+            resDTO.setStatus(MemberCreateResDTO.Status.EXIST_ACCOUNT.getCode());
+            return resDTO;
+        }
         member.setMemberAccount(req.getMemberAccount());
         member.setCid(CommonUtils.encryptToMD5(req.getCid()));
         member.setName(req.getName());
@@ -59,17 +64,20 @@ public class MemberServiceImpl implements MemberService {
         member.setJoinTime(new Date());
         member.setWalletAmount(0);
         member.setWalletAvailableAmount(0);
-        member.setWalletCid(req.getWalletCid());
+        member.setWalletCid(CommonUtils.encryptToMD5(req.getWalletCid()));
         member.setWalletQuestion(req.getWalletQuestion());
         member.setWalletAnswer(req.getWalletAnswer());
         member.setSellerStatus(false);
-        member.setImage(
-                StringUtils.isEmpty(req.getImageBase64())
-                        ? null
-                        : ConvertUtils.base64ToBytes(req.getImageBase64().split(",")[1]));
+        if (!StringUtils.isEmpty(req.getImageBase64())) {
+            if (!FileUtils.ImageFormatChecker(req.getImageBase64().split(",")[1])) {
+                resDTO.setStatus(MemberCreateResDTO.Status.IMAGE_FORMAT_ERROR.getCode());
+                return resDTO;
+            } else {
+                member.setImage(ConvertUtils.base64ToBytes(req.getImageBase64().split(",")[1]));
+            }
+        }
         member = memberRepository.save(member);
-        MemberCreateResDTO resDTO = new MemberCreateResDTO();
-        resDTO.setMemberId(member.getMemberId());
+        resDTO.setMemberId(String.valueOf(member.getMemberId()));
         LoginSourceDTO loginSource = new LoginSourceDTO();
         loginSource.setMemberId(member.getMemberId());
         loginSource.setName(member.getName());
@@ -77,6 +85,7 @@ public class MemberServiceImpl implements MemberService {
         loginSource.setIsVerified(member.getIsVerified());
         sendVerifyEmail(loginSource);
         resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
+        resDTO.setStatus(MemberCreateResDTO.Status.CREATE_SUCCESS.getCode());
         return resDTO;
     }
 
@@ -87,14 +96,13 @@ public class MemberServiceImpl implements MemberService {
      * @return 該筆會員資料
      */
     @Override
-    public MemberDetailResDTO memberDetail(LoginSourceDTO loginSource)
-            throws CheckRequestErrorException {
+    public MemberDetailResDTO memberDetail(LoginSourceDTO loginSource) {
         MemberEntity member = memberRepository.findById(loginSource.getMemberId()).orElse(null);
-        if (null == member) {
-            throw new CheckRequestErrorException("查無此會員資料");
-        }
         MemberDetailResDTO resDTO = new MemberDetailResDTO();
-        resDTO.setMemberId(String.valueOf(member.getMemberId()));
+        if (null == member) {
+            resDTO.setStatus(MemberDetailResDTO.Status.MEMBER_NOTFOUND.getCode());
+            return resDTO;
+        }
         resDTO.setMemberAccount(member.getMemberAccount());
         resDTO.setName(member.getName());
         resDTO.setPhone(member.getPhone());
@@ -105,10 +113,11 @@ public class MemberServiceImpl implements MemberService {
         resDTO.setAddress(member.getAddress());
         resDTO.setIsVerified(member.getIsVerified());
         resDTO.setSellerStatus(member.getSellerStatus());
-        resDTO.setScoreNumber(String.valueOf(member.getScoreNumber()));
-        resDTO.setScoreSum(String.valueOf(member.getScoreSum()));
+        resDTO.setScoreNumber(member.getScoreNumber());
+        resDTO.setScoreSum(member.getScoreSum());
         resDTO.setImageBase64(
                 null == member.getImage() ? null : ConvertUtils.bytesToBase64(member.getImage()));
+        resDTO.setStatus(MemberDetailResDTO.Status.QUERY_SUCCESS.getCode());
         return resDTO;
     }
 
@@ -119,13 +128,19 @@ public class MemberServiceImpl implements MemberService {
      * @param loginSource 登入憑證
      */
     @Override
-    public void memberEdit(MemberEditReqDTO req, LoginSourceDTO loginSource)
-            throws CheckRequestErrorException {
+    public MemberEditResDTO memberEdit(MemberEditReqDTO req, LoginSourceDTO loginSource) {
+        MemberEditResDTO resDTO = new MemberEditResDTO();
         MemberEntity member = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         if (null == member) {
-            throw new CheckRequestErrorException("查無此會員資料");
+            resDTO.setStatus(MemberEditResDTO.Status.MEMBER_NOTFOUND.getCode());
+            return resDTO;
         }
         if (null != req.getMemberAccount()) {
+            MemberEntity member2 = memberRepository.findByMemberAccount(req.getMemberAccount());
+            if (null != member2 && !member2.getMemberId().equals(member.getMemberId())) {
+                resDTO.setStatus(MemberEditResDTO.Status.EXIST_ACCOUNT.getCode());
+                return resDTO;
+            }
             member.setMemberAccount(req.getMemberAccount());
         }
         if (null != req.getName()) {
@@ -150,9 +165,13 @@ public class MemberServiceImpl implements MemberService {
             member.setImage(
                     StringUtils.isEmpty(req.getImageBase64())
                             ? null
-                            : ConvertUtils.base64ToBytes(req.getImageBase64()));
+                            : ConvertUtils.base64ToBytes(req.getImageBase64().split(",")[1]));
+        } else {
+            member.setImage(null);
         }
         memberRepository.save(member);
+        resDTO.setStatus(MemberEditResDTO.Status.EDIT_SUCCESS.getCode());
+        return resDTO;
     }
 
     /**
@@ -244,41 +263,83 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 系統寄送驗證信
+     * 系統寄送會員信箱驗證信
      *
      * @param loginSource 登入憑證
+     * @return 寄送結果狀態
      */
     @Override
-    public void sendVerifyEmail(LoginSourceDTO loginSource) throws CheckRequestErrorException {
+    public SendVerifyEmailResDTO sendVerifyEmail(LoginSourceDTO loginSource) {
+        SendVerifyEmailResDTO resDTO = new SendVerifyEmailResDTO();
         // 從loginSource取出memberId
         MemberEntity member = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         // 取不出來則為null，表示找不到對應的會員
         if (null == member) {
-            throw new CheckRequestErrorException("查無此會員資料");
+            resDTO.setStatus(SendVerifyEmailResDTO.Status.MEMBER_NOTFOUND.getCode());
+            return resDTO;
         }
         // 取出後檢查其驗證狀態，若為true表示已驗證，則不寄送驗證信
         if (loginSource.getIsVerified()) {
-            throw new CheckRequestErrorException("此信箱已完成驗證");
+            resDTO.setStatus(SendVerifyEmailResDTO.Status.ALREADY_VERIFIED.getCode());
+            return resDTO;
         }
         // 確定需要驗證。
         // 檢查上一次送出驗證請求的時間，若不為空表示有要求寄過驗證信
         if (null != member.getVerifySendingTime()) {
             // 若還在冷卻時間內，則不寄送驗證信
             if (DateUtils.addSecond(
-                            member.getVerifySendingTime(), config.getEmailSendingCooldownSecond())
+                            member.getVerifySendingTime(),
+                            config.getEmailVerifySendingCooldownSecond())
                     .after(new Date())) {
-                throw new CheckRequestErrorException(
-                        "冷卻時間為" + config.getEmailSendingCooldownSecond() + "秒，請稍後再試");
+                resDTO.setStatus(SendVerifyEmailResDTO.Status.COOLDOWN_TIME_ERROR.getCode());
+                return resDTO;
             }
         }
         // verifySendingTime 為空(表示為第一次送出驗證信箱請求)，或是不為空但已超過冷卻時間
         sendVerificationEmail(member);
         member.setVerifySendingTime(new Date());
         memberRepository.save(member);
+        resDTO.setStatus(SendVerifyEmailResDTO.Status.SEND_SUCCESS.getCode());
+        return resDTO;
     }
 
     /**
-     * 寄送驗證信方法
+     * 系統寄送重設密碼驗證信
+     *
+     * @param req 註冊信箱
+     * @return 寄送狀態
+     */
+    @Override
+    public MemberCidForgetResDTO memberCidForget(MemberCidForgetReqDTO req) {
+        MemberCidForgetResDTO resDTO = new MemberCidForgetResDTO();
+        // 先檢查所填email是否是某一筆會員的資料
+        if (!memberRepository.existsByEmail(req.getEmail())) { // 不是會員
+            resDTO.setStatus(MemberCidForgetResDTO.Status.EMAIL_NOTFOUND.getCode());
+            return resDTO;
+        }
+        // 是會員
+        MemberEntity member = memberRepository.findByEmail(req.getEmail());
+        // 檢查上一次送出重設密碼請求的時間，若不為空表示有要求寄過驗證信
+        if (null != member.getCidResetSendingTime()) {
+            // 若還在冷卻時間內，則不寄送驗證信
+            if (DateUtils.addSecond(
+                            member.getCidResetSendingTime(),
+                            config.getCidResetSendingCooldownSecond())
+                    .after(new Date())) {
+                resDTO.setStatus(MemberCidForgetResDTO.Status.COOLDOWN_TIME_ERROR.getCode());
+                return resDTO;
+            }
+        }
+        // cidResetSendingTime為空(表示為第一次送出重設密碼請求)，或是不為空但已超過冷卻時間
+        sendCidResetVerify(member);
+        member.setCidResetSendingTime(new Date());
+        memberRepository.save(member);
+        resDTO.setStatus(MemberCidForgetResDTO.Status.EMAIL_SEND_SUCCESS.getCode());
+        return resDTO;
+    }
+
+    /**
+     * 寄送會員信箱驗證信方法
      *
      * @param member 收件者memberEntity
      */
@@ -304,6 +365,37 @@ public class MemberServiceImpl implements MemberService {
                             @Override
                             public void onSentError(EmailException e) {
                                 log.info("寄送驗證信失敗，錯誤資訊：" + e.getMessage());
+                            }
+                        });
+    }
+
+    /**
+     * 寄送重設密碼驗證信方法
+     *
+     * @param member 收件者memberEntity
+     */
+    private void sendCidResetVerify(MemberEntity member) {
+        CidResetVerifySourceDTO cidResetVerifySource = new CidResetVerifySourceDTO();
+        cidResetVerifySource.setCidResetVerifyUUID(CommonUtils.generateUUID());
+        EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
+                .setTitle("My my dear friend 重設密碼驗證信")
+                .addContent(
+                        config.getWebURL()
+                                + "/member/cidReset?verifyCode="
+                                + jwtService.encodeCidResetVerify(cidResetVerifySource))
+                .setIsHtml(false)
+                .setSenderName("My my dear friend 管理員")
+                .addSends(member.getEmail())
+                .doSendOnThread(
+                        new EmailSentListener() {
+                            @Override
+                            public void onSentSuccess() {
+                                log.info("寄送重設密碼驗證信成功");
+                            }
+
+                            @Override
+                            public void onSentError(EmailException e) {
+                                log.info("寄送重設密碼驗證信失敗，錯誤資訊：" + e.getMessage());
                             }
                         });
     }
