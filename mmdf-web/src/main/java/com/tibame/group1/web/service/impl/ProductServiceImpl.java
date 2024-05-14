@@ -3,7 +3,6 @@ package com.tibame.group1.web.service.impl;
 import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
-import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -251,6 +249,19 @@ public class ProductServiceImpl implements ProductService {
         //        return empRepository.findAll();
         List<ProductImgEntity> result = productImgRepository.findAll();
         return result;
+    }
+
+    @Override
+    public List<ProductEntity> queryGetAll(ProductQueryReqDTO productQueryReqDTO) {
+        // Query 第一、三種寫法 ProductRepository.java
+        return productRepository.findProductsByQuery(
+                productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
+                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
+        );
+        // Query 第二種寫法 ProductRepository.java
+//        return productRepository.findByNameLikeAndDescriptionLikeAndCategoryIdAndReviewStatusAndProductStatus(
+//                productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
+//                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
     }
 
 }

@@ -29,14 +29,9 @@ public class ProductFrontendController {
 //    public String productUpdate() {return "/product/product-update"; // 要導入的html
 //    }
 
-//    @GetMapping("product/compound")
-//    public String productCompound() {
-//        return "/product/product-compound"; // 要導入的html
-//    }
-
-//    @GetMapping("/product/update/{productId}")
-//    public String productUpdate(Model model) {
-//        return "/product/product-update";
+//    @GetMapping("product/query")
+//    public String queryGetAll() {
+//        return "/product/product-select"; // 要導入的html
 //    }
 
     @Autowired
