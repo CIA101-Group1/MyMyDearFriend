@@ -201,7 +201,7 @@
         var productId = window.location.pathname.split("/").pop();
         $.ajax({
             url: "/product/update/" + productId,
-            type: 'GET',
+            type: 'POST',
             headers: {
                 "authorization": localStorage.getItem("authorization")
             },

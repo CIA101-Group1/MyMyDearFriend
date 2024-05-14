@@ -24,6 +24,7 @@ public class ProductFrontendController {
 
     @GetMapping("product/select")
     public String productGetAll() {return "/product/product-select"; }
+    public String queryGetAll() {return "/product/product-select"; }
 
 //    @GetMapping("product/update")
 //    public String productUpdate() {return "/product/product-update"; // 要導入的html

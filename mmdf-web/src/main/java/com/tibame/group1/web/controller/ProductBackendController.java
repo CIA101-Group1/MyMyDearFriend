@@ -100,7 +100,7 @@ public class ProductBackendController {
 
     @GetMapping("product/query")
         public ResDTO<List<ProductEntity>> queryGetAll(
-                @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam(name = "categoryId", required = false) Integer categoryId,
+                @RequestParam(name = "name", required = false) String name, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "categoryId", required = false) Integer categoryId,
                 @RequestParam(name = "reviewStatus", required = false) Integer reviewStatus, @RequestParam(name = "productStatus", required = false) Integer productStatus){
         ResDTO<List<ProductEntity>> res = new ResDTO<>();
         var reqDTO = ProductQueryReqDTO.

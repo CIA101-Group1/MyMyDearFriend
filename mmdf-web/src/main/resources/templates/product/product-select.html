@@ -101,7 +101,7 @@
                             </div>
 
                             <div id="productStatus">
-                                <label><input type="radio" name="label" value="0" checked="checked"><span class="round button">未上架</span></label>
+                                <label><input type="radio" name="label" value="0"><span class="round button">未上架</span></label>
                                 <label><input type="radio" name="label" value="1"><span class="round button">上架</span></label>
                             </div>
 
@@ -234,46 +234,46 @@
         });
 
         /** update */
-        // $("#list").on("click", ".updateButton", function() {
-        //     var productId = $(this).data("productid"); // 获取按钮上的 productId
-        //     // 将 productId 作为参数拼接到修改页面的 URL 中，并进行页面跳转
-        //     window.location.href = "/product/update/" + productId;
-        //     return false; // 阻止默认行为
-        // });
-
         $("#list").on("click", ".updateButton", function() {
             var productId = $(this).data("productid"); // 获取按钮上的 productId
-
-            // 准备要发送的数据
-            var dataToSend = {
-                productId: productId, // 将 productId 添加到要发送的数据中
-                // 添加更多需要发送的数据
-                categoryId: categoryId,
-                name: name,
-                price: price,
-                quantity: quantity,
-                description: description,
-                image: image
-            };
-
-            // 发起 POST 请求
-            $.ajax({
-                url: "/product/update/" + productId, // 更新页面的 URL
-                type: "POST",
-                data: dataToSend, // 发送的数据
-                success: function(response) {
-                    // 请求成功处理
-                    console.log("数据发送成功" + response);
-                    // 可以根据需要进行其他操作
-                },
-                error: function(xhr, status, error) {
-                    // 请求失败处理
-                    console.error("数据发送失败: " + error);
-                }
-            });
-
+            // 将 productId 作为参数拼接到修改页面的 URL 中，并进行页面跳转
+            window.location.href = "/product/update/" + productId;
             return false; // 阻止默认行为
         });
+
+        // $("#list").on("click", ".updateButton", function() {
+        //     var productId = $(this).data("productid"); // 获取按钮上的 productId
+        //
+        //     // 准备要发送的数据
+        //     var dataToSend = {
+        //         productId: productId, // 将 productId 添加到要发送的数据中
+        //         // 添加更多需要发送的数据
+        //         categoryId: categoryId,
+        //         name: name,
+        //         price: price,
+        //         quantity: quantity,
+        //         description: description,
+        //         image: image
+        //     };
+        //
+        //     // 发起 POST 请求
+        //     $.ajax({
+        //         url: "/product/update/" + productId, // 更新页面的 URL
+        //         type: "POST",
+        //         data: dataToSend, // 发送的数据
+        //         success: function(response) {
+        //             // 请求成功处理
+        //             console.log("数据发送成功" + response);
+        //             // 可以根据需要进行其他操作
+        //         },
+        //         error: function(xhr, status, error) {
+        //             // 请求失败处理
+        //             console.error("数据发送失败: " + error);
+        //         }
+        //     });
+        //
+        //     return false; // 阻止默认行为
+        // });
 
         /** Category */
         // 加載商品分類選項
@@ -300,9 +300,11 @@
 
         /** 搜索 */
         // 隱藏搜索列
-        $('#search').on('click', function () {
-            $('#searchModal').modal('show');
-        });
+        // $('#searchModal').modal('hide');
+        //
+        // $('#search').on('click', function () {
+        //     $('#searchModal').modal('show');
+        // });
 
         // 點擊搜索按鈕時觸發搜索
         $('#searchButton').on('click', function () {
@@ -334,100 +336,11 @@
                         alert('搜索成功');
                         $('#searchModal').modal('hide');
 
-
-                        // $('#list').DataTable().clear().draw();
-                        //
-                        // // 遍歷產品列表並加入DataTable中
-                        // res.data.forEach(function(product) {
-                        //     $('#list').DataTable().row.add([
-                        //         product.productId,
-                        //         product.sellerId,
-                        //         product.productCategoryEntity.categoryId + '-[' + product.productCategoryEntity.categoryName + ']',
-                        //         product.name,
-                        //         product.description,
-                        //         product.price,
-                        //         product.quantity,
-                        //         '<img src="data:image/jpeg;base64,' + (product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '') + '" width="100px">',
-                        //         product.reviewStatus,
-                        //         product.productStatus,
-                        //         '<form method="post" action="/product/update/' + product.productId + '" style="margin-bottom: 0px;">' +
-                        //         '<input type="submit" class="updateButton" value="修改" data-productid="' + product.productId + '">' +
-                        //         '<input type="hidden" name="productId" value="' + product.productId + '">' +
-                        //         '</form>'
-                        //     ]).draw(false);
-                        // });
-
-
-                        // if (!$.fn.DataTable.isDataTable('#list')) {
-                        //     $('#list').DataTable({
-                        //         "columns": [
-                        //             {"data": "productId"},
-                        //             {"data": "sellerId"},
-                        //             {
-                        //                 "data": "productCategoryEntity",
-                        //                 "render": function (data, type, full, meta) {
-                        //                     return data.categoryId + '-[' + data.categoryName + ']';
-                        //                 }
-                        //             },
-                        //             {"data": "name"},
-                        //             {"data": "description"},
-                        //             {"data": "price"},
-                        //             {"data": "quantity"},
-                        //             {
-                        //                 "data": "productImgs[0].image",
-                        //                 "render": function (data, type, full, meta) {
-                        //                     str = '<img src="data:image/jpeg;base64,' + data + '" width="100px">';
-                        //                     return str;
-                        //                 }
-                        //             },
-                        //             {"data": "reviewStatus"},
-                        //             {"data": "productStatus"},
-                        //             {
-                        //                 "data": "productId",
-                        //                 "render": function (data, type, full, meta) {
-                        //                     return `<form method="post" action="/product/update/${data}" style="margin-bottom: 0px;">
-                        //         <input type="submit" class="updateButton" value="修改" data-productid="${data}">
-                        //         <input type="hidden" name="productId" value="${data}">
-                        //         </form>`;
-                        //                 }
-                        //             }
-                        //         ]
-                        //     });
-                        // }
-
-
-                        // 清空之前的搜索结果
-                        // $('#list').empty();
-
-                                                                      // function找得到資料
+                        $('#list tbody').empty();
+                                                             // function找得到資料
                         // 遍历产品列表并显示到页面上
                         res.data.forEach(function(product) {
-                            // 添加新的行到表格中
-                            // $('#list').append(
-                            //     console.log(product)
-
-                            // $('#list').DataTable().ajax.reload();
-
-                                // `
-                                //     <tr>
-                                //         <td>${product.productId}</td>
-                                //         <td>${product.sellerId}</td>
-                                //         <td>${product.productCategoryEntity.categoryId}-[${product.productCategoryEntity.categoryName}]</td>
-                                //         <td>${product.name}</td>
-                                //         <td>${product.description}</td>
-                                //         <td>${product.price}</td>
-                                //         <td>${product.quantity}</td>
-                                //         <td><img src="data:image/jpeg;base64,${product.productImgs[0].image}" width="100px"></td>
-                                //         <td>${product.reviewStatus}</td>
-                                //         <td>${product.productStatus}</td>
-                                //         <td>
-                                //             <form method="get" action="/product/update/${product.productId}" style="margin-bottom: 0px;">
-                                //                 <input type="submit" class="updateButton" value="修改" data-productid="${product.productId}">
-                                //                 <input type="hidden" name="productId" value="${product.productId}">
-                                //             </form>
-                                //         </td>
-                                //     </tr>
-                                // `
+                                console.log(product)
 
                             var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
 
@@ -454,8 +367,6 @@
                             // 將產品行添加到表格中
                             $('#list').append(html);
                             console.log(html)
-
-                        //     );
                         });
                     } else {
                         alert('搜索失败！' + res.message);
@@ -543,187 +454,6 @@
     //                     }
     //                 });
     //             });
-
-
-
-    // $('#searchButton').on('click', function () {
-    //     let formData = $('#searchForm').serialize();
-    //
-    //     $.ajax({
-    //         url: '/api/product/query',
-    //         type: 'GET',
-    //         data: formData,
-    //         success: function (res) {
-    //             if (res.code === "0") {
-    //                 alert('搜索成功');
-    //                 $('#searchModal').modal('hide');
-    //             } else {
-    //                 alert('搜索失败！' + res.message);
-    //                 console.log(res);
-    //             }
-    //         },
-    //         error: function (xhr, status, error) {
-    //             // Handle error
-    //             console.error(error);
-    //             alert('搜索失败');
-    //         }
-    //     });
-    // });
-    //
-    //     // 当点击发送数据按钮时发送数据
-    //     $("#sendDataButton").click(function() {
-    //         // 准备要发送的数据
-    //         var dataToSend = {
-    //             categoryId: 'categoryId',
-    //             name: 'name',
-    //             price: 'price',
-    //             quantity: 'quantity',
-    //             description: 'description',
-    //             image: 'image'
-    //             // 添加更多需要发送的数据
-    //         };
-    //
-    //         // 发起 POST 请求
-    //         $.ajax({
-    //             url: "/product/update/" + productId, // 更新页面的 URL
-    //             type: "POST",
-    //             data: dataToSend, // 发送的数据
-    //             success: function(response) {
-    //                 // 请求成功处理
-    //                 console.log("数据发送成功" + response);
-    //                 // 可以根据需要进行其他操作
-    //             },
-    //             error: function(xhr, status, error) {
-    //                 // 请求失败处理
-    //                 console.error("数据发送失败: " + error);
-    //             }
-    //         });
-    //
-    //         return false; // 阻止默认行为
-    //     });
-    // });
-
-
-    // });
-    // $(document).ready(function () {
-    //     if (!$.fn.DataTable.isDataTable('#list')) {
-    //         // 加載商品列表
-    //         $('#list').DataTable({
-    //             // DataTables 配置
-    //             "lengthMenu": [5, 10, 20, 50, 100],
-    //             "searching": true,
-    //             "paging": true,
-    //             "ordering": true,
-    //             "processing": true,
-    //             "language": {
-    //                 // DataTables 語言設置
-    //             },
-    //             "ajax": {
-    //                 "url": '/api/product/query', // 修改為搜索的 API 路徑
-    //                 "type": "GET",
-    //                 "data": function (d) {
-    //                     // 在此處添加要傳遞給後端的搜索條件
-    //                     d.name = $('#name').val();
-    //                     d.description = $('#description').val();
-    //                     d.categoryId = $('#categoryId').val();
-    //                     d.reviewStatus = $("input[name='reviewStatus']:checked").val();
-    //                     d.productStatus = $("input[name='productStatus']:checked").val();
-    //                 },
-    //                 "dataSrc": "data" // 指定返回的資料來源
-    //             }
-    //             // ,
-    //             // "columns": [
-    //             //     // DataTable 的列設置
-    //             // ]
-    //         });
-    //     }
-
-
-
-    // /** 搜索 */
-    // $('#searchForm').on('button', function () {
-    //     // 获取搜索条件
-    //     var name = $('#name').val();
-    //     var description = $('#description').val();
-    //     var categoryId = $('#categoryId').val();
-    //     var reviewStatus = $("input[name='reviewStatus']:checked").val();
-    //     var productStatus = $("input[name='productStatus']:checked").val();
-    //
-    //     // 发送 AJAX 请求获取数据
-    //     $.ajax({
-    //         url: '/api/product/query',
-    //         type: 'GET',
-    //         data: {
-    //             name: name,
-    //             description: description,
-    //             categoryId: categoryId,
-    //             reviewStatus: reviewStatus,
-    //             productStatus: productStatus
-    //         },
-    //         headers: {
-    //             "authorization": localStorage.getItem("authorization")
-    //         },
-    //         success: function (res) {
-    //             if (res.code === "0") {
-    //                 // 更新 DataTable 数据源并重新加载
-    //                 $('#list').DataTable().clear().rows.add(res.data).draw();
-    //
-    //                 // 隐藏搜索模态框
-    //                 $('#searchModal').modal('hide');
-    //             } else {
-    //                 alert('搜索失败！' + res.message);
-    //                 console.log(res);
-    //             }
-    //         },
-    //         error: function (xhr, status, error) {
-    //             console.error(error);
-    //             alert('搜索失败');
-    //         }
-    //     });
-    // });
-
-    // $('#searchForm').on('submit', function (event) {
-    //     event.preventDefault(); // 阻止表单默认提交行为
-    //
-    //     // 获取搜索条件
-    //     var name = $('#name').val();
-    //     var description = $('#description').val();
-    //     var categoryId = $('#categoryId').val();
-    //     var reviewStatus = $("input[name='reviewStatus']:checked").val();
-    //     var productStatus = $("input[name='label']:checked").val();
-    //
-    //     // 发送 AJAX 请求获取数据
-    //     $.ajax({
-    //         url: '/api/product/query',
-    //         type: 'GET',
-    //         data: {
-    //             name: name,
-    //             description: description,
-    //             categoryId: categoryId,
-    //             reviewStatus: reviewStatus,
-    //             productStatus: productStatus
-    //         },
-    //         headers: {
-    //             "authorization": localStorage.getItem("authorization")
-    //         },
-    //         success: function (res) {
-    //             if (res.code === "0") {
-    //                 // 更新 DataTable 数据源并重新加载
-    //                 dataTable.clear().rows.add(res.data).draw();
-    //
-    //                 // 隐藏搜索模态框
-    //                 $('#searchModal').modal('hide');
-    //             } else {
-    //                 alert('搜索失败！' + res.message);
-    //                 console.log(res);
-    //             }
-    //         },
-    //         error: function (xhr, status, error) {
-    //             console.error(error);
-    //             alert('搜索失败');
-    //         }
-    //     });
-
 
 
 </script>
