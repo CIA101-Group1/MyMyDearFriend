@@ -294,13 +294,22 @@
         let district = $("#district_box").val();
         let address = $("#address").val().trim();
         // 檢查是否選擇了縣市和鄉鎮市區
-        if (county === "" || district === "") {
-            errorMessage += "<li>請選擇縣市和鄉鎮市區</li>";
+        if (county === "" || county === "選擇縣市") {
+            errorMessage += "<li>請選擇縣市</li>";
+        }
+        if (district === "" || district === "選擇鄉鎮市區") {
+            errorMessage += "<li>請選擇鄉鎮市區</li>";
         }
         if (address === "") {
             errorMessage += "<li>請填寫地址</li>";
         }
         let fullAddress = county + "_" + district + "_" + address;
+
+        // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
+        if (errorMessage !== "") {
+            document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+            return false;
+        }
 
         if (pond.getFile() !== null) { // 有圖片
             let file = pond.getFile().file;
@@ -331,11 +340,6 @@
             saveUserData();
         }
 
-        // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
-        if (errorMessage !== "") {
-            document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
-            return false;
-        }
         $("#errorMessage").text("");
 
         function saveUserData() {
@@ -362,7 +366,7 @@
                                 break;
                         }
                     } else {
-                        alert(response.message);
+                        console.log(response.message);
                     }
                 },
                 error(xhr, status, error) {

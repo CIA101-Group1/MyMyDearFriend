@@ -82,4 +82,13 @@ public class MemberBackendController {
         res.setData(memberService.memberCidForget(req));
         return res;
     }
+
+    @PostMapping("member/cidReset")
+    @CacheEvict(allEntries = true)
+    public @ResponseBody ResDTO<MemberCidResetResDTO> memberCidReset(
+            @Valid @RequestBody MemberCidResetReqDTO req) throws IOException {
+        ResDTO<MemberCidResetResDTO> res = new ResDTO<>();
+        res.setData(memberService.memberCidReset(req));
+        return res;
+    }
 }

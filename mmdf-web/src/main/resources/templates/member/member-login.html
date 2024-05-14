@@ -43,15 +43,15 @@
                             <div class="login">
                                 <div class="login_form_container">
                                     <div class="account_login_form">
-                                        <!-- 我的 Code -->
-                                        <form id="loginForm">
+                                        <form id="login-form">
                                             <div id="errorMessage" style="color: red;"></div>
                                             <label for="memberAccount">帳號:</label>
                                             <input type="text" id="memberAccount" name="memberAccount"><br><br>
                                             <label for="cid">密碼:</label>
                                             <input type="password" id="cid" name="cid"><br><br>
                                             <button type="submit">登入</button>
-                                            <button id="member-create" type="button">註冊</button>
+                                            <button id="memberCreate" type="button">註冊</button>
+                                            <button id="memberCidForget" type="button">忘記密碼</button>
                                         </form>
                                     </div>
                                 </div>
@@ -76,14 +76,14 @@
     let userData = {};
     let errorMessage = "";
     $(document).ready(function () {
-        $('#loginForm').submit(function (e) {
-            e.preventDefault(); // 防止表單提交
+        $("#login-form").submit(function (e) {
+            e.preventDefault();
             errorMessage = "";
-            let memberAccount = $('#memberAccount').val();
+            let memberAccount = $("#memberAccount").val().trim();
             if (memberAccount === "") {
                 errorMessage += "<li>請輸入帳號</li>";
             }
-            let cid = $('#cid').val();
+            let cid = $("#cid").val().trim();
             if (cid === "") {
                 errorMessage += "<li>請輸入密碼</li>";
             }
@@ -124,7 +124,7 @@
                                 break;
                         }
                     } else {
-                        alert(response.message);
+                        console.log(response.message);
                     }
                 },
                 error(xhr, status, error) {
@@ -133,8 +133,12 @@
             });
         });
 
-        $("#member-create").click(function () {
+        $("#memberCreate").click(function () {
             window.location.href = "/member/create";
+        });
+
+        $("#memberCidForget").click(function () {
+            window.location.href = "/member/cidForget";
         });
     });
 </script>
