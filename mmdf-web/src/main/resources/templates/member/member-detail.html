@@ -398,24 +398,27 @@
                 startCountdown(30);
             },
             success(response) {
-                if (apiResponseJSON(response)) {
-                    switch (response.data.status) {
-                        case "0":
-                            alert("此信箱已完成驗證");
-                            break;
-                        case "1":
-                            alert("發送成功，完成驗證後請重新整理頁面");
-                            break;
-                        case "-1":
-                            alert("查無此會員資料");
-                            break;
-                        case "-2":
-                            alert("冷卻時間為30秒，請稍後再試");
-                            break;
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "0":
+                                alert("此信箱已完成驗證");
+                                break;
+                            case "1":
+                                alert("發送成功，完成驗證後請重新整理頁面");
+                                break;
+                            case "-1":
+                                alert("查無此會員資料");
+                                break;
+                            case "-2":
+                                alert("冷卻時間為30秒，請稍後再試");
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
                     }
-                } else {
-                    alert(response);
-                }
+                });
             },
             error(xhr, status, error) {
                 alert("伺服器連線失敗: " + error);
