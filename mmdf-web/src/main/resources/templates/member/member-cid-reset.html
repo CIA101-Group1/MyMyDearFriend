@@ -128,25 +128,28 @@
                 contentType: "application/json",
                 data: JSON.stringify(userData),
                 success(response) {
-                    if (apiResponseJSON(response)) {
-                        switch (response.data.status) {
-                            case "0":
-                                alert("驗證碼過期，請重新發送重設密碼請求");
-                                break;
-                            case "1":
-                                alert("重設密碼成功，請使用新密碼重新登入");
-                                window.location.href = "/member/login";
-                                break;
-                            case "-1":
-                                alert("二次設定新密碼不同，請重新確認");
-                                break;
-                            case "-2":
-                                alert("驗證碼錯誤");
-                                break;
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "0":
+                                    alert("驗證碼過期，請重新發送重設密碼請求");
+                                    break;
+                                case "1":
+                                    alert("重設密碼成功，請使用新密碼重新登入");
+                                    window.location.href = "/member/login";
+                                    break;
+                                case "-1":
+                                    alert("二次設定新密碼不同，請重新確認");
+                                    break;
+                                case "-2":
+                                    alert("驗證碼錯誤");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
                         }
-                    } else {
-                        console.log(response.message);
-                    }
+                    });
                 },
                 error(xhr, status, error) {
                     alert("伺服器連線失敗: " + error);
