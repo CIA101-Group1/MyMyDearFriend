@@ -107,7 +107,6 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<!--                        <button type="submit" class="btn btn-primary">搜索</button>-->
                         <button type="button" class="btn btn-primary" id="searchButton">搜索</button>
                     </div>
 
@@ -206,8 +205,8 @@
                     "data": "productId",
                     "render": function (data, type, full, meta) {
                         return `<form method="post" action="/product/update/${data}" style="margin-bottom: 0px;">
-                                <input type="submit" class="updateButton" value="修改" data-productid="${data}">
-                                <input type="hidden" name="productId" value="${data}">
+                                <input type="submit" class="updateButton" value="修改" data-productid="${data.productId}">
+                                <input type="hidden" name="productId" value="${data.productId}">
                                 </form>`;
                     }
                 }
@@ -234,12 +233,44 @@
         });
 
         /** update */
-        $("#list").on("click", ".updateButton", function() {
-            var productId = $(this).data("productid"); // 获取按钮上的 productId
-            // 将 productId 作为参数拼接到修改页面的 URL 中，并进行页面跳转
-            window.location.href = "/product/update/" + productId;
-            return false; // 阻止默认行为
+
+        $(document).on('click', '.updateButton', function(e) {
+            e.preventDefault(); // 防止默认表单提交行为
+            var productId = $(this).data('productid'); // 获取产品 ID
+
+            // 获取该行产品的其他数据
+            var rowData = {
+                productId: productId,
+                sellerId: $(this).closest('tr').find('td:eq(1)').text(),
+                categoryId: $(this).closest('tr').find('td:eq(2)').text(),
+                name: $(this).closest('tr').find('td:eq(3)').text(),
+                description: $(this).closest('tr').find('td:eq(4)').text(),
+                price: $(this).closest('tr').find('td:eq(5)').text(),
+                quantity: $(this).closest('tr').find('td:eq(6)').text(),
+                reviewStatus: $(this).closest('tr').find('td:eq(8)').text(),
+                productStatus: $(this).closest('tr').find('td:eq(9)').text()
+            };
+
+            var rowDataJSON = JSON.stringify(rowData); // 将数据转换为 JSON 字符串
+
+            // 在表单中添加一个隐藏的 input，将 JSON 字符串作为值存储在其中
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'rowData',
+                value: rowDataJSON
+            }).appendTo('form');
+
+            // 提交表单
+            $(this).closest('form').submit();
         });
+
+
+        // $("#list").on("click", ".updateButton", function() {
+        //     var productId = $(this).data("productid"); // 获取按钮上的 productId
+        //     // 将 productId 作为参数拼接到修改页面的 URL 中，并进行页面跳转
+        //     window.location.href = "/product/update/" + productId;
+        //     return false; // 阻止默认行为
+        // });
 
         // $("#list").on("click", ".updateButton", function() {
         //     var productId = $(this).data("productid"); // 获取按钮上的 productId

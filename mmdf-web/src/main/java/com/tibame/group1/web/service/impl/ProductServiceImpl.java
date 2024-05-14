@@ -99,45 +99,6 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
-//    @Override
-//    public List<ProductCompoundResDTO> findProductsByCompound(
-//            String productId, String sellerId, String categoryId, String name,
-//            String description, String price, String reviewStatus, String productStatus
-////            , ProductCategoryEntity productCategory, MemberEntity memberEntity
-//    ) {
-//        // 根據指定的條件查詢產品資料
-//        List<ProductEntity> products = productRepository.findByCompound(
-//                productId, sellerId, categoryId, name, description, price,
-//                reviewStatus, productStatus
-////                , productCategory, memberEntity
-//        );
-//
-//        // 將 Entity 轉換為 DTO
-//        return products.stream()
-//                .map(this::productCompoundDTO)
-//                .collect(Collectors.toList());
-//    }
-//
-//    private ProductCompoundResDTO productCompoundDTO(ProductEntity product) {
-//        ProductCompoundResDTO dto = new ProductCompoundResDTO();
-//        dto.setProductId(String.valueOf(product.getProductId()));
-//        dto.setSellerId(String.valueOf(product.getSellerId()));
-//        dto.setCategoryId(String.valueOf(product.getCategoryId()));
-//        dto.setName(product.getName());
-//        dto.setDescription(product.getDescription());
-//        dto.setPrice(String.valueOf(product.getPrice()));
-//        dto.setReviewStatus(String.valueOf(product.getReviewStatus()));
-//        dto.setProductStatus(String.valueOf(product.getProductStatus()));
-//
-//        ProductCategoryEntity productCategory = new ProductCategoryEntity();
-//        productCategory.setCategoryId(product.getCategoryId());
-//
-//        MemberEntity memberEntity = new MemberEntity();
-//        memberEntity.setMemberId(memberEntity.getMemberId());
-//
-//        return dto;
-//    }
-
     @Override
     public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
         ProductEntity product = new ProductEntity();
@@ -232,21 +193,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductEntity> getAll() {
-        //        return empRepository.findAll();
         List<ProductEntity> result = productRepository.findAll();
         return result;
     }
 
     @Override
     public List<ProductCategoryEntity> getAllCategory() {
-        //        return empRepository.findAll();
         List<ProductCategoryEntity> result = productCategoryRepository.findAll();
         return result;
     }
 
     @Override
     public List<ProductImgEntity> getAllProductImg() {
-        //        return empRepository.findAll();
         List<ProductImgEntity> result = productImgRepository.findAll();
         return result;
     }

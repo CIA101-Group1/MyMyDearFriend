@@ -37,7 +37,7 @@ public class ProductFrontendController {
 
     @Autowired
     private ProductService productService;
-    @GetMapping("/product/update/{productId}")
+    @PostMapping ("/product/update/{productId}")
     public String updateProductForm(@PathVariable("productId") String productId, Model model) {
         ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
         model.addAttribute("productEntity", productEntity);
