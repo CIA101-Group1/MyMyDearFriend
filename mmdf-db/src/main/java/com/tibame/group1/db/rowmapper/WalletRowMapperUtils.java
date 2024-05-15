@@ -1,4 +1,4 @@
-package com.tibame.group1.common.dto;
+package com.tibame.group1.db.rowmapper;
 
 
 import com.tibame.group1.db.entity.WalletHistoryEntity;
@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class WalletRowMapper implements RowMapper<WalletHistoryEntity> {
+public class WalletRowMapperUtils implements RowMapper<WalletHistoryEntity> {
 
     @Override
     public WalletHistoryEntity mapRow(ResultSet resultSet, int i) throws SQLException {

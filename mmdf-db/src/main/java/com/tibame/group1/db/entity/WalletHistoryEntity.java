@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @Getter
 @Setter
@@ -32,5 +31,6 @@ public class WalletHistoryEntity {
 
     @Column(name = "change_type", nullable = false)
     private Integer changeType;
-
+    
 }
+
