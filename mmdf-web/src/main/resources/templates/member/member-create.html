@@ -286,24 +286,26 @@
             contentType: "application/json",
             data: JSON.stringify(userData),
             success(response) {
-                if (apiResponseJSON(response)) {
-                    switch (response.data.status) {
-                        case "1":
-                            alert("註冊成功，請至信箱完成驗證");
-                            localStorage.setItem("authorization", response.data.authorization);
-                            window.location.href = "/";
-                            break;
-                        case "-1":
-                            alert("上傳檔案格式錯誤");
-                            break;
-                        case "-2":
-                            alert("該帳號已存在");
-                            break;
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "1":
+                                alert("註冊成功，請至信箱完成驗證");
+                                localStorage.setItem("authorization", response.data.authorization);
+                                window.location.href = "/";
+                                break;
+                            case "-1":
+                                alert("上傳檔案格式錯誤");
+                                break;
+                            case "-2":
+                                alert("該帳號已存在");
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
                     }
-                    response.message
-                } else {
-                    alert(response.message);
-                }
+                });
             },
             error(xhr, status, error) {
                 alert("伺服器連線失敗: " + error);

@@ -180,48 +180,51 @@
                 "authorization": localStorage.getItem("authorization")
             },
             success(response) {
-                if (apiResponseJSON(response)) {
-                    switch (response.data.status) {
-                        case "-1":
-                            alert("查無此會員資料");
-                            break;
-                        case "1":
-                            $("#memberAccount").val(response.data.memberAccount);
-                            $("#name").val(response.data.name);
-                            $("#phone").val(response.data.phone);
-                            $("#email").val(response.data.email);
-                            $("#birth").text(response.data.birth);
-                            $("#twPersonId").text(response.data.twPersonId);
-                            fillAddress(response.data.address);
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "-1":
+                                alert("查無此會員資料");
+                                break;
+                            case "1":
+                                $("#memberAccount").val(response.data.memberAccount);
+                                $("#name").val(response.data.name);
+                                $("#phone").val(response.data.phone);
+                                $("#email").val(response.data.email);
+                                $("#birth").text(response.data.birth);
+                                $("#twPersonId").text(response.data.twPersonId);
+                                fillAddress(response.data.address);
 
-                            let scoreNumber = response.data.scoreNumber;
-                            let scoreSum = response.data.scoreSum;
-                            if (scoreNumber !== null) {
-                                let number = parseInt(scoreNumber);
-                                let sum = parseInt(scoreSum);
-                                if (number !== 0) {
-                                    let score = sum / number;
-                                    $("#score").text(score);
+                                let scoreNumber = response.data.scoreNumber;
+                                let scoreSum = response.data.scoreSum;
+                                if (scoreNumber !== null) {
+                                    let number = parseInt(scoreNumber);
+                                    let sum = parseInt(scoreSum);
+                                    if (number !== 0) {
+                                        let score = sum / number;
+                                        $("#score").text(score);
+                                    }
+                                } else {
+                                    $("#score").text("無，尚未啟用賣家資格");
                                 }
-                            } else {
-                                $("#score").text("無，尚未啟用賣家資格");
-                            }
 
-                            let base64Image = response.data.imageBase64;
-                            $("#profile-image").attr("src", "data:image/jpeg;base64," + base64Image);
+                                let base64Image = response.data.imageBase64;
+                                $("#profile-image").attr("src", "data:image/jpeg;base64," + base64Image);
 
-                            if (response.data.isVerified) {
-                                $("#email").after('<div class="verified"> (信箱已驗證)</div>');
-                            } else {
-                                $("#email").after('<button type="button" id="verifyBtn" onclick="sendVerifyEmail()"> 尚未驗證，點我發送驗證信</button>');
-                                $("#verifyBtn").after('<span id="countdownTimer"></span>');
-                                $("#countdownTimer").after('<span id="verifyMessage"></span>')
-                            }
-                            break;
+                                if (response.data.isVerified) {
+                                    $("#email").after('<div class="verified"> (信箱已驗證)</div>');
+                                } else {
+                                    $("#email").after('<button type="button" id="verifyBtn" onclick="sendVerifyEmail()"> 尚未驗證，點我發送驗證信</button>');
+                                    $("#verifyBtn").after('<span id="countdownTimer"></span>');
+                                    $("#countdownTimer").after('<span id="verifyMessage"></span>')
+                                }
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
                     }
-                } else {
-                    alert(response.message);
-                }
+                });
             },
             error(xhr, status, error) {
                 alert("伺服器連線失敗: " + error);
@@ -294,13 +297,22 @@
         let district = $("#district_box").val();
         let address = $("#address").val().trim();
         // 檢查是否選擇了縣市和鄉鎮市區
-        if (county === "" || district === "") {
-            errorMessage += "<li>請選擇縣市和鄉鎮市區</li>";
+        if (county === "" || county === "選擇縣市") {
+            errorMessage += "<li>請選擇縣市</li>";
+        }
+        if (district === "" || district === "選擇鄉鎮市區") {
+            errorMessage += "<li>請選擇鄉鎮市區</li>";
         }
         if (address === "") {
             errorMessage += "<li>請填寫地址</li>";
         }
         let fullAddress = county + "_" + district + "_" + address;
+
+        // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
+        if (errorMessage !== "") {
+            document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+            return false;
+        }
 
         if (pond.getFile() !== null) { // 有圖片
             let file = pond.getFile().file;
@@ -331,11 +343,6 @@
             saveUserData();
         }
 
-        // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
-        if (errorMessage !== "") {
-            document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
-            return false;
-        }
         $("#errorMessage").text("");
 
         function saveUserData() {
@@ -348,22 +355,25 @@
                 contentType: "application/json",
                 data: JSON.stringify(userData),
                 success(response) {
-                    if (apiResponseJSON(response)) {
-                        switch (response.data.status) {
-                            case "1":
-                                alert("修改成功");
-                                location.reload();
-                                break;
-                            case "-1":
-                                alert("該帳號已存在，請重試");
-                                break;
-                            case "-2":
-                                alert("查無此會員資料");
-                                break;
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "1":
+                                    alert("修改成功");
+                                    location.reload();
+                                    break;
+                                case "-1":
+                                    alert("該帳號已存在，請重試");
+                                    break;
+                                case "-2":
+                                    alert("查無此會員資料");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
                         }
-                    } else {
-                        alert(response.message);
-                    }
+                    });
                 },
                 error(xhr, status, error) {
                     alert("伺服器連線失敗: " + error);
@@ -388,24 +398,27 @@
                 startCountdown(30);
             },
             success(response) {
-                if (apiResponseJSON(response)) {
-                    switch (response.data.status) {
-                        case "0":
-                            alert("此信箱已完成驗證");
-                            break;
-                        case "1":
-                            alert("發送成功，完成驗證後請重新整理頁面");
-                            break;
-                        case "-1":
-                            alert("查無此會員資料");
-                            break;
-                        case "-2":
-                            alert("冷卻時間為30秒，請稍後再試");
-                            break;
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "0":
+                                alert("此信箱已完成驗證");
+                                break;
+                            case "1":
+                                alert("發送成功，完成驗證後請重新整理頁面");
+                                break;
+                            case "-1":
+                                alert("查無此會員資料");
+                                break;
+                            case "-2":
+                                alert("冷卻時間為30秒，請稍後再試");
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
                     }
-                } else {
-                    alert(response);
-                }
+                });
             },
             error(xhr, status, error) {
                 alert("伺服器連線失敗: " + error);

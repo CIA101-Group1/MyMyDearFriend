@@ -23,4 +23,6 @@ public interface MemberService {
     SendVerifyEmailResDTO sendVerifyEmail(LoginSourceDTO loginSource);
 
     MemberCidForgetResDTO memberCidForget(MemberCidForgetReqDTO req);
+
+    MemberCidResetResDTO memberCidReset(MemberCidResetReqDTO req) throws IOException;
 }

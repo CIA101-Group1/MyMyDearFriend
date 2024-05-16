@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重設密碼驗證</title>
+    <title>重設密碼</title>
     <!--Filepond JS-->
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -19,9 +19,19 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .cid-forget-form form input {
+            border: 1px solid #ddd;
+            background: none;
+            height: 40px;
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 0 20px;
+            color: #222222;
+        }
+    </style>
 </head>
 <body>
-<h2>重設密碼驗證</h2>
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
@@ -39,14 +49,19 @@
                 <div class="col-sm-12 col-md-9 col-lg-9">
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
-                        <div class="tab-pane fade active" id="account-details">
-                            <h3>重設密碼驗證</h3>
-                            <div class="login">
-                                <div class="login_form_container">
-                                    <div class="account_login_form">
-
-                                        <!-- 我的 Code -->
-
+                        <div class="tab-pane fade active" id="cid-reset">
+                            <h3>重設密碼</h3>
+                            <div class="cid-reset">
+                                <div class="cid-reset-container">
+                                    <div class="cid-reset-form">
+                                        <form id="cid-reset-form">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <label for="new-cid">請輸入新密碼：</label>
+                                            <input type="password" id="new-cid" name="new-cid"><br>
+                                            <label for="new-cid-check">再次輸入新密碼：</label>
+                                            <input type="password" id="new-cid-check" name="new-cid-check"><br>
+                                            <button type="submit">重設密碼</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -68,49 +83,80 @@
 <script src="/js/api-response-utils.js"></script>
 <script>
     let userData = {};
-    // 獲取 URL 中的查詢字符串
-    let queryString = window.location.search;
-    // 將查詢字符串轉換為對象形式
-    let params = new URLSearchParams(queryString);
-    // 獲取特定參數的值
-    let verifyCode = params.get("verifyCode");
-    userData["verifyCode"] = verifyCode;
-    // $(document).ready(function () {
-    //     $.ajax({
-    //         url: "/api/member/verify",
-    //         method: "post",
-    //         headers: {
-    //             "authorization": localStorage.getItem("authorization")
-    //         },
-    //         contentType: "application/json",
-    //         data: JSON.stringify(userData),
-    //         success(response) {
-    //             if (apiResponseJSON(response)) {
-    //                 switch (response.data.status) {
-    //                     case "0":
-    //                         alert("驗證碼過期，請重試...");
-    //                         break;
-    //                     case "1":
-    //                         alert("驗證成功！");
-    //                         window.location.href = "/member/detail";
-    //                         break;
-    //                     case "-1":
-    //                         alert("驗證碼錯誤！");
-    //                         break;
-    //                     case "-2":
-    //                         alert("驗證碼失效，該信箱已驗證過！");
-    //                         break;
-    //                 }
-    //             } else {
-    //                 alert(response.message);
-    //             }
-    //         },
-    //         error(xhr, status, error) {
-    //             alert("伺服器連線失敗: " + error);
-    //         }
-    //     });
-    // });
+    let errorMessage = "";
 
+    $(document).ready(function () {
+        $("#cid-reset-form").submit(function (e) {
+            e.preventDefault();
+            errorMessage = "";
+            // 獲取 URL 中的查詢字符串
+            let queryString = window.location.search;
+            console.log(queryString);
+            // 將查詢字符串轉換為對象形式
+            let params = new URLSearchParams(queryString);
+            // 獲取特定參數的值
+            let verifyCode = params.get("verifyCode");
+
+
+            let newCid = $("#new-cid").val().trim();
+            let newCidCheck = $("#new-cid-check").val().trim();
+            if (newCid === "") {
+                errorMessage += "<li>請輸入新密碼</li>";
+            }
+            if (newCidCheck === "") {
+                errorMessage += "<li>請再次確認新密碼</li>";
+            }
+            if (newCid !== newCidCheck) {
+                errorMessage += "<li>請確認輸入的兩次新密碼相同</li>";
+            }
+            if (errorMessage !== "") {
+                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+                return;
+            }
+
+            userData = {
+                "verifyCode": verifyCode,
+                "newCid": newCid,
+                "newCidCheck": newCidCheck
+            }
+
+            $("#errorMessage").text("");
+
+            $.ajax({
+                url: "/api/member/cidReset",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "0":
+                                    alert("驗證碼過期，請重新發送重設密碼請求");
+                                    break;
+                                case "1":
+                                    alert("重設密碼成功，請使用新密碼重新登入");
+                                    window.location.href = "/member/login";
+                                    break;
+                                case "-1":
+                                    alert("二次設定新密碼不同，請重新確認");
+                                    break;
+                                case "-2":
+                                    alert("驗證碼錯誤");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
