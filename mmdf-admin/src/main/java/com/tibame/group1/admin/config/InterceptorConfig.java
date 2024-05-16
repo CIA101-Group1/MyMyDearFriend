@@ -17,7 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     private PermissionInterceptor permissionInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminCheckLoginInterceptor).addPathPatterns("/**");
-        registry.addInterceptor(permissionInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(adminCheckLoginInterceptor).addPathPatterns("/**").excludePathPatterns("/home", "/static/**", "/assets/**", "/js/**", "/employee/login", "/api/employee/login");
+        // registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns("/home","/static/**");
     }
 }

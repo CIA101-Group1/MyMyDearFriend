@@ -1,4 +1,14 @@
 <!-- js before </body> -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-<script src="/assets/js/scripts.js"></script>
+<script th:src="@{/assets/js/scripts.js}"></script>
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script>
+    $("#logout").click(function (e) {
+        e.preventDefault();
+        if (confirm("確定要登出嗎？")) {
+            localStorage.removeItem("authorization");
+            window.location.href = "/employee/login";
+        }
+    });
+</script>
