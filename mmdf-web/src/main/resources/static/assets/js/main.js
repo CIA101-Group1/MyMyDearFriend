@@ -322,7 +322,7 @@
     /*---single product activation---*/
     $('.single-product-active').owlCarousel({
         autoplay: true,
-		loop: true,
+		loop: false,
         nav: true,
         autoplay: false,
         autoplayTimeout: 8000,
