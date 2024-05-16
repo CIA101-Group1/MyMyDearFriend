@@ -1,8 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html xmlns:th="http://thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>商品資料新增 - addProduct</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>範例</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
     <script src="/js/api-response-utils.js"></script>
     <script src="/js/vendor/jquery-3.7.1.min.js"></script>
@@ -10,7 +16,36 @@
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!--css-->
+    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+    <!-- CSS
+ ========================= -->
+    <!--bootstrap min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
+    <!--owl carousel min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
+    <!--slick min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
+    <!--magnific popup min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
+    <!--font awesome css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
+    <!--ionicons min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
+    <!--animate css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
+    <!--jquery ui min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
+    <!--slinky menu css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
+    <!--plugins css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+
+    <!-- add member css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
     <style>
         table#table-1 {
@@ -59,22 +94,15 @@
 
 </head>
 <body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
 
-<table id="table-1">
-    <tr>
-        <td>
-            <h3>商品資料新增</h3>
-        </td>
-        <td>
-            <h4>
-                <a href="/test-index">回首頁</a>
-                <a href="/product/select">回查詢頁</a>
-            </h4>
-        </td>
-    </tr>
-</table>
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
 
-<h3>資料新增:</h3>
+<!-- Code -->
+
+<h3>新增商品:</h3>
 
 <FORM id="FrontProductCreate">
     <div id="errorMessage" style="color: red;"></div>
@@ -254,6 +282,10 @@
 
 </script>
 
-</body>
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
 
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+</body>
 </html>

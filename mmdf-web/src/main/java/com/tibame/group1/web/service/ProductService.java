@@ -5,8 +5,11 @@ import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.web.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public interface ProductService {
@@ -23,17 +26,9 @@ public interface ProductService {
 
     ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) throws IOException ;
 
-    List<ProductEntity> productGetAll() throws IOException;
-
-//    List<ProductCompoundResDTO> findProductsByCompound(
-//            String productId, String sellerId, String categoryId, String name,
-//            String description, String price, String reviewStatus, String productStatus
-////            , ProductCategoryEntity productCategory, MemberEntity memberEntity
-//    );
+    List<ProductEntity> productGetAll();
 
     ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
-
-//    ProductGetOneResDTO productGetOne(ProductGetOneReqDTO req) throws CheckRequestErrorException;
 
     /**  productImg */
 
@@ -43,11 +38,13 @@ public interface ProductService {
 
     ProductImgUpdateResDTO productImgUpdate(ProductImgUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
+
     ProductEntity getOneProduct(Integer productId);
 
     ProductCategoryEntity getOneCategory(Integer productId);
 
     ProductImgEntity getOneProductImg(Integer productId);
+
 
     List<ProductEntity> getAll();
 
@@ -55,10 +52,26 @@ public interface ProductService {
 
     List<ProductImgEntity> getAllProductImg();
 
-
-//    List<ProductEntity> queryGetAll(ProductQueryReqDTO productQueryReqDTO);
-
     List<ProductEntity> queryGetAll(ProductQueryReqDTO productQueryReqDTO);
 
+    //    List<ProductEntity> buyerproductGetAll(ProductQueryReqDTO productQueryReqDTO);
+
+
+//0515
+    /**
+     * 取得所有商品,以及商品分類與照片
+     */
+    Page<ProductEntity> productGetAll(Pageable pageable);
+
+    /**
+     * 取得商品審核狀態設定清單
+     */
+    HashMap<Integer,String> getProductReviewStatusList();
+
+
+    /**
+     * 取得商品上下架狀態設定清單
+     */
+    HashMap<Integer,String>  getProductStatusList();
 
 }

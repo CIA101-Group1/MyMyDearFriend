@@ -1,5 +1,6 @@
 package com.tibame.group1.web.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.tibame.group1.common.dto.ResDTO;
 import com.tibame.group1.common.dto.web.LoginSourceDTO;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
@@ -9,6 +10,7 @@ import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.*;
 import com.tibame.group1.web.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/")
+@Slf4j
 public class ProductBackendController {
 
     @Autowired
@@ -66,6 +69,7 @@ public class ProductBackendController {
     public @ResponseBody ResDTO<ProductUpdateResDTO> productUpdate(
             @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
         ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
+        log.info("productId:{}", req.getProductId());
         res.setData(productService.productUpdate(req, loginSource));
         return res;
     }

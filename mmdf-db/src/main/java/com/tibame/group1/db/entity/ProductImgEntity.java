@@ -26,5 +26,8 @@ public class ProductImgEntity {
     @JsonIgnore
     private ProductEntity productEntity;
 
+//0515
+    @Transient // 不會被寫入資料庫
+    private String imageBase64;
 
 }

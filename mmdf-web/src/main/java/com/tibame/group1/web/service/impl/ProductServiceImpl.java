@@ -14,10 +14,13 @@ import com.tibame.group1.web.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -108,37 +111,14 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
+        product.setProductId(req.getProductId());
         product = productRepository.save(product);
         ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
         resDTO.setProductId(product.getProductId());
         return resDTO;
-    }
 
-//    @Override
-//    public ProductGetOneResDTO productGetOne(ProductGetOneReqDTO req) {
-//        ProductEntity product = new ProductEntity();
-//        product.setSellerId(req.getMemberId());  //會員ID，從登入驗證碼取的會員ID
-//        product.setCategoryId(req.getCategoryId());
-//        product.setName(req.getName());
-//        product.setDescription(req.getDescription());
-//        product.setPrice(req.getPrice());
-//        product.setQuantity(req.getQuantity());
-//        product.setReviewStatus(req.getReviewStatus());
-//        product.setProductStatus(req.getProductStatus());
-//        product = productRepository.save(product);
-//        ProductGetOneResDTO resDTO = new ProductGetOneResDTO();
-//        resDTO.setProductId(product.getProductId());
-//        return (ProductGetOneResDTO) resDTO.getProductGetAllResDTO();
-//    }
-//    @Override
-//    public List<ProductGetOneResDTO>  productGetOne() { return productRepository.findById(productGetOne().get(ProductGetOneReqDTO));
-//    }
-//    public List<ProductEntity> productGetOne() {
-//        return productRepository.findById(productGetOne().indexOf(Integer));
-//    }
-//    public ProductEntity productGetOne(Integer productid) {
-//        return productRepository.findById(productid).orElse(null);
-//    }
+
+    }
 
 
     /**
@@ -221,5 +201,71 @@ public class ProductServiceImpl implements ProductService {
 //                productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
 //                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
     }
+
+//0515
+    @Override
+    public Page<ProductEntity> productGetAll(Pageable pageable) {
+        //1.查所有商品
+        Page<ProductEntity> productPage = productRepository.findAll(pageable);
+        log.info("productPage: {}", productPage);
+
+        //2.查商品分類
+        List<ProductCategoryEntity> productCategoryList = getAllCategory();
+        //2-1.用map加快比較效率不要用雙迴圈
+        Map<Integer, ProductCategoryEntity> categoryMap = productCategoryList.stream()
+                .collect(Collectors.toMap(ProductCategoryEntity::getCategoryId, Function.identity()));
+        //2-2.放入商品集合
+        productPage.getContent().forEach(productEntity -> {
+            Integer categoryId = productEntity.getCategoryId();
+            ProductCategoryEntity matchedCategory = categoryMap.get(categoryId);
+            if (matchedCategory != null) {
+                productEntity.setProductCategoryEntity(matchedCategory);
+            }
+        });
+
+        //3.查商品照片
+        List<ProductImgEntity> productImgEntityList = getAllProductImg();
+        //3-1.如果照片不是空值,轉成base64
+        productImgEntityList.stream()
+                .filter(productImgEntity -> productImgEntity.getImage() != null)
+                .forEach(productImgEntity -> {
+                    byte[] image = productImgEntity.getImage();
+                    String base64 = Base64.getEncoder().encodeToString(image);
+                    productImgEntity.setImageBase64(base64);
+                });
+        //3-2.用map加快比較效率不要用雙迴圈
+        Map<Integer, List<ProductImgEntity>> productImgMap = productImgEntityList.stream()
+                .filter(productImgEntity -> productImgEntity.getProductId() != null)
+                .collect(Collectors.groupingBy(ProductImgEntity::getProductId));
+        //3-3.放入商品集合
+        productPage.getContent().forEach(productEntity -> {
+            Integer productId = productEntity.getProductId();
+            List<ProductImgEntity> matchedProductImg = productImgMap.get(productId);
+            if (matchedProductImg != null) {
+                Set<ProductImgEntity> productImgs = new HashSet<>(matchedProductImg);
+                productEntity.setProductImgs(productImgs);
+            }
+        });
+        return productPage;
+    }
+
+
+    @Override
+    public HashMap<Integer, String> getProductReviewStatusList() {
+        HashMap<Integer, String> result = new HashMap<>();
+        result.put(0, "審核中");
+        result.put(1, "通過");
+        result.put(2, "未通過");
+        return result;
+    }
+
+    @Override
+    public HashMap<Integer, String> getProductStatusList() {
+        HashMap<Integer, String> result = new HashMap<>();
+        result.put(0, "下架");
+        result.put(1, "上架");
+        return result;
+    }
+
 
 }

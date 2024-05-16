@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ProductUpdateReqDTO {
 
-//    private String productId;
+    private Integer productId;
 
 //    private String sellerId;
 

@@ -3,45 +3,74 @@ package com.tibame.group1.web.controller;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.web.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-//@RestController
-//@RequestMapping("mmdf/web/")
+import java.util.HashMap;
+
 @Controller
 @RequestMapping("/")
 public class ProductFrontendController {
 
-    @GetMapping("product/create")
-    public String productCreate() {
-        return "/product/product-create"; // 要導入的html
-    }
-
-    @GetMapping("product/1")
-    public String productPage() {return "/product/product-page";
-    }
-
-    @GetMapping("product/select")
-    public String productGetAll() {return "/product/product-select"; }
-    public String queryGetAll() {return "/product/product-select"; }
-
-//    @GetMapping("product/update")
-//    public String productUpdate() {return "/product/product-update"; // 要導入的html
-//    }
-
-//    @GetMapping("product/query")
-//    public String queryGetAll() {
-//        return "/product/product-select"; // 要導入的html
-//    }
-
     @Autowired
     private ProductService productService;
-    @PostMapping ("/product/update/{productId}")
-    public String updateProductForm(@PathVariable("productId") String productId, Model model) {
-        ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
-        model.addAttribute("productEntity", productEntity);
-        return "/product/product-update";
+
+//    @PostMapping ("/product/getOne/{productId}")
+//    public String updateProductForm(@PathVariable("productId") String productId, Model model) {
+//
+//        ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
+//        model.addAttribute("productEntity", productEntity);
+//
+//        return "/product/product-update";
+//    }
+
+//    0515
+//    buyer
+
+    @GetMapping("product/buyer/select")
+    public String getProduct(Model model,
+                             @RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size) {
+        {
+            //BackEndController
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+
+        return "/product/buyer-product-select";
+        }
+    }
+
+//    seller
+
+    @GetMapping("product/seller/select")
+    public String productshop(Model model,
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size) {
+        {
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+            return "/product/seller-product-select";
+        }
+    }
+
+    @GetMapping("product/seller/create")
+    public String productCreate() {
+        return "/product/seller-product-create"; // 要導入的html
     }
 
 }
