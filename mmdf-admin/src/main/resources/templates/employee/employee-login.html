@@ -88,8 +88,8 @@
 
                     // 登入成功後的處理
                     if (apiResponseJSON(response)) {
-                        switch (response.code) {
-                            case "0":
+                        switch (response.data.status) {
+                            case "1":
                                 alert("登入成功！");
                                 localStorage.setItem("authorization", response.data.authorization);
                                 window.location.href = "/home";

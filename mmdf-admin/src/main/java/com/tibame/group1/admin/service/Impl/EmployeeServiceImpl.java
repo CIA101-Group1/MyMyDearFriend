@@ -138,6 +138,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         /*密碼正確後，下一步要產登入驗證碼，用在後面需要登入的頁面
         先設定loginSource裡面代的基本資訊
          */
+        resDTO.setStatus(LoginResDTO.Status.LOGIN_SUCCESS.getCode());
         AdminLoginSourceDTO adminLoginSource = new AdminLoginSourceDTO();
         adminLoginSource.setEmployeeId(employee.getEmployeeId());
         adminLoginSource.setEmployeeName(employee.getEmployeeName());
