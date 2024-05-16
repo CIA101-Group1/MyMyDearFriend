@@ -27,8 +27,8 @@ public class RedisUtils {
      *
      * @return Key生成器
      */
-    public static KeyGenerator createEmsKeyGenerator() {
-        return createEmsKeyGenerator("");
+    public static KeyGenerator createMmdfKeyGenerator() {
+        return createMmdfKeyGenerator("");
     }
 
     /**
@@ -36,7 +36,7 @@ public class RedisUtils {
      *
      * @return Key生成器
      */
-    public static KeyGenerator createEmsKeyGenerator(String hash) {
+    public static KeyGenerator createMmdfKeyGenerator(String hash) {
         return (target, method, params) -> {
             StringBuilder stringBuilder;
             if (StringUtils.isEmpty(hash)) {

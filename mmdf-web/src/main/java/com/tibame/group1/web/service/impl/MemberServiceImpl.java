@@ -252,9 +252,10 @@ public class MemberServiceImpl implements MemberService {
                 return resDTO;
             }
 
-            resDTO.setStatus(MemberVerifyResDTO.Status.VERIFY_SUCCESS.getCode());
             member.setIsVerified(true);
             member.setVerifiedTime(new Date());
+            memberRepository.save(member);
+            resDTO.setStatus(MemberVerifyResDTO.Status.VERIFY_SUCCESS.getCode());
             return resDTO;
         } catch (AuthorizationException ae) {
             resDTO.setStatus(MemberVerifyResDTO.Status.VERIFY_CODE_ERROR.getCode());
@@ -338,6 +339,40 @@ public class MemberServiceImpl implements MemberService {
         return resDTO;
     }
 
+    @Override
+    public MemberCidResetResDTO memberCidReset(MemberCidResetReqDTO req) throws IOException {
+        MemberCidResetResDTO resDTO = new MemberCidResetResDTO();
+        try {
+            CidResetVerifySourceDTO cidResetVerifySource =
+                    jwtService.decodeCidResetVerify(req.getVerifyCode());
+            MemberEntity member =
+                    memberRepository.findByCidResetVerifyUUID(
+                            cidResetVerifySource.getCidResetVerifyUUID());
+            if (null == member) {
+                resDTO.setStatus(MemberCidResetResDTO.Status.VERIFY_CODE_ERROR.getCode());
+                return resDTO;
+            }
+            if (DateUtils.addMinute(
+                            member.getCidResetSendingTime(),
+                            config.getCidResetVerifyCodeSurvivalMinute())
+                    .before(new Date())) {
+                resDTO.setStatus(MemberCidResetResDTO.Status.VERIFY_CODE_EXPIRED.getCode());
+                return resDTO;
+            }
+            if (!req.getNewCid().equals(req.getNewCidCheck())) {
+                resDTO.setStatus(MemberCidResetResDTO.Status.CHECK_CID_DIFFERENCE.getCode());
+                return resDTO;
+            }
+            member.setCid(CommonUtils.encryptToMD5(req.getNewCid()));
+            memberRepository.save(member);
+            resDTO.setStatus(MemberCidResetResDTO.Status.RESET_CID_SUCCESS.getCode());
+            return resDTO;
+        } catch (AuthorizationException e) {
+            resDTO.setStatus(MemberCidResetResDTO.Status.VERIFY_CODE_ERROR.getCode());
+            return resDTO;
+        }
+    }
+
     /**
      * 寄送會員信箱驗證信方法
      *
@@ -377,6 +412,8 @@ public class MemberServiceImpl implements MemberService {
     private void sendCidResetVerify(MemberEntity member) {
         CidResetVerifySourceDTO cidResetVerifySource = new CidResetVerifySourceDTO();
         cidResetVerifySource.setCidResetVerifyUUID(CommonUtils.generateUUID());
+        member.setCidResetVerifyUUID(cidResetVerifySource.getCidResetVerifyUUID());
+        memberRepository.save(member);
         EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
                 .setTitle("My my dear friend 重設密碼驗證信")
                 .addContent(
