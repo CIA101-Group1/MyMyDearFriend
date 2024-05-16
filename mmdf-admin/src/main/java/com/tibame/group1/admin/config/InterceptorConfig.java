@@ -10,14 +10,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private AdminCheckLoginInterceptor adminCheckLoginInterceptor;
+    @Autowired private AdminCheckLoginInterceptor adminCheckLoginInterceptor;
 
-    @Autowired
-    private PermissionInterceptor permissionInterceptor;
+    @Autowired private PermissionInterceptor permissionInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminCheckLoginInterceptor).addPathPatterns("/**");
-        registry.addInterceptor(permissionInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(adminCheckLoginInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/home",
+                        "/static/**",
+                        "/assets/**",
+                        "/js/**",
+                        "/employee/login",
+                        "/api/employee/login");
+        // registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns("/home","/static/**");
     }
 }
