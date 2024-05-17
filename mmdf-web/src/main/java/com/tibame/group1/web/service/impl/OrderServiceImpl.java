@@ -3,14 +3,8 @@ package com.tibame.group1.web.service.impl;
 import com.tibame.group1.common.enums.OrderMemberIdentity;
 import com.tibame.group1.common.enums.OrderStatus;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
-import com.tibame.group1.db.entity.MemberEntity;
-import com.tibame.group1.db.entity.OrderDetailEntity;
-import com.tibame.group1.db.entity.OrderEntity;
-import com.tibame.group1.db.entity.ProductTestEntity;
-import com.tibame.group1.db.repository.MemberRepository;
-import com.tibame.group1.db.repository.OrderDetailRepository;
-import com.tibame.group1.db.repository.OrderRepository;
-import com.tibame.group1.db.repository.ProductTestRepository;
+import com.tibame.group1.db.entity.*;
+import com.tibame.group1.db.repository.*;
 import com.tibame.group1.web.dto.*;
 import com.tibame.group1.web.service.OrderService;
 
@@ -36,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired private MemberRepository memberRepository;
 
-    @Autowired private ProductTestRepository productTestRepository;
+    @Autowired private ProductRepository productRepository;
 
     @Override
     public OrderCreateResDTO orderCreate(OrderCreateReqDTO req, LoginSourceDTO loginSource) throws CheckRequestErrorException{
@@ -66,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         // 建立訂單詳情
         for (OrderBuyProductDTO buyProduct : req.getBuyProductList()) {
             // 檢查 product 是否存在，庫存是否足夠
-            ProductTestEntity product = productTestRepository.findById(buyProduct.getProductId()).orElse(null);
+            ProductEntity product = productRepository.findById(buyProduct.getProductId()).orElse(null);
             if (product == null) {
                 log.warn("查無商品 {}", buyProduct.getProductId());
                 throw new CheckRequestErrorException("查無商品");
@@ -80,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
 
             // 扣除商品庫存
             product.setQuantity(product.getQuantity() - buyProduct.getQuantity());
-            productTestRepository.save(product);
+            productRepository.save(product);
 
             OrderDetailEntity orderDetail = new OrderDetailEntity();
             orderDetail.setOrderId(order.getId());
@@ -237,7 +231,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetailResDTO> list = new ArrayList<>();
         for (OrderDetailEntity orderDetail : orderDetailList) {
             // 檢查商品是否存在
-            ProductTestEntity product = productTestRepository.findById(orderDetail.getProductId()).orElse(null);
+            ProductEntity product = productRepository.findById(orderDetail.getProductId()).orElse(null);
             if(product == null){
                 log.warn("查無商品 {}", orderDetail.getProductId());
                 throw new CheckRequestErrorException("查無商品");
