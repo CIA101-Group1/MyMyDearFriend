@@ -6,16 +6,9 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>賣家商品新增</title>
+    <title>賣家商品瀏覽</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-
-    <script src="/js/api-response-utils.js"></script>
-    <script src="/js/vendor/jquery-3.7.1.min.js"></script>
-    <!--Filepond JS-->
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-
     <!--css-->
     <!--    <th:block th:replace="~{/fragments/css}"/>-->
     <!-- CSS
@@ -47,50 +40,17 @@
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
+    <!-- FilePond CSS -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
     <style>
-        table#table-1 {
-            background-color: #CCCCFF;
-            border: 2px solid black;
-            text-align: center;
-        }
-
-        table#table-1 h4 {
-            color: red;
-            display: block;
-            margin-bottom: 1px;
-        }
-
-        h4 {
-            color: blue;
-            display: inline;
+        .custom-orange-btn {
+            background-color: #ff6f00; /* 深橘色 */
+            border-color: #28004D; /* 使按鈕的邊框與背景色相同 */
+            color: #fff; /* 文字顏色為白色 */
         }
     </style>
 
-    <style>
-        table {
-            width: 450px;
-            background-color: white;
-            margin-top: 1px;
-            margin-bottom: 1px;
-        }
-
-        #description {
-            width: 500px;
-            height: 100px;
-        }
-
-    </style>
-
-    <!--    Filepond CSS    -->
-    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-          rel="stylesheet"/>
-    <style>
-        .filepond--item {
-            /*width: 15%;*/
-            height: 100%;
-        }
-    </style>
 
 </head>
 <body>
@@ -100,187 +60,231 @@
 <!--breadcrumb-->
 <th:block th:replace="~{/fragments/breadcrumb}"/>
 
-<!-- Code -->
 
-<h3>新增商品:</h3>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">新增商品</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!--        <div class="collapse navbar-collapse" id="navbarResponsive">-->
+        <!--            <ul class="navbar-nav ml-auto">-->
+        <!--                <li class="nav-item active">-->
+        <!--                    <a class="nav-link" href="#">Home-->
+        <!--                        <span class="sr-only">(current)</span>-->
+        <!--                    </a>-->
+        <!--                </li>-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" href="#">About</a>-->
+        <!--                </li>-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" href="#">Services</a>-->
+        <!--                </li>-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" href="#">Contact</a>-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </div>-->
+    </div>
+</nav>
 
-<FORM id="FrontProductCreate">
-    <div id="errorMessage" style="color: red;"></div>
-    <table>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form id="product_form" role="form" data-toggle="validator">
+                <!--                <div class="form-group">-->
+                <!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;">資料新增</div>-->
+                <!--                </div>-->
+                <div class="form-group row">
+                    <label for="name" class="col-md-1 col-form-label">商品分類</label>
+                    <div class="col-md-2">
+                        <div class="dropdown">
+                            <select id="categoryId" name="categoryId" class="form-control" required>
+                                <option value="">選擇商品分類</option>
+                                <option th:each="category : ${productCategoryList}"
+                                        th:value="${category.categoryId}"
+                                        th:text="${category.categoryName}"></option>
+                            </select>
+                        </div>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-md-1 col-form-label">商品名稱</label>
+                    <div class="col-md-6">
+                        <input id="name" name="name" type="text" class="form-control"
+                               placeholder="請輸入商品名稱"
+                               pattern=".{1,20}"
+                               data-error="格式錯誤，且長度必需在1到20之間"
+                               required="required">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="price" class="col-md-1 col-form-label">價格</label>
+                    <div class="col-md-6">
+                        <input id="price" name="price" type="number" class="form-control"
+                               placeholder="請輸入商品價格"
+                               min="0" max="9999999999" step="1"
+                               data-error="請填入0-9數字，最多10個位數"
+                               required="required">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="quantity" class="col-md-1 col-form-label">數量</label>
+                    <div class="col-md-6">
+                        <input id="quantity" name="quantity" type="number" class="form-control"
+                               placeholder="數量"
+                               min="0" max="9999999999" step="1"
+                               data-error="請填入0-9數字，最多10個位數"
+                               required="required">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-md-1 col-form-label">商品描述</label>
+                    <div class="col-md-6">
+                        <textarea id="description" name="description" rows="5" cols="45" class="form-control"
+                                  placeholder="請輸入商品描述，讓你的商品更有吸引力"
+                                  pattern=".{1,200}"
+                                  data-error="格式錯誤，且長度必需在1到200之間"
+                                  required="required"></textarea>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="filepond">商品圖片</label>
+                    <input
+                            id="filepond"
+                            type="file"
+                            class="filepond"
+                            name="upFiles"
+                            data-max-file-size="3MB"
+                            data-max-files="5"
+                            required="required"
+                            data-error="請上傳圖片"
+                    />
+                    <div class="help-block with-errors"></div>
+                </div>
 
-        <div class="form-group row">
-            <label for="categoryId" class="col-sm-2 col-form-label">分類:</label>
-            <div class="col-sm-10">
-                <select id="categoryId" name="categoryId" class="form-control" required></select>
-                <div class="invalid-feedback"></div>
-            </div>
+                <input type="submit" value="新增" class="btn btn-block custom-orange-btn"/>
+                <br>
+                <br>
+            </form>
+            <!--            <input type="submit" id="fast" value="一鍵填充" class="btn btn-danger btn-block"/>-->
         </div>
-        <div>
-            <label for="name">商品名稱:</label>
-            <input type="TEXT" id="name" name="name" size="45" placeholder="請輸入商品名稱"/>
-        </div>
-        <div>
-            <label for="price">價格:</label>
-            <input type="TEXT" id="price" name="price" size="45" placeholder="請輸入商品價格"/>
-        </div>
-        <div>
-            <label for="quantity">數量:</label>
-            <input type="TEXT" id="quantity" name="quantity" size="45" placeholder="請輸入商品數量"/>
-        </div>
-        <div>
-            <label for="description">商品描述:</label><br>
-            <input type="TEXT" id="description" name="description" size="45"
-                   placeholder="請輸入商品描述，讓你的商品更有吸引力"/>
-        </div>
+    </div>
+</div>
 
-        <div class="form-group">
-            <label for="filepond">商品圖片:</label>
-            <input
-                    id="filepond"
-                    type="file"
-                    class="filepond"
-                    name="upFiles"
-                    data-max-file-size="3MB"
-                    data-max-files="5"
-            />
-        </div>
 
-    </table>
-    <button type="button" id="saveBtn">送出新增</button>
-</FORM>
-
+<script src='/assets/js/vendor/jquery-3.4.1.min.js'></script>
+<!--引用 Validator-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+<!--Filepond JS-->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 <script>
-
-    FilePond.registerPlugin(FilePondPluginImagePreview);
-
-    const inputElement = document.querySelector("#filepond");
-    const pond = FilePond.create(inputElement);
-    pond.setOptions({
-        required: true,
-        storeAsFile: true,
-        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br> ',
-        itemInsertLocation: "after",
-        imagePreviewHeight: "150px",
-        imagePreviewTransparencyIndicator: "grid",
-    });
-
-    let userData = {};
-    let errorMessage = "";
-
     $(document).ready(function () {
-        $('#saveBtn').click(function (e) { // 監聽送出新增按鈕的點擊事件
-            e.preventDefault(); // 防止表單提交
-            errorMessage = "";
-            let name = $("#name").val().trim();
-            if (name === "" || !/^.{1,20}$/u.test(name)) {
-                errorMessage += "<li>商品名稱：格式錯誤，且長度必需在1到20之間</li>";
-            }
-            let price = $("#price").val().trim();
-            if (price === "" || !/^[0-9]{1,10}$/.test(price)) {
-                errorMessage += "<li>價格：請填入0-9數字，最高10位數</li>";
-            }
-            let quantity = $("#quantity").val().trim();
-            if (quantity === "" || !/^[0-9]{1,10}$/.test(quantity)) {
-                errorMessage += "<li>數量：請填入0-9數字，最多10個位數</li>";
-            }
-            let categoryId = $("#categoryId").val();
-            if (!categoryId) {
-                errorMessage += "<li>商品分類請勿空白</li>";
-            }
-            let description = $("#description").val().trim();
-            if (description === "" || !/^.{0,200}$/.test(description)) {
-                errorMessage += "<li>商品描述：格式錯誤，且長度必需在0到200之間</li>";
-            }
+        // 初始化 FilePond
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        const inputElement = document.querySelector("#filepond");
+        const pond = FilePond.create(inputElement);
+        pond.setOptions({
+            required: true,
+            storeAsFile: true,
+            labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br> ',
+            itemInsertLocation: "after",
+            imagePreviewHeight: "150px",
+            imagePreviewTransparencyIndicator: "grid",
+        });
 
-            /** productImg */
-            let file = pond.getFile().file; // 獲取上傳的文件
-            let image;
+        // 監聽表單提交事件
+        $('#product_form').validator().on('submit', function (e) {
+            console.log("submit")
+            e.preventDefault(); // 防止原始表單提交
 
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function (event) {
-                    var base64String = event.target.result.split(',')[1]; // Extract base64 string from data URL
-                    image = base64String;
-                    console.log("test")
-                    userData = {
-                        name: name,
-                        price: price,
-                        quantity: quantity,
-                        description: description,
-                        categoryId: categoryId,
-                        image: image
-                    };
-                    sendCreateReq()
-                };
-                reader.readAsDataURL(file);
-            }
-
-            if (errorMessage !== "") {
-                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+            // 獲取上傳的圖片
+            if (!pond.getFile()) {
+                alert('請上傳圖片');
                 return false;
             }
 
-            $("#errorMessage").text("");
+            // 獲取上傳的圖片
+            let file = pond.getFile().file;
+            let image = null;
+            // 如果表單驗證通過
+            if (file) {
+                // 獲取表單數據
+                let categoryId = $('#categoryId').val();
+                let name = $('#name').val();
+                let price = $('#price').val();
+                let quantity = $('#quantity').val();
+                let description = $('#description').val();
 
-            function sendCreateReq() {
-                $.ajax({
-                    url: "/api/product/create",
-                    method: "post",
-                    contentType: "application/json",
-                    data: JSON.stringify(userData),
-                    headers: {
-                        "authorization": localStorage.getItem("authorization")
-                    },
-                    success: function (response) {
-                        console.log(response)
-                        if (apiResponseJSON(response)) {
-                            let data = response.data;
-                            $("#name").val(response.data.name);
-                            $("#price").val(response.data.price);
-                            $("#quantity").val(response.data.quantity);
-                            $("#description").val(response.data.description);
-                            $("#categoryId").text(response.data.categoryId);
-                            $("#sellerId").text(response.data.sellerId);
-                            $("#reviewStatus").text(response.data.reviewStatus);
-                            $("#productStatus").text(response.data.productStatus);
-                            let imgBase64 = `data:image/png;base64, ${data.upFiles}`;
-                            $("#productImgs").attr("src", imgBase64);
-                            alert("新增成功!")
-                        }
-                    },
-                    error: function (xhr, textStatus, error) {
-                        console.log(error)
-                        alert("伺服器連線失敗: " + error);
-                    }
-                });
-            }
+                if (file) {
+                    // 使用 FileReader 讀取文件內容，轉為 Base64 格式
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var base64String = event.target.result.split(',')[1]; // 提取 base64 字串
+                        image = base64String;
 
-        });
-    });
-
-    $(document).ready(function () {
-        $.ajax({
-            url: '/api/productCategory/getAll',
-            type: 'GET',
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            success: function (res) {
-                let data = res.data;
-                let categoryId = $('#categoryId');
-                categoryId.empty();
-                data.forEach(function (category) {
-                    categoryId.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
-                });
-            },
-            error: function (error) {
-                alert("伺服器連線失敗: " + error);
+                        // 構造請求數據對象
+                        let userData = {
+                            name: name,
+                            price: price,
+                            quantity: quantity,
+                            description: description,
+                            categoryId: categoryId,
+                            image: image
+                        };
+                        // 發送 AJAX 請求
+                        createProductData(userData);
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
         });
-    });
 
+        // 定義一個函數來發送 AJAX 請求並創建產品數據
+        function createProductData(userData) {
+            $.ajax({
+                url: "/api/product/create",
+                type: 'POST',
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: JSON.stringify(userData), // 將數據轉換為 JSON 格式
+                contentType: "application/json", // 設置請求頭的 Content-Type
+                success: function (res) {
+                    console.log(res);
+                    alert("商品新增成功");
+                },
+                error: function (error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        }
+
+        // // 監聽點擊事件
+        // $('#fast').validator().on('click', function (e) {
+        //     // 阻止表單的預設行為
+        //     e.preventDefault();
+        //
+        //     // 修改欄位資料
+        //     $('#categoryId').val(1);
+        //     $('#name').val('新的商品名稱');
+        //     $('#price').val(99);
+        //     $('#quantity').val(99);
+        //     $('#description').val('新的描述');
+        // });
+    });
 
 </script>
+
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
