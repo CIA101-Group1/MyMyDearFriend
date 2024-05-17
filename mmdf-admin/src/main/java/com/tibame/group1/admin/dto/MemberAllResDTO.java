@@ -37,9 +37,9 @@ public class MemberAllResDTO {
 
     private Boolean sellerStatus;
 
-    private String scoreNumber;
+    private Integer scoreNumber;
 
-    private String scoreSum;
+    private Integer scoreSum;
 
     private String imageBase64;
 
