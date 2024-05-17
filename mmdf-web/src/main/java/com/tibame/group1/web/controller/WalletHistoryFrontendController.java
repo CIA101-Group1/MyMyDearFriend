@@ -4,7 +4,6 @@ import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.WalletHistoryService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-public class WalletHistoryBackendController {
+public class WalletHistoryFrontendController {
 
     @Autowired
     private WalletHistoryService walletHistoryService;
