@@ -2,6 +2,7 @@ package com.tibame.group1.web.controller;
 
 import ch.qos.logback.core.model.Model;
 import com.tibame.group1.common.dto.ResDTO;
+import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -63,12 +64,22 @@ public class ProductBackendController {
         return res;
     }
 
+//    @PostMapping("product/update")
+//    @CheckLogin
+//    public @ResponseBody ResDTO<ProductUpdateResDTO> productUpdate(
+//            @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
+//        ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
+//        log.info("productId:{}", req.getProductId());
+//        res.setData(productService.productUpdate(req, loginSource));
+//        return res;
+//    }
+
+//    0517
     @PostMapping("product/update")
     @CheckLogin
-    public @ResponseBody ResDTO<ProductUpdateResDTO> productUpdate(
+    public ResDTO<ProductUpdateResDTO> productGetOne(
             @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
         ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
-        log.info("productId:{}", req.getProductId());
         res.setData(productService.productUpdate(req, loginSource));
         return res;
     }

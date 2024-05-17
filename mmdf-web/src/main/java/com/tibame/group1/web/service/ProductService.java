@@ -1,5 +1,6 @@
 package com.tibame.group1.web.service;
 
+import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -27,6 +28,7 @@ public interface ProductService {
 
     List<ProductEntity> productGetAll();
 
+    //0517
     ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
     /**  productImg */
@@ -72,5 +74,11 @@ public interface ProductService {
      * 取得商品上下架狀態設定清單
      */
     HashMap<Integer,String>  getProductStatusList();
+
+//    0517
+
+    ProductEntity getOneSellerProduct(Integer productId);
+
+    List<ProductImgEntity> getProductImgListByProductId(Integer productId);
 
 }
