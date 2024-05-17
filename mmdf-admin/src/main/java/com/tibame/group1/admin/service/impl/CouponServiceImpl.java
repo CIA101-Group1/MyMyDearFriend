@@ -80,7 +80,7 @@ public class CouponServiceImpl implements CouponService {
             couponList.add(resDTO);
         }
         PagesResDTO pagesResDTO = new PagesResDTO();
-        pagesResDTO.setTotalPage(String.valueOf(pageResult.getTotalPages()));
+//        pagesResDTO.setTotalPage(String.valueOf(pageResult.getTotalPages()));
         CouponResDTO res = new CouponResDTO();
         res.setCouponList(couponList);
         res.setPages(pagesResDTO);
