@@ -1,6 +1,6 @@
 package com.tibame.group1.web.service.impl;
 
-import com.tibame.group1.common.dto.web.LoginSourceDTO;
+import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
