@@ -20,12 +20,14 @@ public class EmployeeBackendController {
     @Autowired
     private EmployeeService employeeService;
 
+    //員工創建也要登入驗證
     @PostMapping("employee/create")
     public @ResponseBody ResDTO<EmployeeCreateResDTO> employeeCreate(
-            @Valid @RequestBody EmployeeCreateReqDTO req)
-            throws DateException, IOException {
+            @Valid @RequestBody EmployeeCreateReqDTO req,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException, DateException {
         ResDTO<EmployeeCreateResDTO> res = new ResDTO<>();
-        res.setData(employeeService.employeeCreate(req));
+        res.setData(employeeService.employeeCreate(req, adminLoginSource));
         return res;
     }
 
