@@ -10,4 +10,6 @@ public class  MemberAllReqDTO {
     private Boolean isVerified;
 
     private Boolean sellerStatus;
+
+    private String searchText;
 }
