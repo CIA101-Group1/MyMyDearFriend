@@ -64,12 +64,22 @@ public class ProductBackendController {
         return res;
     }
 
+//    @PostMapping("product/update")
+//    @CheckLogin
+//    public @ResponseBody ResDTO<ProductUpdateResDTO> productUpdate(
+//            @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
+//        ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
+//        log.info("productId:{}", req.getProductId());
+//        res.setData(productService.productUpdate(req, loginSource));
+//        return res;
+//    }
+
+//    0517
     @PostMapping("product/update")
     @CheckLogin
-    public @ResponseBody ResDTO<ProductUpdateResDTO> productUpdate(
+    public ResDTO<ProductUpdateResDTO> productUpdate(
             @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
         ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
-        log.info("productId:{}", req.getProductId());
         res.setData(productService.productUpdate(req, loginSource));
         return res;
     }

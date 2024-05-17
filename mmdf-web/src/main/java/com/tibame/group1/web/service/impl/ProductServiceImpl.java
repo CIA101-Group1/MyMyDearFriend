@@ -102,22 +102,46 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+//    @Override
+//    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
+//        ProductEntity product = new ProductEntity();
+//        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
+//        product.setCategoryId(Integer.valueOf(req.getCategoryId()));
+//        product.setName(req.getName());
+//        product.setDescription(req.getDescription());
+//        product.setPrice(Integer.valueOf(req.getPrice()));
+//        product.setQuantity(Integer.valueOf(req.getQuantity()));
+//        product.setProductId(req.getProductId());
+//        product = productRepository.save(product);
+//        ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
+//        resDTO.setProductId(product.getProductId());
+//        return resDTO;
+//    }
+
+//    0517
     @Override
     public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
         ProductEntity product = new ProductEntity();
+        product.setProductId(req.getProductId());
         product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
         product.setCategoryId(Integer.valueOf(req.getCategoryId()));
         product.setName(req.getName());
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
-        product.setProductId(req.getProductId());
         product = productRepository.save(product);
+
+        if (req.getUpdateImg()) {
+            List<ProductImgEntity> productImgEntityList = productImgRepository.findByProductEntity_ProductId(req.getProductId());
+            if (productImgEntityList != null && !productImgEntityList.isEmpty()) {
+                ProductImgEntity productImg = productImgEntityList.get(0);
+                productImg.setImage(StringUtils.isEmpty(req.getImage()) ? null : ConvertUtils.base64ToBytes(req.getImage()));
+                productImgRepository.save(productImg);
+            }
+        }
         ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
         resDTO.setProductId(product.getProductId());
         return resDTO;
-
-
     }
 
 

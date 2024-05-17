@@ -79,4 +79,11 @@ public class ProductFrontendController {
         return "/product/seller-product-create"; // 要導入的html
     }
 
+    @GetMapping("product/seller/update")
+    public String ProductUpdate(Model model) {
+        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+        return "/product/seller-product-update"; // 要導入的html
+    }
+
 }

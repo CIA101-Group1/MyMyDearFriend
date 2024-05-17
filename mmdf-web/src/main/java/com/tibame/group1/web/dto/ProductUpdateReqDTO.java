@@ -41,4 +41,8 @@ public class ProductUpdateReqDTO {
 //    @NotEmpty(message = "審核狀態：請勿空白")
 //    private String productStatus;
 
+//    0517
+    private String image;
+    private Boolean updateImg;
+
 }

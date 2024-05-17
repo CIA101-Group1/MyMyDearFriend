@@ -28,6 +28,7 @@ public interface ProductService {
 
     List<ProductEntity> productGetAll();
 
+    //0517
     ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
     /**  productImg */
@@ -73,5 +74,6 @@ public interface ProductService {
      * 取得商品上下架狀態設定清單
      */
     HashMap<Integer,String>  getProductStatusList();
+
 
 }
