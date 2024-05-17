@@ -5,6 +5,7 @@ import com.tibame.group1.admin.dto.MemberResDTO;
 import com.tibame.group1.admin.service.MemberService;
 import com.tibame.group1.common.dto.ResDTO;
 
+import com.tibame.group1.common.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,9 +24,10 @@ public class MemberBackendController {
     @Cacheable
     public @ResponseBody ResDTO<MemberResDTO> memberAll(
             @RequestBody MemberAllReqDTO req,
-            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
-            @RequestParam(value = "sizePerPage", defaultValue = "10") int sizePerPage) {
-        Pageable pageable = PageRequest.of(pageNum, sizePerPage);
+            @RequestParam(value = "page", defaultValue = "0") String pageNum,
+            @RequestParam(value = "sizePerPage", defaultValue = "10") String sizePerPage) {
+        Pageable pageable =
+                PageRequest.of(NumberUtils.toInt(pageNum), NumberUtils.toInt(sizePerPage));
         ResDTO<MemberResDTO> res = new ResDTO<>();
         res.setData(memberService.memberAll(req, pageable));
         return res;

@@ -53,18 +53,33 @@ public class MemberServiceImpl implements MemberService {
             resDTO.setCity(member.getCity());
             resDTO.setAddress(member.getAddress());
             resDTO.setIsVerified(member.getIsVerified());
+            resDTO.setVerifySendingTime(
+                    null == member.getVerifySendingTime()
+                            ? null
+                            : DateUtils.dateToSting(member.getVerifySendingTime()));
+            resDTO.setVerifiedTime(
+                    null == member.getVerifiedTime()
+                            ? null
+                            : DateUtils.dateToSting(member.getVerifiedTime()));
+            resDTO.setJoinTime(DateUtils.dateToSting(member.getJoinTime()));
+            resDTO.setWalletAmount(member.getWalletAmount());
+            resDTO.setWalletAvailableAmount(member.getWalletAvailableAmount());
             resDTO.setSellerStatus(member.getSellerStatus());
-            resDTO.setScoreNumber(String.valueOf(member.getScoreNumber()));
-            resDTO.setScoreSum(String.valueOf(member.getScoreSum()));
+            resDTO.setScoreNumber(member.getScoreNumber());
+            resDTO.setScoreSum(member.getScoreSum());
             resDTO.setImageBase64(
                     null == member.getImage()
                             ? null
                             : ConvertUtils.bytesToBase64(member.getImage()));
+            resDTO.setCidResetSendingTime(
+                    null == member.getCidResetSendingTime()
+                            ? null
+                            : DateUtils.dateToSting(member.getCidResetSendingTime()));
             memberList.add(resDTO);
         }
         PagesResDTO pagesResDTO = new PagesResDTO();
-        pagesResDTO.setTotalPage(String.valueOf(pageResult.getTotalPages()));
-        pagesResDTO.setTotalCount(String.valueOf(pageResult.getTotalElements()));
+        pagesResDTO.setTotalPages(pageResult.getTotalPages());
+        pagesResDTO.setTotalCount((int) pageResult.getTotalElements());
         MemberResDTO res = new MemberResDTO();
         res.setMemberList(memberList);
         res.setPages(pagesResDTO);

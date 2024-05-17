@@ -55,6 +55,10 @@ public class MemberServiceImpl implements MemberService {
         member.setCid(CommonUtils.encryptToMD5(req.getCid()));
         member.setName(req.getName());
         member.setPhone(req.getPhone());
+        if ((memberRepository.existsByEmail(req.getEmail()))) {
+            resDTO.setStatus(MemberCreateResDTO.Status.EXIST_EMAIL.getCode());
+            return resDTO;
+        }
         member.setEmail(req.getEmail());
         member.setBirth(DateUtils.stringToDate(req.getBirth(), DateUtils.DEFAULT_DATE_FORMAT));
         member.setTwPersonId(req.getTwPersonId());
@@ -83,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
         loginSource.setName(member.getName());
         loginSource.setEmail(member.getEmail());
         loginSource.setIsVerified(member.getIsVerified());
-        sendVerifyEmail(loginSource);
+        //        sendVerifyEmail(loginSource);
         resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
         resDTO.setStatus(MemberCreateResDTO.Status.CREATE_SUCCESS.getCode());
         return resDTO;
