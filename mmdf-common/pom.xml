@@ -92,10 +92,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.tibame.group1</groupId>
-            <artifactId>mmdf-db</artifactId>
-        </dependency>
 
         <!-- Apache Tika，內容分析工具，支援多種檔案格式辨別，並且可以提取檔案內部的相關內容 -->
         <dependency>

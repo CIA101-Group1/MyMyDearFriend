@@ -15,12 +15,12 @@ import java.io.IOException;
 @EnableCaching
 @EntityScan("com.tibame.group1.db.entity")
 @EnableJpaRepositories("com.tibame.group1.db.repository")
-public class MmdfWebApplication2 implements CommandLineRunner {
+public class MmdfWebApplication implements CommandLineRunner {
 
     @Autowired private InitTestMemberService initTestMemberService;
 
     public static void main(String[] args) {
-        SpringApplication.run(MmdfWebApplication2.class, args);
+        SpringApplication.run(MmdfWebApplication.class, args);
     }
 
     @Override
