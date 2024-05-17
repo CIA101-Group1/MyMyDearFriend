@@ -37,7 +37,7 @@ spring:
     # 預設不要自動啟動，先初始化完再啟動
     auto-startup: false
     jdbc:
-      initialize-schema: always
+      initialize-schema: never
       schema: "classpath:quartz-schema.sql"
     # quartz設定參數
     properties:

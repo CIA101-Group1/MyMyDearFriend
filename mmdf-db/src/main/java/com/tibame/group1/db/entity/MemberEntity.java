@@ -42,7 +42,7 @@ public class MemberEntity {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Column(name = "birth", nullable = false)
+    @Column(name = "birth", nullable = false, columnDefinition = "date")
     private Date birth;
 
     @Column(name = "tw_person_id", nullable = false, length = 10)
@@ -54,7 +54,7 @@ public class MemberEntity {
     @Column(name = "address", nullable = false, length = 100)
     private String address;
 
-    @Column(name = "is_verified", nullable = false)
+    @Column(name = "is_verified", nullable = false, columnDefinition = "tinyint")
     private Boolean isVerified = false;
 
     @Column(name = "verify_sending_time")
@@ -67,12 +67,12 @@ public class MemberEntity {
     private Date joinTime;
 
     @Column(name = "wallet_amount")
-    private Integer walletAmount = 0;
+    private Integer walletAmount;
 
     @Column(name = "wallet_available_amount")
-    private Integer walletAvailableAmount = 0;
+    private Integer walletAvailableAmount;
 
-    @Column(name = "wallet_cid", nullable = false, length = 20)
+    @Column(name = "wallet_cid", nullable = false, length = 200)
     private String walletCid;
 
     @Column(name = "wallet_question", nullable = false, length = 100)
@@ -81,7 +81,7 @@ public class MemberEntity {
     @Column(name = "wallet_answer", nullable = false, length = 100)
     private String walletAnswer;
 
-    @Column(name = "seller_status", nullable = false)
+    @Column(name = "seller_status", nullable = false, columnDefinition = "tinyint")
     private Boolean sellerStatus = false;
 
     @Column(name = "score_number")
@@ -92,4 +92,10 @@ public class MemberEntity {
 
     @Column(name = "image", columnDefinition = "mediumblob")
     private byte[] image;
+
+    @Column(name = "cid_reset_sending_time")
+    private Date cidResetSendingTime;
+
+    @Column(name = "cid_reset_verify_uuid", length = 100)
+    private String cidResetVerifyUUID;
 }

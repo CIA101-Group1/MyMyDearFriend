@@ -19,13 +19,21 @@ public class MemberAllResDTO {
 
     private String birth;
 
-    private String twPersonId;
-
     private String city;
 
     private String address;
 
     private Boolean isVerified;
+
+    private String verifySendingTime;
+
+    private String verifiedTime;
+
+    private String joinTime;
+
+    private Integer walletAmount;
+
+    private Integer walletAvailableAmount;
 
     private Boolean sellerStatus;
 
@@ -34,4 +42,6 @@ public class MemberAllResDTO {
     private String scoreSum;
 
     private String imageBase64;
+
+    private String cidResetSendingTime;
 }

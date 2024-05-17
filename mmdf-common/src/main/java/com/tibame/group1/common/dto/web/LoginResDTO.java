@@ -19,7 +19,9 @@ public class LoginResDTO {
 
         LOGIN_SUCCESS("1", "正常登入"),
 
-        LOGIN_INFO_INCORRECT("-1", "帳號或密碼錯誤");
+        LOGIN_INFO_INCORRECT("-1", "帳號或密碼錯誤"),
+
+        ACCOUNT_DISABLED("-2", "帳號已停用");
 
         private final String code;
 

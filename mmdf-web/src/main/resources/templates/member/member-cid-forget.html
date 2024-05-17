@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忘記密碼</title>
+    <!--Filepond JS-->
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet"/>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .cid-forget-form form input {
+            border: 1px solid #ddd;
+            background: none;
+            height: 40px;
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 0 20px;
+            color: #222222;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="cid-forget">
+                            <h3>忘記密碼</h3>
+                            <div class="cid-forget">
+                                <div class="cid-forget-container">
+                                    <div class="cid-forget-form">
+                                        <form id="cid-forget-form">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <label for="email">註冊信箱：</label>
+                                            <input type="text" id="email" name="email"><br>
+                                            <button type="submit">點我發送重設密碼驗證信</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end   -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    let errorMessage = "";
+    $(document).ready(function () {
+        $("#cid-forget-form").submit(function (e) {
+            e.preventDefault();
+            errorMessage = "";
+            let email = $("#email").val().trim();
+            if (email === "") {
+                errorMessage += "<li>請輸入註冊信箱</li>";
+            }
+            if (errorMessage !== "") {
+                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+                return;
+            }
+            userData = {
+                email: email
+            };
+            $("#errorMessage").text("");
+
+            $.ajax({
+                url: "/api/member/cidForget",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "1":
+                                    alert("成功發送重設密碼信");
+                                    break;
+                                case "-1":
+                                    alert("查無此信箱，請前往註冊");
+                                    break;
+                                case "-2":
+                                    alert("冷卻時間為30秒，請稍後再試");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

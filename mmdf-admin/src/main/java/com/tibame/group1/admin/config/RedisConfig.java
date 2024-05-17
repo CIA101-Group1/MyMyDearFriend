@@ -20,8 +20,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig implements CacheErrorHandler {
 
     @Bean
-    public KeyGenerator emsKeyGenerator() {
-        return RedisUtils.createEmsKeyGenerator();
+    public KeyGenerator mmdfKeyGenerator() {
+        return RedisUtils.createMmdfKeyGenerator();
     }
 
     @Bean

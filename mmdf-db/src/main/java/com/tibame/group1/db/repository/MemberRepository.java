@@ -13,4 +13,10 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
 
     @Query("SELECT (count(m) > 0) FROM MemberEntity m WHERE m.email = :email")
     boolean existsByEmail(@Param("email") String email);
+
+    @Query("SELECT m FROM MemberEntity m WHERE m.email = :email")
+    MemberEntity findByEmail(@Param("email") String email);
+
+    @Query("SELECT m FROM MemberEntity m WHERE m.cidResetVerifyUUID = :cidResetVerifyUUID")
+    MemberEntity findByCidResetVerifyUUID(@Param("cidResetVerifyUUID") String cidResetVerifyUUID);
 }
