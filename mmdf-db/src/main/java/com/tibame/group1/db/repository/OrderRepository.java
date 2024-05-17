@@ -8,11 +8,9 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 
-    OrderEntity findByIdAndSellerId(Integer orderId, Integer sellerId);
+    List<OrderEntity> findBySellerIdOrderByCreateTimeDesc(Integer sellerId);
 
-    OrderEntity findByIdAndBuyerId(Integer orderId, Integer buyerId);
+    List<OrderEntity> findByBuyerIdOrderByCreateTimeDesc(Integer buyerId);
 
-    List<OrderEntity> findBySellerId(Integer sellerId);
-
-    List<OrderEntity> findByBuyerId(Integer buyerId);
+    List<OrderEntity> findBySellerIdOrBuyerIdOrderByCreateTimeDesc(Integer sellerId, Integer buyerId);
 }

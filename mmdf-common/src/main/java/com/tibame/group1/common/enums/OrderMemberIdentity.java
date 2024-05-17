@@ -1,7 +1,8 @@
 package com.tibame.group1.common.enums;
 
-public enum OrderMemberStatus {
+public enum OrderMemberIdentity {
     BUYER,
     SELLER,
-    NONE
+    BOTH,
+    ALL
 }
