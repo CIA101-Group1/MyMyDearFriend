@@ -1,35 +1,38 @@
 package com.tibame.group1.db.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Immutable;
-
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "bid")
-@Immutable
 public class BidEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bid_id", nullable = false)
-    private String bidId;
+    private Integer id;
 
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private com.tibame.group1.db.entity.BidProductEntity product;
 
-    @Column(name = "member_id", nullable = false)
-    private String memberId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id", nullable = false)
+    private MemberEntity member;
 
+    @NotNull
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
+    @NotNull
     @Column(name = "bid_time", nullable = false)
-    private LocalDateTime bidTime;
+    private Timestamp bidTime;
 }
