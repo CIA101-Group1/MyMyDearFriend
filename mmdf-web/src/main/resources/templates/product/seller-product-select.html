@@ -301,9 +301,7 @@
                                         0.00
                                     </td>
                                     <td>
-<!--                                        <button type="button" class="btn btn-primary" th:onclick="'updateProduct(\'' + ${product.productId} + '\')'">修改</button>-->
-                                        <button type="button" class="btn btn-primary" th:onclick="'redirectToUpdatePage(\'' + ${product.productId} + '\')'">修改</button>
-<!--                                        <button onclick="redirectToUpdatePage(productId)">修改</button>-->
+                                        <a th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}" class="btn btn-primary">修改</a>
                                     </td>
 
                                 </tr>
@@ -351,24 +349,12 @@
 </div>
 <!--shop  area end-->
 
-<script th:inline="javascript">
-    function redirectToUpdatePage(productId) {
-        // 建立要夾帶的其他資料，這裡假設夾帶一個名為 additionalData 的參數，值為 "additionalInfo"
-        var additionalData = "additionalInfo";
-        console.log(additionalData)
-
-        // 建立要跳轉的 URL，將 productId 及其他資料夾帶在 URL 中
-        var url = '/product/seller/update?productId=' + productId + '&additionalData=' + additionalData;
-
-        // 使用 JavaScript 進行頁面跳轉
-        window.location.href = url;
-    }
-</script>
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
+
 </body>
 </html>

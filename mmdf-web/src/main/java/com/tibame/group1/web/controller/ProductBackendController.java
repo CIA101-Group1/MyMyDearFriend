@@ -77,7 +77,7 @@ public class ProductBackendController {
 //    0517
     @PostMapping("product/update")
     @CheckLogin
-    public ResDTO<ProductUpdateResDTO> productUpdate(
+    public ResDTO<ProductUpdateResDTO> productGetOne(
             @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
         ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
         res.setData(productService.productUpdate(req, loginSource));

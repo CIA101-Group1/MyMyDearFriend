@@ -75,5 +75,10 @@ public interface ProductService {
      */
     HashMap<Integer,String>  getProductStatusList();
 
+//    0517
+
+    ProductEntity getOneSellerProduct(Integer productId);
+
+    List<ProductImgEntity> getProductImgListByProductId(Integer productId);
 
 }

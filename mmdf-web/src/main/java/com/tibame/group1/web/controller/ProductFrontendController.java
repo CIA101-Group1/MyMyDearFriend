@@ -86,4 +86,18 @@ public class ProductFrontendController {
         return "/product/seller-product-update"; // 要導入的html
     }
 
+    /**
+     * 透過商品ID取得單一商品，進入修改畫面
+     */
+    @GetMapping("/seller/product/getOne/{productId}")
+    public String getOneProduct(@PathVariable("productId") Integer productId, Model model) {
+        ProductEntity productEntity = productService.getOneSellerProduct(productId);
+        model.addAttribute("productEntity", productEntity);
+
+        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+
+        return "/product/product-getOne";
+    }
+
 }
