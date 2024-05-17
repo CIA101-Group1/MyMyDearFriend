@@ -5,9 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class  MemberAllReqDTO {
+public class CouponAllReqDTO {
 
-    private Boolean isVerified;
+    private String couponId;
 
-    private Boolean sellerStatus;
+    private String title;
+
 }
