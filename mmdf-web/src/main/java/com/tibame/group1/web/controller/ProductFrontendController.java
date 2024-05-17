@@ -1,6 +1,7 @@
 package com.tibame.group1.web.controller;
 
 import com.tibame.group1.db.entity.ProductEntity;
+import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.web.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -68,9 +70,34 @@ public class ProductFrontendController {
         }
     }
 
+//    0517
+
     @GetMapping("product/seller/create")
-    public String productCreate() {
+    public String ProductCreate(Model model) {
+        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
         return "/product/seller-product-create"; // 要導入的html
+    }
+
+    @GetMapping("product/seller/update")
+    public String ProductUpdate(Model model) {
+        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+        return "/product/seller-product-update"; // 要導入的html
+    }
+
+    /**
+     * 透過商品ID取得單一商品，進入修改畫面
+     */
+    @GetMapping("/seller/product/getOne/{productId}")
+    public String getOneProduct(@PathVariable("productId") Integer productId, Model model) {
+        ProductEntity productEntity = productService.getOneSellerProduct(productId);
+        model.addAttribute("productEntity", productEntity);
+
+        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+
+        return "/product/product-getOne";
     }
 
 }
