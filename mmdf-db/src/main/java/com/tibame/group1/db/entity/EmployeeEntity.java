@@ -5,19 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 @Immutable
+@Table(name = "employee")
 public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer employeeId;
 
     @Column(name = "employee_account", nullable = false, length = 20)
-    private String memberAccount;
+    private String employeeAccount;
 
     @Column(name = "employee_password", nullable = false, length = 200)
     private String employeePassword;
@@ -31,7 +32,10 @@ public class EmployeeEntity {
     @Column(name = "employee_phone", nullable = false, length = 20)
     private String employeePhone;
 
-    private LocalDateTime employeeCreateTime;
+    @Column(name = "employee_gender", nullable = false)
+    private String employeeGender;
+
+    private Date employeeCreateTime;
 
     private Integer employeeStatus;
 

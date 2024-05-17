@@ -1,18 +1,18 @@
 package com.tibame.group1.admin.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/mmdf/admin")
+@Controller
 public class EmployeeFrontedController {
 
-    @GetMapping("employee/login")
+    @GetMapping("/employee/login")
     public String employeeLogin(Model model) {
-        return "employee-login"; //要導入的html
+        return "/employee/employee-login"; //要導入的html
     }
 
     @GetMapping("employee/detail")

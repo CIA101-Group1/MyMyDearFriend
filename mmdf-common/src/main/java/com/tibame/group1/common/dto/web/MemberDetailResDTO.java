@@ -1,16 +1,13 @@
 package com.tibame.group1.common.dto.web;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class MemberDetailResDTO {
-    private String memberId;
-
     private String memberAccount;
-
-    private String cid;
 
     private String name;
 
@@ -28,27 +25,25 @@ public class MemberDetailResDTO {
 
     private Boolean isVerified;
 
-    private String verificationSendingTime;
-
-    private String verifiedTime;
-
-    private String joinTime;
-
-    private String walletAmount;
-
-    private String walletAvailableAmount;
-
-    private String walletCid;
-
-    private String walletQuestion;
-
-    private String walletAnswer;
-
     private Boolean sellerStatus;
 
-    private String scoreNumber;
+    private Integer scoreNumber;
 
-    private String scoreSum;
+    private Integer scoreSum;
 
     private String imageBase64;
+
+    private String status;
+
+    @AllArgsConstructor
+    @Getter
+    public enum Status {
+        QUERY_SUCCESS("1", "查詢成功"),
+
+        MEMBER_NOTFOUND("-1", "查無此會員資料");
+
+        private final String code;
+
+        private final String message;
+    }
 }

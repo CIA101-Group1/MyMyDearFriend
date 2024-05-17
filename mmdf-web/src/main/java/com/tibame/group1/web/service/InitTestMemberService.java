@@ -48,8 +48,8 @@ public class InitTestMemberService {
         member.setEmail(config.getEmail());
         member.setBirth(new Date());
         member.setTwPersonId(config.getTwPersonId());
-        member.setCity("台北市");
-        member.setAddress("中山區");
+        member.setCity("臺北市");
+        member.setAddress("臺北市_中山區_testAccount");
         member.setIsVerified(true);
         member.setJoinTime(new Date());
         member.setVerifySendingTime(new Date());

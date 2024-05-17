@@ -1,8 +1,9 @@
 package com.tibame.group1.web.service;
 
 import com.tibame.group1.common.exception.AuthorizationException;
+import com.tibame.group1.web.dto.CidResetVerifySourceDTO;
 import com.tibame.group1.web.dto.EmailVerifySourceDTO;
-import com.tibame.group1.common.dto.web.LoginSourceDTO;
+import com.tibame.group1.web.dto.LoginSourceDTO;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -102,6 +103,47 @@ public class JwtService {
             EmailVerifySourceDTO emailVerifySource = new EmailVerifySourceDTO();
             emailVerifySource.setMemberId(claims.get("memberId", Integer.class));
             return emailVerifySource;
+        } catch (Exception e) {
+            throw new AuthorizationException("信箱驗證碼檢驗失敗");
+        }
+    }
+
+    /**
+     * 產生重設密碼驗證碼
+     *
+     * @param cidResetVerifySource 驗證碼資訊
+     * @return 重設密碼驗證碼
+     */
+    public String encodeCidResetVerify(CidResetVerifySourceDTO cidResetVerifySource) {
+        return Jwts.builder()
+                .claim("cidResetVerifyUUID", cidResetVerifySource.getCidResetVerifyUUID())
+                .subject("重設密碼驗證")
+                .issuedAt(new Date())
+                .signWith(createSecretKey())
+                .compact();
+    }
+
+    /**
+     * 拆解重設密碼驗證碼
+     *
+     * @param verifyCode 重設密碼驗證碼
+     * @return 驗證碼資訊
+     */
+    public CidResetVerifySourceDTO decodeCidResetVerify(String verifyCode)
+            throws AuthorizationException {
+        try {
+            SecretKeySpec secretKey = createSecretKey();
+            Claims claims =
+                    Jwts.parser()
+                            .decryptWith(secretKey)
+                            .verifyWith(secretKey)
+                            .build()
+                            .parseSignedClaims(verifyCode)
+                            .getPayload();
+            CidResetVerifySourceDTO cidResetVerifySource = new CidResetVerifySourceDTO();
+            cidResetVerifySource.setCidResetVerifyUUID(
+                    claims.get("cidResetVerifyUUID", String.class));
+            return cidResetVerifySource;
         } catch (Exception e) {
             throw new AuthorizationException("信箱驗證碼檢驗失敗");
         }

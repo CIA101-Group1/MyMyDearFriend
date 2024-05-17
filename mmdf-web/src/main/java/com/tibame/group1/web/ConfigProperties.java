@@ -56,12 +56,18 @@ public class ConfigProperties extends com.tibame.group1.common.ConfigProperties 
     /** 測試寄驗證信用信箱密碼 */
     private String testEmailCid;
 
-    /** 發送驗證信間隔時間 */
-    private Integer emailSendingCooldownSecond;
+    /** 發送信箱驗證信間隔時間 */
+    private Integer emailVerifySendingCooldownSecond;
 
     /** 測試用信箱驗證連結 */
     private String emailVerifyLink;
 
     /** web 網址 */
     private String webURL;
+
+    /** 發送重設密碼驗證信間隔時間 */
+    private Integer cidResetSendingCooldownSecond;
+
+    /** 重設密碼驗證碼存活時間 */
+    private Integer cidResetVerifyCodeSurvivalMinute;
 }

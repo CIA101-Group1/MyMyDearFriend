@@ -3,6 +3,7 @@ package com.tibame.group1.common.utils;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 /**
  * 常用共用方法
@@ -38,5 +39,15 @@ public class CommonUtils {
         } catch (NoSuchAlgorithmException e) {
             throw new IOException("MD5加密失敗");
         }
+    }
+
+    /**
+     * 產生UUID
+     *
+     * @return UUID字串
+     */
+    public static String generateUUID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 }

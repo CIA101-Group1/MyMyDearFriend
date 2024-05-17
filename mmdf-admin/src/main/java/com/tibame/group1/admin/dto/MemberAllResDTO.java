@@ -1,16 +1,15 @@
-package com.tibame.group1.common.dto.web;
+package com.tibame.group1.admin.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberResDTO {
-    private Integer memberId;
+public class MemberAllResDTO {
+
+    private String memberId;
 
     private String memberAccount;
-
-    private String cid;
 
     private String name;
 
@@ -20,15 +19,13 @@ public class MemberResDTO {
 
     private String birth;
 
-    private String twPersonId;
-
     private String city;
 
     private String address;
 
     private Boolean isVerified;
 
-    private String verificationSendingTime;
+    private String verifySendingTime;
 
     private String verifiedTime;
 
@@ -38,12 +35,6 @@ public class MemberResDTO {
 
     private Integer walletAvailableAmount;
 
-    private String walletCid;
-
-    private String walletQuestion;
-
-    private String walletAnswer;
-
     private Boolean sellerStatus;
 
     private Integer scoreNumber;
@@ -51,4 +42,6 @@ public class MemberResDTO {
     private Integer scoreSum;
 
     private String imageBase64;
+
+    private String cidResetSendingTime;
 }

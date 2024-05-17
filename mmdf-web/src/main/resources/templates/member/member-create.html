@@ -1,185 +1,320 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊會員</title>
+    <!--Filepond JS-->
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet"/>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .dropdown select, .dropdown input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        .dropdown select:focus, .dropdown input:focus {
+            outline: none;
+        }
+    </style>
 </head>
 <body>
-<h2>註冊會員</h2>
-<form id="createForm">
-    <div id="errorMessage" style="color: red;"></div>
-    <div>
-        <label for="memberAccount">帳號：</label>
-        <input type="text" id="memberAccount" name="memberAccount">
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <h3>填寫會員資料</h3>
+                            <div class="login">
+                                <div class="login_form_container">
+                                    <div class="account_login_form">
+                                        <!-- 我的 Code -->
+                                        <form id="createForm">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <div>
+                                                <label for="memberAccount">帳號：</label>
+                                                <input type="text" id="memberAccount" name="memberAccount">
+                                            </div>
+                                            <div>
+                                                <label for="cid">密碼：</label>
+                                                <input type="password" id="cid" name="cid">
+                                            </div>
+                                            <div>
+                                                <label for="name">姓名：</label>
+                                                <input type="text" id="name" name="name">
+                                            </div>
+                                            <div>
+                                                <label for="phone">電話：</label>
+                                                <input type="tel" id="phone" name="phone">
+                                            </div>
+                                            <div>
+                                                <label for="email">電子郵件：</label>
+                                                <input type="email" id="email" name="email">
+                                            </div>
+                                            <div>
+                                                <label for="birth">生日：</label>
+                                                <input type="date" id="birth" name="birth">
+                                            </div>
+                                            <div>
+                                                <label for="twPersonId">身份證字號：</label>
+                                                <input type="text" id="twPersonId" name="twPersonId">
+                                            </div>
+                                            <div class="dropdown">
+                                                <label for="county_box">地址：</label>
+                                                <select name="city" id="county_box">
+                                                    <option value="">選擇縣市</option>
+                                                </select>
+
+                                                <label for="district_box"></label>
+                                                <select name="district" id="district_box">
+                                                    <option value="">選擇鄉鎮市區</option>
+                                                </select>
+
+                                                <label for="address"></label>
+                                                <input type="text" id="address" name="name"
+                                                       placeholder="請接續填寫剩餘地址資訊">
+                                            </div>
+                                            <div>
+                                                <label for="walletCid">錢包密碼：</label>
+                                                <input type="password" id="walletCid" name="walletCid">
+                                            </div>
+                                            <div>
+                                                <label for="walletQuestion">錢包密碼提示問題：</label>
+                                                <input type="text" id="walletQuestion" name="walletQuestion">
+                                            </div>
+                                            <div>
+                                                <label for="walletAnswer">錢包密碼提示答案：</label>
+                                                <input type="text" id="walletAnswer" name="walletAnswer">
+                                            </div>
+                                            <div id="imgErrorMsg" style="color: red;"></div>
+                                            <div class="form-group">
+                                                <label for="filepond">會員大頭照:</label>
+                                                <input
+                                                        id="filepond"
+                                                        type="file"
+                                                        class="filepond"
+                                                        name="upFiles"
+                                                        data-max-file-size="3MB"
+                                                        data-max-files="5"
+                                                        accept="image/jpg, image/jpeg, image/png"
+                                                />
+                                            </div>
+                                            <div>
+                                                <button type="button" id="saveBtn">送出</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="cid">密碼：</label>
-        <input type="password" id="cid" name="cid">
-    </div>
-    <div>
-        <label for="name">姓名：</label>
-        <input type="text" id="name" name="name">
-    </div>
-    <div>
-        <label for="phone">電話：</label>
-        <input type="tel" id="phone" name="phone">
-    </div>
-    <div>
-        <label for="email">電子郵件：</label>
-        <input type="email" id="email" name="email">
-    </div>
-    <div>
-        <label for="birth">生日：</label>
-        <input type="date" id="birth" name="birth">
-    </div>
-    <div>
-        <label for="twPersonId">身份證字號：</label>
-        <input type="text" id="twPersonId" name="twPersonId">
-    </div>
-    <div>
-        <label for="city">縣市：</label>
-        <input type="text" id="city" name="city">
-    </div>
-    <div>
-        <label for="address">地址：</label>
-        <input type="text" id="address" name="address">
-    </div>
-    <div>
-        <label for="walletCid">錢包密碼：</label>
-        <input type="password" id="walletCid" name="walletCid">
-    </div>
-    <div>
-        <label for="walletQuestion">錢包密碼提示問題：</label>
-        <input type="text" id="walletQuestion" name="walletQuestion">
-    </div>
-    <div>
-        <label for="walletAnswer">錢包密碼提示答案：</label>
-        <input type="text" id="walletAnswer" name="walletAnswer">
-    </div>
-    <!--    <div>-->
-    <!--        <label for="avatar">會員大頭照：</label>-->
-    <!--        <input type="file" id="avatar" name="avatar">-->
-    <!--    </div>-->
-    <div>
-        <button type="button" id="saveBtn">送出</button>
-    </div>
-</form>
+</section>
+<!-- main end   -->
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+<!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
+<script src="/js/address-of-tw.js"></script>
 <script>
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    let inputElement = document.querySelector("#filepond");
+    let pond = FilePond.create(inputElement);
+    pond.setOptions({
+        required: false,
+        storeAsFile: true,
+        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br>',
+        itemInsertLocation: "after",
+        imagePreviewHeight: "150px",
+        imagePreviewTransparencyIndicator: "grid",
+    });
+
     let userData = {};
     let errorMessage = "";
 
-    function validateForm() {
-        userData = {};
-        errorMessage = "";
+    $(document).ready(function () {
+        $("#saveBtn").click(function (e) {
+            e.preventDefault();
+            errorMessage = "";
+            let memberAccount = $("#memberAccount").val().trim();
+            if (memberAccount === "" || !/^[(一-龥)a-zA-Z0-9_]{2,20}$/.test(memberAccount)) {
+                errorMessage += "<li>會員帳號必須是中、英文字母、數字和_，且長度必需在2到20之間</li>";
+            }
 
-        let memberAccount = $("#memberAccount").val().trim();
-        if (memberAccount === "" || !/^[(一-龥)a-zA-Z0-9_]{2,20}$/.test(memberAccount)) {
-            errorMessage += "<li>會員帳號必須是中、英文字母、數字和_，且長度必需在2到20之間</li>";
-        }
+            let cid = $("#cid").val().trim();
+            if (cid === "" || !/^[a-zA-Z0-9]{6,16}$/.test(cid)) {
+                errorMessage += "<li>密碼：只能是數字和英文字母，且長度必須在6到16之間</li>";
+            }
 
-        let cid = $("#cid").val().trim();
-        if (cid === "" || !/^[a-zA-Z0-9]{6,16}$/.test(cid)) {
-            errorMessage += "<li>密碼：只能是數字和英文字母，且長度必須在6到16之間</li>";
-        }
+            let name = $("#name").val().trim();
+            if (name === "" || !/^[\u4e00-\u9fa5a-zA-Z]{2,20}$/.test(name)) {
+                errorMessage += "<li>姓名必須是中、英文字母，且長度必需在2到20之間</li>";
+            }
 
-        let name = $("#name").val().trim();
-        if (name === "" || !/^[\u4e00-\u9fa5a-zA-Z]{2,20}$/.test(name)) {
-            errorMessage += "<li>姓名必須是中、英文字母，且長度必需在2到20之間</li>";
-        }
+            let phone = $("#phone").val().trim();
+            if (phone === "" || !/^[0-9]{10}$/.test(phone)) {
+                errorMessage += "<li>電話必須是10位數字，且不含符號</li>";
+            }
 
-        let phone = $("#phone").val().trim();
-        if (phone === "" || !/^[0-9]{10}$/.test(phone)) {
-            errorMessage += "<li>電話必須是10位數字，且不含符號</li>";
-        }
+            let email = $("#email").val().trim();
+            if (email === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorMessage += "<li>請填寫正確的電子郵件格式</li>";
+            }
 
-        let email = $("#email").val().trim();
-        if (email === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            errorMessage += "<li>請填寫正確的電子郵件格式</li>";
-        }
+            let birth = $("#birth").val().trim().split("-").join("");
+            if (birth === "") {
+                errorMessage += "<li>請選擇生日</li>";
+            }
 
-        let birth = $("#birth").val().trim().split("-").join("");
-        if (birth === "") {
-            errorMessage += "<li>請選擇生日</li>";
-        }
+            let twPersonId = $("#twPersonId").val().trim();
+            if (twPersonId === "" || !/^[A-Z][12]\d{8}$/.test(twPersonId)) {
+                errorMessage += "<li>身份證字號格式不正確</li>";
+            }
 
-        let twPersonId = $("#twPersonId").val().trim();
-        if (twPersonId === "" || !/^[A-Z][12]\d{8}$/.test(twPersonId)) {
-            errorMessage += "<li>身份證字號格式不正確</li>";
-        }
+            // 獲取縣市和鄉鎮市區的值
+            let county = $('#county_box').val();
+            let district = $('#district_box').val();
+            let address = $("#address").val().trim();
+            // 檢查是否選擇了縣市和鄉鎮市區
+            if (county === "" || district === "") {
+                errorMessage += "<li>請選擇縣市和鄉鎮市區</li>";
+            }
+            if (address === "") {
+                errorMessage += "<li>請填寫地址</li>";
+            }
+            let fullAddress = county + "_" + district + "_" + address;
 
-        let city = $("#city").val().trim();
-        if (city === "") {
-            errorMessage += "<li>請填寫城市</li>";
-        }
+            let walletCid = $("#walletCid").val().trim();
+            if (walletCid === "" || !/^[a-zA-Z0-9]{6,16}$/.test(walletCid)) {
+                errorMessage += "<li>錢包密碼：只能是數字和英文字母，且長度必須在6到16之間</li>";
+            }
 
-        let address = $("#address").val().trim();
-        if (address === "") {
-            errorMessage += "<li>請填寫地址</li>";
-        }
+            let walletQuestion = $("#walletQuestion").val().trim();
+            if (walletQuestion === "") {
+                errorMessage += "<li>錢包密碼提示問題請勿空白</li>";
+            }
 
-        let walletCid = $("#walletCid").val().trim();
-        if (walletCid === "" || !/^[a-zA-Z0-9]{6,16}$/.test(walletCid)) {
-            errorMessage += "<li>錢包密碼：只能是數字和英文字母，且長度必須在6到16之間</li>";
-        }
+            let walletAnswer = $("#walletAnswer").val().trim();
+            if (walletAnswer === "") {
+                errorMessage += "<li>錢包密碼提示答案請勿空白</li>";
+            }
 
-        let walletQuestion = $("#walletQuestion").val().trim();
-        if (walletQuestion === "") {
-            errorMessage += "<li>錢包密碼提示問題請勿空白</li>";
-        }
+            if (pond.getFile() !== null) { // 有圖片
+                let file = pond.getFile().file;
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let imageBase64 = e.target.result;
+                    userData = {
+                        memberAccount: memberAccount,
+                        cid: cid,
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        birth: birth,
+                        twPersonId: twPersonId,
+                        city: county,
+                        address: fullAddress,
+                        walletCid: walletCid,
+                        walletQuestion: walletQuestion,
+                        walletAnswer: walletAnswer,
+                        imageBase64: imageBase64
+                    };
+                    saveUserData();
+                };
+                reader.readAsDataURL(file);
+            } else { // 沒有圖片
+                userData = {
+                    memberAccount: memberAccount,
+                    cid: cid,
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    birth: birth,
+                    twPersonId: twPersonId,
+                    city: county,
+                    address: fullAddress,
+                    walletCid: walletCid,
+                    walletQuestion: walletQuestion,
+                    walletAnswer: walletAnswer
+                };
+                saveUserData();
+            }
 
-        let walletAnswer = $("#walletAnswer").val().trim();
-        if (walletAnswer === "") {
-            errorMessage += "<li>錢包密碼提示答案請勿空白</li>";
-        }
-
-        // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
-        if (errorMessage !== "") {
-            document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
-            return false;
-        }
-
-        // 若所有檢查通過，設置好回傳的物件並回傳 true
-        userData = {
-            memberAccount: memberAccount,
-            cid: cid,
-            name: name,
-            phone: phone,
-            email: email,
-            birth: birth,
-            twPersonId: twPersonId,
-            city: city,
-            address: address,
-            walletCid: walletCid,
-            walletQuestion: walletQuestion,
-            walletAnswer: walletAnswer
-        };
-        return true;
-    }
-
-    $("#saveBtn").click(function () {
-        if (validateForm()) {
+            // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
+            if (errorMessage !== "") {
+                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+                return false;
+            }
             $("#errorMessage").text("");
-            $.ajax({
-                url: "/api/member/create",
-                method: "post",
-                contentType: "application/json",
-                data: JSON.stringify(userData),
-                success(response) {
-                    if (apiResponseJSON(response)) {
-                        alert("註冊成功，請至信箱完成驗證");
-                        localStorage.setItem("authorization", response.data.authorization);
-                        window.location.href = "/test-index";
-                    }
-                },
-                error(xhr, status, error) {
-                    alert("伺服器連線失敗: " + error);
-                }
-            });
-        }
+        });
     });
+
+    function saveUserData() {
+        $.ajax({
+            url: "/api/member/create",
+            method: "post",
+            contentType: "application/json",
+            data: JSON.stringify(userData),
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "1":
+                                alert("註冊成功，請至信箱完成驗證");
+                                localStorage.setItem("authorization", response.data.authorization);
+                                window.location.href = "/";
+                                break;
+                            case "-1":
+                                alert("上傳檔案格式錯誤");
+                                break;
+                            case "-2":
+                                alert("該帳號已存在");
+                                break;
+                            case "-3":
+                                alert("該信箱已存在");
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
+                    }
+                });
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+    }
 </script>
 </body>
 </html>
