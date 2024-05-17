@@ -85,25 +85,28 @@
             contentType: "application/json",
             data: JSON.stringify(userData),
             success(response) {
-                if (apiResponseJSON(response)) {
-                    switch (response.data.status) {
-                        case "0":
-                            alert("驗證碼過期，請重試...");
-                            break;
-                        case "1":
-                            alert("驗證成功！");
-                            window.location.href = "/member/detail";
-                            break;
-                        case "-1":
-                            alert("驗證碼錯誤！");
-                            break;
-                        case "-2":
-                            alert("驗證碼失效，該信箱已驗證過！");
-                            break;
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "0":
+                                alert("驗證碼過期，請重試...");
+                                break;
+                            case "1":
+                                alert("驗證成功！");
+                                window.location.href = "/member/detail";
+                                break;
+                            case "-1":
+                                alert("驗證碼錯誤！");
+                                break;
+                            case "-2":
+                                alert("驗證碼失效，該信箱已驗證過！");
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
                     }
-                } else {
-                    alert(response.message);
-                }
+                });
             },
             error(xhr, status, error) {
                 alert("伺服器連線失敗: " + error);

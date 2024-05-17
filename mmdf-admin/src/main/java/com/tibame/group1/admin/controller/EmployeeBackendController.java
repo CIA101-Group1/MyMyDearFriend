@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("mmdf/admin/api")
+@RequestMapping("/api")
 public class EmployeeBackendController {
 
     @Autowired
