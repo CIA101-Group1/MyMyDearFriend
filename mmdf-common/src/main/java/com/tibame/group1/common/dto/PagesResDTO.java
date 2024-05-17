@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class PagesResDTO {
 
-    private String totalPage;
+    private Integer totalPages;
 
-    private String totalCount;
+    private Integer totalCount;
 }

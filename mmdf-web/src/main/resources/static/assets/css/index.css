@@ -1,0 +1,35 @@
+.hello-color {color:yellow;}
+
+body {
+  padding-top: 8rem;
+  font-weight: bold;
+}
+
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+h1{
+	color:red;
+}
+
+h2{
+	color:Chartreuse;
+	padding: 0rem 1.0rem 0rem 0rem;
+}
+
+.navbar-brand{
+  font-size: 25px;
+}
+
+a:hover, a:active {
+	color: red;
+	font-weight: bold;
+}
+
+.index-green {
+	font-size: 35px;
+	color: green;
+	font-weight: bold;
+}
