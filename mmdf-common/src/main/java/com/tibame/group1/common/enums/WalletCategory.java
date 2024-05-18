@@ -7,9 +7,6 @@ import lombok.Data;
  * todo 是否要加上金錢顯示
  */
 
-/*
-*todo：要如何顯示的時候還能加上$$
-* */
 
 @AllArgsConstructor
 public enum WalletCategory {
@@ -29,6 +26,5 @@ public enum WalletCategory {
 
 
     private final String code;
-
     private final String message;
 }
