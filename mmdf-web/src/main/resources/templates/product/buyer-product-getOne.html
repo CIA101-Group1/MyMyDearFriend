@@ -71,7 +71,7 @@
         <div class="col-lg-8 mt-5 mb-5">
             <form id="product_form" role="form" data-toggle="validator">
                 <div class="form-group">
-<!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;"></div>-->
+                    <!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;"></div>-->
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-md-1 col-form-label">商品編號</label>
@@ -177,7 +177,7 @@
 
                 <input type="submit" value="修改" class="btn btn-danger btn-block"/>
             </form>
-<!--            <input type="submit" id="fast" value="一鍵修改" class="btn btn-danger btn-block"/>-->
+            <!--            <input type="submit" id="fast" value="一鍵修改" class="btn btn-danger btn-block"/>-->
         </div>
     </div>
 </div>
@@ -336,9 +336,14 @@
                 },
                 data: JSON.stringify(userData), // 將數據轉換為 JSON 格式
                 contentType: "application/json", // 設置請求頭的 Content-Type
-                success: function (res) {
-                    console.log(res);
-                    alert("商品修改成功");
+                // success: function (res) {
+                //     console.log(res);
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            alert("商品修改成功");
+                        },
+                    });
                 },
                 error: function (error) {
                     alert("伺服器連線失敗: " + error);
@@ -347,17 +352,17 @@
         }
 
         // 監聽點擊事件
-    //     $('#fast').validator().on('click', function (e) {
-    //         // 阻止表單的預設行為
-    //         e.preventDefault();
-    //
-    //         // 修改欄位資料
-    //         $('#categoryId').val(1);
-    //         $('#name').val('新的商品名稱');
-    //         $('#price').val(99);
-    //         $('#quantity').val(99);
-    //         $('#description').val('新的描述');
-    //     });
+        //     $('#fast').validator().on('click', function (e) {
+        //         // 阻止表單的預設行為
+        //         e.preventDefault();
+        //
+        //         // 修改欄位資料
+        //         $('#categoryId').val(1);
+        //         $('#name').val('新的商品名稱');
+        //         $('#price').val(99);
+        //         $('#quantity').val(99);
+        //         $('#description').val('新的描述');
+        //     });
     });
 
 </script>

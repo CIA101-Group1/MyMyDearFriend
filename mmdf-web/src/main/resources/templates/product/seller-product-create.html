@@ -259,9 +259,14 @@
                 },
                 data: JSON.stringify(userData), // 將數據轉換為 JSON 格式
                 contentType: "application/json", // 設置請求頭的 Content-Type
-                success: function (res) {
-                    console.log(res);
-                    alert("商品新增成功");
+                // success: function (res) {
+                success(response) {
+                    apiResponseJSON(response, {
+                            onSuccess(data) {
+                                console.log(data);
+                                alert("商品新增成功");
+                            }
+                });
                 },
                 error: function (error) {
                     alert("伺服器連線失敗: " + error);

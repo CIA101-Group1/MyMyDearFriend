@@ -35,7 +35,7 @@ public class ProductFrontendController {
     @GetMapping("product/buyer/select")
     public String getProduct(Model model,
                              @RequestParam(value = "page", defaultValue = "0") int page,
-                             @RequestParam(value = "size", defaultValue = "10") int size) {
+                             @RequestParam(value = "size", defaultValue = "11") int size) {
         {
             //BackEndController
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
