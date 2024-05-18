@@ -79,12 +79,12 @@ public class ProductFrontendController {
         return "/product/seller-product-create"; // 要導入的html
     }
 
-    @GetMapping("product/seller/update")
-    public String ProductUpdate(Model model) {
-        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
-        model.addAttribute("productCategoryList", productCategoryList);
-        return "/product/seller-product-update"; // 要導入的html
-    }
+//    @GetMapping("product/seller/update")
+//    public String ProductUpdate(Model model) {
+//        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+//        model.addAttribute("productCategoryList", productCategoryList);
+//        return "/product/seller-product-update"; // 要導入的html
+//    }
 
     /**
      * 透過商品ID取得單一商品，進入修改畫面
@@ -97,7 +97,7 @@ public class ProductFrontendController {
         List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
         model.addAttribute("productCategoryList", productCategoryList);
 
-        return "/product/product-getOne";
+        return "/product/seller-product-getOne-update";
     }
 
 }
