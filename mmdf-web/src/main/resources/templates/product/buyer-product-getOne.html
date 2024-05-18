@@ -40,6 +40,8 @@
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
+    <script src="/js/api-response-utils.js"></script>
+
     <script th:src="@{/js/custom.js}"></script>
 
     <!-- 自訂 CSS 樣式 -->
@@ -341,6 +343,7 @@
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
+                            console.log(data);
                             alert("商品修改成功");
                         },
                     });
