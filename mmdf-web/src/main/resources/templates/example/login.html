@@ -1,0 +1,64 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>範例</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- customer login start -->
+<div class="customer_login">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!--login area start-->
+            <div class="col-lg-6 col-md-6">
+                <div class="account_form">
+                    <h2>login</h2>
+                    <form action="#">
+                        <p>
+                            <label>Username or email <span>*</span></label>
+                            <input type="text">
+                        </p>
+                        <p>
+                            <label>Passwords <span>*</span></label>
+                            <input type="password">
+                        </p>
+                        <div class="login_submit">
+                            <a href="#">Lost your password?</a>
+                            <label for="remember">
+                                <input id="remember" type="checkbox">
+                                Remember me
+                            </label>
+                            <button type="submit">login</button>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <!--login area start-->
+        </div>
+    </div>
+</div>
+<!-- customer login end -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+</body>
+</html>
