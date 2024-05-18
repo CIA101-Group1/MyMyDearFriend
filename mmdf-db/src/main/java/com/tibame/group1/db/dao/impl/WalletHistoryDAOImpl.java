@@ -48,7 +48,7 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
         Map<String, Object> map = new HashMap<>();
         map.put("memberID", walletReqDTO.getMemberID());
         map.put("changeAmount", walletReqDTO.getChangeAmount());
-        map.put("changeType", walletReqDTO.getChangeType());
+        map.put("changeType", walletReqDTO.getChangeType().toString());
 
         Date now = new Date();
         map.put("changeTime", now);

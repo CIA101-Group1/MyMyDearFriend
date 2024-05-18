@@ -1,5 +1,6 @@
 package com.tibame.group1.db.entity;
 
+import com.tibame.group1.common.enums.WalletCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,5 +30,5 @@ public class WalletHistoryEntity {
   private Integer changeAmount;
 
   @Column(name = "change_type", nullable = false)
-  private Integer changeType;
+  private WalletCategory changeType;
 }
