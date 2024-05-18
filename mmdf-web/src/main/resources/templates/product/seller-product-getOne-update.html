@@ -1,0 +1,378 @@
+<!doctype html>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>賣家商品單一查詢</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <!--css-->
+    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+    <!-- CSS
+ ========================= -->
+    <!--bootstrap min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
+    <!--owl carousel min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
+    <!--slick min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
+    <!--magnific popup min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
+    <!--font awesome css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
+    <!--ionicons min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
+    <!--animate css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
+    <!--jquery ui min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
+    <!--slinky menu css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
+    <!--plugins css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+
+    <!-- add member css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+    <script th:src="@{/js/custom.js}"></script>
+
+    <!-- 自訂 CSS 樣式 -->
+    <style>
+        .has-error .help-block.with-errors {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container d-flex justify-content-center">
+        <a class="navbar-brand" href="/">資料查看</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 mt-5 mb-5">
+            <form id="product_form" role="form" data-toggle="validator">
+                <div class="form-group">
+<!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;"></div>-->
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-md-1 col-form-label">商品編號</label>
+                    <div class="col-md-2">
+                        <input id="productId" name="productId" type="text" class="form-control" readonly="readonly"
+                               th:value="${productEntity.productId}"
+                        >
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-md-1 col-form-label">商品分類</label>
+                    <div class="col-md-2">
+                        <div class="dropdown">
+                            <select id="categoryId" name="categoryId" class="form-control" required>
+                                <option th:each="category : ${productCategoryList}"
+                                        th:value="${category.categoryId}"
+                                        th:text="${category.categoryName}"
+                                        th:selected="${category.categoryId} == ${productEntity.categoryId}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="name" class="col-md-1 col-form-label">商品名稱</label>
+                    <div class="col-md-6">
+                        <input id="name" name="name" type="text" class="form-control" placeholder="請輸入商品名稱"
+                               pattern=".{1,20}"
+                               data-error="格式錯誤，且長度必需在1到20之間"
+                               required="required"
+                               th:value="${productEntity.name}"
+                        >
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="price" class="col-md-1 col-form-label">價格</label>
+                    <div class="col-md-6">
+                        <input id="price" name="price" type="number" class="form-control" placeholder="請輸入商品價格"
+                               min="0" max="9999999999" step="1"
+                               data-error="請填入0-9數字，最多10個位數"
+                               required="required"
+                               th:value="${productEntity.price}"
+                        >
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="quantity" class="col-md-1 col-form-label">數量</label>
+                    <div class="col-md-6">
+                        <input id="quantity" name="quantity" type="number" class="form-control" placeholder="數量"
+                               min="0" max="9999999999" step="1"
+                               data-error="請填入0-9數字，最多10個位數"
+                               required="required"
+                               th:value="${productEntity.quantity}"
+                        >
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-md-1 col-form-label">商品描述</label>
+                    <div class="col-md-6">
+                        <textarea id="description" name="description" rows="5" cols="45" class="form-control"
+                                  placeholder="請輸入商品描述，讓你的商品更有吸引力"
+                                  pattern=".{1,200}"
+                                  data-error="格式錯誤，且長度必需在1到200之間"
+                                  required="required"
+                                  th:text="${productEntity.description}">
+                        </textarea>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6 mx-auto">
+                            <div id="preview-container1"
+                                 th:if="${productEntity.productImgs != null and productEntity.productImgs.size() > 0}"
+                                 th:id="'productImgTd_' + ${productEntity.productImgs[0].imageId}"
+                                 style="display: flex; justify-content: center; align-items: center;">
+                                <img th:src="'data:image/jpg;base64,'+${productEntity.productImgs[0].imageBase64}"
+                                     style="height: 180px;width: 180px" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="filepond">商品圖片</label>
+                    <input
+                            id="filepond"
+                            type="file"
+                            class="filepond"
+                            name="upFiles"
+                            data-max-file-size="3MB"
+                            data-max-files="5"
+                            required="required"
+                            data-error="請上傳圖片"
+                    />
+                    <div class="help-block with-errors"></div>
+                </div>
+
+                <input type="submit" value="修改" class="btn btn-danger btn-block"/>
+            </form>
+<!--            <input type="submit" id="fast" value="一鍵修改" class="btn btn-danger btn-block"/>-->
+        </div>
+    </div>
+</div>
+
+<script src='/assets/js/vendor/jquery-3.4.1.min.js'></script>
+<!--引用 Validator-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+<!--Filepond JS-->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script>
+    $(document).ready(function () {
+        // 初始化 FilePond
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        const inputElement = document.querySelector("#filepond");
+        const pond = FilePond.create(inputElement);
+        pond.setOptions({
+            required: true,
+            storeAsFile: true,
+            labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br> ',
+            itemInsertLocation: "after",
+            imagePreviewHeight: "150px",
+            imagePreviewTransparencyIndicator: "grid",
+        });
+
+        // 監聽表單提交事件
+        $('#product_form').validator().on('submit', function (e) {
+            //照片用code
+            let updateImg = false;
+            console.log("submit")
+            e.preventDefault(); // 防止原始表單提交
+
+            var idList = $('[id^="productImgTd_"]').map(function () {
+                return this.id; // 返回匹配元素的 ID
+            }).get();
+
+            //照片用code Start
+            // 獲取上傳的圖片
+            //1.維持舊照片: 沒有上傳新照片+imageId存在
+            if (!pond.getFile() && idList.length > 0) {
+                console.log('!pond.getFile() && idList == null >> 維持舊照片 >> 不更新照片');
+            }
+            //2.有舊照片更新舊照片: 上傳新照片+imageId存在
+            if (pond.getFile() && idList.length > 0) {
+                console.log('pond.getFile() && idList.length > 0 >> 沒有舊照片上傳全新的 >> 更新照片');
+                alert('確定更換照片嗎?');
+                updateImg = true;
+            }
+            //3.沒有舊照片: 上傳新照片+imageId不存在
+            if (pond.getFile() && idList.length === 0) {
+                console.log('pond.getFile() && idList.length === 0 >> 沒有舊照片上傳全新的 >> 更新照片');
+                updateImg = true;
+            }
+            //照片用code End
+
+            if (updateImg) {
+                let file = pond.getFile().file;
+                let image = null;
+                // 獲取表單數據
+                let productId = $('#productId').val();
+                let categoryId = $('#categoryId').val();
+                let name = $('#name').val();
+                let price = $('#price').val();
+                let quantity = $('#quantity').val();
+                let description = $('#description').val();
+
+                if (file) {
+                    // 使用 FileReader 讀取文件內容，轉為 Base64 格式
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var base64String = event.target.result.split(',')[1]; // 提取 base64 字串
+                        image = base64String;
+
+                        // 構造請求數據對象
+                        let userData = {
+                            productId: productId,
+                            name: name,
+                            price: price,
+                            quantity: quantity,
+                            description: description,
+                            categoryId: categoryId,
+                            // image: image,
+                            updateImg: updateImg
+                        };
+                        // 發送 AJAX 請求
+                        updateProductData(userData);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                // 構造請求數據對象
+                let userData = {
+                    productId: $('#productId').val(),
+                    name: $('#name').val(),
+                    price: $('#price').val(),
+                    quantity: $('#quantity').val(),
+                    description: $('#description').val(),
+                    categoryId: $('#categoryId').val(),
+                    updateImg: updateImg
+                };
+                // 發送 AJAX 請求
+                updateProductData(userData);
+            }
+
+
+            // if (!pond.getFile()) {
+            //     alert('請上傳圖片');
+            //     return false;
+            // }
+
+            // let file = pond.getFile().file;
+            // let image = null;
+            // // 如果表單驗證通過
+            // if (file) {
+            //     // 獲取表單數據
+            //     let productId = $('#productId').val();
+            //     let categoryId = $('#categoryId').val();
+            //     let name = $('#name').val();
+            //     let price = $('#price').val();
+            //     let quantity = $('#quantity').val();
+            //     let description = $('#description').val();
+            //
+            //     if (file) {
+            //         // 使用 FileReader 讀取文件內容，轉為 Base64 格式
+            //         var reader = new FileReader();
+            //         reader.onload = function (event) {
+            //             var base64String = event.target.result.split(',')[1]; // 提取 base64 字串
+            //             image = base64String;
+            //
+            //             // 構造請求數據對象
+            //             let userData = {
+            //                 productId: productId,
+            //                 name: name,
+            //                 price: price,
+            //                 quantity: quantity,
+            //                 description: description,
+            //                 categoryId: categoryId,
+            //                 image: image,
+            //                 updateImg: updateImg
+            //             };
+            //             // 發送 AJAX 請求
+            //             updateProductData(userData);
+            //         };
+            //         reader.readAsDataURL(file);
+            //     }
+            // }
+        });
+
+        // 定義一個函數來發送 AJAX 請求並創建產品數據
+        function updateProductData(userData) {
+            $.ajax({
+                url: "/api/product/update",
+                type: 'POST',
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: JSON.stringify(userData), // 將數據轉換為 JSON 格式
+                contentType: "application/json", // 設置請求頭的 Content-Type
+                // success: function (res) {
+                //     console.log(res);
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log(data);
+                            alert("商品修改成功");
+                        }
+                    });
+                },
+                error: function (error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        }
+
+        // 監聽點擊事件
+    //     $('#fast').validator().on('click', function (e) {
+    //         // 阻止表單的預設行為
+    //         e.preventDefault();
+    //
+    //         // 修改欄位資料
+    //         $('#categoryId').val(1);
+    //         $('#name').val('新的商品名稱');
+    //         $('#price').val(99);
+    //         $('#quantity').val(99);
+    //         $('#description').val('新的描述');
+    //     });
+    });
+
+</script>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+</body>
+</html>
