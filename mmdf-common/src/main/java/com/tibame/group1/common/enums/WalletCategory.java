@@ -7,6 +7,10 @@ import lombok.Data;
  * todo 是否要加上金錢顯示
  */
 
+/*
+*todo：要如何顯示的時候還能加上$$
+* */
+
 @AllArgsConstructor
 public enum WalletCategory {
 
@@ -21,7 +25,6 @@ public enum WalletCategory {
     DEPOSIT("4","入帳申請"),
 
     FEE("5","手續費");
-
 
 
 
