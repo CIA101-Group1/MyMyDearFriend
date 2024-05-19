@@ -7,6 +7,8 @@ import com.tibame.group1.web.service.WalletHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class WalletHistoryServiceImpl implements WalletHistoryService {
 
@@ -21,5 +23,10 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     @Override
     public Integer createWalletHistory(WalletReqDTO walletReqDTO) {
         return walletHistoryDAO.createWalletHistory(walletReqDTO);
+    }
+
+    @Override
+    public List<WalletHistoryEntity> getWallets() {
+        return walletHistoryDAO.getWallets();
     }
 }

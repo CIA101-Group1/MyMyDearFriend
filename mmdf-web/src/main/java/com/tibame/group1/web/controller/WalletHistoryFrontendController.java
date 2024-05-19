@@ -11,10 +11,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class WalletHistoryFrontendController {
 
   @Autowired private WalletHistoryService walletHistoryService;
+
+  @GetMapping("/wallets")
+  public ResponseEntity<List<WalletHistoryEntity>> getWallets() {
+    List<WalletHistoryEntity> walletHistoryEntityList = walletHistoryService.getWallets();
+
+    return ResponseEntity.status(HttpStatus.OK).body(walletHistoryEntityList);
+  }
 
   /** todo: 錢包分頁功能與每筆細項，用Lsit */
   @GetMapping("/wallets/{walletID}")
@@ -34,12 +43,12 @@ public class WalletHistoryFrontendController {
 
   @PostMapping("/wallets")
   public ResponseEntity<WalletHistoryEntity> createWalletHistory(
-      @RequestBody @Valid WalletReqDTO walletReqDTO){
+      @RequestBody @Valid WalletReqDTO walletReqDTO) {
+
     Integer walletID = walletHistoryService.createWalletHistory(walletReqDTO);
 
     WalletHistoryEntity wallet = walletHistoryService.getWalletHistoryById(walletID);
 
-   return ResponseEntity.status(HttpStatus.CREATED).body(wallet);
-
+    return ResponseEntity.status(HttpStatus.CREATED).body(wallet);
   }
 }

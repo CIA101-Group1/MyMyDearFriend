@@ -19,46 +19,60 @@ import java.util.Map;
 @Component
 public class WalletHistoryDAOImpl implements WalletHistoryDAO {
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  @Autowired private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Override
-    public WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId) {
-        String sql = "SELECT wallet_history_id, change_time, member_id, change_amount, change_type\n" +
-                "FROM wallet_history WHERE wallet_history_id = :wallet_history_id";
+  @Override
+  public WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId) {
+    String sql =
+        "SELECT wallet_history_id, change_time, member_id, change_amount, change_type\n"
+            + "FROM wallet_history WHERE wallet_history_id = :wallet_history_id";
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("wallet_history_id", walletHistoryId);
+    Map<String, Object> map = new HashMap<>();
+    map.put("wallet_history_id", walletHistoryId);
 
-        List<WalletHistoryEntity> walletHistoryEntityList = namedParameterJdbcTemplate.query(sql, map, new WalletRowMapperUtils());
+    List<WalletHistoryEntity> walletHistoryEntityList =
+        namedParameterJdbcTemplate.query(sql, map, new WalletRowMapperUtils());
 
-        if (walletHistoryEntityList.size() > 0) {
-            return walletHistoryEntityList.get(0);
-        } else {
-            return null;
-        }
+    if (walletHistoryEntityList.size() > 0) {
+      return walletHistoryEntityList.get(0);
+    } else {
+      return null;
     }
+  }
 
-    @Override
-    public Integer createWalletHistory(WalletReqDTO walletReqDTO) {
+  @Override
+  public Integer createWalletHistory(WalletReqDTO walletReqDTO) {
 
-        String sql = "INSERT INTO wallet_history (change_time, member_id, change_amount, change_type) " +
-        "VALUES (:changeTime, :memberID, :changeAmount, :changeType)";
+    String sql =
+        "INSERT INTO wallet_history (change_time, member_id, change_amount, change_type) "
+            + "VALUES (:changeTime, :memberID, :changeAmount, :changeType)";
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("memberID", walletReqDTO.getMemberID());
-        map.put("changeAmount", walletReqDTO.getChangeAmount());
-        map.put("changeType", walletReqDTO.getChangeType().toString());
+    Map<String, Object> map = new HashMap<>();
+    map.put("memberID", walletReqDTO.getMemberID());
+    map.put("changeAmount", walletReqDTO.getChangeAmount());
+    map.put("changeType", walletReqDTO.getChangeType().toString());
 
-        Date now = new Date();
-        map.put("changeTime", now);
+    Date now = new Date();
+    map.put("changeTime", now);
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
+    namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
 
-        int walletID = keyHolder.getKey().intValue();
+    int walletID = keyHolder.getKey().intValue();
 
-        return walletID;
-    }
+    return walletID;
+  }
+
+  @Override
+  public List<WalletHistoryEntity> getWallets() {
+    String sql =
+            "SELECT wallet_history_id, change_time, member_id, change_amount, change_type " +
+                    "FROM wallet_history";  // 修正拼接错误，添加空格
+
+    List<WalletHistoryEntity> walletHistoryEntityList = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(), new WalletRowMapperUtils());
+
+    return walletHistoryEntityList;
+  }
+
 }

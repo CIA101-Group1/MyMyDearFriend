@@ -20,7 +20,9 @@ public enum WalletCategory {
 
     DEPOSIT("4","入帳申請"),
 
-    FEE("5","手續費");
+    FEE("5","手續費"),
+
+    TEST("6", "測試用");
 
 
 
