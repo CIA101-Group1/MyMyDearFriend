@@ -10,8 +10,8 @@ public class HomePageController {
         return "home";
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/example")
     public String hello() {
-        return "hello";
+        return "example";
     }
 }

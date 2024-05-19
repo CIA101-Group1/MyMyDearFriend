@@ -1,0 +1,255 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>範例</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!--blog area start-->
+<div class="blog_page_section mt-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-md-12">
+                <div class="blog_wrapper">
+                    <article class="single_blog">
+                        <figure>
+                            <div class="blog_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/blogpage1.jpg" alt=""></a>
+                            </div>
+                            <figcaption class="blog_content">
+                                <h4 class="post_title"><a href="blog-details.html"><i class="fa fa-paper-plane"></i>
+                                    Blog image post</a></h4>
+                                <div class="blog_meta">
+                                    <p>By <a href="#">admin</a> / Date <a href="#">July 16, 2022</a> / Category: <a
+                                            href="#">eCommerce</a></p>
+                                </div>
+                                <p class="post_desc">Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras
+                                    pretium arcu ex. Aenean posuere libero eu augue condimentum rhoncus praesent
+                                    ornare.</p>
+                                <footer class="btn_more">
+                                    <a href="blog-details.html"> Read more</a>
+                                </footer>
+                            </figcaption>
+                        </figure>
+                    </article>
+                    <article class="single_blog">
+                        <figure>
+                            <div class="blog_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/blogpage2.jpg" alt=""></a>
+                            </div>
+                            <figcaption class="blog_content">
+                                <h4 class="post_title"><a href="blog-details.html"><i
+                                        class="fa fa-paper-plane"></i>Libero lorem</a></h4>
+                                <div class="blog_meta">
+                                    <p>By <a href="#">admin</a> / Date <a href="#">July 16, 2022</a> / Category: <a
+                                            href="#">eCommerce</a></p>
+                                </div>
+                                <p class="post_desc">Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras
+                                    pretium arcu ex. Aenean posuere libero eu augue condimentum rhoncus praesent
+                                    ornare.</p>
+                                <footer class="btn_more">
+                                    <a href="blog-details.html"> Read more</a>
+                                </footer>
+                            </figcaption>
+                        </figure>
+                    </article>
+                    <article class="single_blog">
+                        <figure>
+                            <div class="blog_thumb blog_thumb_active owl-carousel">
+                                <div class="single_blog_thumb">
+                                    <a href="#"><img src="/assets/img/blog/blogpage6.jpg" alt=""></a>
+                                </div>
+                                <div class="single_blog_thumb">
+                                    <a href="#"><img src="/assets/img/blog/blogpage1.jpg" alt=""></a>
+                                </div>
+                                <div class="single_blog_thumb">
+                                    <a href="#"><img src="/assets/img/blog/blogpage3.jpg" alt=""></a>
+                                </div>
+                                <div class="single_blog_thumb">
+                                    <a href="#"><img src="/assets/img/blog/blogpage4.jpg" alt=""></a>
+                                </div>
+                            </div>
+                            <figcaption class="blog_content">
+                                <h4 class="post_title"><a href="blog-details.html"><i class="fa fa-paper-plane"></i>
+                                    Post with Gallery</a></h4>
+                                <div class="blog_meta">
+                                    <p>By <a href="#">admin</a> / Date <a href="#">July 16, 2022</a> / Category: <a
+                                            href="#">eCommerce</a></p>
+                                </div>
+                                <p class="post_desc">Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras
+                                    pretium arcu ex. Aenean posuere libero eu augue condimentum rhoncus praesent
+                                    ornare.</p>
+                                <footer class="btn_more">
+                                    <a href="blog-details.html"> Read more</a>
+                                </footer>
+                            </figcaption>
+                        </figure>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12">
+                <div class="blog_sidebar_widget">
+                    <div class="widget_list widget_search">
+                        <div class="widget_title">
+                            <h3>Search</h3>
+                        </div>
+                        <form action="#">
+                            <input placeholder="Search..." type="text">
+                            <button type="submit">search</button>
+                        </form>
+                    </div>
+                    <div class="widget_list comments">
+                        <div class="widget_title">
+                            <h3>Recent Comments</h3>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/comment2.png.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <span> <a href="#">demo</a> says:</span>
+                                <a href="blog-details.html">Quisque semper nunc</a>
+                            </div>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/comment2.png.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <span><a href="#">admin</a> says:</span>
+                                <a href="blog-details.html">Quisque orci porta...</a>
+                            </div>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/comment2.png.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <span><a href="#">demo</a> says:</span>
+                                <a href="blog-details.html">Quisque semper nunc</a>
+                            </div>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/comment2.png.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <span><a href="#">admin</a> says:</span>
+                                <a href="blog-details.html">Quisque semper nunc</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget_list widget_post">
+                        <div class="widget_title">
+                            <h3>Recent Posts</h3>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/blog1.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <h4><a href="blog-details.html">Blog image post</a></h4>
+                                <span>March 16, 2022 </span>
+                            </div>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/blog2.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <h4><a href="blog-details.html">Post with Gallery</a></h4>
+                                <span>March 16, 2022 </span>
+                            </div>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/blog3.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <h4><a href="blog-details.html">Post with Audio</a></h4>
+                                <span>March 16, 2022 </span>
+                            </div>
+                        </div>
+                        <div class="post_wrapper">
+                            <div class="post_thumb">
+                                <a href="blog-details.html"><img src="/assets/img/blog/blog4.jpg" alt=""></a>
+                            </div>
+                            <div class="post_info">
+                                <h4><a href="blog-details.html">Post with Video</a></h4>
+                                <span>March 16, 2022 </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget_list widget_categories">
+                        <div class="widget_title">
+                            <h3>Categories</h3>
+                        </div>
+                        <ul>
+                            <li><a href="#">Audio</a></li>
+                            <li><a href="#">Company</a></li>
+                            <li><a href="#">Gallery</a></li>
+                            <li><a href="#">Image</a></li>
+                            <li><a href="#">Other</a></li>
+                            <li><a href="#">Travel</a></li>
+                        </ul>
+                    </div>
+                    <div class="widget_list widget_tag">
+                        <div class="widget_title">
+                            <h3>Tag products</h3>
+                        </div>
+                        <div class="tag_widget">
+                            <ul>
+                                <li><a href="#">asian</a></li>
+                                <li><a href="#">brown</a></li>
+                                <li><a href="#">euro</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--blog area end-->
+
+<!--blog pagination area start-->
+<div class="blog_pagination">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagination">
+                    <ul>
+                        <li class="current">1</li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li class="next"><a href="#">next</a></li>
+                        <li><a href="#">>></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--blog pagination area end-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+</body>
+</html>
