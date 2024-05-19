@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <title> MyMyDearFriends 賣 買 管理平台 </title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+</head>
+
+<!--    <link rel="stylesheet" type="text/css" href="images/text.css">-->
+<!--    <SCRIPT language=JavaScript src="images/script.js" type=text/javascript></SCRIPT>-->
+<!--    <th:block th:replace="~{/fragments/css}"/>-->
+
+    <style>
+        /* 樣式設置 */
+        .tab-container {
+            border-bottom: 1px solid #ccc;
+            display: flex;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            background-color: #f0f0f0;
+        }
+
+        .tab.active {
+            border-color: #ccc;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+
+</head>
+
+
+<body>
+<div align=center>
+    <table width=770 border=0 cellspacing=0 cellpadding=0 background=images/bg.gif>
+        <tr>
+            <td width=10></td>
+            <td width=750 height=100 align=center valign=top>
+                <!-- top1 -->
+                <table width=750 border=0 cellspacing=0 cellpadding=0 height=10 bgcolor="#FFA200">
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+                <!-- /top1 -->
+                <!-- top2 -->
+                <table width=748 border=0 cellspacing=0 cellpadding=0 height=60 bgcolor=efefef>
+                    <tr>
+                        <td width=200 height=60><img src="/assets/img/logo.png" width="200" height="60" border="0" alt="">
+                        <td width=548 align=center valign=top>
+                            <!-- 导航 -->
+                            <TABLE WIDTH=548 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+                                <!-- 標籤容器 -->
+                                <div class="tab-container">
+                                    <!-- 初始的標籤 -->
+                                    <div class="tab" onclick="showTabContent('new')">最新消息</div>
+                                    <div class="tab" onclick="showTabContent('google')">google</div>
+                                    <div class="tab" onclick="showTabContent('ie')">IE</div>
+                                </div>
+
+                                <!-- 標籤內容 -->
+                                <div id="yahoo" class="tab-content active">
+                                    <h2>Yahoo Content</h2>
+                                    <p>This is the content for Yahoo.</p>
+                                </div>
+                                <div id="google" class="tab-content">
+                                    <h2>Google Content</h2>
+                                    <p>This is the content for Google.</p>
+                                </div>
+                                <div id="ie" class="tab-content">
+                                    <h2>IE Content</h2>
+                                    <p>This is the content for IE.</p>
+                                </div>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <!-- /top2 -->
+
+                <!-- top3 -->
+                <TABLE border=0 cellPadding=0 cellSpacing=0 width=750>
+                    <TBODY>
+                    <TR>
+                        <TD width=200 valign=top align=center>
+                            <div align=right>
+                                <table width=198 border=0 cellspacing=0 cellpadding=0 bgcolor=dddddd>
+                                    <tr>
+                                        <td><img src="images/userlogin.gif" width="198" height="30" border="0" alt="">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                    <tr height=24 bgcolor=ffffff>
+                                        <form id="loginForm" action="http://bbs.wish8.com/auto_login.asp?action=login"
+                                              method="post" target="_blank">
+                                            <td width=60 align=center><font color=aaaaaa>帳 號</font></td>
+                                            <td width=137 align=center>
+                                                <div class="form-floating mb-3">
+                                                    <input class="form-control" id="username" name="username" size=12
+                                                           class="form1"
+                                                           style="background-color: rgb(210,232,255); color: #7B7B7B; border: 1px solid #7B7B7B">
+                                                    <label for="username"></label>
+                                                </div>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    <tr height=24 bgcolor=ffffff>
+                                        <td align=center><font color=aaaaaa>密　码</font></td>
+                                        <td align=center>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="password" name="password" maxlength=16
+                                                       size=12 type=password class="form1"
+                                                       style="background-color: rgb(210,232,255); color: #7B7B7B; border: 1px solid #7B7B7B">
+                                                <label for="password"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr height=24 bgcolor=ffffff>
+                                        <td align=center><font color=aaaaaa>验证码</font></td>
+                                        <td align=center>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="verifycode" name="verifycode"
+                                                       maxlength=16 value="8358" size=12 type=password class="form1"
+                                                       style="background-color: rgb(210,232,255); color: #7B7B7B; border: 1px solid #7B7B7B">
+                                                <label for="verifycode"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr height=24 bgcolor=ffffff>
+                                        <td colspan="2" align=center>
+                                            <button type="submit" class="btn btn-primary">登入</button>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </TD>
+                        <td>查詢所有該賣家所以訂單明細</td>
+                    </TR>
+                    </TBODY>
+                </TABLE>
+                <!-- /top3 -->
+
+                <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                    <!--			<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                    <tr bgcolor=ffffff>
+                        <td width=200 height=200 align=center valign=top>
+                            <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                <tr>
+                                    <td>
+                                        <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="60">&nbsp;</td>
+                                                <td width="130">
+                                                    <div align="center"><b><a href="#"></a>
+                                                        <a href="index.htm">
+                                                            <font size="4">
+                                                                首页
+                                                            </font></a></b></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                            <!--Button1.Content.Begin-->
+                            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                                <!--			<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                                <tr bgcolor=ffffff>
+                                    <td width=200 height=80 align=center valign=top>
+                                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                            <tr>
+                                                <td>
+                                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="60">&nbsp;</td>
+                                                            <td width="130">
+                                                                <div align="center"><b><a href="#"></a>
+                                                                    <!--Button1.Link-->
+                                                                    <a href="#">
+                                                                        <font size="4">
+                                                                            <!--Button1-->
+                                                                            公司简介
+                                                                        </font></a></b></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--Button1.Content.End-->
+
+
+                            <!--Button2.Content.Begin-->
+                            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                                <tr bgcolor=ffffff>
+                                    <td width=200 height=80 align=center valign=top>
+                                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                            <tr>
+                                                <td>
+                                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="60">&nbsp;</td>
+                                                            <td width="130">
+                                                                <div align="center"><b><a href="#"></a>
+                                                                    <!--Button2.Link-->
+                                                                    <a href="#">
+                                                                        <font size="4">
+                                                                            <!--Button2-->
+                                                                            产品介绍
+                                                                        </font></a></b></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--Button2.Content.End-->
+
+
+                            <!--Button3.Content.Begin-->
+                            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                                <tr bgcolor=ffffff>
+                                    <td width=200 height=80 align=center valign=top>
+                                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                            <tr>
+                                                <td>
+                                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="60">&nbsp;</td>
+                                                            <td width="130">
+                                                                <div align="center"><b>
+                                                                    <!--Button3.Link-->
+                                                                    <a href="#">
+                                                                        <font size="4">
+                                                                            <!--Button3-->
+                                                                            技术支持
+                                                                        </font></a></b></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--Button3.Content.End-->
+
+
+                            <!--Button4.Content.Begin-->
+                            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                                <tr bgcolor=ffffff>
+                                    <td width=200 height=80 align=center valign=top>
+                                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                            <tr>
+                                                <td>
+                                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="60">&nbsp;</td>
+                                                            <td width="130">
+                                                                <div align="center"><b><a href="#"></a>
+                                                                    <!--Button4.Link-->
+                                                                    <a href="#">
+                                                                        <font size="4">
+                                                                            <!--Button4-->
+                                                                            企业新闻
+                                                                        </font></a></b></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--Button4.Content.End-->
+
+
+                            <!--Button5.Content.Begin-->
+                            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                                <tr bgcolor=ffffff>
+                                    <td width=200 height=80 align=center valign=top>
+                                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                            <tr>
+                                                <td>
+                                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="60">&nbsp;</td>
+                                                            <td width="130">
+                                                                <div align="center"><b><a href="#"></a>
+                                                                    <!--Button5.Link-->
+                                                                    <a href="#">
+                                                                        <font size="4">
+                                                                            <!--Button5-->
+                                                                            常见问题
+                                                                        </font></a></b></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--Button5.Content.End-->
+
+
+                            <!--Button6.Content.Begin-->
+                            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
+                                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
+                                <tr bgcolor=ffffff>
+                                    <td width=200 height=80 align=center valign=top>
+                                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                                            <tr>
+                                                <td>
+                                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="60">&nbsp;</td>
+                                                            <td width="130">
+                                                                <div align="center"><b><a href="#"></a>
+                                                                    <!--Button6.Link-->
+                                                                    <a href="#">
+                                                                        <font size="4">
+                                                                            <!--Button6-->
+                                                                            联系我们</font></a>
+                                                                </b></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                        <td valign=top align=right>
+                        <div align="left"><a href=http://www.cn666.com target=_blank><img src="images/CN666.gif"
+                                                                                          width="548" height="80"
+                                                                                          border="0"
+                                                                                          alt="中安数据，竭诚为您服务"></a>
+                        </div>
+                            <table width=548 border=0 cellspacing=1 cellpadding=0 bgcolor=cccccc>
+                                <tr height=200 bgcolor=ffffff>
+                                    <TD width=548 align=right bgcolor=0>
+                                        <img src="/assets/img/Team.png" width="546" height="141" border="0" alt=""></TD>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- /content3 -->
+                <br><br><br>
+
+                <!-- bottom -->
+                <table width=748 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+                    <tr bgcolor=ffffff height=18>
+<!--                        <td valign=absmiddle align=center>-->
+<!--                            关于公司 ┋ 网站留言 ┋ 友情链接 ┋ 与我在线 ┋ 幫助-->
+<!--                        </td>-->
+                        <th>修改人</th>
+                        <th>審核人</th>
+                        <th>狀態</th>
+                    </tr>
+                    <tbody>
+                    <tr>
+                        <td th:text="1">Peter</td>
+                        <td th:text="1">Peter</td>
+                        <td th:text="審核中">審核中</td>
+                </table>
+                <!-- /bottom -->
+                <div align=center>
+                    <br>copyright by www.wish8.com 2024/05--賣~買 Dear Friends
+                    <br><br>
+                </div>
+            </td>
+            <td width=10></td>
+        </tr>
+    </table>
+</div>
+
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    // 函數：顯示特定標籤的內容
+    function showTabContent(tabName) {
+        // 隱藏所有標籤內容
+        var tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(function (content) {
+            content.classList.remove('active');
+        });
+
+        // 顯示選定標籤的內容
+        var selectedTabContent = document.getElementById(tabName);
+        selectedTabContent.classList.add('active');
+
+        // 取消選定所有標籤
+        var tabs = document.querySelectorAll('.tab');
+        tabs.forEach(function (tab) {
+            tab.classList.remove('active');
+        });
+
+        // 選定並突顯選定標籤
+        var selectedTab = document.querySelector('[onclick="showTabContent(\'' + tabName + '\')"]');
+        selectedTab.classList.add('active');
+    }
+</script>
+
+<!--<script>-->
+<!--    let userData = {};-->
+<!--    let errorMessage = "";-->
+<!--    $(document).ready(function () {-->
+<!--        $('#loginForm').submit(function (e) {-->
+<!--            e.preventDefault(); // 防止表單提交-->
+<!--            errorMessage = "";-->
+<!--            let employeeAccount = $('#employeeAccount').val();-->
+<!--            if (employeeAccount === "") {-->
+<!--                errorMessage += "<li>請輸入帳號</li>";-->
+<!--            }-->
+<!--            let employeePassword = $('#employeePassword').val();-->
+<!--            if (employeePassword === "") {-->
+<!--                errorMessage += "<li>請輸入密碼</li>";-->
+<!--            }-->
+
+<!--            if (errorMessage !== "") {-->
+<!--                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";-->
+<!--                return;-->
+<!--            }-->
+
+<!--            userData = {-->
+<!--                employeeAccount: employeeAccount,-->
+<!--                employeePassword: employeePassword-->
+<!--            };-->
+
+<!--            $("#errorMessage").text("");-->
+
+<!--            $.ajax({-->
+<!--                url: "/api/employee/login",-->
+<!--                method: "post",-->
+<!--                contentType: "application/json",-->
+<!--                data: JSON.stringify(userData),-->
+<!--                success(response) {-->
+<!--                    console.log(response)-->
+
+<!--                    // 登入成功後的處理-->
+<!--                    if (apiResponseJSON(response)) {-->
+<!--                        switch (response.data.status) {-->
+<!--                            case "1":-->
+<!--                                alert("登入成功！");-->
+<!--                                localStorage.setItem("authorization", response.data.authorization);-->
+<!--                                window.location.href = "/home";-->
+<!--                                break;-->
+<!--                            case "-1":-->
+<!--                                alert("帳號或密碼錯誤，請重試");-->
+<!--                                break;-->
+<!--                        }-->
+<!--                    } else {-->
+<!--                        alert(response.message);-->
+<!--                    }-->
+<!--                },-->
+<!--                error(xhr, status, error) {-->
+<!--                    alert("伺服器連線失敗: " + error);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+</body>
+</html>

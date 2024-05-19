@@ -211,7 +211,7 @@
 <!--                                        <span class="label_sale">10%</span>-->
 <!--                                    </div>-->
                                     <a class="primary_img" th:if="${product.productImgs != null and product.productImgs.size() > 0}"
-                                       th:id="'productImgTd_' + ${product.productImgs[0].imageId}" href="product-details.html">
+                                       th:id="'productImgTd_' + ${product.productImgs[0].imageId}" th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
                                         <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
                                              style="height: 150px;width: 150px" alt=""/>
                                     </a>
@@ -233,7 +233,7 @@
                                             <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                         </ul>
                                     </div>
-                                    <h4 class="product_name" th:text="${product.name}" ><a href="product-details.html"> <span style="font-size: large;"></span></a></h4>
+                                    <h4 class="product_name" th:text="${product.name}" ><a th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}"> <span style="font-size: large;"></span></a></h4>
                                     <div class="price_box">
                                         <span class="current_price" th:text="${product.price}" ></span>
                                     </div>
