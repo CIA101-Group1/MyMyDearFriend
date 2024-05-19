@@ -1,6 +1,6 @@
 package com.tibame.group1.web.service.impl;
 
-import com.tibame.group1.common.enums.WalletCategory;
+import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.db.dao.WalletHistoryDAO;
 import com.tibame.group1.db.dto.WalletReqDTO;
@@ -27,7 +27,7 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     }
 
     @Override
-    public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory, String search) {
-        return walletHistoryDAO.getWallets(walletCategory, search);
+    public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
+        return walletHistoryDAO.getWallets(walletQueryParams);
     }
 }

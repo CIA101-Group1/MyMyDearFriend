@@ -1,6 +1,6 @@
 package com.tibame.group1.web.service;
 
-import com.tibame.group1.common.enums.WalletCategory;
+import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.db.dto.WalletReqDTO;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,6 @@ public interface WalletHistoryService{
 
     Integer createWalletHistory(WalletReqDTO walletReqDTO);
 
-    List<WalletHistoryEntity> getWallets(WalletCategory walletCategory, String search);
+    List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
 
 }
