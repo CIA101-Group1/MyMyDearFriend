@@ -118,23 +118,23 @@ public class ProductFrontendController {
         return "/product/buyer-product-getOne";
     }
 
-//    @GetMapping("product/employee/productSelect")
-//    public String empSelect(Model model,
-//                            @RequestParam(value = "page", defaultValue = "0") int page,
-//                            @RequestParam(value = "size", defaultValue = "11") int size) {
-//        {
-//            //BackEndController
-//            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
-//            model.addAttribute("productPage", productPage);
-//
-//            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
-//            model.addAttribute("reviewStatusList", reviewStatusList);
-//
-//            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
-//            model.addAttribute("productStatusList", productStatusList);
-//            return "/product-admin/index"; // 要導入的html
-//        }
-//    }
+    @GetMapping("product/emp/productSelect")
+    public String empSelect(Model model,
+                            @RequestParam(value = "page", defaultValue = "0") int page,
+                            @RequestParam(value = "size", defaultValue = "11") int size) {
+        {
+            //BackEndController
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+            return "product-admin/index"; // 要導入的html
+        }
+    }
 
 
 }

@@ -16,15 +16,15 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminCheckLoginInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(
-                        "/home",
-                        "/static/**",
-                        "/assets/**",
-                        "/js/**",
-                        "/employee/login",
-                        "/api/employee/login");
+//        registry.addInterceptor(adminCheckLoginInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(
+//                        "/home",
+//                        "/static/**",
+//                        "/assets/**",
+//                        "/js/**",
+//                        "/employee/login",
+//                        "/api/employee/login");
         // registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns("/home","/static/**");
     }
 }
