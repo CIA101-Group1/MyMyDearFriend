@@ -104,7 +104,8 @@
                                placeholder="輸入會員編號、帳號或電子郵件">
                     </div>
                     <div class="col-md-3 align-self-end">
-                        <button id="resetFilters" class="btn btn-secondary">重置篩選條件</button>
+                        <button id="searchBtn" class="btn btn-primary">查詢</button>
+                        <button id="resetFilters" class="btn btn-secondary mr-2">重置篩選條件</button>
                     </div>
                 </div>
                 <!-- 主要表格 -->
@@ -165,22 +166,25 @@
         $("#resetFilters").on("click", function () {
             $("#isVerifiedFilter").val("");
             $("#sellerStatusFilter").val("");
+            $("#searchInput").val("");
             fetchMemberData();
         });
 
-        // 當搜尋輸入框的值改變時，重新加載資料
-        $("#searchInput").on("input", function () {
+        // 查詢按鈕點擊事件
+        $("#searchBtn").on("click", function () {
+            $("#isVerifiedFilter").val("");
+            $("#sellerStatusFilter").val("");
             fetchMemberData();
         });
 
         function fetchMemberData(pageNumber = 0, pageSize = 5) {
             const isVerified = $("#isVerifiedFilter").val();
             const sellerStatus = $("#sellerStatusFilter").val();
-            const searchText = $("#searchInput").val();
+            const searchText = $("#searchInput").val().trim();
             // 更新 userData
             userData.isVerified = isVerified === "" ? null : isVerified === "true";
             userData.sellerStatus = sellerStatus === "" ? null : sellerStatus === "true";
-            userData.searchText = searchText;
+            userData.searchText = searchText === "" ? null : searchText;
             $.ajax({
                 url: `/api/member/all?page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",

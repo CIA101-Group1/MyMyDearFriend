@@ -7,14 +7,13 @@ import com.tibame.group1.admin.service.MemberService;
 import com.tibame.group1.common.dto.PagesResDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.DateUtils;
+import com.tibame.group1.common.utils.NumberUtils;
+import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,18 +26,24 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResDTO memberAll(MemberAllReqDTO req, Pageable pageable) {
-        MemberEntity exampleEntity = new MemberEntity();
-        exampleEntity.setIsVerified(req.getIsVerified());
-        exampleEntity.setSellerStatus(req.getSellerStatus());
-
-        // 使用ExampleMatcher定義匹配規則，這裡使用默認的匹配器，即全匹配
-        ExampleMatcher matcher = ExampleMatcher.matching();
-
-        // 將範例對象和匹配規則組合成Example對象
-        Example<MemberEntity> example = Example.of(exampleEntity, matcher);
-
-        // 調用findAll方法進行查詢和分頁
-        Page<MemberEntity> pageResult = memberRepository.findAll(example, pageable);
+        Page<MemberEntity> pageResult;
+        if (StringUtils.isEmpty(req.getSearchText())) {
+            MemberEntity filterEntity = new MemberEntity();
+            filterEntity.setIsVerified(req.getIsVerified());
+            filterEntity.setSellerStatus(req.getSellerStatus());
+            ExampleMatcher filterMatcher = ExampleMatcher.matching();
+            // 將範例對象和匹配規則組合成Example對象
+            Example<MemberEntity> filterExample = Example.of(filterEntity, filterMatcher);
+            // 調用findAll方法進行查詢和分頁
+            pageResult = memberRepository.findAll(filterExample, pageable);
+        } else {
+            pageResult =
+                    memberRepository.findByMemberIdOrMemberAccountOrEmail(
+                            NumberUtils.toInt(req.getSearchText()),
+                            req.getSearchText(),
+                            req.getSearchText(),
+                            pageable);
+        }
 
         // 把查詢結果從Page物件拿出來塞進去List裡面
         List<MemberAllResDTO> memberList = new ArrayList<>();
