@@ -22,7 +22,7 @@ public class WalletHistoryBachendController {
   @CheckLogin
   @GetMapping("/wallets")
   public ResponseEntity<List<WalletHistoryEntity>> getAllWalletHistory(
-          @RequestParam("walletCategory") WalletCategory walletCategory,
+          @RequestParam(value = "walletCategory", required = false) WalletCategory walletCategory,
           @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
     List<WalletHistoryEntity> walletHistoryEntityList =
             walletHistoryService.getWallets(walletCategory);
@@ -48,8 +48,10 @@ public class WalletHistoryBachendController {
   }
 
   @PostMapping("/wallets")
+  @CheckLogin
   public ResponseEntity<WalletHistoryEntity> createWalletHistory(
-      @RequestBody @Valid WalletReqDTO walletReqDTO) {
+      @RequestBody @Valid WalletReqDTO walletReqDTO,
+      @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
 
     Integer walletID = walletHistoryService.createWalletHistory(walletReqDTO);
 
