@@ -12,10 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class WalletHistoryDAOImpl implements WalletHistoryDAO {
@@ -66,7 +63,7 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
   }
 
   @Override
-  public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory) {
+  public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory, String search) {
     String sql =
         "SELECT wallet_history_id, change_time, member_id, change_amount, change_type "
             + "FROM wallet_history WHERE 1=1";
@@ -78,9 +75,25 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
       map.put("changeType", walletCategory.name());
     }
 
+//    if (search != null) {
+//      sql = sql + " AND change_time LIKE :search";
+//      map.put("search", "%" + search + "%");
+//    }
+
+    if (search != null) {
+      sql = sql + " AND change_time >= :threeMonthsAgo";
+      map.put("threeMonthsAgo", calculateThreeMonthsAgo());
+    }
+
     List<WalletHistoryEntity> walletHistoryEntityList =
         namedParameterJdbcTemplate.query(sql, map, new WalletRowMapperUtils());
 
     return walletHistoryEntityList;
+  }
+
+  private Date calculateThreeMonthsAgo() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MONTH, -3);
+    return calendar.getTime();
   }
 }

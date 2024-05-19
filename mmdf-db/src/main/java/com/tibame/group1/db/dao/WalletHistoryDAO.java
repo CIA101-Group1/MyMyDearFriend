@@ -13,5 +13,6 @@ public interface WalletHistoryDAO {
 
     Integer createWalletHistory(WalletReqDTO walletReqDTO);
 
-    List<WalletHistoryEntity> getWallets(WalletCategory walletCategory);
+    List<WalletHistoryEntity> getWallets(WalletCategory walletCategory, String search);
+
 }

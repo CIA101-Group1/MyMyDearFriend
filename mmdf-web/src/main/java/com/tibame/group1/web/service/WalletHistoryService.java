@@ -15,5 +15,6 @@ public interface WalletHistoryService{
 
     Integer createWalletHistory(WalletReqDTO walletReqDTO);
 
-    List<WalletHistoryEntity> getWallets(WalletCategory walletCategory);
+    List<WalletHistoryEntity> getWallets(WalletCategory walletCategory, String search);
+
 }

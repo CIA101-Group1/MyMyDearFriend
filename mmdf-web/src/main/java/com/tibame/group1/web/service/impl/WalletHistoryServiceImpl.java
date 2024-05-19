@@ -27,7 +27,7 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     }
 
     @Override
-    public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory) {
-        return walletHistoryDAO.getWallets(walletCategory);
+    public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory, String search) {
+        return walletHistoryDAO.getWallets(walletCategory, search);
     }
 }

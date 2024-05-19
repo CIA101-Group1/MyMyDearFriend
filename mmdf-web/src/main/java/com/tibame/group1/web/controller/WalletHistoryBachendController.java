@@ -23,9 +23,10 @@ public class WalletHistoryBachendController {
   @GetMapping("/wallets")
   public ResponseEntity<List<WalletHistoryEntity>> getAllWalletHistory(
           @RequestParam(value = "walletCategory", required = false) WalletCategory walletCategory,
+          @RequestParam(value = "search", required = false) String search,
           @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
     List<WalletHistoryEntity> walletHistoryEntityList =
-            walletHistoryService.getWallets(walletCategory);
+            walletHistoryService.getWallets(walletCategory , search);
 
     return ResponseEntity.status(HttpStatus.OK).body(walletHistoryEntityList);
   }
