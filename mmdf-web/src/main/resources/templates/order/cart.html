@@ -27,64 +27,19 @@
                 <div class="col-12">
                     <div class="table_desc">
                         <div class="cart_page table-responsive">
-                            <table>
+                            <table class="table table-striped table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="product_remove">Delete</th>
                                     <th class="product_thumb">Image</th>
                                     <th class="product_name">Product</th>
                                     <th class="product-price">Price</th>
                                     <th class="product_quantity">Quantity</th>
-                                    <th class="product_total">Total</th>
+                                    <th class="product_total">SubTotal</th>
+                                    <th class="product_remove">Delete</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                    <td class="product_thumb"><a href="#"><img src="assets/img/s-product/product.jpg"
-                                                                               alt=""></a></td>
-                                    <td class="product_name"><a href="#">Handbag fringilla</a></td>
-                                    <td class="product-price">£65.00</td>
-                                    <td class="product_quantity"><label>Quantity</label> <input min="1" max="100"
-                                                                                                value="1" type="number">
-                                    </td>
-                                    <td class="product_total">£130.00</td>
-
-
-                                </tr>
-
-                                <tr>
-                                    <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                    <td class="product_thumb"><a href="#"><img src="assets/img/s-product/product2.jpg"
-                                                                               alt=""></a></td>
-                                    <td class="product_name"><a href="#">Handbags justo</a></td>
-                                    <td class="product-price">£90.00</td>
-                                    <td class="product_quantity"><label>Quantity</label> <input min="1" max="100"
-                                                                                                value="1" type="number">
-                                    </td>
-                                    <td class="product_total">£180.00</td>
-
-
-                                </tr>
-                                <tr>
-                                    <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                    <td class="product_thumb"><a href="#"><img src="assets/img/s-product/product3.jpg"
-                                                                               alt=""></a></td>
-                                    <td class="product_name"><a href="#">Handbag elit</a></td>
-                                    <td class="product-price">£80.00</td>
-                                    <td class="product_quantity"><label>Quantity</label> <input min="1" max="100"
-                                                                                                value="1" type="number">
-                                    </td>
-                                    <td class="product_total">£160.00</td>
-
-
-                                </tr>
-
-                                </tbody>
+                                <tbody id="tbody"></tbody>
                             </table>
-                        </div>
-                        <div class="cart_submit">
-                            <button type="submit">update cart</button>
                         </div>
                     </div>
                 </div>
@@ -107,18 +62,8 @@
                             <h3>Cart Totals</h3>
                             <div class="coupon_inner">
                                 <div class="cart_subtotal">
-                                    <p>Subtotal</p>
-                                    <p class="cart_amount">£215.00</p>
-                                </div>
-                                <div class="cart_subtotal ">
-                                    <p>Shipping</p>
-                                    <p class="cart_amount"><span>Flat Rate:</span> £255.00</p>
-                                </div>
-                                <a href="#">Calculate shipping</a>
-
-                                <div class="cart_subtotal">
-                                    <p>Total</p>
-                                    <p class="cart_amount">£215.00</p>
+                                    <p style="font-size: 25px">Total</p>
+                                    <p class="cart_amount" id="cart_total"></p>
                                 </div>
                                 <div class="checkout_btn">
                                     <a href="#">Proceed to Checkout</a>
@@ -139,5 +84,113 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
+
+<script>
+    $(document).ready(function () {
+        getCart();
+
+        $("#tbody").on("click", "a#remove", function () {
+            let remove = confirm("Remove Item?");
+            if (remove) {
+                let productId = $(this).closest("tr").find("input#productId").val();
+
+                $.ajax({
+                    url: "/api/cart/remove/" + productId,
+                    method: "DELETE",
+                    headers: {
+                        "authorization": localStorage.getItem("authorization")
+                    },
+                    success: function (response) {
+                        // console.log(response);
+                        $("#tbody").html("");
+                        getCart();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("There was a problem :", error);
+                    },
+                })
+            }
+        })
+
+        $("#tbody").on("change", "input#quantity", function () {
+            // console.log($(this).closest("tr").find("input#productId").val())
+
+            let data = {
+                productId: $(this).closest("tr").find("input#productId").val(),
+                quantity: $(this).val()
+            };
+            $.ajax({
+                url: "/api/cart/update",
+                method: "PUT",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    // console.log(response);
+                    $("#tbody").html("");
+                    getCart();
+                },
+                error: function (xhr, status, error) {
+                    console.error("There was a problem :", error);
+                },
+            })
+        })
+
+        function getCart() {
+            $.ajax({
+                url: "/api/cart/get",
+                method: "GET",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success: function (response) {
+                    // console.log(response);
+                    let cartList = response.data;
+                    let total = 0;
+                    cartList.forEach(function (cartItem) {
+                        total += cartItem.subtotal;
+
+                        $("#tbody").append(
+                            "<tr>" +
+                            "<td class='product_thumb'>" +
+                            "<a href='#'><img src='#' alt=''/></a>" +
+                            "</td>" +
+                            "<td class='product_name'>" +
+                            "<input id='productId' value='" + cartItem.productId + "' type='hidden' />" +
+                            "<a href='#'>" +
+                            cartItem.productName +
+                            "</a>" +
+                            "</td>" +
+                            "<td class='product_price'>" +
+                            cartItem.price +
+                            "</td>" +
+                            "<td class='product_quantity'>" +
+                            "<label>Quantity</label>" +
+                            "<input id='quantity' min='1' max='100' value='" +
+                            cartItem.quantity +
+                            "' type='number' />" +
+                            "</td>" +
+                            "<td class='product_total'>" +
+                            cartItem.subtotal +
+                            "</td>" +
+                            "<td class='product_remove'>" +
+                            "<a id='remove'><i class='fa fa-trash-o'></i></a>" +
+                            "</td>" +
+                            "</tr>"
+                        );
+                    });
+
+                    $("#cart_total").text(total);
+                },
+                error: function (xhr, status, error) {
+                    console.error("There was a problem :", error);
+                },
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
