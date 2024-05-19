@@ -1,5 +1,6 @@
 package com.tibame.group1.db.dao.impl;
 
+import com.tibame.group1.common.enums.WalletCategory;
 import com.tibame.group1.db.dao.WalletHistoryDAO;
 import com.tibame.group1.db.dto.WalletReqDTO;
 import com.tibame.group1.db.rowmapper.WalletRowMapperUtils;
@@ -65,14 +66,21 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
   }
 
   @Override
-  public List<WalletHistoryEntity> getWallets() {
+  public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory) {
     String sql =
-            "SELECT wallet_history_id, change_time, member_id, change_amount, change_type " +
-                    "FROM wallet_history";  // 修正拼接错误，添加空格
+        "SELECT wallet_history_id, change_time, member_id, change_amount, change_type "
+            + "FROM wallet_history WHERE 1=1";
 
-    List<WalletHistoryEntity> walletHistoryEntityList = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(), new WalletRowMapperUtils());
+    Map<String, Object> map = new HashMap<>();
+
+    if (walletCategory != null) {
+      sql = sql + " AND change_type = :changeType";
+      map.put("changeType", walletCategory.name());
+    }
+
+    List<WalletHistoryEntity> walletHistoryEntityList =
+        namedParameterJdbcTemplate.query(sql, map, new WalletRowMapperUtils());
 
     return walletHistoryEntityList;
   }
-
 }

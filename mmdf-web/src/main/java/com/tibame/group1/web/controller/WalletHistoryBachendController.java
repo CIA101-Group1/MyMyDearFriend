@@ -1,5 +1,6 @@
 package com.tibame.group1.web.controller;
 
+import com.tibame.group1.common.enums.WalletCategory;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.LoginSourceDTO;
@@ -14,21 +15,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class WalletHistoryFrontendController {
+public class WalletHistoryBachendController {
 
   @Autowired private WalletHistoryService walletHistoryService;
 
+  @CheckLogin
   @GetMapping("/wallets")
-  public ResponseEntity<List<WalletHistoryEntity>> getWallets() {
-    List<WalletHistoryEntity> walletHistoryEntityList = walletHistoryService.getWallets();
+  public ResponseEntity<List<WalletHistoryEntity>> getAllWalletHistory(
+          @RequestParam("walletCategory") WalletCategory walletCategory,
+          @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
+    List<WalletHistoryEntity> walletHistoryEntityList =
+            walletHistoryService.getWallets(walletCategory);
 
     return ResponseEntity.status(HttpStatus.OK).body(walletHistoryEntityList);
   }
 
+
   /** todo: 錢包分頁功能與每筆細項，用Lsit */
   @GetMapping("/wallets/{walletID}")
   @CheckLogin
-  public ResponseEntity<WalletHistoryEntity> getWalletHistory(
+  public ResponseEntity<WalletHistoryEntity> getOneWalletHistory(
       @PathVariable("walletID") Integer walletID,
       @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
 
