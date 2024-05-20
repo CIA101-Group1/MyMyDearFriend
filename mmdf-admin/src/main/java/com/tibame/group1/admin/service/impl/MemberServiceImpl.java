@@ -1,9 +1,9 @@
 package com.tibame.group1.admin.service.Impl;
 
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
-import com.tibame.group1.admin.dto.MemberAllReqDTO;
-import com.tibame.group1.admin.dto.MemberAllResDTO;
+import com.tibame.group1.admin.dto.MemberReqDTO;
 import com.tibame.group1.admin.dto.MemberResDTO;
+import com.tibame.group1.admin.dto.MemberAllResDTO;
 import com.tibame.group1.admin.service.MemberService;
 import com.tibame.group1.common.dto.PagesResDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
@@ -29,14 +29,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired private EmployeeRepository employeeRepository;
 
+    /**
+     * 後台超級管理員查詢會員資料
+     *
+     * @param req 查詢條件
+     * @param adminLoginSource 員工登入
+     * @param pageable 分頁資訊
+     * @return 查詢結果
+     */
     @Override
-    public MemberResDTO memberAll(
-            MemberAllReqDTO req, AdminLoginSourceDTO adminLoginSource, Pageable pageable) {
-        MemberResDTO res = new MemberResDTO();
+    public MemberAllResDTO memberAll(
+            MemberReqDTO req, AdminLoginSourceDTO adminLoginSource, Pageable pageable) {
+        MemberAllResDTO res = new MemberAllResDTO();
         EmployeeEntity employee =
                 employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
         if (null == employee) {
-            res.setStatus(MemberResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
+            res.setStatus(MemberAllResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
             return res;
         }
 
@@ -60,9 +68,9 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 把查詢結果從Page物件拿出來塞進去List裡面
-        List<MemberAllResDTO> memberList = new ArrayList<>();
+        List<MemberResDTO> memberList = new ArrayList<>();
         for (MemberEntity member : pageResult.getContent()) {
-            MemberAllResDTO resDTO = new MemberAllResDTO();
+            MemberResDTO resDTO = new MemberResDTO();
             resDTO.setMemberId(String.valueOf(member.getMemberId()));
             resDTO.setMemberAccount(member.getMemberAccount());
             resDTO.setName(member.getName());
@@ -101,7 +109,7 @@ public class MemberServiceImpl implements MemberService {
         pagesResDTO.setTotalCount((int) pageResult.getTotalElements());
         res.setMemberList(memberList);
         res.setPages(pagesResDTO);
-        res.setStatus(MemberResDTO.Status.SEARCH_SUCCESS.getCode());
+        res.setStatus(MemberAllResDTO.Status.SEARCH_SUCCESS.getCode());
         return res;
     }
 }

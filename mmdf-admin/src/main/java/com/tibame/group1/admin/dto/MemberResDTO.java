@@ -1,32 +1,47 @@
 package com.tibame.group1.admin.dto;
 
-import com.tibame.group1.common.dto.PagesResDTO;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
 public class MemberResDTO {
 
-    private PagesResDTO pages;
+    private String memberId;
 
-    private List<MemberAllResDTO> memberList;
+    private String memberAccount;
 
-    private String status;
+    private String name;
 
-    @AllArgsConstructor
-    @Getter
-    public enum Status {
-        SEARCH_SUCCESS("1", "查詢成功"),
+    private String phone;
 
-        EMPLOYEE_NOTFOUND("-1", "查無此員工");
+    private String email;
 
-        private final String code;
+    private String birth;
 
-        private final String message;
-    }
+    private String city;
+
+    private String address;
+
+    private Boolean isVerified;
+
+    private String verifySendingTime;
+
+    private String verifiedTime;
+
+    private String joinTime;
+
+    private Integer walletAmount;
+
+    private Integer walletAvailableAmount;
+
+    private Boolean sellerStatus;
+
+    private Integer scoreNumber;
+
+    private Integer scoreSum;
+
+    private String imageBase64;
+
+    private String cidResetSendingTime;
 }
