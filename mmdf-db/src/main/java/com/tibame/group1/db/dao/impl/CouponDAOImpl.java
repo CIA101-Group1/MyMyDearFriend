@@ -4,6 +4,7 @@ import com.tibame.group1.db.dao.CouponDAO;
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
 import com.tibame.group1.db.rowmapper.CouponRowMapperUtils;
+import org.apache.commons.math3.stat.descriptive.summary.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,6 +20,18 @@ import java.util.Map;
 public class CouponDAOImpl implements CouponDAO {
 
   @Autowired private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+  @Override
+  public List<CouponEntity> getCoupons() {
+    String sql = "SELECT coupon_id, title, low_price, discount, number, date_start, date_end, addable, livemode " +
+            "FROM coupon";
+
+    Map<String, Object> map = new HashMap<>();
+
+    List<CouponEntity> couponList = namedParameterJdbcTemplate.query(sql, map, new CouponRowMapperUtils());
+
+    return couponList;
+  }
 
   @Override
   public CouponEntity getCouponByID(Integer couponID) {

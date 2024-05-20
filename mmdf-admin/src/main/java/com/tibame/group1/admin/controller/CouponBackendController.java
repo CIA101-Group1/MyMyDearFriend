@@ -7,14 +7,27 @@ import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class CouponBackendController {
 
   @Autowired private CouponService couponService;
+
+  @GetMapping("/coupons")
+  public ResponseEntity<List<CouponEntity>> getCoupons(
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
+
+    List<CouponEntity> couponList = couponService.getCoupons();
+
+    return ResponseEntity.status(HttpStatus.OK).body(couponList);
+
+  }
 
   @GetMapping("/coupons/{couponID}")
   public ResponseEntity<CouponEntity> getOneCoupon(
