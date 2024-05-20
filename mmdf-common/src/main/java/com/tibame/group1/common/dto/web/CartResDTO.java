@@ -18,4 +18,6 @@ public class CartResDTO {
     private Integer quantity;
 
     private Integer subtotal;
+
+    private String imageBase64;
 }
