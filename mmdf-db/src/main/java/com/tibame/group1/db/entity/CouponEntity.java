@@ -1,6 +1,5 @@
 package com.tibame.group1.db.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +13,6 @@ import java.util.Date;
         @Index(name = "coupon_index", columnList = "coupon_id", unique = true),
        }
 )
-
-
 
 public class CouponEntity {
        @Id
@@ -42,10 +39,10 @@ public class CouponEntity {
        private Date dateEnd;
 
        @Column(name = "addable", nullable = false)
-       private Integer addable;
+       private String addable;
 
        @Column(name = "livemode", nullable = false)
-       private Integer livemode;
+       private String livemode;
 
 
 }

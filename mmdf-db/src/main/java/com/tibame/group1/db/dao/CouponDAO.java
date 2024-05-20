@@ -1,16 +1,13 @@
-package com.tibame.group1.admin.service;
+package com.tibame.group1.db.dao;
 
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
-import org.springframework.stereotype.Service;
 
-@Service
-public interface CouponService {
 
+public interface CouponDAO {
 
     CouponEntity getCouponByID(Integer couponID);
 
     Integer createCoupon(CouponReqDTO couponReqDTO);
-
 
 }
