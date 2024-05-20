@@ -10,4 +10,5 @@ public interface CouponDAO {
 
     Integer createCoupon(CouponReqDTO couponReqDTO);
 
+    void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO);
 }

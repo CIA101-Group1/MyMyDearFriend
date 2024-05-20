@@ -55,7 +55,7 @@ public class CouponDAOImpl implements CouponDAO {
     map.put("number", couponReqDTO.getNumber());
     map.put("dateStart", couponReqDTO.getDateStart());
     map.put("dateEnd", couponReqDTO.getDateEnd());
-    map.put("addable", couponReqDTO.getAddable());
+    map.put("addable", couponReqDTO.getAddable().toString());
     map.put("livemode", couponReqDTO.getLivemode());
 
 
@@ -66,5 +66,27 @@ public class CouponDAOImpl implements CouponDAO {
     int couponID = keyHolder.getKey().intValue();
 
     return couponID;
+  }
+
+  @Override
+  public void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO) {
+
+    String sql =
+            "UPDATE coupon SET title = :title, low_price = :lowPrice, discount = :discount, number = :number, date_start = :dateStart, date_end = :dateEnd, addable = :addable, livemode = :livemode" +
+                    " WHERE coupon_id = :couponID";
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("couponID", couponID);
+
+    map.put("title", couponReqDTO.getTitle());
+    map.put("lowPrice", couponReqDTO.getLowPrice());
+    map.put("discount", couponReqDTO.getDiscount());
+    map.put("number", couponReqDTO.getNumber());
+    map.put("dateStart", couponReqDTO.getDateStart());
+    map.put("dateEnd", couponReqDTO.getDateEnd());
+    map.put("addable", couponReqDTO.getAddable().toString());
+    map.put("livemode", couponReqDTO.getLivemode());
+
+    namedParameterJdbcTemplate.update(sql, map);
   }
 }

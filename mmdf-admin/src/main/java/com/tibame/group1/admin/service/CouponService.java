@@ -13,4 +13,5 @@ public interface CouponService {
     Integer createCoupon(CouponReqDTO couponReqDTO);
 
 
+    void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO);
 }

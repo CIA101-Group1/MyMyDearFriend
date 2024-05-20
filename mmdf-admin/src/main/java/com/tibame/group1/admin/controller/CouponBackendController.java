@@ -43,4 +43,26 @@ public class CouponBackendController {
 
     return ResponseEntity.status(HttpStatus.CREATED).body(coupon);
   }
+
+  @CheckLogin
+  @PutMapping("/coupons/{couponID}")
+  public ResponseEntity<CouponEntity> updateCoupon(
+          @PathVariable("couponID") Integer couponID,
+          @RequestBody @Valid CouponReqDTO couponReqDTO,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource){
+
+    // 先檢查Coupon是否存在
+    CouponEntity coupon = couponService.getCouponByID(couponID);
+
+    if (coupon == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    // 修改優惠卷的數據
+    couponService.updateCoupon(couponID, couponReqDTO);
+
+    CouponEntity updateCoupon = couponService.getCouponByID(couponID);
+
+    return ResponseEntity.status(HttpStatus.OK).body(updateCoupon);
+  }
 }

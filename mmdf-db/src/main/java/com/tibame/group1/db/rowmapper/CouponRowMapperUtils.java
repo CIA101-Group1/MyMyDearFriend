@@ -1,5 +1,6 @@
 package com.tibame.group1.db.rowmapper;
 
+import com.tibame.group1.common.enums.CouponCategory;
 import com.tibame.group1.db.entity.CouponEntity;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -19,7 +20,9 @@ public class CouponRowMapperUtils implements RowMapper<CouponEntity> {
     couponEntity.setNumber(resultSet.getInt("number"));
     couponEntity.setDateStart(resultSet.getTimestamp("date_start"));
     couponEntity.setDateEnd(resultSet.getTimestamp("date_end"));
-    couponEntity.setAddable(resultSet.getString("addable"));
+
+    couponEntity.setAddable(CouponCategory.valueOf(resultSet.getString("addable")));
+
     couponEntity.setLivemode(resultSet.getString("livemode"));
 
     return couponEntity;
