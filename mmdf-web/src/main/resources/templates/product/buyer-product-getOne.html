@@ -68,13 +68,12 @@
                 <div class="product-details-tab">
                     <div id="img-1" class="zoomWrapper single-zoom">
                         <a th:if="${productEntity.productImgs != null and productEntity.productImgs.size() > 0}"
-                         th:id="'productImgTd_' + ${productEntity.productImgs[0].imageId}"
+                         th:id="'productImgId_' + ${productEntity.productImgs[0].imageId}"
                          style="display: flex; justify-content: center; align-items: center;">
-<!--                        <a href="#">-->
-<!--                            <img id="zoom1" src="assets/img/product/productbig4.jpg" data-zoom-image="assets/img/product/productbig4.jpg" alt="big-1">-->
                         </a>
                         <img th:src="'data:image/jpg;base64,'+${productEntity.productImgs[0].imageBase64}"
-                             style="height: 180px;width: 180px" alt=""/>
+                             style="height: 300px;width: 300px" alt=""/>
+
                     </div>
 
 

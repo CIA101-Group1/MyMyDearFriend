@@ -14,7 +14,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    /** productCategory */
+    /**
+     * productCategory
+     */
 
     ProductCategoryCreateResDTO productCategoryCreate(ProductCategoryCreateReqDTO req) throws IOException;
 
@@ -22,16 +24,20 @@ public interface ProductService {
 
     ProductCategoryUpdateResDTO productCategoryUpdate(ProductCategoryUpdateReqDTO req) throws IOException;
 
-    /** product */
+    /**
+     * product
+     */
 
-    ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) throws IOException ;
+    ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
     List<ProductEntity> productGetAll();
 
     //0517
     ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
-    /**  productImg */
+    /**
+     * productImg
+     */
 
     ProductImgCreateResDTO productImgCreate(ProductImgCreateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
@@ -59,6 +65,7 @@ public interface ProductService {
 
 
 //0515
+
     /**
      * 取得所有商品,以及商品分類與照片
      */
@@ -67,18 +74,22 @@ public interface ProductService {
     /**
      * 取得商品審核狀態設定清單
      */
-    HashMap<Integer,String> getProductReviewStatusList();
+    HashMap<Integer, String> getProductReviewStatusList();
 
 
     /**
      * 取得商品上下架狀態設定清單
      */
-    HashMap<Integer,String>  getProductStatusList();
+    HashMap<Integer, String> getProductStatusList();
 
 //    0517
 
     ProductEntity getOneSellerProduct(Integer productId);
 
     List<ProductImgEntity> getProductImgListByProductId(Integer productId);
+
+
+    void updateReviewStatus(int productId) throws Exception;
+
 
 }

@@ -62,7 +62,8 @@
 
                         <div class="widget_list widget_color" style="text-align: center;">
 
-                            <button type="button" class="btn btn-success " id="create" onclick="window.location.href='/product/seller/create'">
+                            <button type="button" class="btn btn-success " id="create"
+                                    onclick="window.location.href='/product/seller/create'">
                                 新增商品
                             </button>
                             <br>
@@ -192,11 +193,100 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-12">
 
-                <!--                    0515start-->
-                <button type="button" class="btn btn-success " data-toggle="modal"
-                        data-target="#searchModal" id="search">
-                    搜索清單
-                </button>
+                        <!--                    0515start-->
+                        <!--                <button type="button" class="btn btn-success " data-toggle="modal"-->
+                        <!--                        data-target="#searchModal" id="search">-->
+                        <!--                    搜索清單-->
+                        <!--                </button>-->
+
+
+                        <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                                data-target="#searchModal" id="search">
+                            搜索清單
+                        </button>
+
+                        <!-- 搜索模态框 -->
+                        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
+                             aria-labelledby="searchModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <!-- 模态框头部 -->
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="searchModalLabel">搜索商品</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <!-- 模态框内容 -->
+                                    <div class="modal-body">
+                                        <!-- 搜索表单 -->
+                                        <form id="searchForm" th:action="@{/api/product/query}" method="get">
+                                            <!-- 商品名称 -->
+                                            <div class="form-group">
+                                                <label for="name">商品名稱:</label>
+                                                <input type="text" class="form-control" id="name" name="name" required>
+                                            </div>
+                                            <!-- 商品描述 -->
+                                            <div class="form-group">
+                                                <label for="description">商品描述:</label>
+                                                <input type="text" class="form-control" id="description" name="description" required>
+                                            </div>
+                                            <!-- 分类 -->
+                                            <div class="form-group">
+                                                <label for="categoryId">分類:</label>
+                                                <select id="categoryId" name="categoryId" class="form-control" required>
+                                                    <option value="">請選擇分類</option>
+                                                    <!-- 使用Thymeleaf渲染选项 -->
+                                                    <option th:each="category : ${categories}" th:value="${category.id}"
+                                                            th:text="${category.name}"></option>
+                                                </select>
+                                            </div>
+                                            <!-- 最低价格 -->
+                                            <div class="form-group">
+                                                <label for="minPrice">最低價格：</label>
+                                                <input type="number" id="minPrice" name="minPrice" min="0">
+                                            </div>
+                                            <!-- 最高价格 -->
+                                            <div class="form-group">
+                                                <label for="maxPrice">最高價格：</label>
+                                                <input type="number" id="maxPrice" name="maxPrice" min="0">
+                                            </div>
+                                            <!-- 買家編號 -->
+                                            <div class="form-group">
+                                                <label for="memberId">買家編號:</label>
+                                                <input type="text" class="form-control" id="memberId" name="memberId"
+                                                       required>
+                                            </div>
+                                            <!-- 審核状态 -->
+                                            <div id="reviewStatus">
+                                                <label><input type="checkbox" name="reviewStatus" value="0">
+                                                    審核中</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="1">
+                                                    通過</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="2">
+                                                    未通過</label>
+                                            </div>
+                                            <!-- 商品状态 -->
+                                            <div id="productStatus">
+                                                <label><input type="radio" name="label" value="0"><span
+                                                        class="round button">未上架</span></label>
+                                                <label><input type="radio" name="label" value="1"><span
+                                                        class="round button">上架</span></label>
+                                            </div>
+                                            <!-- 模态框底部 -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">搜索</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
@@ -258,33 +348,16 @@
                                 <tr th:each="product : ${productPage.content}">
                                     <td th:text="${product.productId}">1</td>
                                     <!--                                        <td th:text="${product.sellerId}">sellerId</td>-->
-                                    <td th:text="${product.productCategoryEntity.categoryName}">
-                                        <!--                                        <td th:text="${product.categoryId + ' - [' + product.productCategoryEntity.categoryName + ']'}">-->
-                                        <!--                                        Category Id - [Category Name]-->
-                                    </td>
-                                    <!--                                        <td th:text="${product.name}">name</td>-->
+                                    <td th:text="${product.productCategoryEntity.categoryName}"></td>
+
                                     <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
                                         name
                                     </td>
+
                                     <td th:text="${product.description}">0.00</td>
 
-                                    <!--                                        <td th:text="${product.description.length() > 5 ? #strings.substring(product.description, 0, 5) + '...' : product.description}"-->
-                                    <!--                                            th:if="${product.description.length() > 5}"-->
-                                    <!--                                            onclick="showFullDescription(this, '${product.description}')">0.00-->
-                                    <!--                                            </span>-->
-                                    <!--                                            <span th:unless="${product.description.length() > 5}" th:text="${product.description}"></span>-->
-                                    <!--                                        </td>-->
-
-                                    <!--                                        <td>-->
-                                    <!--                                            <span th:text="${product.description.length() > 5 ? #strings.substring(product.description, 0, 5) + '...' : product.description}"-->
-                                    <!--                                                  th:if="${product.description.length() > 5}"-->
-                                    <!--                                                  onclick="showFullDescription(this, '${product.description}')">-->
-                                    <!--                                            </span>-->
-                                    <!--                                            <span th:unless="${product.description.length() > 5}" th:text="${product.description}"></span>-->
-                                    <!--                                        </td>-->
-
-
                                     <td th:text="${product.price}">0.00</td>
+
                                     <td th:text="${product.quantity}">0.00</td>
 
                                     <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
@@ -301,7 +374,8 @@
                                         0.00
                                     </td>
                                     <td>
-                                        <a th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}" class="btn btn-primary">修改</a>
+                                        <a th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}"
+                                           class="btn btn-primary">修改</a>
                                     </td>
 
                                 </tr>
@@ -340,14 +414,90 @@
                         </div>
                     </div>
                 </div>
-
                 <!--                    0515end-->
-
             </div>
         </div>
     </div>
 </div>
 <!--shop  area end-->
+
+<script>
+    $(document).ready(function () {
+        /** Category */
+        // 加載商品分類選項
+        $.ajax({
+            url: '/api/productCategory/getAll',
+            type: 'GET',
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success: function (res) {
+                console.log(res);
+                let data = res.data;
+                let categoryIdSelect = $('#categoryId');
+                categoryIdSelect.empty();
+                categoryIdSelect.append(`<option value="">請選擇分類</option>`);
+                data.forEach(function (category) {
+                    categoryIdSelect.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
+                });
+            },
+            error: function (error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+
+        $('#searchForm').submit(function (e) {
+            e.preventDefault(); // 阻止表单默认提交
+
+            // 获取表单数据
+            var formData = $(this).serialize();
+
+            // 发送 Ajax 请求
+            $.ajax({
+                url: '/api/product/query',
+                type: 'GET',
+                data: formData,
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success: function (res) {
+                    if (res.code === "0") {
+                        alert('搜索成功');
+                        $('#searchModal').modal('hide');
+
+                        // 清空表格数据
+                        $('#products tbody').empty();
+
+                        // 遍历搜索结果并显示到页面上
+                        res.data.forEach(function (product) {
+                            var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+
+                            // 添加商品行到表格
+                            $('#products tbody').append(`
+                                <tr>
+                                    <td>${product.productId}</td>
+                                    <td>${product.productCategoryEntity.categoryName}</td>
+                                    <td>
+                                        <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                    </td>
+                                    <td>${reviewStatusList[product.reviewStatus]}</td>
+                                    <td>${productStatusList[product.productStatus]}</td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        alert('搜索失败！' + res.message);
+                        console.log(res);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert('搜索失败');
+                }
+            });
+        });
+    });
+</script>
 
 
 <!--footer-->

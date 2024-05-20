@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
 //        return resDTO;
 //    }
 
-//    0517
+    //    0517
     @Override
     public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
         ProductEntity product = new ProductEntity();
@@ -266,7 +266,7 @@ public class ProductServiceImpl implements ProductService {
 //                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
     }
 
-//0515
+    //0515
     @Override
     public Page<ProductEntity> productGetAll(Pageable pageable) {
         //1.查所有商品
@@ -331,5 +331,17 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+    @Override
+    public void updateReviewStatus(int productId) throws Exception {
+        // 根据产品ID从数据库中获取产品对象
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+
+        // 更新产品的审核状态 ，上架
+        product.setReviewStatus(1);
+
+        // 保存更新后的产品对象回数据库
+        productRepository.save(product);
+    }
 
 }

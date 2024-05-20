@@ -1,0 +1,276 @@
+<!doctype html>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>賣家商品瀏覽</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <!--css-->
+    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+    <!-- CSS
+ ========================= -->
+    <!--bootstrap min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
+    <!--owl carousel min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
+    <!--slick min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
+    <!--magnific popup min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
+    <!--font awesome css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
+    <!--ionicons min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
+    <!--animate css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
+    <!--jquery ui min css-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+    <!--slinky menu css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
+    <!--plugins css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+
+    <!-- add member css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+    <script th:src="@{/js/custom.js}"></script>
+
+    <script src="/js/api-response-utils.js"></script>
+
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+
+<!--shop  area start-->
+<div class="shop_area shop_reverse mt-100 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-1 col-md-12">
+                <!--                    0515start-->
+                <button type="button" class="btn btn-success " data-toggle="modal"
+                        data-target="#searchModal" id="search">
+                    搜索清單
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+            <div class="container">
+                <a class="navbar-brand" href="/">商品資料</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarResponsive"
+                        aria-controls="navbarResponsive"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 mt-5 mb-5">
+                    <table id="products" class="table table-bordered table-responsive-sm">
+                        <colgroup>
+                            <!-- 第一欄寬度 -->
+                            <col style="width: 3%;">
+                            <!-- 第二欄寬度 -->
+                            <col style="width: 5%;">
+                            <!-- 第三欄寬度 -->
+                            <col style="width: 20%;">
+                            <!-- 第四欄寬度 -->
+                            <col style="width: 30%;">
+                            <!-- 第五欄寬度 -->
+                            <col style="width: 5%;">
+                            <!-- 第六欄寬度 -->
+                            <col style="width: 2%;">
+                            <!-- 第七欄寬度 -->
+                            <col style="width: 35%;">
+                            <!-- 第八欄寬度 -->
+                            <col style="width: 3%;">
+                            <!-- 第九欄寬度 -->
+                            <col style="width: 5%;">
+                            <!-- 第十欄寬度 -->
+                            <col style="width: 5%;">
+                            <!-- 第十一欄寬度 -->
+                            <col style="width: 10%;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>分類</th>
+                            <th>品<br>名</th>
+                            <th>內<br>容</th>
+                            <th>價<br>格</th>
+                            <th>數<br>量</th>
+                            <th>圖<br>片</th>
+                            <th>賣家編號</th>
+                            <th>審核狀態</th>
+                            <th>上下架</th>
+                            <th>審<br>核</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${productPage.content}">
+                            <td th:text="${product.productId}">1</td>
+                            <td th:text="${product.productCategoryEntity.categoryName}">
+                            </td>
+                            <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
+                                name
+                            </td>
+                            <td th:text="${product.description}">0.00</td>
+                            <td th:text="${product.price}">0.00</td>
+                            <td th:text="${product.quantity}">0.00</td>
+
+                            <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
+                                th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
+                                <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
+                                     style="height: 120px;width: 120px" alt=""/>
+                            </td>
+                            <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
+
+                            <td th:text="${product.sellerId}">1</td>
+
+                            <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}">
+                                0.00
+                            </td>
+                            <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
+                                0.00
+                            </td>
+                            <td>
+<!--                                <button onclick="updateReviewStatus(${product.productId})" class="btn btn-primary">-->
+<!--                                    審核成功-->
+<!--                                </button>-->
+<!--                                <button onclick="updateReviewStatus('${product.productId}')" class="btn btn-primary">審核成功</button>-->
+<!--                                <button class="btn btn-primary" data-product-id="${product.productId}">-->
+<!--                                    審核成功-->
+<!--                                </button>-->
+                                <button class="btn btn-primary" th:attr="data-product-id=${product.productId}">
+                                    審核成功
+                                </button>
+
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item"
+                                th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/product/review(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                            </li>
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                                th:classappend="${productPage.number == i} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{/admin/product/review(page=${i}, size=${productPage.size})}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/product/review(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <form th:action="@{/admin/product/review}" method="get">
+                                    <input type="hidden" name="size" th:value="${productPage.size}">
+                                    <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
+                                           step="1" value="${productPage.number}" style="width: 50px;">
+                                    <button type="submit" class="btn btn-primary">Go</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--                    0515end-->
+<!--shop  area end-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('button.btn').click(function() {
+            var productId = $(this).data('product-id');
+            updateReviewStatus(productId);
+            console.log(productId);
+        });
+    });
+    function updateReviewStatus(productId) {
+        $.ajax({
+            type:"POST",
+            url: "/seller/product/updateReviewStatus",
+            data: JSON.stringify({productId: productId}),
+            // headers: {
+            //     "authorization": localStorage.getItem("authorization")
+            // },
+            contentType: "application/json", // 設置請求頭的 Content-Type
+            success: function (response) {
+            // success(response) {
+                apiResponseJSON(response, {
+                   // onSuccess(data) {
+                    onSuccess: (data) => {
+                       console.log(data);
+                       console.log(response);
+                if (response.hasOwnProperty("reviewStatus")) {
+                    $('#reviewStatus' + productId).text(response.reviewStatus);
+                }
+                console.log(response.success || response.error);
+                   }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/seller/product/updateReviewStatus",
+    //     data: postData,
+    //     success: function(response) {
+    //         apiResponseJSON(response, {
+    //             onSuccess: function(data) {
+    //                 // 成功回调函数
+    //                 console.log("Success:", data);
+    //             },
+    //             onError: function(error) {
+    //                 // 错误回调函数
+    //                 console.error("Error:", error);
+    //             }
+    //         });
+    //     },
+    //     error: function(xhr, status, error) {
+    //         // AJAX 请求失败时的处理
+    //         console.error("AJAX Error:", error);
+    //     }
+    // });
+
+</script>
+
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+</body>
+</html>

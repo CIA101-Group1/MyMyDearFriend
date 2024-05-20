@@ -42,6 +42,11 @@
 
     <script th:src="@{/js/custom.js}"></script>
 
+    <script src="/js/api-response-utils.js"></script>
+
+    <!-- FilePond CSS -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
     <!-- 自訂 CSS 樣式 -->
     <style>
         .has-error .help-block.with-errors {
@@ -210,7 +215,7 @@
             console.log("submit")
             e.preventDefault(); // 防止原始表單提交
 
-            var idList = $('[id^="productImgTd_"]').map(function () {
+            var idList = $('[id^="productImgId_"]').map(function () {
                 return this.id; // 返回匹配元素的 ID
             }).get();
 

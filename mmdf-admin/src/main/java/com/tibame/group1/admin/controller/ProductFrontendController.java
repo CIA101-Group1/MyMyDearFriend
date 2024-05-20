@@ -3,18 +3,19 @@ package com.tibame.group1.admin.controller;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.web.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -132,8 +133,41 @@ public class ProductFrontendController {
 
             HashMap<Integer, String> productStatusList = productService.getProductStatusList();
             model.addAttribute("productStatusList", productStatusList);
-            return "product-admin/index"; // 要導入的html
+            return "product-admin/product-review"; // 要導入的html
         }
+    }
+
+//    @PostMapping("/seller/product/updateReviewStatus")
+//    @ResponseBody
+//    public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId) {
+//        Map<String, String> response = new HashMap<>();
+//        try {
+//            productService.updateReviewStatus(productId);
+//            // 获取更新后的审核状态
+//            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
+//            response.put("reviewStatus", newReviewStatus);
+//            response.put("success", "審核狀態已成功更新");
+//        } catch (Exception e) {
+//            response.put("error", "無法更新審核狀態");
+//        }
+//        return response;
+//    }
+
+    @GetMapping("/redirect")
+    public void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //取得請求 主機名及接口
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+
+        //設置新的接口
+        int newPort = 8002;
+
+        //建立目標URL
+        String rargetUrl = String.format("%s://%s:%d/api/destination", scheme, serverName, newPort);
+
+        //重新導向目標URL
+        response.sendRedirect(rargetUrl);
+
     }
 
 
