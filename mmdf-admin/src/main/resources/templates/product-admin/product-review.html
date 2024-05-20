@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>買家商品瀏覽</title>
+    <title>賣家商品瀏覽</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!--css-->
@@ -39,14 +39,17 @@
 
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-</head>
 
+    <script th:src="@{/js/custom.js}"></script>
+
+</head>
 <body>
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
 <!--breadcrumb-->
 <th:block th:replace="~{/fragments/breadcrumb}"/>
+
 
 <!--shop  area start-->
 <div class="shop_area shop_reverse mt-100 mb-100">
@@ -56,22 +59,18 @@
                 <!--sidebar widget start-->
                 <aside class="sidebar_widget">
                     <div class="widget_inner">
-                        <div class="widget_list widget_color">
-                            <h3>商品分類</h3>
-                            <ul>
-                                <li>
-                                    <a href="#"> JAVA系列 <span>(6)</span></a>
-                                </li>
-                                <li>
-                                    <a href="#"> SQL系列 <span>(8)</span></a>
-                                </li>
-                                <li>
-                                    <a href="#"> Servlet系列 <span>(10)</span></a>
-                                </li>
-                            </ul>
+
+                        <div class="widget_list widget_color" style="text-align: center;">
+
+                            <button type="button" class="btn btn-success " id="create" onclick="window.location.href='/product/seller/create'">
+                                新增商品
+                            </button>
+                            <br>
+                            <br>
                         </div>
+
                         <div class="widget_list widget_compare">
-                            <h3>Compare</h3>
+                            <!--                            <h3>Compare</h3>-->
                             <div class="shop_sidebar_product">
                                 <article class="single_product">
                                     <figure>
@@ -84,7 +83,7 @@
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a href="product-details.html">SQL營養液套組</a>
                                             </h4>
-                                            <div class="product_rating">
+                                            <div class="product_rating">賣家評價
                                                 <ul>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
@@ -110,7 +109,7 @@
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a href="product-details.html">JAVA麥克風</a></h4>
-                                            <div class="product_rating">
+                                            <div class="product_rating">賣家評價
                                                 <ul>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
@@ -136,7 +135,7 @@
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a href="product-details.html"> 面試順利包</a></h4>
-                                            <div class="product_rating">
+                                            <div class="product_rating">賣家評價
                                                 <ul>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
@@ -162,7 +161,7 @@
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a href="product-details.html"> 吳神滑鼠</a></h4>
-                                            <div class="product_rating">
+                                            <div class="product_rating">賣家評價
                                                 <ul>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                                     <li><a href="#"><i class="icon icon-Star"></i></a></li>
@@ -190,103 +189,160 @@
                 <!--sidebar widget end-->
             </div>
             <div class="col-lg-9 col-md-12">
-                <!--shop wrapper start-->
-                <!--shop toolbar start-->
-                <div class="shop_toolbar_wrapper">
+                <div class="row">
+                    <div class="col-lg-1 col-md-12">
 
-                    <button type="button" class="btn btn-success " data-toggle="modal"
-                            data-target="#searchModal" id="search">
-                        搜索清單
-                    </button>
-
-                </div>
-                <!--shop toolbar end-->
-                <div class="row shop_wrapper">
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-12 " th:each="product : ${productPage.content}">
-                        <article class="single_product">
-                            <figure>
-                                <div class="product_thumb">
-                                    <!--                                    <div class="label_product">-->
-                                    <!--                                        <span class="label_new">new</span>-->
-                                    <!--                                        <span class="label_sale">10%</span>-->
-                                    <!--                                    </div>-->
-                                    <a class="primary_img"
-                                       th:if="${product.productImgs != null and product.productImgs.size() > 0}"
-                                       th:id="'productImgTd_' + ${product.productImgs[0].imageId}"
-                                       th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
-                                        <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
-                                             style="height: 150px;width: 150px" alt=""/>
-                                    </a>
-                                    <div class="action_links">
-                                        <ul>
-                                            <li class="quick_button"><a href="#" data-toggle="modal"
-                                                                        data-target="#modal_box" title="quick view"> <i
-                                                    class="icon icon-Eye"></i></a></li>
-                                            <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i
-                                                    class="icon icon-Heart"></i></a></li>
-                                            <li class="compare"><a href="#" title="Add to Compare"><i
-                                                    class="icon icon-MusicMixer"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_content grid_content">
-                                    <div class="product_rating">
-                                        <ul>
-                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                        </ul>
-                                    </div>
-                                    <h4 class="product_name" th:text="${product.name}"><a
-                                            th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
-                                        <span style="font-size: large;"></span></a></h4>
-                                    <div class="price_box">
-                                        <span class="current_price" th:text="${product.price}"></span>
-                                    </div>
-                                    <div class="add_to_cart">
-                                        <a href="orderlist.html" title="Add to cart">加入購物車</a>
-                                    </div>
-                                </div>
-                            </figure>
-                        </article>
+                <!--                    0515start-->
+                <button type="button" class="btn btn-success " data-toggle="modal"
+                        data-target="#searchModal" id="search">
+                    搜索清單
+                </button>
                     </div>
-
                 </div>
 
-                <div class="shop_toolbar t_bottom">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item"
-                                th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/product/buyer/select(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
-                            </li>
-                            <li class="page-item"
-                                th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
-                                th:classappend="${productPage.number == i} ? 'active'">
-                                <a class="page-link"
-                                   th:href="@{/product/buyer/select(page=${i}, size=${productPage.size})}"
-                                   th:text="${i + 1}">1</a>
-                            </li>
-                            <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/product/buyer/select(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
-                            </li>
-                            <li class="page-item">
-                                <form th:action="@{/product/buyer/select}" method="get">
-                                    <input type="hidden" name="size" th:value="${productPage.size}">
-                                    <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
-                                           step="1" value="${productPage.number}" style="width: 50px;">
-                                    <button type="submit" class="btn btn-primary">Go</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </nav>
+                <!-- Navigation -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+                    <div class="container">
+                        <a class="navbar-brand" href="/">商品資料</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarResponsive"
+                                aria-controls="navbarResponsive"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 mt-5 mb-5">
+                            <table id="products" class="table table-bordered table-responsive-sm">
+                                <colgroup>
+                                    <!-- 第一欄寬度 -->
+                                    <col style="width: 3%;">
+                                    <!-- 第二欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第三欄寬度 -->
+                                    <col style="width: 20%;">
+                                    <!-- 第四欄寬度 -->
+                                    <col style="width: 30%;">
+                                    <!-- 第五欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第六欄寬度 -->
+                                    <col style="width: 2%;">
+                                    <!-- 第七欄寬度 -->
+                                    <col style="width: 35%;">
+                                    <!-- 第八欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第九欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第十欄寬度 -->
+                                    <col style="width: 10%;">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>編號</th>
+                                    <!--                                        <th>賣家編號</th>-->
+                                    <th>分類</th>
+                                    <th>品名</th>
+                                    <th>內容</th>
+                                    <th>價格</th>
+                                    <th>數量</th>
+                                    <th>圖片</th>
+                                    <th>審核</th>
+                                    <th>上下架</th>
+                                    <th>修改</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="product : ${productPage.content}">
+                                    <td th:text="${product.productId}">1</td>
+                                    <!--                                        <td th:text="${product.sellerId}">sellerId</td>-->
+                                    <td th:text="${product.productCategoryEntity.categoryName}">
+                                        <!--                                        <td th:text="${product.categoryId + ' - [' + product.productCategoryEntity.categoryName + ']'}">-->
+                                        <!--                                        Category Id - [Category Name]-->
+                                    </td>
+                                    <!--                                        <td th:text="${product.name}">name</td>-->
+                                    <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
+                                        name
+                                    </td>
+                                    <td th:text="${product.description}">0.00</td>
+
+                                    <!--                                        <td th:text="${product.description.length() > 5 ? #strings.substring(product.description, 0, 5) + '...' : product.description}"-->
+                                    <!--                                            th:if="${product.description.length() > 5}"-->
+                                    <!--                                            onclick="showFullDescription(this, '${product.description}')">0.00-->
+                                    <!--                                            </span>-->
+                                    <!--                                            <span th:unless="${product.description.length() > 5}" th:text="${product.description}"></span>-->
+                                    <!--                                        </td>-->
+
+                                    <!--                                        <td>-->
+                                    <!--                                            <span th:text="${product.description.length() > 5 ? #strings.substring(product.description, 0, 5) + '...' : product.description}"-->
+                                    <!--                                                  th:if="${product.description.length() > 5}"-->
+                                    <!--                                                  onclick="showFullDescription(this, '${product.description}')">-->
+                                    <!--                                            </span>-->
+                                    <!--                                            <span th:unless="${product.description.length() > 5}" th:text="${product.description}"></span>-->
+                                    <!--                                        </td>-->
+
+
+                                    <td th:text="${product.price}">0.00</td>
+                                    <td th:text="${product.quantity}">0.00</td>
+
+                                    <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
+                                        th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
+                                        <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
+                                             style="height: 120px;width: 120px" alt=""/>
+                                    </td>
+                                    <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
+
+                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '默認'}">
+                                        0.00
+                                    </td>
+                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
+                                        0.00
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}" class="btn btn-primary">修改</a>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item"
+                                        th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/product/seller/select(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                                        th:classappend="${productPage.number == i} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{/product/seller/select(page=${i}, size=${productPage.size})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/product/seller/select(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <form th:action="@{/product/seller/select}" method="get">
+                                            <input type="hidden" name="size" th:value="${productPage.size}">
+                                            <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
+                                                   step="1" value="${productPage.number}" style="width: 50px;">
+                                            <button type="submit" class="btn btn-primary">Go</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                        </div>
+                    </div>
                 </div>
-                <!--shop toolbar end-->
-                <!--shop wrapper end-->
+
+                <!--                    0515end-->
+
             </div>
         </div>
     </div>
@@ -299,5 +355,6 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
+
 </body>
 </html>

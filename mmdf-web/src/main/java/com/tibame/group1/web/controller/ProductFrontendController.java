@@ -154,6 +154,18 @@ public class ProductFrontendController {
         return response;
     }
 
+    @GetMapping("/buyer/proCategory/getOne/{categoryId}")
+    public String getOneByCategory(@PathVariable("categoryId") String productId, Model model) {
+
+        ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
+        model.addAttribute("productEntity", productEntity);
+
+        List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+
+        return "/product/buyer-proCategory-select";
+    }
+
 @GetMapping("api/destination")
     public ResponseEntity<String> redirect(HttpServletRequest request){
         System.out.println("收到redirect");
