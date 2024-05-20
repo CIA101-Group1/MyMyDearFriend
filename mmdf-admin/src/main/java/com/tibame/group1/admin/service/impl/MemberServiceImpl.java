@@ -1,5 +1,6 @@
-package com.tibame.group1.admin.service.impl;
+package com.tibame.group1.admin.service.Impl;
 
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.dto.MemberAllReqDTO;
 import com.tibame.group1.admin.dto.MemberAllResDTO;
 import com.tibame.group1.admin.dto.MemberResDTO;
@@ -9,7 +10,9 @@ import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.common.utils.NumberUtils;
 import com.tibame.group1.common.utils.StringUtils;
+import com.tibame.group1.db.entity.EmployeeEntity;
 import com.tibame.group1.db.entity.MemberEntity;
+import com.tibame.group1.db.repository.EmployeeRepository;
 import com.tibame.group1.db.repository.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +27,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired private MemberRepository memberRepository;
 
+    @Autowired private EmployeeRepository employeeRepository;
+
     @Override
-    public MemberResDTO memberAll(MemberAllReqDTO req, Pageable pageable) {
+    public MemberResDTO memberAll(
+            MemberAllReqDTO req, AdminLoginSourceDTO adminLoginSource, Pageable pageable) {
+        MemberResDTO res = new MemberResDTO();
+        EmployeeEntity employee =
+                employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
+        if (null == employee) {
+            res.setStatus(MemberResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
+            return res;
+        }
+
         Page<MemberEntity> pageResult;
         if (StringUtils.isEmpty(req.getSearchText())) {
             MemberEntity filterEntity = new MemberEntity();
@@ -85,9 +99,9 @@ public class MemberServiceImpl implements MemberService {
         PagesResDTO pagesResDTO = new PagesResDTO();
         pagesResDTO.setTotalPages(pageResult.getTotalPages());
         pagesResDTO.setTotalCount((int) pageResult.getTotalElements());
-        MemberResDTO res = new MemberResDTO();
         res.setMemberList(memberList);
         res.setPages(pagesResDTO);
+        res.setStatus(MemberResDTO.Status.SEARCH_SUCCESS.getCode());
         return res;
     }
 }
