@@ -1,6 +1,7 @@
 package com.tibame.group1.admin.controller;
 
 import com.tibame.group1.admin.annotation.CheckLogin;
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.CouponService;
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
@@ -17,7 +18,8 @@ public class CouponBackendController {
 
   @GetMapping("/coupons/{couponID}")
   public ResponseEntity<CouponEntity> getOneCoupon(
-          @PathVariable("couponID") Integer couponID) {
+          @PathVariable("couponID") Integer couponID,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
 
     CouponEntity coupon = couponService.getCouponByID(couponID);
 
@@ -32,7 +34,8 @@ public class CouponBackendController {
   @CheckLogin
   @PostMapping("/coupons")
   public ResponseEntity<CouponEntity> createCoupon(
-          @RequestBody @Valid CouponReqDTO couponReqDTO) {
+          @RequestBody @Valid CouponReqDTO couponReqDTO,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
 
     Integer couponID = couponService.createCoupon(couponReqDTO);
 

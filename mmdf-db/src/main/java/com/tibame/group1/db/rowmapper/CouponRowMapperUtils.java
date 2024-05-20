@@ -12,15 +12,15 @@ public class CouponRowMapperUtils implements RowMapper<CouponEntity> {
   public CouponEntity mapRow(ResultSet resultSet, int i) throws SQLException {
     CouponEntity couponEntity = new CouponEntity();
 
-    couponEntity.setCouponID(resultSet.getInt("COUPON_ID"));
-    couponEntity.setTitle(resultSet.getString("TITLE"));
-    couponEntity.setLowPrice(resultSet.getInt("LOW_PRICE"));
-    couponEntity.setDiscount(resultSet.getInt("DISCOUNT"));
-    couponEntity.setNumber(resultSet.getInt("NUMBER"));
-    couponEntity.setDateStart(resultSet.getTimestamp("DATE_START"));
-    couponEntity.setDateEnd(resultSet.getTimestamp("DATE_END"));
-    couponEntity.setAddable(resultSet.getString("ADDABLE"));
-    couponEntity.setLivemode(resultSet.getString("LIVEMONE"));
+    couponEntity.setCouponID(resultSet.getInt("coupon_ID"));
+    couponEntity.setTitle(resultSet.getString("title"));
+    couponEntity.setLowPrice(resultSet.getInt("low_price"));
+    couponEntity.setDiscount(resultSet.getInt("discount"));
+    couponEntity.setNumber(resultSet.getInt("number"));
+    couponEntity.setDateStart(resultSet.getTimestamp("date_start"));
+    couponEntity.setDateEnd(resultSet.getTimestamp("date_end"));
+    couponEntity.setAddable(resultSet.getString("addable"));
+    couponEntity.setLivemode(resultSet.getString("livemode"));
 
     return couponEntity;
   }

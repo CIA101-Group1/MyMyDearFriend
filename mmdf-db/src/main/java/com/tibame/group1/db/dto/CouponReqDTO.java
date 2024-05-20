@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 public class CouponReqDTO {
 
+
     @NotNull
     private String title;
 

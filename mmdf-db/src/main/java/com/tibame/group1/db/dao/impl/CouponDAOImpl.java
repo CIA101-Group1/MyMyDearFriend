@@ -44,8 +44,9 @@ public class CouponDAOImpl implements CouponDAO {
   public Integer createCoupon(CouponReqDTO couponReqDTO) {
 
     String sql =
-        "INSERT INTO coupon (title, low_price, discount, number, date_start, date_end, addable, livemode) "
-            + "VALUES (title, lowPrice, discount, number, dateStart, dateEnd, addable, livemode)";
+            "INSERT INTO coupon (title, low_price, discount, number, date_start, date_end, addable, livemode) "
+                    + "VALUES (:title, :lowPrice, :discount, :number, :dateStart, :dateEnd, :addable, :livemode)";
+
 
     Map<String, Object> map = new HashMap<>();
     map.put("title", couponReqDTO.getTitle());
@@ -57,9 +58,6 @@ public class CouponDAOImpl implements CouponDAO {
     map.put("addable", couponReqDTO.getAddable());
     map.put("livemode", couponReqDTO.getLivemode());
 
-//    Date now = new Date();
-//    map.put("dateEnd", now);
-//    map.put("dateStart", now);
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
