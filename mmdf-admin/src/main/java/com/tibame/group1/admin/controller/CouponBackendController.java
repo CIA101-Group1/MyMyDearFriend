@@ -65,4 +65,15 @@ public class CouponBackendController {
 
     return ResponseEntity.status(HttpStatus.OK).body(updateCoupon);
   }
+
+  @CheckLogin
+  @DeleteMapping("/coupons/{couponID}")
+  public ResponseEntity<CouponEntity> deleteCoupon(
+          @PathVariable("couponID") Integer couponID,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource){
+
+    couponService.deleteCouponByID(couponID);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 }

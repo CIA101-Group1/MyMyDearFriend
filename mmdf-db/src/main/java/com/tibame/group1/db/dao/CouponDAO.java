@@ -11,4 +11,6 @@ public interface CouponDAO {
     Integer createCoupon(CouponReqDTO couponReqDTO);
 
     void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO);
+
+    void deleteCouponByID(Integer couponID);
 }

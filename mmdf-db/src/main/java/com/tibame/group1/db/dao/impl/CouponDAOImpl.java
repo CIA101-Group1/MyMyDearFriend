@@ -89,4 +89,14 @@ public class CouponDAOImpl implements CouponDAO {
 
     namedParameterJdbcTemplate.update(sql, map);
   }
+
+  @Override
+  public void deleteCouponByID(Integer couponID) {
+    String sql = "DELETE FROM coupon WHERE coupon_id = :couponID";
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("couponID", couponID);
+
+    namedParameterJdbcTemplate.update(sql, map);
+  }
 }

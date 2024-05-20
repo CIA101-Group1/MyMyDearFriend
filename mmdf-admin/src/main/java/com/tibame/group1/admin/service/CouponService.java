@@ -14,4 +14,6 @@ public interface CouponService {
 
 
     void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO);
+
+    void deleteCouponByID(Integer couponID);
 }

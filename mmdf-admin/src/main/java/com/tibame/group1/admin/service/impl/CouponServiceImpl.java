@@ -20,6 +20,17 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Integer createCoupon(CouponReqDTO couponReqDTO) {
+
         return couponDAO.createCoupon(couponReqDTO);
+    }
+
+    @Override
+    public void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO) {
+        couponDAO.updateCoupon(couponID, couponReqDTO);
+    }
+
+    @Override
+    public void deleteCouponByID(Integer couponID) {
+        couponDAO.deleteCouponByID(couponID);
     }
 }
