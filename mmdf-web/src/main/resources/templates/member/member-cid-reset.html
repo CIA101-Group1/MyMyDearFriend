@@ -6,20 +6,16 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>重設密碼</title>
-    <!--Filepond JS-->
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
-    <!--    Filepond CSS    -->
-    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-          rel="stylesheet"/>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
+        .row {
+            margin: auto;
+            justify-content: center;
+        }
+
         .cid-forget-form form input {
             border: 1px solid #ddd;
             background: none;
@@ -28,6 +24,12 @@
             width: 100%;
             padding: 0 20px;
             color: #222222;
+        }
+
+        .btn-warning {
+            color: #212529 !important;
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
         }
     </style>
 </head>
@@ -43,24 +45,20 @@
     <div class="container">
         <div class="account_dashboard">
             <div class="row">
-                <!-- Sidebar -->
-                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
-
                 <div class="col-sm-12 col-md-9 col-lg-9">
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="cid-reset">
-                            <h3>重設密碼</h3>
+                            <h3 style="text-align: center;">重設密碼</h3>
                             <div class="cid-reset">
                                 <div class="cid-reset-container">
-                                    <div class="cid-reset-form">
+                                    <div class="account_login_form">
                                         <form id="cid-reset-form">
-                                            <div id="errorMessage" style="color: red;"></div>
                                             <label for="new-cid">請輸入新密碼：</label>
-                                            <input type="password" id="new-cid" name="new-cid"><br>
+                                            <input type="password" id="new-cid" name="new-cid"><br><br>
                                             <label for="new-cid-check">再次輸入新密碼：</label>
                                             <input type="password" id="new-cid-check" name="new-cid-check"><br>
-                                            <button type="submit">重設密碼</button>
+                                            <button type="submit" class="btn btn-warning">重設密碼</button>
                                         </form>
                                     </div>
                                 </div>
@@ -74,12 +72,29 @@
 </section>
 <!-- main end   -->
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 
 <!--js-->
-<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
 <script>
     let userData = {};
@@ -110,8 +125,9 @@
                 errorMessage += "<li>請確認輸入的兩次新密碼相同</li>";
             }
             if (errorMessage !== "") {
-                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
-                return;
+                $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+                $("#myModal").modal("show");
+                return false;
             }
 
             userData = {
@@ -132,17 +148,23 @@
                         onSuccess(data) {
                             switch (data.status) {
                                 case "0":
-                                    alert("驗證碼過期，請重新發送重設密碼請求");
+                                    $("#modalBody").html("驗證碼過期，請重新發送重設密碼請求");
+                                    $("#myModal").modal("show");
                                     break;
                                 case "1":
-                                    alert("重設密碼成功，請使用新密碼重新登入");
-                                    window.location.href = "/member/login";
+                                    $("#modalBody").html("重設密碼成功，請使用新密碼重新登入");
+                                    $("#myModal").modal("show");
+                                    setTimeout(function () {
+                                        window.location.href = "/member/login";
+                                    }, 2000);
                                     break;
                                 case "-1":
-                                    alert("二次設定新密碼不同，請重新確認");
+                                    $("#modalBody").html("二次設定新密碼不同，請重新確認");
+                                    $("#myModal").modal("show");
                                     break;
                                 case "-2":
-                                    alert("驗證碼錯誤");
+                                    $("#modalBody").html("重設密碼之驗證碼錯誤");
+                                    $("#myModal").modal("show");
                                     break;
                             }
                         },
@@ -152,7 +174,8 @@
                     });
                 },
                 error(xhr, status, error) {
-                    alert("伺服器連線失敗: " + error);
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
                 }
             });
         });
