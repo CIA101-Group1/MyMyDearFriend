@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .btn-primary {
+            color: #fff !important;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+
+        .btn-secondary {
+            color: #fff !important;
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+        }
+
+        .dropdown select, .dropdown input {
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        .dropdown select:focus, .dropdown input:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <!-- 主要內容 -->
+                            <div id="layoutSidenav_content">
+                                <main>
+                                    <div class="container-fluid px-4">
+                                        <h3 class="mt-4">通知列表</h3>
+                                        <!-- 篩選條件 -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-2 custom-select-wrapper">
+                                                <label for="isVerifiedFilter"
+                                                       style="margin-bottom: 5px;">通知類型</label>
+                                                <select id="isVerifiedFilter" class="form-control">
+                                                    <option value="">所有</option>
+                                                    <option value="general">一般商城通知</option>
+                                                    <option value="auction">競標商城通知</option>
+                                                    <option value="chat">聊天室通知</option>
+                                                    <option value="customerService">客服通知</option>
+                                                    <option value="news">最新消息</option>
+                                                    <option value="market">市集通知</option>
+                                                    <option value="system">系統通知</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 custom-select-wrapper-input">
+                                                <label for="sendingTimeBegin"
+                                                       style="margin-bottom: 5px;">發送時間起始</label>
+                                                <input type="date" id="sendingTimeBegin" class="form-control">
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-center justify-content-center"
+                                                 style="max-width: 40px;">
+                                                <span>~</span>
+                                            </div>
+                                            <div class="col-md-3 custom-select-wrapper-input">
+                                                <label for="sendingTimeEnd"
+                                                       style="margin-bottom: 5px;">發送時間結束</label>
+                                                <input type="date" id="sendingTimeEnd" class="form-control">
+                                            </div>
+                                            <div class="col-md-3 custom-select-wrapper-input">
+                                                <label for="searchInput" style="margin-bottom: 5px;">文字搜尋</label>
+                                                <input type="text" id="searchInput" class="form-control"
+                                                       placeholder="輸入通知標題或內容">
+                                            </div>
+                                            <div class="col-md-3 align-self-end d-flex justify-content-between">
+                                                <button id="searchBtn" class="btn btn-primary">搜尋</button>
+                                                <button id="resetFilters" class="btn btn-secondary ml-2">重置篩選條件
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- 主要表格 -->
+                                        <table id="memberTable" class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>種類</th>
+                                                <th>標題</th>
+                                                <th>內容</th>
+                                                <th>發送時間</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <!-- 這裡將通知資料動態插入 -->
+                                            </tbody>
+                                        </table>
+                                        <div id="alertMessage" class="alert alert-warning"
+                                             style="display: none; text-align: center;">查無資料
+                                        </div>
+                                        <nav>
+                                            <ul class="pagination">
+                                                <!-- 這裡將動態插入分頁按鈕 -->
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end   -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    $(document).ready(function () {
+        // 當篩選條件改變時，重新加載資料
+        $("#isVerifiedFilter, #sendingTimeBegin, #sendingTimeEnd").on("change", function () {
+            fetchMemberData();
+        });
+
+        // 當點擊重置按鈕時，重置篩選條件並重新加載資料
+        $("#resetFilters").on("click", function () {
+            $("#isVerifiedFilter").val("");
+            $("#sendingTimeBegin").val("");
+            $("#sendingTimeEnd").val("");
+            $("#searchInput").val("");
+            fetchMemberData();
+        });
+
+        // 查詢按鈕點擊事件
+        $("#searchBtn").on("click", function () {
+            $("#isVerifiedFilter").val("");
+            $("#sendingTimeBegin").val("");
+            $("#sendingTimeEnd").val("");
+            fetchMemberData();
+        });
+
+        $.ajax({
+            url: "/api/memberNotice/all",
+            method: "get",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+
+                    },
+                    onError(message) {
+                        console.log(message);
+                    }
+                });
+            },
+            error(xhr, status, error) {
+                $("#modalBody").html("伺服器連線失敗: " + error);
+                $("#myModal").modal("show");
+            }
+        });
+    });
+</script>
+</body>
+</html>

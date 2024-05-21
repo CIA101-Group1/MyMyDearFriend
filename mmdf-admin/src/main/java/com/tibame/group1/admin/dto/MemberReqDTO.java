@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class  MemberAllReqDTO {
+public class MemberReqDTO {
 
     private Boolean isVerified;
 
