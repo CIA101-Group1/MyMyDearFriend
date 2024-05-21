@@ -1,6 +1,7 @@
 package com.tibame.group1.web.controller;
 
 import com.tibame.group1.common.enums.WalletCategory;
+import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.LoginSourceDTO;
@@ -19,19 +20,24 @@ public class WalletHistoryBachendController {
 
   @Autowired private WalletHistoryService walletHistoryService;
 
+  /** todo: 錢包分頁功能與每筆細項，用Lsit */
   @CheckLogin
   @GetMapping("/wallets")
   public ResponseEntity<List<WalletHistoryEntity>> getAllWalletHistory(
-          @RequestParam("walletCategory") WalletCategory walletCategory,
-          @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
+      @RequestParam(value = "walletCategory", required = false) WalletCategory walletCategory,
+      @RequestParam(value = "search", required = false) String search,
+      @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource
+  ) {
+    WalletQueryParams walletQueryParams = new WalletQueryParams();
+    walletQueryParams.setWalletCategory(walletCategory);
+    walletQueryParams.setSearch(search);
+
     List<WalletHistoryEntity> walletHistoryEntityList =
-            walletHistoryService.getWallets(walletCategory);
+        walletHistoryService.getWallets(walletQueryParams);
 
     return ResponseEntity.status(HttpStatus.OK).body(walletHistoryEntityList);
   }
 
-
-  /** todo: 錢包分頁功能與每筆細項，用Lsit */
   @GetMapping("/wallets/{walletID}")
   @CheckLogin
   public ResponseEntity<WalletHistoryEntity> getOneWalletHistory(
@@ -48,8 +54,10 @@ public class WalletHistoryBachendController {
   }
 
   @PostMapping("/wallets")
+  @CheckLogin
   public ResponseEntity<WalletHistoryEntity> createWalletHistory(
-      @RequestBody @Valid WalletReqDTO walletReqDTO) {
+      @RequestBody @Valid WalletReqDTO walletReqDTO,
+      @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
 
     Integer walletID = walletHistoryService.createWalletHistory(walletReqDTO);
 

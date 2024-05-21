@@ -87,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
         loginSource.setName(member.getName());
         loginSource.setEmail(member.getEmail());
         loginSource.setIsVerified(member.getIsVerified());
-        //        sendVerifyEmail(loginSource);
+        sendVerifyEmail(loginSource);
         resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
         resDTO.setStatus(MemberCreateResDTO.Status.CREATE_SUCCESS.getCode());
         return resDTO;

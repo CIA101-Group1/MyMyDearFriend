@@ -1,42 +1,92 @@
 package com.tibame.group1.admin.controller;
 
-import com.tibame.group1.admin.dto.CouponAllReqDTO;
-import com.tibame.group1.admin.dto.CouponResDTO;
+import com.tibame.group1.admin.annotation.CheckLogin;
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.CouponService;
-import com.tibame.group1.common.dto.ResDTO;
-import com.tibame.group1.common.dto.admin.CouponCreateReqDTO;
-import com.tibame.group1.common.dto.admin.CouponCreateResDTO;
-import com.tibame.group1.common.exception.DateException;
+import com.tibame.group1.db.dto.CouponReqDTO;
+import com.tibame.group1.db.entity.CouponEntity;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("api/")
 public class CouponBackendController {
 
-    @Autowired
-    private CouponService couponService;
+  @Autowired private CouponService couponService;
 
-    @PostMapping("coupon/create")
-    public @ResponseBody ResDTO<CouponCreateResDTO> couponCreate(@RequestBody CouponCreateReqDTO req) throws DateException {
+  @GetMapping("/coupons")
+  public ResponseEntity<List<CouponEntity>> getCoupons(
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
 
-        ResDTO<CouponCreateResDTO> res = new ResDTO<>();
-        System.out.println("有傳輸成功");
-        res.setData(couponService.couponCreate(req));
-        System.out.println("有傳輸成功01");
-        return res;
+    List<CouponEntity> couponList = couponService.getCoupons();
+
+    return ResponseEntity.status(HttpStatus.OK).body(couponList);
+
+  }
+
+  @GetMapping("/coupons/{couponID}")
+  public ResponseEntity<CouponEntity> getOneCoupon(
+          @PathVariable("couponID") Integer couponID,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
+
+    CouponEntity coupon = couponService.getCouponByID(couponID);
+
+    if (coupon != null) {
+      return ResponseEntity.status(HttpStatus.OK).body(coupon);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+  }
+
+//  @PostMapping("coupons/create")
+  @CheckLogin
+  @PostMapping("/coupons")
+  public ResponseEntity<CouponEntity> createCoupon(
+          @RequestBody @Valid CouponReqDTO couponReqDTO,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
+
+    Integer couponID = couponService.createCoupon(couponReqDTO);
+
+    CouponEntity coupon = couponService.getCouponByID(couponID);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(coupon);
+  }
+
+  @CheckLogin
+  @PutMapping("/coupons/{couponID}")
+  public ResponseEntity<CouponEntity> updateCoupon(
+          @PathVariable("couponID") Integer couponID,
+          @RequestBody @Valid CouponReqDTO couponReqDTO,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource){
+
+    // 先檢查Coupon是否存在
+    CouponEntity coupon = couponService.getCouponByID(couponID);
+
+    if (coupon == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @RequestMapping("coupon/all")
-    public @ResponseBody ResDTO<CouponResDTO> couponAll(
-            @RequestBody CouponAllReqDTO req,
-            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
-            @RequestParam(value = "sizePerPage", defaultValue = "10") int sizePerPage)throws DateException {
-        Pageable pageable = PageRequest.of(pageNum, sizePerPage);
-        ResDTO<CouponResDTO> res = new ResDTO<>();
-        res.setData(couponService.couponAll(req, pageable));
-        return res;
-    }
+    // 修改優惠卷的數據
+    couponService.updateCoupon(couponID, couponReqDTO);
+
+    CouponEntity updateCoupon = couponService.getCouponByID(couponID);
+
+    return ResponseEntity.status(HttpStatus.OK).body(updateCoupon);
+  }
+
+  @CheckLogin
+  @DeleteMapping("/coupons/{couponID}")
+  public ResponseEntity<CouponEntity> deleteCoupon(
+          @PathVariable("couponID") Integer couponID,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource){
+
+    couponService.deleteCouponByID(couponID);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 }

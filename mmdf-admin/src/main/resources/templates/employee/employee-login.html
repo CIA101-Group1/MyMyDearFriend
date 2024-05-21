@@ -83,13 +83,10 @@
                 method: "post",
                 contentType: "application/json",
                 data: JSON.stringify(userData),
-                success(response) {
-                    console.log(response)
-
+                success(response) {// 登入成功後的處理
                     apiResponseJSON(response, {
-                        onSuccess: function (data) {
-                            //登入成功後的處理
-                            switch (response.data.status) {
+                        onSuccess(data) {
+                            switch (data.status) {
                                 case "1":
                                     alert("登入成功！");
                                     localStorage.setItem("authorization", response.data.authorization);
@@ -100,9 +97,8 @@
                                     break;
                             }
                         },
-                        onError: function (errorMessage) {
-                            //如果有錯誤顯示錯誤訊息
-                            alert(response.message);
+                        onError(message) {
+                            console.log(message);
                         }
                     });
                 },
