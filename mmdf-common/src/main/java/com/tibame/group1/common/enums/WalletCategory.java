@@ -24,8 +24,6 @@ public enum WalletCategory {
 
     TEST("6", "測試用");
 
-
-
     private final String code;
     private final String message;
 }

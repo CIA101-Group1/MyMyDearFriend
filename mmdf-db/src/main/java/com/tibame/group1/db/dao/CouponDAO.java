@@ -1,13 +1,12 @@
-package com.tibame.group1.admin.service;
+package com.tibame.group1.db.dao;
 
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public interface CouponService {
+
+public interface CouponDAO {
 
     List<CouponEntity> getCoupons();
 
@@ -15,9 +14,7 @@ public interface CouponService {
 
     Integer createCoupon(CouponReqDTO couponReqDTO);
 
-
     void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO);
 
     void deleteCouponByID(Integer couponID);
-
 }
