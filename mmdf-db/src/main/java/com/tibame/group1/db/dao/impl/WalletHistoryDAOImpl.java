@@ -81,9 +81,9 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
     }
 
 
-//      if (search != null) {
+//      if (walletQueryParams.search != null) {
 //      sql = sql + " AND change_time LIKE :search";
-//      map.put("search", "%" + walletQueryParams.getSearch + "%");
+//      map.put("search", "%" + walletQueryParams.getSearch() + "%");
 //    }
 
     List<WalletHistoryEntity> walletHistoryEntityList =
