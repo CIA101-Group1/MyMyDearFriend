@@ -1,7 +1,7 @@
 package com.tibame.group1.db.dao.impl;
 
-import com.tibame.group1.common.enums.WalletCategory;
 import com.tibame.group1.db.dao.WalletHistoryDAO;
+import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.dto.WalletReqDTO;
 import com.tibame.group1.db.rowmapper.WalletRowMapperUtils;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
@@ -12,10 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class WalletHistoryDAOImpl implements WalletHistoryDAO {
@@ -66,21 +63,38 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
   }
 
   @Override
-  public List<WalletHistoryEntity> getWallets(WalletCategory walletCategory) {
+  public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
     String sql =
         "SELECT wallet_history_id, change_time, member_id, change_amount, change_type "
             + "FROM wallet_history WHERE 1=1";
 
     Map<String, Object> map = new HashMap<>();
 
-    if (walletCategory != null) {
+    if (walletQueryParams.getWalletCategory() != null) {
       sql = sql + " AND change_type = :changeType";
-      map.put("changeType", walletCategory.name());
+      map.put("changeType", walletQueryParams.getWalletCategory().name());
     }
+
+    if (walletQueryParams.getSearch() != null) {
+      sql = sql + " AND change_time >= :threeMonthsAgo";
+      map.put("threeMonthsAgo", calculateThreeMonthsAgo());
+    }
+
+
+//      if (search != null) {
+//      sql = sql + " AND change_time LIKE :search";
+//      map.put("search", "%" + walletQueryParams.getSearch + "%");
+//    }
 
     List<WalletHistoryEntity> walletHistoryEntityList =
         namedParameterJdbcTemplate.query(sql, map, new WalletRowMapperUtils());
 
     return walletHistoryEntityList;
+  }
+
+  private Date calculateThreeMonthsAgo() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MONTH, -3);
+    return calendar.getTime();
   }
 }
