@@ -191,6 +191,9 @@
                 url: `/api/member/all?page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",
                 contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
                 data: JSON.stringify(userData),
                 success(response) {
                     apiResponseJSON(response, {

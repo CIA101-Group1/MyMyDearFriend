@@ -17,6 +17,9 @@ public class MarketEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer marketId;
 
+    @Column(name = "market_name",nullable = false,length = 20)
+    private String marketName;
+
     @Column(name = "market_description", nullable = false, length = 1000)
     private String marketDescription;
 

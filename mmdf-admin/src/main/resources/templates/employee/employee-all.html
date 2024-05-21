@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>查詢員工資料</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定義表格樣式 */
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            white-space: nowrap; /* 不換行 */
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding-right: 2rem; /* 預留空間給倒三角形 */
+        }
+
+        .custom-select-wrapper::after {
+            content: "\f0d7"; /* Font Awesome Unicode for caret down */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(0);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">員工資料列表</h1>
+                <!-- 我的code -->
+                <!-- 篩選條件 -->
+                <div class="row mb-3">
+                    <div class="col-md-3 custom-select-wrapper-input">
+                        <label for="searchInput" style="margin-bottom: 5px;">查詢員工姓名</label>
+                        <input type="text" id="searchInput" class="form-control"
+                               placeholder="輸入員工姓名">
+                    </div>
+                </div>
+                <!-- 主要表格 -->
+                <table id="employeeTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>員工編號</th>
+                        <th>帳號</th>
+                        <th>姓名</th>
+                        <th>電子郵件</th>
+                        <th>電話</th>
+                        <th>性別</th>
+                        <th>建立時間</th>
+                        <th>狀態</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 這裡將員工資料動態插入 -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+        // 當搜尋輸入框的值改變時，重新加載資料
+        $("#searchInput").on("input", function () {
+            fetchEmployeeData();
+        });
+
+        function fetchEmployeeData() {
+            const searchName = $("#searchInput").val();
+            $.ajax({
+                url: `/api/employee/all?name=${searchName}`,
+                method: "get",
+                contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            const employeeList = data.employeeList;
+
+                            // 清空表格
+                            $("#employeeTable tbody").empty();
+
+                            // 插入員工資料
+                            employeeList.forEach(employee => {
+                                const formattedAddress = employee.address.replace(/_/g, "");
+
+                                $("#employeeTable tbody").append(`
+                                    <tr>
+                                        <td>${employee.employeeId}</td>
+                                        <td>${employee.employeeAccount}</td>
+                                        <td>${employee.employeeName}</td>
+                                        <td>${employee.employeeEmail}</td>
+                                        <td>${employee.employeePhone}</td>
+                                        <td>${employee.employeeGender}</td>
+                                        <td>${employee.employeeCreateTime}</td>
+                                        <td>${employee.employeeStatus}</td>
+                                    </tr>
+                                `);
+                            });
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        }
+
+        // 初始加載資料
+        fetchEmployeeData();
+    });
+</script>
+</body>
+</html>
