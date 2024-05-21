@@ -112,6 +112,7 @@ public class ProductBackendController {
         return res;
     }
 
+
     @GetMapping("product/query")
         public ResDTO<List<ProductEntity>> queryGetAll(
                 @RequestParam(name = "name", required = false) String name, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "categoryId", required = false) Integer categoryId,

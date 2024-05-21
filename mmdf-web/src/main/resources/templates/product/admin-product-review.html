@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>賣家商品瀏覽</title>
+    <title>員工商品管理系統</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!--css-->
@@ -28,7 +28,7 @@
     <!--animate css-->
     <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
     <!--jquery ui min css-->
-<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+    <!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
     <!--slinky menu css-->
     <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
     <!--plugins css-->
@@ -44,13 +44,110 @@
 
     <script src="/js/api-response-utils.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* 樣式設置 */
+        .tab-container {
+            border-bottom: 1px solid #ccc;
+            display: flex;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            background-color: white;
+        }
+
+        .tab.active {
+            border-color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+
 </head>
 <body>
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
 <!--breadcrumb-->
-<th:block th:replace="~{/fragments/breadcrumb}"/>
+<!--<th:block th:replace="~{/fragments/breadcrumb}"/>-->
+
+
+<td width=548 align=center valign=top>
+    <!-- 导航 -->
+    <TABLE WIDTH=548 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+        <!-- 標籤容器 -->
+        <div class="tab-container">
+            <!-- 初始的標籤 -->
+            <div class="tab" onclick="showTabContent('new')">內部公告</div>
+            <div class="tab" onclick="showTabContent('star')">客戶評價</div>
+            <div class="tab" onclick="showTabContent('assess')">業績</div>
+            <div class="tab" onclick="showTabContent('supplier')">供應商</div>
+        </div>
+
+        <!-- 標籤內容 -->
+        <div id="new" class="tab-content">
+            <h3><strong>公告:</strong></h3>
+            <p>親愛的員工，<br>
+                &nbsp &nbsp &nbsp &nbsp 我們很高興地宣布，我們的二手商城將推出一項新的政策，旨在提升我們的服務品質並保護我們的客戶和員工。<br>
+
+                從即日起，所有上架的二手商品都必須通過我們的質量檢查。這意味著，每一項商品在上架前，都需要經過我們的專業團隊進行詳細的檢查，以確保商品的品質符合我們的標準。
+
+                此外，我們也將實施新的退貨政策。如果客戶在購買商品後的30天內發現商品有任何問題，他們可以申請退貨或換貨。我們的客服團隊將會在收到申請後的48小時內回覆。
+
+                &nbsp 我們相信，這些新政策將有助於提升我們的服務品質，並贏得客戶的信任。我們期待你們的支持和配合，一起為我們的客戶提供更好的服務。<br>
+
+                感謝你們的理解和配合。<br><br>
+
+                敬祝各位同仁 &nbsp MMDF商城</p>
+        </div>
+        <div id="star" class="tab-content">
+            <h3>客戶評價</h3>
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
+                </li>
+                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
+                </li>
+                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
+                </li>
+                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
+                </li>
+                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star"></i></a></li>
+            </ul>
+        </div>
+        <div id="assess" class="tab-content">
+            <h3>季度報表 (2020-2024)</h3>
+            <canvas id="myChart"></canvas>
+        </div>
+        <div id="supplier" class="tab-content">
+            <h4>各部門分機:</h4>
+            <pre>
+                客服部門：            行銷部門：
+                張小姐：分機101       黃先生：分機401
+                李先生：分機102       高小姐：分機402
+                王小姐：分機103       吳小姐：分機403
+                採購部門：            陳小姐：分機404
+                陳先生：分機201       物流部門：
+                林小姐：分機202       鄭先生：分機301
+                                  &nbsp  蔡小姐：分機302
+            </pre>
+        </div>
+    </table>
+</td>
 
 
 <!--shop  area start-->
@@ -150,13 +247,13 @@
                                 0.00
                             </td>
                             <td>
-<!--                                <button onclick="updateReviewStatus(${product.productId})" class="btn btn-primary">-->
-<!--                                    審核成功-->
-<!--                                </button>-->
-<!--                                <button onclick="updateReviewStatus('${product.productId}')" class="btn btn-primary">審核成功</button>-->
-<!--                                <button class="btn btn-primary" data-product-id="${product.productId}">-->
-<!--                                    審核成功-->
-<!--                                </button>-->
+                                <!--                                <button onclick="updateReviewStatus(${product.productId})" class="btn btn-primary">-->
+                                <!--                                    審核成功-->
+                                <!--                                </button>-->
+                                <!--                                <button onclick="updateReviewStatus('${product.productId}')" class="btn btn-primary">審核成功</button>-->
+                                <!--                                <button class="btn btn-primary" data-product-id="${product.productId}">-->
+                                <!--                                    審核成功-->
+                                <!--                                </button>-->
                                 <button class="btn btn-primary" th:attr="data-product-id=${product.productId}">
                                     審核成功
                                 </button>
@@ -205,34 +302,35 @@
 <!--shop  area end-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('button.btn').click(function() {
+    $(document).ready(function () {
+        $('button.btn').click(function () {
             var productId = $(this).data('product-id');
             updateReviewStatus(productId);
             console.log(productId);
         });
     });
+
     function updateReviewStatus(productId) {
         $.ajax({
-            type:"POST",
-            url: "/seller/product/updateReviewStatus",
+            type: "POST",
+            url: "/seller/product/updateReviewStatus/" + productId,
             data: JSON.stringify({productId: productId}),
-            // headers: {
-            //     "authorization": localStorage.getItem("authorization")
-            // },
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
             contentType: "application/json", // 設置請求頭的 Content-Type
             success: function (response) {
-            // success(response) {
+                // success(response) {
                 apiResponseJSON(response, {
-                   // onSuccess(data) {
+                    // onSuccess(data) {
                     onSuccess: (data) => {
-                       console.log(data);
-                       console.log(response);
-                if (response.hasOwnProperty("reviewStatus")) {
-                    $('#reviewStatus' + productId).text(response.reviewStatus);
-                }
-                console.log(response.success || response.error);
-                   }
+                        console.log(data);
+                        // 检查 data 中是否有 reviewStatus
+                        if (response.hasOwnProperty("reviewStatus")) {
+                            $('#reviewStatus' + productId).text(response.reviewStatus);
+                        }
+                        console.log(response.success || response.error);
+                    }
                 });
             },
             error: function (xhr, status, error) {
@@ -240,6 +338,79 @@
             }
         });
     }
+
+
+    // 函數：顯示特定標籤的內容
+    function showTabContent(tabName) {
+        // 隱藏所有標籤內容
+        var tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(function (content) {
+            content.classList.remove('active');
+        });
+
+        // 顯示選定標籤的內容
+        var selectedTabContent = document.getElementById(tabName);
+        selectedTabContent.classList.add('active');
+
+        // 取消選定所有標籤
+        var tabs = document.querySelectorAll('.tab');
+        tabs.forEach(function (tab) {
+            tab.classList.remove('active');
+        });
+
+        // 選定並突顯選定標籤
+        var selectedTab = document.querySelector('[onclick="showTabContent(\'' + tabName + '\')"]');
+        selectedTab.classList.add('active');
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['一月到三月', '四月到六月', '七月到九月', '十月到十二月'],
+            datasets: [
+                {
+                    label: '2020',
+                    data: [192, 330, 240, 108],
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false
+                },
+                {
+                    label: '2021',
+                    data: [260, 370, 284, 220],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    fill: false
+                },
+                {
+                    label: '2022',
+                    data: [280, 306, 120, 230],
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    fill: false
+                },
+                {
+                    label: '2023',
+                    data: [240, 150, 328, 270],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                },
+                {
+                    label: '2024',
+                    data: [284, 220, 192, 350],
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
 
     // $.ajax({
     //     type: "POST",

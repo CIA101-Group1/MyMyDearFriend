@@ -138,7 +138,7 @@ public class ProductFrontendController {
         }
     }
 
-    @PostMapping("/seller/product/updateReviewStatus")
+    @PostMapping("/seller/product/updateReviewStatus/{productId}")
     @ResponseBody
     public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId) {
         Map<String, String> response = new HashMap<>();
@@ -166,6 +166,8 @@ public class ProductFrontendController {
         return "/product/buyer-proCategory-select";
     }
 
+
+
 @GetMapping("api/destination")
     public ResponseEntity<String> redirect(HttpServletRequest request){
         System.out.println("收到redirect");
@@ -173,4 +175,22 @@ public class ProductFrontendController {
 }
 
 
+
+    @GetMapping("/admin/pro/review")
+    public String adminReview(Model model,
+                                     @RequestParam(value = "page", defaultValue = "0") int page,
+                                     @RequestParam(value = "size", defaultValue = "10") int size) {
+        {
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+
+            return "/product/index";
+        }
+    }
 }

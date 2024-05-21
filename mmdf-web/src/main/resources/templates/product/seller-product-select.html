@@ -367,10 +367,10 @@
                                     </td>
                                     <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
 
-                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '默認'}">
+                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}">
                                         0.00
                                     </td>
-                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
+                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '下架'}">
                                         0.00
                                     </td>
                                     <td>
@@ -475,13 +475,23 @@
                             // 添加商品行到表格
                             $('#products tbody').append(`
                                 <tr>
-                                    <td>${product.productId}</td>
-                                    <td>${product.productCategoryEntity.categoryName}</td>
+                                    <td th:text="${product.productId}"></td>
+                                    <td th:text="${product.productCategoryEntity.categoryName}"></td>
+                                    <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
+                                        name
+                                    </td>
+
+                                    <td th:text="${product.description}">0.00</td>
+
+                                    <td th:text="${product.price}">0.00</td>
+
+                                    <td th:text="${product.quantity}">0.00</td>
+
                                     <td>
                                         <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
                                     </td>
-                                    <td>${reviewStatusList[product.reviewStatus]}</td>
-                                    <td>${productStatusList[product.productStatus]}</td>
+                                    <td th:utext="${reviewStatusList[product.reviewStatus]}"></td>
+                                    <td th:utext="${productStatusList[product.productStatus]}"></td>
                                 </tr>
                             `);
                         });
