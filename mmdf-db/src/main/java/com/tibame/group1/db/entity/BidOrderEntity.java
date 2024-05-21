@@ -1,53 +1,81 @@
 package com.tibame.group1.db.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Immutable;
-
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "bid_order")
-@Immutable
 public class BidOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bid_product_id", nullable = false)
-    private Integer bidProductId;
+    @Column(name = "order_id", nullable = false)
+    private Integer id;
 
-    @Column(name = "seller_id", nullable = false, length = 20)
-    private String sellerId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private com.tibame.group1.db.entity.BidProductEntity product;
 
-    @Column(name = "category_id", nullable = false, length = 200)
-    private String categoryId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private MemberEntity buyer;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "seller_id", nullable = false)
+    private MemberEntity seller;
+
+    @Column(name = "member_coupon_id1")
+    private Integer memberCouponId1;
+
+    @Column(name = "member_coupon_id2")
+    private Integer memberCouponId2;
+
+    @NotNull
+    @Column(name = "price_before_discount", nullable = false)
+    private Integer priceBeforeDiscount;
+
+    @NotNull
+    @Column(name = "discount", nullable = false)
+    private Integer discount;
+
+    @NotNull
+    @Column(name = "price_after_discount", nullable = false)
+    private Integer priceAfterDiscount;
+
+    @NotNull
+    @Column(name = "create_time", nullable = false)
+    private Timestamp createTime;
+
+    @NotNull
+    @Column(name = "order_status", nullable = false)
+    private Integer orderStatus;
+
+    @Size(max = 20)
+    @NotNull
     @Column(name = "name", nullable = false, length = 20)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 20)
-    private String description;
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "phone", nullable = false, length = 20)
+    private String phone;
 
-    @Column(name = "start_price", nullable = false, length = 50)
-    private String startPrice;
+    @Size(max = 40)
+    @NotNull
+    @Column(name = "address", nullable = false, length = 40)
+    private String address;
 
-    @Column(name = "duration", nullable = false)
-    private Date duration;
-
-    @Column(name = "start_time")
-    private LocalDateTime startTime;
-
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
-
-    @Column(name = "status")
-    private Integer status;
-
-    @Column(name = "image", columnDefinition = "mediumblob")
-    private byte[] image;
+    @NotNull
+    @Column(name = "fee", nullable = false)
+    private Integer fee;
 }

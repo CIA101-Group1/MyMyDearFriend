@@ -11,14 +11,14 @@ public interface EmployeeService {
     //員工創建也要驗證登入
     EmployeeCreateResDTO employeeCreate(EmployeeCreateReqDTO req, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, IOException, DateException;
 
-    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException;
+    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, IOException;
 
-    void employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
+    EmployeeEditResDTO employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException;
 
     LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException;
 
-    EmployeeResDTO employeeAll(EmployeeAllReqDTO req) throws DateException;
+    EmployeeResDTO employeeAll(EmployeeAllReqDTO req, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, IOException,DateException;
 
 
 }

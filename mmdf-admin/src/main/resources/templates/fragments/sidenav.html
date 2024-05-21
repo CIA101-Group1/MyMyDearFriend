@@ -6,7 +6,7 @@
                 <!-- 首頁 -->
                 <a class="nav-link" href="/home">後台首頁</a>
                 <!-- 員工 -->
-                <a class="nav-link" href="employee.html">員工管理</a>
+                <a onclick="goToEmployeeAll()" class="nav-link">員工管理</a>
                 <!-- 會員 -->
                 <a class="nav-link" href="/member/all">會員資料查詢</a>
                 <!-- 錢包 -->
@@ -74,3 +74,22 @@
         </div>
     </nav>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    });
+
+    function goToEmployeeAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/employee/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToEmployeeAll href: ', url);
+        window.location.href = url;
+    }
+</script>
+

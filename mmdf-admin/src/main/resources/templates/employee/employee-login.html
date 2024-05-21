@@ -86,21 +86,25 @@
                 success(response) {
                     console.log(response)
 
-                    // 登入成功後的處理
-                    if (apiResponseJSON(response)) {
-                        switch (response.data.status) {
-                            case "1":
-                                alert("登入成功！");
-                                localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/home";
-                                break;
-                            case "-1":
-                                alert("帳號或密碼錯誤，請重試");
-                                break;
+                    apiResponseJSON(response, {
+                        onSuccess: function (data) {
+                            //登入成功後的處理
+                            switch (response.data.status) {
+                                case "1":
+                                    alert("登入成功！");
+                                    localStorage.setItem("authorization", response.data.authorization);
+                                    window.location.href = "/home";
+                                    break;
+                                case "-1":
+                                    alert("帳號或密碼錯誤，請重試");
+                                    break;
+                            }
+                        },
+                        onError: function (errorMessage) {
+                            //如果有錯誤顯示錯誤訊息
+                            alert(response.message);
                         }
-                    } else {
-                        alert(response.message);
-                    }
+                    });
                 },
                 error(xhr, status, error) {
                     alert("伺服器連線失敗: " + error);

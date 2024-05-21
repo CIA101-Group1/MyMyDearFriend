@@ -1,0 +1,15 @@
+.error {
+	color: #ff0000;
+	font-style: italic;
+	font-weight: lighter;
+}
+
+.errorblock {
+	color: #000;
+	background-color: #ffEEEE;
+	border: 3px solid #ff0000;
+	padding: 5px;
+	margin: 5px;
+	width: 500px;
+	font-weight: normal;
+}

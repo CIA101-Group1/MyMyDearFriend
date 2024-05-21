@@ -5,8 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>查詢會員資料</title>
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定義表格樣式 */
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            white-space: nowrap; /* 不換行 */
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding-right: 2rem; /* 預留空間給倒三角形 */
+        }
+
+        .custom-select-wrapper::after {
+            content: "\f0d7"; /* Font Awesome Unicode for caret down */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(0);
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body class="sb-nav-fixed">
 <!--header-->
@@ -22,13 +80,193 @@
             <div class="container-fluid px-4">
                 <h1 class="mt-4">會員資料列表</h1>
                 <!-- 我的code -->
+                <!-- 篩選條件 -->
+                <div class="row mb-3">
+                    <div class="col-md-3 custom-select-wrapper">
+                        <label for="isVerifiedFilter" style="margin-bottom: 5px;">會員驗證狀態</label>
+                        <select id="isVerifiedFilter" class="form-control">
+                            <option value="">所有</option>
+                            <option value="true">已驗證</option>
+                            <option value="false">未驗證</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 custom-select-wrapper">
+                        <label for="sellerStatusFilter" style="margin-bottom: 5px;">賣家功能狀態</label>
+                        <select id="sellerStatusFilter" class="form-control">
+                            <option value="">所有</option>
+                            <option value="true">已開通</option>
+                            <option value="false">未開通</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 custom-select-wrapper-input">
+                        <label for="searchInput" style="margin-bottom: 5px;">單筆會員搜尋</label>
+                        <input type="text" id="searchInput" class="form-control"
+                               placeholder="輸入會員編號、帳號或電子郵件">
+                    </div>
+                    <div class="col-md-3 align-self-end">
+                        <button id="resetFilters" class="btn btn-secondary">重置篩選條件</button>
+                    </div>
+                </div>
+                <!-- 主要表格 -->
+                <table id="memberTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>會員編號</th>
+                        <th>會員大頭照</th>
+                        <th>帳號</th>
+                        <th>姓名</th>
+                        <th>電話</th>
+                        <th>電子郵件</th>
+                        <th>生日</th>
+                        <th>城市</th>
+                        <th>地址</th>
+                        <th>會員驗證狀態</th>
+                        <th>驗證信發送時間</th>
+                        <th>會員驗證完成時間</th>
+                        <th>加入會員時間</th>
+                        <th>錢包餘額</th>
+                        <th>錢包可用金額</th>
+                        <th>賣家功能狀態</th>
+                        <th>被評分數(總和/總筆數)</th>
+                        <th>重設密碼驗證信發送時間</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 這裡將會員資料動態插入 -->
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination">
+                        <!-- 這裡將動態插入分頁按鈕 -->
+                    </ul>
+                </nav>
             </div>
         </main>
     </div>
 </div>
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
-<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    $(document).ready(function () {
+        $("#memberTable th").resizable({
+            handles: "e", // 只允許在右邊緣拖拉調整大小
+            minWidth: 40 // 最小寬度
+        });
+
+        // 當篩選條件改變時，重新加載資料
+        $("#isVerifiedFilter, #sellerStatusFilter").on("change", function () {
+            fetchMemberData();
+        });
+
+        // 當點擊重置按鈕時，重置篩選條件並重新加載資料
+        $("#resetFilters").on("click", function () {
+            $("#isVerifiedFilter").val("");
+            $("#sellerStatusFilter").val("");
+            fetchMemberData();
+        });
+
+        // 當搜尋輸入框的值改變時，重新加載資料
+        $("#searchInput").on("input", function () {
+            fetchMemberData();
+        });
+
+        function fetchMemberData(pageNumber = 0, pageSize = 5) {
+            const isVerified = $("#isVerifiedFilter").val();
+            const sellerStatus = $("#sellerStatusFilter").val();
+            const searchText = $("#searchInput").val();
+            // 更新 userData
+            userData.isVerified = isVerified === "" ? null : isVerified === "true";
+            userData.sellerStatus = sellerStatus === "" ? null : sellerStatus === "true";
+            userData.searchText = searchText;
+            $.ajax({
+                url: `/api/member/all?page=${pageNumber}&sizePerPage=${pageSize}`,
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            const memberList = data.memberList;
+                            const totalPages = data.pages.totalPages;
+
+                            // 清空表格和分頁
+                            $("#memberTable tbody").empty();
+                            $(".pagination").empty();
+
+                            // 插入會員資料
+                            memberList.forEach(member => {
+                                const formattedAddress = member.address.replace(/_/g, "");
+                                const scoreSum = member.scoreSum !== null && member.scoreSum !== undefined ? member.scoreSum : "-";
+                                const scoreNumber = member.scoreNumber !== null && member.scoreNumber !== undefined ? member.scoreNumber : "-";
+                                const imageSrc = member.imageBase64 ? `data:image/jpeg;base64,${member.imageBase64}` : "";
+
+                                $("#memberTable tbody").append(`
+                                    <tr>
+                                        <td>${member.memberId}</td>
+                                        <td>${imageSrc ? `<img src="${imageSrc}" alt="會員大頭照" style="max-width: 50px; max-height: 50px;" />` : "無"}</td>
+                                        <td>${member.memberAccount}</td>
+                                        <td>${member.name}</td>
+                                        <td>${member.phone}</td>
+                                        <td>${member.email}</td>
+                                        <td>${formatDate(member.birth)}</td>
+                                        <td>${member.city}</td>
+                                        <td>${formattedAddress}</td>
+                                        <td>${member.isVerified ? "已驗證" : "未驗證"}</td>
+                                        <td>${member.verifySendingTime}</td>
+                                        <td>${member.verifiedTime}</td>
+                                        <td>${member.joinTime}</td>
+                                        <td>${member.walletAmount}</td>
+                                        <td>${member.walletAvailableAmount}</td>
+                                        <td>${member.sellerStatus ? "已開通賣家功能" : "未開通賣家功能"}</td>
+                                        <td>${scoreSum}/${scoreNumber}</td>
+                                        <td>${member.cidResetSendingTime}</td>
+                                    </tr>
+                                `);
+                            });
+
+                            // 插入分頁按鈕
+                            for (let i = 0; i < totalPages; i++) {
+                                $(".pagination").append(`
+                                    <li class="page-item ${i === pageNumber ? "active" : ""}">
+                                        <a class="page-link" href="#">${i + 1}</a>
+                                    </li>
+                                `);
+                            }
+
+                            // 分頁按鈕點擊事件
+                            $(".pagination .page-link").on("click", function (e) {
+                                e.preventDefault();
+                                const pageIndex = parseInt($(this).text()) - 1;
+                                fetchMemberData(pageIndex);
+                                // 滾動到頁面頂部
+                                $("html, body").animate({scrollTop: 0}, 50);
+                            });
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        }
+
+        // 初始加載第一頁
+        fetchMemberData();
+    });
+
+    // 格式化日期
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+</script>
 </body>
 </html>

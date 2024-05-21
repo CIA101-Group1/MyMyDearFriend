@@ -20,7 +20,9 @@ public class MemberCreateResDTO {
 
         IMAGE_FORMAT_ERROR("-1", "上傳檔案格式錯誤"),
 
-        EXIST_ACCOUNT("-2", "該帳號已存在");
+        EXIST_ACCOUNT("-2", "該帳號已存在"),
+
+        EXIST_EMAIL("-3", "該信箱已存在");
 
         private final String code;
 

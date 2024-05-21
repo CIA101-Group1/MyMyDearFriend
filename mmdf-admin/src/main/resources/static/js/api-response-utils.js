@@ -1,12 +1,19 @@
 /**
  * 網頁請求登入所得到的回應之JSON拆解
+ *
  * @param response 後端api回應之JSON物件
- * @returns {boolean} 是否成功回傳
+ * @param callbackListener 拆解response的監聽器
  */
-function apiResponseJSON(response) {
+function apiResponseJSON(response, callbackListener) {
     if (null === response) {
-        return false;
+        return;
     }
-    // 解析 JSON 字串為 JavaScript 物件
-    return response.code === "0";
+    switch (response.code) {
+        case "0":
+            callbackListener.onSuccess(response.data);
+            break;
+        default:
+            callbackListener.onError(response.message);
+            break;
+    }
 }
