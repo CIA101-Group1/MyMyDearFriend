@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/")
@@ -52,11 +53,11 @@ public class EmployeeBackendController {
     }
 
     @GetMapping("employee/all")
-    public @ResponseBody ResDTO<EmployeeResDTO> employeeAll(
+    public @ResponseBody ResDTO<List<EmployeeAllResDTO>> employeeAll(
             @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
-            @RequestParam(value = "name") String employeeName)
+            @RequestParam(value = "name", required = false) String employeeName)
             throws CheckRequestErrorException, IOException, DateException {
-        ResDTO<EmployeeResDTO> res = new ResDTO<>();
+        ResDTO<List<EmployeeAllResDTO>> res = new ResDTO<>();
         res.setData(employeeService.employeeAll(adminLoginSource, employeeName));
         return res;
     }
