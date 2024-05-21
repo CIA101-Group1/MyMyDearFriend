@@ -7,10 +7,14 @@ import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.repository.EmployeeRoleRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Arrays;
+
+@Slf4j
 @Component
 public class AdminCheckLoginInterceptor implements HandlerInterceptor {
 
@@ -20,11 +24,17 @@ public class AdminCheckLoginInterceptor implements HandlerInterceptor {
     @Autowired
     private EmployeeRoleRepository employeeRoleRepository;
 
+    private static final String TOKEN_HEADER_NAME = "authorization";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws AuthorizationException {
-        String authorization = request.getHeader("authorization");
+        String header = request.getHeader(TOKEN_HEADER_NAME);
+        String authorization = Arrays.stream(request.getQueryString().split("&"))
+                .filter(s -> s.startsWith(TOKEN_HEADER_NAME))
+                .map(s-> s.replaceAll(TOKEN_HEADER_NAME + "=", ""))
+                .findAny().orElse(header);
+
         if (StringUtils.isEmpty(authorization)) {
             throw new AuthorizationException("登入驗證碼不可為空");
         }

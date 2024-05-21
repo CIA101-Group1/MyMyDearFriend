@@ -14,6 +14,7 @@ public class JwtService {
     private static final String SECRET_KEY =
             "3Kl9hDf7Rg2Jn8Oq5Ws1Xz4Vu0yPc6Bm5Tj1Gf9Nv3Hr7Yx4Ew2Qo8";
 
+
     private SecretKeySpec createSecretKey(){return new SecretKeySpec(SECRET_KEY.getBytes(),"HmacSHA256");}
 
     /**

@@ -9,33 +9,37 @@ import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("api/")
 public class EmployeeBackendController {
 
     @Autowired
     private EmployeeService employeeService;
 
+    //員工創建也要登入驗證
     @PostMapping("employee/create")
     public @ResponseBody ResDTO<EmployeeCreateResDTO> employeeCreate(
-            @Valid @RequestBody EmployeeCreateReqDTO req)
-            throws DateException, IOException {
+            @Valid @RequestBody EmployeeCreateReqDTO req,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException, DateException {
         ResDTO<EmployeeCreateResDTO> res = new ResDTO<>();
-        res.setData(employeeService.employeeCreate(req));
+        res.setData(employeeService.employeeCreate(req, adminLoginSource));
         return res;
     }
 
     @PostMapping("employee/edit")
-    public ResDTO<?> employeeEdit(
+    public @ResponseBody ResDTO<EmployeeEditResDTO> employeeEdit(
             @Valid @RequestBody EmployeeEditReqDTO req,
             @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException {
-        employeeService.employeeEdit(req, adminLoginSource);
-        return new ResDTO<>();
+        ResDTO<EmployeeEditResDTO> res = new ResDTO<>();
+        res.setData(employeeService.employeeEdit(req, adminLoginSource));
+        return res;
     }
 
     @GetMapping("employee/detail")
@@ -44,6 +48,16 @@ public class EmployeeBackendController {
             throws CheckRequestErrorException, IOException {
         ResDTO<EmployeeDetailResDTO> res = new ResDTO<>();
         res.setData(employeeService.employeeDetail(adminLoginSource));
+        return res;
+    }
+
+    @GetMapping("employee/all")
+    public @ResponseBody ResDTO<EmployeeResDTO> employeeAll(
+            @Valid @RequestBody EmployeeAllReqDTO req,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE)AdminLoginSourceDTO adminLoginSource)
+        throws CheckRequestErrorException,IOException,DateException{
+        ResDTO<EmployeeResDTO> res = new ResDTO<>();
+        res.setData(employeeService.employeeAll(req,adminLoginSource));
         return res;
     }
 

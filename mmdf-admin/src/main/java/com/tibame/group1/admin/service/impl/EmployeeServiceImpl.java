@@ -11,11 +11,15 @@ import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.db.entity.EmployeeEntity;
 import com.tibame.group1.db.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -31,8 +35,13 @@ public class EmployeeServiceImpl implements EmployeeService {
      * 後台新增員工
      */
     @Override
-    public EmployeeCreateResDTO employeeCreate(EmployeeCreateReqDTO req)
-            throws DateException, IOException {
+    public EmployeeCreateResDTO employeeCreate(EmployeeCreateReqDTO req, AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException, DateException {
+        // 確認用戶身份是否有效
+        if (adminLoginSource == null || adminLoginSource.getEmployeeId() == null) {
+            // 如果登錄信息不完整，拋出異常或返回錯誤提示
+            throw new CheckRequestErrorException("登入異常");
+        }
         EmployeeEntity employee = new EmployeeEntity();
         employee.setEmployeeAccount(req.getEmployeeAccount());
         employee.setEmployeePassword(CommonUtils.encryptToMD5(req.getEmployeePassword()));
@@ -74,12 +83,46 @@ public class EmployeeServiceImpl implements EmployeeService {
         return resDTO;
     }
 
-    /**
-     * 只有管理員能修改資料，目前先寫為員工自行更新自己的資料，待新增權限後修改
-     */
     @Override
-    public void employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
+    public EmployeeResDTO employeeAll(EmployeeAllReqDTO req, AdminLoginSourceDTO adminLoginSourceDTO) throws DateException {
+        EmployeeEntity exampleEntity = new EmployeeEntity();
+        exampleEntity.setEmployeeCreateTime(DateUtils.stringToDate(req.getEmployeeCreateTime(), DateUtils.DEFAULT_DATE_FORMAT));
+
+        //使ExampleMatcher定義匹配規則，使用默認的匹配器，即全匹配
+        ExampleMatcher matcher = ExampleMatcher.matching();
+
+        //將範例對象匹配規則組合成Example對象
+        Example<EmployeeEntity> example = Example.of(exampleEntity, matcher);
+
+        //調用findAll方法進行查詢
+        List<EmployeeEntity> employees = employeeRepository.findAll(example);
+
+        //將查詢結果轉為EmployeeAllResDTO對象
+        List<EmployeeAllResDTO> employeeList = new ArrayList<>();
+        for (EmployeeEntity employee : employees) {
+            EmployeeAllResDTO resDTO = new EmployeeAllResDTO();
+            resDTO.setEmployeeId(String.valueOf(employee.getEmployeeId()));
+            resDTO.setEmployeeAccount(employee.getEmployeeAccount());
+            resDTO.setEmployeePassword(employee.getEmployeePassword());
+            resDTO.setEmployeeName(employee.getEmployeeName());
+            resDTO.setEmployeeEmail(employee.getEmployeeEmail());
+            resDTO.setEmployeePhone(employee.getEmployeePhone());
+            resDTO.setEmployeeCreateTime(DateUtils.dateToSting(employee.getEmployeeCreateTime()));
+            resDTO.setEmployeeStatus(employee.getEmployeeStatus());
+            employeeList.add(resDTO);
+
+
+        }
+        EmployeeResDTO res = new EmployeeResDTO();
+        res.setEmployeeList(employeeList);
+        return res;
+
+    }
+
+    @Override
+    public EmployeeEditResDTO employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException {
+        EmployeeEditResDTO resDTO = new EmployeeEditResDTO();
         EmployeeEntity employee = employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
         if (null == employee) {
             throw new CheckRequestErrorException("查無此會員資料");
@@ -96,13 +139,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (null != req.getEmployeeEmail()) {
             employee.setEmployeeEmail(req.getEmployeeEmail());
         }
-        if(null != req.getEmployeePhone()){
+        if (null != req.getEmployeePhone()) {
             employee.setEmployeePhone(req.getEmployeePhone());
         }
         if (null != req.getEmployeeGender()) {
             employee.setEmployeeGender(req.getEmployeeGender());
         }
         employeeRepository.save(employee);
+        resDTO.setStatus(EmployeeEditResDTO.Status.EDIT_SUCCESS.getCode());
+        return resDTO;
 
     }
 
@@ -110,18 +155,18 @@ public class EmployeeServiceImpl implements EmployeeService {
      * 員工登入後台
      */
     @Override
-    public LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException{
+    public LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException {
         LoginResDTO resDTO = new LoginResDTO();
         //用輸入的帳號去資料庫撈相同的帳號的那一筆
         EmployeeEntity employee = employeeRepository.findByEmployeeAccount(req.getEmployeeAccount());
         //如果撈不到
-        if (null == employee){
+        if (null == employee) {
             //把response狀態設定為-1，表示帳號或密碼錯誤
             resDTO.setStatus(LoginResDTO.Status.LOGIN_INFO_INCORRECT.getCode());
             return resDTO;
         }
         //檢查帳號是否被停用
-        if(employee.getEmployeeStatus() == 0){
+        if (employee.getEmployeeStatus() == 0) {
             //帳號被停用，返回相應的錯誤消息
             resDTO.setStatus(LoginResDTO.Status.ACCOUNT_DISABLED.getCode());
             return resDTO;
@@ -130,7 +175,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         要使用經過MD5加密的密碼去比對
         如果不一樣
          */
-        if(!CommonUtils.encryptToMD5(req.getEmployeePassword()).equals(employee.getEmployeePassword())){
+        if (!CommonUtils.encryptToMD5(req.getEmployeePassword()).equals(employee.getEmployeePassword())) {
             //把response狀態設定為-1，表示帳號或密碼錯誤
             resDTO.setStatus(LoginResDTO.Status.LOGIN_INFO_INCORRECT.getCode());
             return resDTO;
