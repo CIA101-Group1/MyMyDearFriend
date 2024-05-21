@@ -115,7 +115,6 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 <script>
-    let searchData = {};
     $(document).ready(function () {
         // 當搜尋輸入框的值改變時，重新加載資料
         $("#searchInput").on("input", function () {
@@ -124,12 +123,13 @@
 
         function fetchEmployeeData() {
             const searchName = $("#searchInput").val();
-            const searchData = {name:searchName};
             $.ajax({
-                url: "/api/employee/all",
+                url: `/api/employee/all?name=${searchName}`,
                 method: "get",
                 contentType: "application/json",
-                data: JSON.stringify(searchData),
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
