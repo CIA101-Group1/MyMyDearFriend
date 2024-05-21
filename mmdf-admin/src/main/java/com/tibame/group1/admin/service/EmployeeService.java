@@ -8,17 +8,19 @@ import com.tibame.group1.common.exception.DateException;
 import java.io.IOException;
 
 public interface EmployeeService {
-    //員工創建也要驗證登入
-    EmployeeCreateResDTO employeeCreate(EmployeeCreateReqDTO req, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, IOException, DateException;
+    // 員工創建也要驗證登入
+    EmployeeCreateResDTO employeeCreate(
+            EmployeeCreateReqDTO req, AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException, DateException;
 
-    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, IOException;
+    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException;
 
     EmployeeEditResDTO employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException;
 
     LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException;
 
-    EmployeeResDTO employeeAll(EmployeeAllReqDTO req, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, IOException,DateException;
-
-
+    EmployeeResDTO employeeAll(AdminLoginSourceDTO adminLoginSource, String employeeName)
+            throws CheckRequestErrorException, IOException, DateException;
 }

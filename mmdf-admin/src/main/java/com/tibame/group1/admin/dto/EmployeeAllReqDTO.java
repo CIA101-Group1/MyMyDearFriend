@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeAllReqDTO {
-    private String employeeCreateTime;
+    private String employeeName;
 }
