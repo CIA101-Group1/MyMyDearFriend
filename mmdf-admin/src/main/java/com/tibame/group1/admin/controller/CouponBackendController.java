@@ -3,7 +3,8 @@ package com.tibame.group1.admin.controller;
 import com.tibame.group1.admin.annotation.CheckLogin;
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.CouponService;
-import com.tibame.group1.common.enums.CouponCategory;
+import com.tibame.group1.common.enums.CouponEffectCategory;
+import com.tibame.group1.common.enums.CouponStackCategory;
 import com.tibame.group1.common.utils.Page;
 import com.tibame.group1.db.dto.CouponQueryParams;
 import com.tibame.group1.db.dto.CouponReqDTO;
@@ -30,7 +31,8 @@ public class CouponBackendController {
           @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
 
           // 查詢 Filtering
-          @RequestParam(value = "couponCategory", required = false) CouponCategory couponCategory,
+          @RequestParam(value = "couponStackCategory", required = false) CouponStackCategory couponStackCategory,
+          @RequestParam(value = "couponEffectCategory", required = false) CouponEffectCategory couponEffectCategory,
           @RequestParam(value = "search", required = false) String search,
 
           // 排序 Sorting
@@ -42,7 +44,8 @@ public class CouponBackendController {
           @RequestParam(value = "offset", defaultValue = "0") @Max(0) @Min(0) Integer offset
   ) {
     CouponQueryParams couponQueryParams = new CouponQueryParams();
-    couponQueryParams.setCouponCategory(couponCategory);
+    couponQueryParams.setCouponStackCategory(couponStackCategory);
+    couponQueryParams.setCouponEffectCategory(couponEffectCategory);
     couponQueryParams.setSearch(search);
     couponQueryParams.setOrderBy(orderBy);
     couponQueryParams.setSort(sort);
