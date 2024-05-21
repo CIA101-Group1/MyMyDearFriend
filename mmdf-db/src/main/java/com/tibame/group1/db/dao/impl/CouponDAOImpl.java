@@ -135,4 +135,26 @@ public class CouponDAOImpl implements CouponDAO {
     calendar.add(Calendar.MONTH, -3);
     return calendar.getTime();
   }
+
+  @Override
+  public Integer countCoupon(CouponQueryParams couponQueryParams) {
+    String sql = "SELECT count(*) FROM coupon WHERE 1=1 ";
+
+    Map<String, Object> map = new HashMap<>();
+
+    if (couponQueryParams.getCouponCategory() != null) {
+      sql = sql + " AND addable = :addable";
+      map.put("addable", couponQueryParams.getCouponCategory().name());
+    }
+
+    // 加入SQL查詢語句 >> 去對應:serch物件
+    if (couponQueryParams.getSearch() != null) {
+      sql = sql + " AND date_Start LIKE :search";
+      map.put("search", "%" + couponQueryParams.getSearch() + "%");
+    }
+
+    Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+
+    return total;
+  }
 }

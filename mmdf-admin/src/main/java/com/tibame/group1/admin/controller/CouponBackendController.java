@@ -4,6 +4,7 @@ import com.tibame.group1.admin.annotation.CheckLogin;
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.CouponService;
 import com.tibame.group1.common.enums.CouponCategory;
+import com.tibame.group1.common.utils.Page;
 import com.tibame.group1.db.dto.CouponQueryParams;
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
@@ -24,7 +25,7 @@ public class CouponBackendController {
 
   @CheckLogin
   @GetMapping("/coupons")
-  public ResponseEntity<List<CouponEntity>> getCoupons(
+  public ResponseEntity<Page<CouponEntity>> getCoupons(
 
           @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
 
@@ -37,7 +38,7 @@ public class CouponBackendController {
           @RequestParam(value = "sort", defaultValue = "desc") String sort,
 
           // 分頁 Pagination
-          @RequestParam(value = "limit", defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+          @RequestParam(value = "limit", defaultValue = "10") @Max(1000) @Min(0) Integer limit,
           @RequestParam(value = "offset", defaultValue = "0") @Max(0) @Min(0) Integer offset
   ) {
     CouponQueryParams couponQueryParams = new CouponQueryParams();
@@ -50,7 +51,15 @@ public class CouponBackendController {
 
     List<CouponEntity> couponList = couponService.getCoupons(couponQueryParams);
 
-    return ResponseEntity.status(HttpStatus.OK).body(couponList);
+    Integer total = couponService.countCoupon(couponQueryParams);
+
+    Page<CouponEntity> page = new Page<>();
+    page.setLimit(limit);
+    page.setOffset(offset);
+    page.setTotal(total);
+    page.setResults(couponList);
+
+    return ResponseEntity.status(HttpStatus.OK).body(page);
   }
 
   @GetMapping("/coupons/{couponID}")

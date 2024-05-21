@@ -7,6 +7,10 @@ public enum CouponCategory {
 
     STACKABLE,
 
-    NON_STACKABLE
+    NON_STACKABLE,
+
+
+
+
 
 }
