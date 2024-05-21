@@ -4,8 +4,10 @@ import com.tibame.group1.common.dto.web.CartReqDTO;
 import com.tibame.group1.common.dto.web.CartResDTO;
 import com.tibame.group1.db.dao.CartDao;
 
+import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
+import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class CartDaoImpl implements CartDao {
     @Autowired
     private ProductImgRepository productImgRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Override
     public String addProductToCart(CartReqDTO req) {
         // 查詢購物車所有商品、數量
@@ -62,8 +67,11 @@ public class CartDaoImpl implements CartDao {
         List<CartResDTO> cartList = new ArrayList<>();
         for(Object key : map.keySet()){
             ProductEntity product = productRepository.findById(Integer.parseInt(key.toString())).orElse(null);
+            MemberEntity seller = memberRepository.findById(product.getSellerId()).orElse(null);
             CartResDTO cart = new CartResDTO();
             cart.setMemberId(memberId);
+            cart.setSellerId(product.getSellerId());
+            cart.setSellerName(seller.getName());
             cart.setProductId(key.toString());
             cart.setProductName(product.getName());
             cart.setPrice(product.getPrice());
@@ -85,9 +93,11 @@ public class CartDaoImpl implements CartDao {
     }
 
     @Override
-    public String updateCart(CartReqDTO req) {
+    public Integer updateCart(CartReqDTO req) {
         // 更新購物車商品
         redisTemplateCart.opsForHash().put(req.getMemberId(), req.getProductId(), req.getQuantity());
-        return UPDATE_CART_MESSAGE;
+        ProductEntity product = productRepository.findById(Integer.parseInt(req.getProductId())).orElse(null);
+        Integer subtotal =  product.getPrice() * req.getQuantity();
+        return subtotal;
     }
 }

@@ -9,6 +9,10 @@ public class CartResDTO {
 
     private String memberId;
 
+    private Integer sellerId;
+
+    private String sellerName;
+
     private String productId;
 
     private String productName;

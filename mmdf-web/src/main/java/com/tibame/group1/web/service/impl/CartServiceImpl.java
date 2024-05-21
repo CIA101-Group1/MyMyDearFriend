@@ -50,7 +50,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String updateCart(CartReqDTO req, LoginSourceDTO loginSource)
+    public Integer updateCart(CartReqDTO req, LoginSourceDTO loginSource)
             throws CheckRequestErrorException {
         // 調用getValidatedMember檢查會員是否存在
         MemberEntity member = getValidatedMember(loginSource);

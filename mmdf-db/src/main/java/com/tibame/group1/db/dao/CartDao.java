@@ -13,5 +13,5 @@ public interface CartDao {
 
     String removeProductFromCart(String productId, String memberId);
 
-    String updateCart(CartReqDTO req);
+    Integer updateCart(CartReqDTO req);
 }

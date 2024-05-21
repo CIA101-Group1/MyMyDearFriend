@@ -61,7 +61,7 @@
                 <div class="col-12">
                     <div class="table_desc">
                         <div class="cart_page table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th class="product_thumb">圖片</th>
@@ -93,14 +93,14 @@
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="coupon_code right">
-                            <h3>購物車總計</h3>
+                            <h3>所選商品金額</h3>
                             <div class="coupon_inner">
                                 <div class="cart_subtotal">
-                                    <p style="font-size: 25px">總金額:</p>
-                                    <p class="cart_amount" id="cart_total"></p>
+                                    <p style="font-size: 25px">總計:</p>
+                                    <p class="cart_amount" id="cart_total">$0</p>
                                 </div>
                                 <div class="checkout_btn">
-                                    <a href="#">結帳</a>
+                                    <button id="checkout" type="button" style="width: 100px;height: 40px;font-size: 16px;">去買單</button>
                                 </div>
                             </div>
                         </div>
@@ -127,6 +127,7 @@
         // 更新購物車商品
         $("#cart_tbody").on("change", "input#quantity", function () {
             // console.log($(this).closest("tr").find("input#productId").val())
+            let subtotal = $(this).closest("tr").find("td.product_total");
 
             let data = {
                 productId: $(this).closest("tr").find("input#productId").val(),
@@ -141,11 +142,13 @@
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success(response) {
-                    // 清空購物車資料重新取得購物車資料
-                    $("#cart_tbody").html("");
-                    getCart();
+                    console.log(response.data);
+                    console.log(subtotal.text(response.data));
+                    // 重新取得購物車資料
+                    $(subtotal).text(response.data);
+                    updateSelectedSellerTotal()
                     // 清空mini購物車資料重新取得mini購物車資料
-                    $("div.cart_gallery").html("");
+                    $("div.cart_gallery").empty();
                     getMiniCart();
                 },
                 error(xhr, status, error) {
@@ -156,35 +159,87 @@
 
         // 移除購物車商品
         $("#cart_tbody").on("click", "a#remove", function () {
-            let remove = confirm("Remove Item?");
-            if (remove) {
-                let productId = $(this).closest("tr").find("input#productId").val();
+            Swal.fire({
+                title: "確認移除?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "確認",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "商品已移除!",
+                        icon: "success",
+                        confirmButtonText: '確認'
+                    });
+                    let productId = $(this).closest("tr").find("input#productId").val();
 
-                $.ajax({
-                    url: "/api/cart/remove/" + productId,
-                    method: "DELETE",
-                    headers: {
-                        "authorization": localStorage.getItem("authorization")
-                    },
-                    success(response) {
-                        // 清空購物車資料重新取得購物車資料
-                        $("#cart_tbody").html("");
-                        getCart();
-                        // 清空mini購物車資料重新取得mini購物車資料
-                        $("div.cart_gallery").html("");
-                        getMiniCart();
-                    },
-                    error(xhr, status, error) {
-                        console.error("There was a problem :", error);
-                    },
-                })
-            }
+                    $.ajax({
+                        url: "/api/cart/remove/" + productId,
+                        method: "DELETE",
+                        headers: {
+                            "authorization": localStorage.getItem("authorization")
+                        },
+                        success(response) {
+                            // 清空購物車資料重新取得購物車資料
+                            $("#cart_tbody").empty();
+                            getCart();
+                            updateSelectedSellerTotal()
+                            // 清空mini購物車資料重新取得mini購物車資料
+                            $("div.cart_gallery").empty();
+                            getMiniCart();
+                        },
+                        error(xhr, status, error) {
+                            console.error("There was a problem :", error);
+                        },
+                    })
+                }
+            });
         })
 
+        // 取消表單submit事件
         $("#cart-form").submit(function (e){
             e.preventDefault();
         })
+
+        // 送出資料至checkout
+        $("#checkout").on("click", function(){
+            let selectedData = getSelectedSellerData();
+            if (selectedData) {
+                // 將資料存至localStorage
+                localStorage.setItem("selectedCartData", JSON.stringify(selectedData));
+                window.location.href = "/order/checkout";
+            }
+        })
     });
+
+    // 取得買家選擇的商品資料
+    function getSelectedSellerData() {
+        let selectedSellerId = $(".seller-checkbox:checked").data("seller-id");
+        if (selectedSellerId) {
+            let selectedItems = [];
+            $(`tr[data-seller-id="${selectedSellerId}"]`).each(function() {
+                let item = {
+                    productId: $(this).find("#productId").val(),
+                    productName: $(this).find(".product_name a").text(),
+                    price: $(this).find(".product_price").text(),
+                    quantity: $(this).find("#quantity").val(),
+                    subtotal: $(this).find(".product_total").text().trim().replace('$', '')
+                };
+                selectedItems.push(item);
+            });
+            return { sellerId: selectedSellerId, items: selectedItems };
+        } else {
+            Swal.fire({
+                title: '請選擇一個賣家!',
+                icon: 'warning',
+                confirmButtonText: '確認'
+            });
+            return null;
+        }
+    }
 </script>
 
 </body>

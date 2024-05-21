@@ -18,6 +18,6 @@ public interface CartService {
     String removeProductFromCart(String productId, LoginSourceDTO loginSource)
             throws CheckRequestErrorException;
 
-    String updateCart(CartReqDTO req, LoginSourceDTO loginSource)
+    Integer updateCart(CartReqDTO req, LoginSourceDTO loginSource)
             throws CheckRequestErrorException;
 }

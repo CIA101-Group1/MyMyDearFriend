@@ -47,7 +47,7 @@ public class CartBackendController {
 
     @PutMapping("cart/update")
     @CheckLogin
-    public @ResponseBody ResDTO<String> updateCart(
+    public @ResponseBody ResDTO<Integer> updateCart(
             @Valid @RequestBody CartReqDTO req,
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
             throws CheckRequestErrorException {
