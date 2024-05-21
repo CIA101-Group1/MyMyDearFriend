@@ -8,6 +8,8 @@ import com.tibame.group1.db.dto.CouponQueryParams;
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +25,32 @@ public class CouponBackendController {
   @CheckLogin
   @GetMapping("/coupons")
   public ResponseEntity<List<CouponEntity>> getCoupons(
+
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
+
+          // 查詢 Filtering
           @RequestParam(value = "couponCategory", required = false) CouponCategory couponCategory,
           @RequestParam(value = "search", required = false) String search,
-          @RequestParam(defaultValue = "date_start") String orderBy,
-          @RequestParam(defaultValue = "desc") String sort,
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource
+
+          // 排序 Sorting
+          @RequestParam(value = "orderBy", defaultValue = "date_start") String orderBy,
+          @RequestParam(value = "sort", defaultValue = "desc") String sort,
+
+          // 分頁 Pagination
+          @RequestParam(value = "limit", defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+          @RequestParam(value = "offset", defaultValue = "0") @Max(0) @Min(0) Integer offset
   ) {
     CouponQueryParams couponQueryParams = new CouponQueryParams();
     couponQueryParams.setCouponCategory(couponCategory);
     couponQueryParams.setSearch(search);
+    couponQueryParams.setOrderBy(orderBy);
+    couponQueryParams.setSort(sort);
+    couponQueryParams.setLimit(limit);
+    couponQueryParams.setOffset(offset);
 
     List<CouponEntity> couponList = couponService.getCoupons(couponQueryParams);
 
     return ResponseEntity.status(HttpStatus.OK).body(couponList);
-
   }
 
   @GetMapping("/coupons/{couponID}")

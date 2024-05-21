@@ -31,15 +31,19 @@ public class CouponDAOImpl implements CouponDAO {
       map.put("addable", couponQueryParams.getCouponCategory().name());
     }
 
-//    if (couponQueryParams.getSearch() != null) {
-//      sql = sql + " AND date_start = :threeMonthsAgo";
-//      map.put("threeMonthsAgo", calculateThreeMonthsAgo());
-//    }
-
+    // 加入SQL查詢語句 >> 去對應:serch物件
       if (couponQueryParams.getSearch() != null) {
-      sql = sql + " AND title LIKE :search";
+      sql = sql + " AND date_Start LIKE :search";
       map.put("search", "%" + couponQueryParams.getSearch() + "%");
     }
+
+    //排序
+    sql = sql + " ORDER BY " + couponQueryParams.getOrderBy() + " " + couponQueryParams.getSort();
+
+    //分頁
+    sql = sql + " LIMIT :limit OFFSET :offset";
+    map.put("limit", couponQueryParams.getLimit());
+    map.put("offset", couponQueryParams.getOffset());
 
     List<CouponEntity> couponList = namedParameterJdbcTemplate.query(sql, map, new CouponRowMapperUtils());
 
