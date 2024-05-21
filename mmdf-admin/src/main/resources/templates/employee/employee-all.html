@@ -162,7 +162,7 @@
 
                                 // 插入員工資料
                                 data.forEach(employee => {
-                                    const maskedPassword = '*'.repeat(employee.employeePassword.length); // 将密码替换为星号
+                                    const maskedPassword = '*'.repeat(employee.employeePassword.length); // 將密碼替換為星號
                                     $("#employeeTable tbody").append(`
                                         <tr>
                                             <td>${employee.employeeId}</td>
@@ -172,7 +172,7 @@
                                             <td>${employee.employeeEmail}</td>
                                             <td>${employee.employeePhone}</td>
                                             <td>${employee.employeeGender}</td>
-                                            <td>${employee.employeeCreateTime}</td>
+                                            <td>${formatDate(employee.employeeCreateTime)}</td>
                                             <td>${employee.employeeStatus}</td>
                                         </tr>
                                     `);
@@ -193,6 +193,14 @@
         // 初始加載資料
         fetchEmployeeData();
     });
+    // 格式化日期
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
 </script>
 </body>
 </html>
+
