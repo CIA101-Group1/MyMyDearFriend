@@ -1,10 +1,10 @@
 package com.tibame.group1.db.dao.impl;
 
 import com.tibame.group1.db.dao.CouponDAO;
+import com.tibame.group1.db.dto.CouponQueryParams;
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
 import com.tibame.group1.db.rowmapper.CouponRowMapperUtils;
-import org.apache.commons.math3.stat.descriptive.summary.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,9 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class CouponDAOImpl implements CouponDAO {
@@ -22,11 +20,26 @@ public class CouponDAOImpl implements CouponDAO {
   @Autowired private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
   @Override
-  public List<CouponEntity> getCoupons() {
+  public List<CouponEntity> getCoupons(CouponQueryParams couponQueryParams) {
     String sql = "SELECT coupon_id, title, low_price, discount, number, date_start, date_end, addable, livemode " +
-            "FROM coupon";
+            "FROM coupon WHERE 1=1";
 
     Map<String, Object> map = new HashMap<>();
+
+    if (couponQueryParams.getCouponCategory() != null) {
+      sql = sql + " AND addable = :addable";
+      map.put("addable", couponQueryParams.getCouponCategory().name());
+    }
+
+//    if (couponQueryParams.getSearch() != null) {
+//      sql = sql + " AND date_start = :threeMonthsAgo";
+//      map.put("threeMonthsAgo", calculateThreeMonthsAgo());
+//    }
+
+      if (couponQueryParams.getSearch() != null) {
+      sql = sql + " AND title LIKE :search";
+      map.put("search", "%" + couponQueryParams.getSearch() + "%");
+    }
 
     List<CouponEntity> couponList = namedParameterJdbcTemplate.query(sql, map, new CouponRowMapperUtils());
 
@@ -111,5 +124,11 @@ public class CouponDAOImpl implements CouponDAO {
     map.put("couponID", couponID);
 
     namedParameterJdbcTemplate.update(sql, map);
+  }
+
+  private Date calculateThreeMonthsAgo() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MONTH, -3);
+    return calendar.getTime();
   }
 }

@@ -3,11 +3,12 @@ package com.tibame.group1.admin.controller;
 import com.tibame.group1.admin.annotation.CheckLogin;
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.CouponService;
+import com.tibame.group1.common.enums.CouponCategory;
+import com.tibame.group1.db.dto.CouponQueryParams;
 import com.tibame.group1.db.dto.CouponReqDTO;
 import com.tibame.group1.db.entity.CouponEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,20 @@ public class CouponBackendController {
 
   @Autowired private CouponService couponService;
 
+  @CheckLogin
   @GetMapping("/coupons")
   public ResponseEntity<List<CouponEntity>> getCoupons(
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
+          @RequestParam(value = "couponCategory", required = false) CouponCategory couponCategory,
+          @RequestParam(value = "search", required = false) String search,
+          @RequestParam(defaultValue = "date_start") String orderBy,
+          @RequestParam(defaultValue = "desc") String sort,
+          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource
+  ) {
+    CouponQueryParams couponQueryParams = new CouponQueryParams();
+    couponQueryParams.setCouponCategory(couponCategory);
+    couponQueryParams.setSearch(search);
 
-    List<CouponEntity> couponList = couponService.getCoupons();
+    List<CouponEntity> couponList = couponService.getCoupons(couponQueryParams);
 
     return ResponseEntity.status(HttpStatus.OK).body(couponList);
 

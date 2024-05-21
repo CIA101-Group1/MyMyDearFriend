@@ -1,4 +1,4 @@
-package com.tibame.group1.admin.service.Impl;
+package com.tibame.group1.admin.service.impl;
 
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.dto.MemberReqDTO;
