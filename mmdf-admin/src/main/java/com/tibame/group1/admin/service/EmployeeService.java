@@ -6,6 +6,7 @@ import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface EmployeeService {
     // 員工創建也要驗證登入
@@ -21,6 +22,6 @@ public interface EmployeeService {
 
     LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException;
 
-    EmployeeResDTO employeeAll(AdminLoginSourceDTO adminLoginSource, String employeeName)
+    List<EmployeeAllResDTO> employeeAll(AdminLoginSourceDTO adminLoginSource, String employeeName)
             throws CheckRequestErrorException, IOException, DateException;
 }
