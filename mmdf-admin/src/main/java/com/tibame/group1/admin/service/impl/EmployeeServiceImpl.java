@@ -5,7 +5,6 @@ import com.tibame.group1.admin.service.EmployeeService;
 import com.tibame.group1.admin.service.JwtService;
 import com.tibame.group1.common.dto.web.LoginResDTO;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
-import com.tibame.group1.common.exception.DateException;
 import com.tibame.group1.common.utils.CommonUtils;
 import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.db.entity.EmployeeEntity;
@@ -34,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeCreateResDTO employeeCreate(
             EmployeeCreateReqDTO req, AdminLoginSourceDTO adminLoginSource)
-            throws CheckRequestErrorException, IOException, DateException {
+            throws CheckRequestErrorException, IOException {
         // 確認用戶身份是否有效
         if (adminLoginSource == null || adminLoginSource.getEmployeeId() == null) {
             // 如果登錄信息不完整，拋出異常或返回錯誤提示
