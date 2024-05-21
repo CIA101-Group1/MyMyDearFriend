@@ -25,6 +25,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/js/**",
                         "/employee/login",
                         "/api/employee/login");
-        // registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns("/home","/static/**");
+         // registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns("/home","/static/**");
     }
 }

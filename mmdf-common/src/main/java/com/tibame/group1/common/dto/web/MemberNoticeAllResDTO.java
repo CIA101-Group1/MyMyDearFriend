@@ -1,8 +1,7 @@
-package com.tibame.group1.admin.dto;
-
-
+package com.tibame.group1.common.dto.web;
 
 import com.tibame.group1.common.dto.PagesResDTO;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CouponResDTO {
+public class MemberNoticeAllResDTO {
 
     private PagesResDTO pages;
 
-    private List<CouponAllResDTO> couponList;
-
+    private List<MemberNoticeResDTO> memberNoticeList;
 }

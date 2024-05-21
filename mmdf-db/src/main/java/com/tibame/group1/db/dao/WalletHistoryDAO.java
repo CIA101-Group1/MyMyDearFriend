@@ -1,6 +1,6 @@
 package com.tibame.group1.db.dao;
 
-import com.tibame.group1.common.enums.WalletCategory;
+import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.dto.WalletReqDTO;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 
@@ -13,5 +13,6 @@ public interface WalletHistoryDAO {
 
     Integer createWalletHistory(WalletReqDTO walletReqDTO);
 
-    List<WalletHistoryEntity> getWallets(WalletCategory walletCategory);
+    List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
+
 }

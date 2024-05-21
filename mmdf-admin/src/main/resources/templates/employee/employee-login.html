@@ -83,24 +83,24 @@
                 method: "post",
                 contentType: "application/json",
                 data: JSON.stringify(userData),
-                success(response) {
-                    console.log(response)
-
-                    // 登入成功後的處理
-                    if (apiResponseJSON(response)) {
-                        switch (response.data.status) {
-                            case "1":
-                                alert("登入成功！");
-                                localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/home";
-                                break;
-                            case "-1":
-                                alert("帳號或密碼錯誤，請重試");
-                                break;
+                success(response) {// 登入成功後的處理
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "1":
+                                    alert("登入成功！");
+                                    localStorage.setItem("authorization", response.data.authorization);
+                                    window.location.href = "/home";
+                                    break;
+                                case "-1":
+                                    alert("帳號或密碼錯誤，請重試");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
                         }
-                    } else {
-                        alert(response.message);
-                    }
+                    });
                 },
                 error(xhr, status, error) {
                     alert("伺服器連線失敗: " + error);

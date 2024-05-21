@@ -1,17 +1,24 @@
 package com.tibame.group1.admin.service;
 
-import com.tibame.group1.admin.dto.CouponAllReqDTO;
-import com.tibame.group1.admin.dto.CouponResDTO;
-import com.tibame.group1.admin.dto.MemberAllReqDTO;
-import com.tibame.group1.admin.dto.MemberResDTO;
-import com.tibame.group1.common.dto.ResDTO;
-import com.tibame.group1.common.dto.admin.CouponCreateReqDTO;
-import com.tibame.group1.common.dto.admin.CouponCreateResDTO;
-import com.tibame.group1.common.exception.DateException;
-import org.springframework.data.domain.Pageable;
+import com.tibame.group1.db.dto.CouponQueryParams;
+import com.tibame.group1.db.dto.CouponReqDTO;
+import com.tibame.group1.db.entity.CouponEntity;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public interface CouponService {
-    CouponCreateResDTO couponCreate(CouponCreateReqDTO req) throws DateException;
 
-    CouponResDTO couponAll(CouponAllReqDTO req, Pageable pageable) throws DateException;
+    List<CouponEntity> getCoupons(CouponQueryParams couponQueryParams);
+
+    CouponEntity getCouponByID(Integer couponID);
+
+    Integer createCoupon(CouponReqDTO couponReqDTO);
+
+
+    void updateCoupon(Integer couponID, CouponReqDTO couponReqDTO);
+
+    void deleteCouponByID(Integer couponID);
+
 }
