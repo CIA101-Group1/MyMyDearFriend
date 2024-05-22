@@ -41,4 +41,9 @@ public class CouponServiceImpl implements CouponService {
     public void deleteCouponByID(Integer couponID) {
         couponDAO.deleteCouponByID(couponID);
     }
+
+    @Override
+    public Integer countCoupon(CouponQueryParams couponQueryParams) {
+        return couponDAO.countCoupon(couponQueryParams);
+    }
 }

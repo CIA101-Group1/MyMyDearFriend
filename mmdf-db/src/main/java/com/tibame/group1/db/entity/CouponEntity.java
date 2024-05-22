@@ -1,6 +1,7 @@
 package com.tibame.group1.db.entity;
 
-import com.tibame.group1.common.enums.CouponCategory;
+import com.tibame.group1.common.enums.CouponEffectCategory;
+import com.tibame.group1.common.enums.CouponStackCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,10 +41,10 @@ public class CouponEntity {
        private Date dateEnd;
 
        @Column(name = "addable", nullable = false)
-       private CouponCategory addable;
+       private CouponStackCategory addable;
 
        @Column(name = "livemode", nullable = false)
-       private String livemode;
+       private CouponEffectCategory livemode;
 
 }
 
