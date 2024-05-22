@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>賣家商品瀏覽</title>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <!--    <th:block th:replace="~{/fragments/css}"/>-->
     <!-- CSS
@@ -455,7 +455,6 @@
                                 // 遍历搜索结果并显示到页面上
                                 response.data.forEach(function (product) {
                                     var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
-                                    var reviewStatus = reviewStatusList[product.reviewStatus];
                                     // 添加商品行到表格
                                     $('#products tbody').append(`
                                         <tr>
@@ -468,7 +467,7 @@
                                             <td>
                                                 <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
                                             </td>
-                                            <td>${reviewStatus}</td>
+                                            <td>${product.reviewStatus}</td>
                                             <td>${product.productStatus}</td>
                                             <td>
                                                 <a href="/seller/product/getOne/${product.productId}"
