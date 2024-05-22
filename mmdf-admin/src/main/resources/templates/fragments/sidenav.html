@@ -8,7 +8,7 @@
                 <!-- 員工 -->
                 <a onclick="goToEmployeeAll()" class="nav-link">員工管理</a>
                 <!-- 會員 -->
-                <a class="nav-link" href="/member/all">會員資料查詢</a>
+                <a onclick="goToMemberAll()" class="nav-link">會員資料查詢</a>
                 <!-- 錢包 -->
                 <a class="nav-link" href="offline-market.html">錢包管理</a>
                 <!-- 優惠券 -->
@@ -89,6 +89,16 @@
             url += '?authorization=' + encodeURIComponent(authorization);
         }
         console.log('goToEmployeeAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToMemberAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/member/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
         window.location.href = url;
     }
 </script>

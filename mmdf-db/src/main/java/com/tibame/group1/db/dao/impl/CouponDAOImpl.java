@@ -26,24 +26,43 @@ public class CouponDAOImpl implements CouponDAO {
 
     Map<String, Object> map = new HashMap<>();
 
-    if (couponQueryParams.getCouponCategory() != null) {
-      sql = sql + " AND addable = :addable";
-      map.put("addable", couponQueryParams.getCouponCategory().name());
+    if (couponQueryParams.getCouponEffectCategory() != null) {
+      sql = sql + " AND livemode = :livemode";
+      map.put("livemode", couponQueryParams.getCouponEffectCategory().name());
     }
 
-//    if (couponQueryParams.getSearch() != null) {
-//      sql = sql + " AND date_start = :threeMonthsAgo";
-//      map.put("threeMonthsAgo", calculateThreeMonthsAgo());
-//    }
+    if (couponQueryParams.getCouponStackCategory() != null) {
+      sql = sql + " AND addable = :addable";
+      map.put("addable", couponQueryParams.getCouponStackCategory().name());
+    }
 
-      if (couponQueryParams.getSearch() != null) {
-      sql = sql + " AND title LIKE :search";
+    // 加入SQL查詢語句 >> 去對應:search物件
+    if (couponQueryParams.getSearch() != null) {
+      sql = sql + " AND date_start LIKE :search";
       map.put("search", "%" + couponQueryParams.getSearch() + "%");
     }
+
+    // 加入日期範圍限制
+    sql = sql + " AND date_start >= :threeMonthsAgo";
+    map.put("threeMonthsAgo", calculateThreeMonthsAgo());
+
+    //排序
+    sql = sql + " ORDER BY " + couponQueryParams.getOrderBy() + " " + couponQueryParams.getSort();
+
+    //分頁
+    sql = sql + " LIMIT :limit OFFSET :offset";
+    map.put("limit", couponQueryParams.getLimit());
+    map.put("offset", couponQueryParams.getOffset());
 
     List<CouponEntity> couponList = namedParameterJdbcTemplate.query(sql, map, new CouponRowMapperUtils());
 
     return couponList;
+  }
+
+  private Date calculateThreeMonthsAgo() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MONTH, -3);
+    return calendar.getTime();
   }
 
   @Override
@@ -64,6 +83,8 @@ public class CouponDAOImpl implements CouponDAO {
     } else {
       return null;
     }
+
+
   }
 
   @Override
@@ -82,7 +103,7 @@ public class CouponDAOImpl implements CouponDAO {
     map.put("dateStart", couponReqDTO.getDateStart());
     map.put("dateEnd", couponReqDTO.getDateEnd());
     map.put("addable", couponReqDTO.getAddable().toString());
-    map.put("livemode", couponReqDTO.getLivemode());
+    map.put("livemode", couponReqDTO.getAddable().toString());
 
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -111,7 +132,7 @@ public class CouponDAOImpl implements CouponDAO {
     map.put("dateStart", couponReqDTO.getDateStart());
     map.put("dateEnd", couponReqDTO.getDateEnd());
     map.put("addable", couponReqDTO.getAddable().toString());
-    map.put("livemode", couponReqDTO.getLivemode());
+    map.put("livemode", couponReqDTO.getAddable().toString());
 
     namedParameterJdbcTemplate.update(sql, map);
   }
@@ -126,9 +147,25 @@ public class CouponDAOImpl implements CouponDAO {
     namedParameterJdbcTemplate.update(sql, map);
   }
 
-  private Date calculateThreeMonthsAgo() {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.MONTH, -3);
-    return calendar.getTime();
+  @Override
+  public Integer countCoupon(CouponQueryParams couponQueryParams) {
+    String sql = "SELECT count(*) FROM coupon WHERE 1=1 ";
+
+    Map<String, Object> map = new HashMap<>();
+
+    if (couponQueryParams.getCouponStackCategory() != null) {
+      sql = sql + " AND addable = :addable";
+      map.put("addable", couponQueryParams.getCouponStackCategory().name());
+    }
+
+    // 加入SQL查詢語句 >> 去對應:serch物件
+    if (couponQueryParams.getSearch() != null) {
+      sql = sql + " AND date_Start LIKE :search";
+      map.put("search", "%" + couponQueryParams.getSearch() + "%");
+    }
+
+    Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+
+    return total;
   }
 }
