@@ -6,10 +6,9 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>範例</title>
+    <title>結帳</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
 </head>
@@ -27,7 +26,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <form>
-                        <h3>訂單明細</h3>
+                        <h3>訂單詳情</h3>
                         <div class="col-lg-12 mb-20">
                             <label for="name" class="form-label">姓名 : <span>*</span></label>
                             <input type="text" class="form-control" id="name" required>
@@ -66,24 +65,24 @@
                                 <tbody id="checkout_tbody">
                                 </tbody>
                                 <tfoot>
-                                <tr>
+                                <tr class="table-secondary">
                                     <th>商品總金額</th>
                                     <td><strong id="cart_total"></strong></td>
                                 </tr>
-                                <tr>
+                                <tr class="table-secondary">
                                     <th>折扣</th>
                                     <td><strong id="discount"></strong></td>
                                 </tr>
-                                <tr class="order_total">
+                                <tr class="order_total table-secondary">
                                     <th>總付款金額</th>
-                                    <td><strong id="order_total"></strong></td>
+                                    <td><strong id="order_total" style="font-size: 20px; color: red"></strong></td>
                                 </tr>
                                 </tfoot>
                             </table>
                         </div>
                         <div class="payment_method">
                             <div class="order_button" style="position: relative;">
-                                <button type="button"
+                                <button id="sendOrder" type="button"
                                         style="position: absolute; right: 0; bottom: -20px; width: 100px; height: 40px">
                                     結帳
                                 </button>
@@ -133,7 +132,37 @@
         $("#discount").text(`$${discount}`);
         $("#order_total").text(`$${orderTotal}`);
 
-
+        $("#sendOrder").on("click", function (){
+            let orderCity = $(".city").val();
+            let orderDistrict = $(".district").val();
+            let orderAddress = $("#address").val();
+            let address = orderCity + orderDistrict + orderAddress;
+            let orderData = {
+                sellerId: data.sellerId,
+                priceBeforeDiscount: $("#cart_total").text().split("$")[1],
+                discount: $("#discount").text().split("$")[1],
+                priceAfterDiscount: $("#order_total").text().split("$")[1],
+                name: $("#name").val(),
+                phone: $("#phone").val(),
+                address: address,
+                buyProductList: data.items
+            };
+            $.ajax({
+                url: "/api/order/create",
+                method: "POST",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                contentType: "application/json",
+                data: JSON.stringify(orderData),
+                success(response) {
+                    console.log(response.data);
+                },
+                error(xhr, status, error) {
+                    console.error("There was a problem :", error);
+                },
+            })
+        })
     });
 
     // 讀取LocalStorage中的數據
@@ -141,7 +170,6 @@
         let selectedCartData = localStorage.getItem("selectedCartData");
         if (selectedCartData) {
             selectedCartData = JSON.parse(selectedCartData);
-            // console.log("Loaded Selected Seller Data:", selectedCartData);
         }
         return selectedCartData;
     }
