@@ -3,7 +3,6 @@ package com.tibame.group1.admin.interceptor;
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.JwtService;
 import com.tibame.group1.common.exception.AuthorizationException;
-import com.tibame.group1.db.repository.EmployeeRoleRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +20,6 @@ import java.util.Arrays;
 public class AdminCheckLoginInterceptor implements HandlerInterceptor {
 
     @Autowired private JwtService jwtService;
-
-    @Autowired private EmployeeRoleRepository employeeRoleRepository;
 
     private static final String TOKEN_HEADER_NAME = "authorization";
 
