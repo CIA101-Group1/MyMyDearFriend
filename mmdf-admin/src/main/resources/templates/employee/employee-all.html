@@ -46,14 +46,6 @@
             position: relative;
         }
 
-        .custom-select-wrapper select {
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            padding-right: 2rem; /* 預留空間給倒三角形 */
-        }
-
         .custom-select-wrapper::after {
             content: "\f0d7"; /* Font Awesome Unicode for caret down */
             font-family: "Font Awesome 5 Free";
@@ -100,19 +92,22 @@
                         <button id="resetButton" class="btn btn-secondary">重置</button>
                     </div>
                 </div>
+                <!-- 新增創建新員工按鈕 -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <button id="createEmployeeButton" class="btn btn-success">創建新員工資料</button>
+                    </div>
+                </div>
                 <!-- 主要表格 -->
                 <table id="employeeTable" class="table table-striped">
                     <thead>
                     <tr>
                         <th>員工編號</th>
                         <th>帳號</th>
-                        <th>密碼</th>
                         <th>姓名</th>
-                        <th>電子郵件</th>
-                        <th>電話</th>
-                        <th>性別</th>
                         <th>建立時間</th>
                         <th>狀態</th>
+                        <th>操作</th> <!-- 新增一個欄位用於顯示操作按鈕 -->
                     </tr>
                     </thead>
                     <tbody>
@@ -139,6 +134,12 @@
             fetchEmployeeData();
         });
 
+        // 監聽創建新員工按鈕的點擊事件
+        $("#createEmployeeButton").on("click", function (){
+            // 導航到創建資料畫面，這裡的 URL 可能需要根據實際情況修改
+            window.location.href = "/employee/create";
+        });
+
         function fetchEmployeeData() {
             const searchName = $("#searchInput").val().trim();
             $.ajax({
@@ -162,21 +163,36 @@
 
                                 // 插入員工資料
                                 data.forEach(employee => {
-                                    const maskedPassword = '*'.repeat(employee.employeePassword.length); // 将密码替换为星号
                                     $("#employeeTable tbody").append(`
-                                        <tr>
-                                            <td>${employee.employeeId}</td>
-                                            <td>${employee.employeeAccount}</td>
-                                            <td>${maskedPassword}</td>
-                                            <td>${employee.employeeName}</td>
-                                            <td>${employee.employeeEmail}</td>
-                                            <td>${employee.employeePhone}</td>
-                                            <td>${employee.employeeGender}</td>
-                                            <td>${employee.employeeCreateTime}</td>
-                                            <td>${employee.employeeStatus}</td>
-                                        </tr>
-                                    `);
+                                            <tr>
+                                                <td>${employee.employeeId}</td>
+                                                <td>${employee.employeeAccount}</td>
+                                                <td>${employee.employeeName}</td>
+                                                <td>${formatDate(employee.employeeCreateTime)}</td>
+                                                <td>${employee.employeeStatus}</td>
+                                                <td><button class="btn btn-primary detail-button" data-employee-id="${employee.employeeId}">詳細資料</button></td>
+                                            </tr>
+                                        `);
                                 });
+
+                                /// 在fetchEmployeeData函數中的相應位置修改，當點擊修改按鈕時將token作為URL參數傳遞到edit.html頁面中
+                                $(".detail-button").on("click", function () {
+                                    // 取得被點擊員工的 ID
+                                    const employeeId = $(this).data("employee-id");
+                                    // 獲取token
+                                    var authorization = localStorage.getItem("authorization");
+                                    // 導航到修改資料畫面，將token作為URL參數傳遞
+                                    window.location.href = `/employee/detail?id=${employeeId}&authorization=${authorization}`;
+                                });
+
+                                // 監聽創建新員工按鈕的點擊事件
+                                $("#createEmployeeButton").on("click", function (){
+                                    // 取得token
+                                    var authorization = localStorage.getItem("authorization");
+                                    // 將token作為URL參數傳遞
+                                    window.location.href = "/employee/create?authorization=" + authorization;
+                                });
+
                             }
                         },
                         onError(message) {
@@ -193,6 +209,14 @@
         // 初始加載資料
         fetchEmployeeData();
     });
+    // 格式化日期
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
 </script>
 </body>
 </html>
+
