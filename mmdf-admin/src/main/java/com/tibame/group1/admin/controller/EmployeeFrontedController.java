@@ -15,14 +15,22 @@ public class EmployeeFrontedController {
 
     @GetMapping("/employee/detail")
     public String employeeDetail() {
-        log.error("無法查詢員工詳細資訊");
-        return "/employee/employee-detail";  //要導入的html
+        return "employee/employee-detail";  //要導入的html
     }
 
     @GetMapping("/employee/all")
     public String index() {
-        log.error("無法查詢所有員工資料");
         return "/employee/employee-all";
+    }
+
+    @GetMapping("/employee/create")
+    public String employeeCreate() {
+        return "employee/employee-create";
+    }
+
+    @GetMapping("/employee/detailOne")
+    public String employeeDetailOne() {
+        return "employee/employee-detail-one";
     }
 }
 
