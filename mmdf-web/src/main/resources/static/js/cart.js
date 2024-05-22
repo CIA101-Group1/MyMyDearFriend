@@ -17,7 +17,7 @@ $(document).ready(function () {
                 Swal.fire({
                     title: "商品已移除!",
                     icon: "success",
-                    confirmButtonText: '確認'
+                    confirmButtonText: "確認"
                 });
                 let productId = $(this).closest("div.cart_item").find("input#productId").val();
 

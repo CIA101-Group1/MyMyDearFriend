@@ -29,11 +29,11 @@
                         <h3>訂單明細</h3>
                         <div class="col-lg-12 mb-20">
                             <label for="name" class="form-label">姓名 <span>*</span></label>
-                            <input type="text" class="form-control" id="name">
+                            <input type="text" class="form-control" id="name" required>
                         </div>
                         <div class="col-lg-12 mb-20">
                             <label for="phone">電話 <span>*</span></label>
-                            <input type="text" class="form-control" id="phone">
+                            <input type="text" class="form-control" id="phone" required>
                         </div>
                         <div class="col-lg-12 mb-20">
                             <label for="email"> 電子郵件 <span>*</span></label>
@@ -41,11 +41,11 @@
                         </div>
                         <div class="col-12 mb-20">
                             <label for="address"> 地址 <span>*</span></label>
-                            <input type="text" class="form-control" id="address">
+                            <input type="text" class="form-control" id="address" required>
                         </div>
                         <div class="col-12 mb-20">
                             <label> 優惠卷 </label>
-                            <input type="text" class="form-control" >
+                            <input type="text" class="form-control">
                         </div>
                     </form>
                 </div>
@@ -66,7 +66,7 @@
                                 <tfoot>
                                 <tr>
                                     <th>商品總金額</th>
-                                    <td id="cart_subtotal"></td>
+                                    <td><strong id="cart_total"></strong></td>
                                 </tr>
                                 <tr>
                                     <th>折扣</th>
@@ -81,7 +81,10 @@
                         </div>
                         <div class="payment_method">
                             <div class="order_button" style="position: relative;">
-                                <button type="button" style="position: absolute; right: 0; bottom: -20px; width: 100px; height: 40px">結帳</button>
+                                <button type="button"
+                                        style="position: absolute; right: 0; bottom: -20px; width: 100px; height: 40px">
+                                    結帳
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -98,18 +101,19 @@
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        // 頁面加載時讀取member資料
+        getMemberDetail();
         // 頁面加載時讀取LocalStorage中的數據
         let data = loadSelectedCartData();
 
         let tbody = $("#checkout_tbody");
-        tbody.empty(); // 清空現有的表格內容
 
-        let cartSubtotal = 0;
+        let cartTotal = 0;
 
         // 動態生成表格內容
         data.items.forEach(function (item) {
-            cartSubtotal += parseFloat(item.subtotal);
+            cartTotal += parseInt(item.subtotal);
             tbody.append(
                 `<tr>
                     <td>${item.productName} <strong> × ${item.quantity}</strong></td>
@@ -120,11 +124,11 @@
 
         // 更新小計和總計
         let discount = 5.00; // 假設折扣是5元
-        let orderTotal = cartSubtotal - discount;
+        let orderTotal = cartTotal - discount;
 
-        $("#cart_subtotal").text(`$${cartSubtotal.toFixed(2)}`);
-        $("#discount").text(`$${discount.toFixed(2)}`);
-        $("#order_total").text(`$${orderTotal.toFixed(2)}`);
+        $("#cart_total").text(`$${cartTotal}`);
+        $("#discount").text(`$${discount}`);
+        $("#order_total").text(`$${orderTotal}`);
 
     });
 
@@ -133,9 +137,36 @@
         let selectedCartData = localStorage.getItem("selectedCartData");
         if (selectedCartData) {
             selectedCartData = JSON.parse(selectedCartData);
-            console.log("Loaded Selected Seller Data:", selectedCartData);
+            // console.log("Loaded Selected Seller Data:", selectedCartData);
         }
         return selectedCartData;
+    }
+
+    // 取得買家資料
+    function getMemberDetail() {
+        $.ajax({
+            url: "/api/member/detail",
+            method: "get",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                let member = response.data;
+                $("#name").val(member.name);
+                $("#phone").val(member.phone);
+                $("#email").val(member.email);
+                $("#address").val(member.address);
+            },
+            error(xhr, status, error) {
+                Swal.fire({
+                    title: "Oops...!",
+                    icon: "error",
+                    text: "伺服器連線失敗: " + error,
+                    confirmButtonText: "確認"
+                });
+                console.error("There was a problem :", error);
+            }
+        });
     }
 
 </script>
