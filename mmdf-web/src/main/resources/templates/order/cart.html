@@ -1,0 +1,246 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cart</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .shopping_cart_area {
+            margin-top: 100px;
+        }
+        .table_desc {
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+        .cart_page table th, .cart_page table td {
+            text-align: center; /* 水平置中 */
+            vertical-align: middle; /* 垂直置中 */
+        }
+        .product_thumb img {
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<!--breadcrumbs area start-->
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <h3>購物車</h3>
+                    <ul>
+                        <li><a href="/">home</a></li>
+                        <li>購物車</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+
+
+<!--shopping cart area start -->
+<div class="shopping_cart_area mt-100">
+    <div class="container">
+        <form id="cart-form">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table_desc">
+                        <div class="cart_page table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="product_thumb">圖片</th>
+                                    <th class="product_name">商品</th>
+                                    <th class="product-price">單價</th>
+                                    <th class="product_quantity">數量</th>
+                                    <th class="product_total">總計</th>
+                                    <th class="product_remove">移除</th>
+                                </tr>
+                                </thead>
+                                <tbody id="cart_tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--coupon code area start-->
+            <div class="coupon_area">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="coupon_code left">
+                            <h3>Coupon</h3>
+                            <div class="coupon_inner">
+                                <p>Enter your coupon code if you have one.</p>
+                                <input placeholder="Coupon code" type="text">
+                                <button type="submit">Apply coupon</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="coupon_code right">
+                            <h3>所選商品金額</h3>
+                            <div class="coupon_inner">
+                                <div class="cart_subtotal">
+                                    <p style="font-size: 25px">總計:</p>
+                                    <p class="cart_amount" id="cart_total">$0</p>
+                                </div>
+                                <div class="checkout_btn">
+                                    <button id="checkout" type="button" style="width: 100px;height: 40px;font-size: 16px;">去買單</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--coupon code area end-->
+        </form>
+    </div>
+</div>
+<!--shopping cart area end -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<script>
+    $(document).ready(function () {
+        // 取得購物車資料
+        getCart();
+
+        // 更新購物車商品
+        $("#cart_tbody").on("change", "input#quantity", function () {
+            // console.log($(this).closest("tr").find("input#productId").val())
+            let subtotal = $(this).closest("tr").find("td.product_total");
+
+            let data = {
+                productId: $(this).closest("tr").find("input#productId").val(),
+                quantity: $(this).val()
+            };
+            $.ajax({
+                url: "/api/cart/update",
+                method: "PUT",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success(response) {
+                    console.log(response.data);
+                    console.log(subtotal.text(response.data));
+                    // 重新取得購物車資料
+                    $(subtotal).text(response.data);
+                    updateSelectedSellerTotal()
+                    // 清空mini購物車資料重新取得mini購物車資料
+                    $("div.cart_gallery").empty();
+                    getMiniCart();
+                },
+                error(xhr, status, error) {
+                    console.error("There was a problem :", error);
+                },
+            })
+        })
+
+        // 移除購物車商品
+        $("#cart_tbody").on("click", "a#remove", function () {
+            Swal.fire({
+                title: "確認移除?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "確認",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "商品已移除!",
+                        icon: "success",
+                        confirmButtonText: '確認'
+                    });
+                    let productId = $(this).closest("tr").find("input#productId").val();
+
+                    $.ajax({
+                        url: "/api/cart/remove/" + productId,
+                        method: "DELETE",
+                        headers: {
+                            "authorization": localStorage.getItem("authorization")
+                        },
+                        success(response) {
+                            // 清空購物車資料重新取得購物車資料
+                            $("#cart_tbody").empty();
+                            getCart();
+                            updateSelectedSellerTotal()
+                            // 清空mini購物車資料重新取得mini購物車資料
+                            $("div.cart_gallery").empty();
+                            getMiniCart();
+                        },
+                        error(xhr, status, error) {
+                            console.error("There was a problem :", error);
+                        },
+                    })
+                }
+            });
+        })
+
+        // 取消表單submit事件
+        $("#cart-form").submit(function (e){
+            e.preventDefault();
+        })
+
+        // 送出資料至checkout
+        $("#checkout").on("click", function(){
+            let selectedData = getSelectedSellerData();
+            if (selectedData) {
+                // 將資料存至localStorage
+                localStorage.setItem("selectedCartData", JSON.stringify(selectedData));
+                window.location.href = "/order/checkout";
+            }
+        })
+    });
+
+    // 取得買家選擇的商品資料
+    function getSelectedSellerData() {
+        let selectedSellerId = $(".seller-checkbox:checked").data("seller-id");
+        if (selectedSellerId) {
+            let selectedItems = [];
+            $(`tr[data-seller-id="${selectedSellerId}"]`).each(function() {
+                let item = {
+                    productId: $(this).find("#productId").val(),
+                    productName: $(this).find(".product_name a").text(),
+                    price: $(this).find(".product_price").text(),
+                    quantity: $(this).find("#quantity").val(),
+                    subtotal: $(this).find(".product_total").text().trim().replace('$', '')
+                };
+                selectedItems.push(item);
+            });
+            return { sellerId: selectedSellerId, items: selectedItems };
+        } else {
+            Swal.fire({
+                title: '請選擇一個賣家!',
+                icon: 'warning',
+                confirmButtonText: '確認'
+            });
+            return null;
+        }
+    }
+</script>
+
+</body>
+</html>

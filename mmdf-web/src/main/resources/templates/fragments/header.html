@@ -28,61 +28,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="header_account-list  mini_cart_wrapper">
-                            <a href="javascript:void(0)"><i class="icon icon-FullShoppingCart"></i><span
-                                    class="item_count">2</span></a>
-                            <!--mini cart-->
-                            <div class="mini_cart">
-                                <div class="cart_gallery">
-                                    <div class="cart_item">
-                                        <div class="cart_img">
-                                            <a href="#"><img src="/assets/img/s-product/product.jpg" alt=""></a>
-                                        </div>
-                                        <div class="cart_info">
-                                            <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
-                                            <p>1 x <span> $65.00 </span></p>
-                                        </div>
-                                        <div class="cart_remove">
-                                            <a href="#"><i class="ion-ios-close-outline"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="cart_item">
-                                        <div class="cart_img">
-                                            <a href="#"><img src="/assets/img/s-product/product2.jpg" alt=""></a>
-                                        </div>
-                                        <div class="cart_info">
-                                            <a href="#">impedit dolor sed soluta natus voluptas.</a>
-                                            <p>1 x <span> $60.00 </span></p>
-                                        </div>
-                                        <div class="cart_remove">
-                                            <a href="#"><i class="ion-ios-close-outline"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mini_cart_table">
-                                    <div class="cart_table_border">
-                                        <div class="cart_total">
-                                            <span>Sub total:</span>
-                                            <span class="price">$125.00</span>
-                                        </div>
-                                        <div class="cart_total mt-10">
-                                            <span>total:</span>
-                                            <span class="price">$125.00</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mini_cart_footer">
-                                    <div class="cart_button">
-                                        <a href="cart.html"><i class="fa fa-shopping-cart"></i> View cart</a>
-                                    </div>
-                                    <div class="cart_button">
-                                        <a href="checkout.html"><i class="fa fa-sign-in"></i> Checkout</a>
-                                    </div>
 
-                                </div>
-                            </div>
-                            <!--mini cart end-->
-                        </div>
                         <!-- 通知 -->
                         <div class="header_account-list top_links">
                             <a href="#">
@@ -306,56 +252,23 @@
                             </div>
                             <!-- 購物車 -->
                             <div class="header_account-list  mini_cart_wrapper">
-                                <a href="javascript:void(0)"><i class="icon icon-FullShoppingCart"></i><span
-                                        class="item_count">2</span></a>
+                                <a id="cart_count" href="/order/cart"></a>
                                 <!--mini cart-->
-                                <div class="mini_cart">
+                                <div class="mini_cart" style="overflow: auto">
                                     <div class="cart_gallery">
-                                        <div class="cart_item">
-                                            <div class="cart_img">
-                                                <a href="#"><img src="/assets/img/s-product/product.jpg" alt=""></a>
-                                            </div>
-                                            <div class="cart_info">
-                                                <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
-                                                <p>1 x <span> $65.00 </span></p>
-                                            </div>
-                                            <div class="cart_remove">
-                                                <a href="#"><i class="ion-ios-close-outline"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="cart_item">
-                                            <div class="cart_img">
-                                                <a href="#"><img src="/assets/img/s-product/product2.jpg" alt=""></a>
-                                            </div>
-                                            <div class="cart_info">
-                                                <a href="#">impedit dolor sed soluta natus voluptas.</a>
-                                                <p>1 x <span> $60.00 </span></p>
-                                            </div>
-                                            <div class="cart_remove">
-                                                <a href="#"><i class="ion-ios-close-outline"></i></a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="mini_cart_table">
                                         <div class="cart_table_border">
                                             <div class="cart_total">
-                                                <span>Sub total:</span>
-                                                <span class="price">$125.00</span>
-                                            </div>
-                                            <div class="cart_total mt-10">
-                                                <span>total:</span>
-                                                <span class="price">$125.00</span>
+                                                <span>總金額:</span>
+                                                <span class="price"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mini_cart_footer">
                                         <div class="cart_button">
-                                            <a href="cart.html"><i class="fa fa-shopping-cart"></i> View cart</a>
+                                            <a href="/order/cart"><i class="fa fa-shopping-cart"></i> 查看購物車</a>
                                         </div>
-                                        <div class="cart_button">
-                                            <a href="checkout.html"><i class="fa fa-sign-in"></i> Checkout</a>
-                                        </div>
-
                                     </div>
                                 </div>
                                 <!--mini cart end-->
@@ -415,3 +328,4 @@
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/icon-member.js"></script>
+<script src="/js/cart.js"></script>
