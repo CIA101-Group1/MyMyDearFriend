@@ -21,4 +21,5 @@ public interface CouponService {
 
     void deleteCouponByID(Integer couponID);
 
+    Integer countCoupon(CouponQueryParams couponQueryParams);
 }
