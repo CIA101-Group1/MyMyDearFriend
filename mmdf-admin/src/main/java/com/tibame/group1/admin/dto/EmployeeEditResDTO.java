@@ -14,7 +14,7 @@ public class EmployeeEditResDTO {
     public enum Status {
         EDIT_SUCCESS("1", "修改成功"),
 
-        MEMBER_NOTFOUND("-1", "查無此員工資料");
+        EMPLOYEE_NOTFOUND("-1", "查無此員工資料");
 
         private final String code;
 
