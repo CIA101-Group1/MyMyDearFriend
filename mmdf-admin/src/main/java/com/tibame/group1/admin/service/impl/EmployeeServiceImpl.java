@@ -183,6 +183,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (null != req.getEmployeeGender()) {
             employee.setEmployeeGender(req.getEmployeeGender());
         }
+        if (null != req.getEmployeeStatus()) {
+            employee.setEmployeeStatus(req.getEmployeeStatus());
+        }
         employeeRepository.save(employee);
         resDTO.setStatus(EmployeeEditResDTO.Status.EDIT_SUCCESS.getCode());
         return resDTO;
