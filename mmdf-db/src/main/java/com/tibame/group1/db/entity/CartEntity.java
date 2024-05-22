@@ -10,10 +10,10 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@IdClass(ShoppingCartEntity.ShoppingCartPK.class)
+@IdClass(CartEntity.ShoppingCartPK.class)
 @Table(name = "shopping_cart")
 @Immutable
-public class ShoppingCartEntity {
+public class CartEntity {
     @Id
     @Column(name = "member_id", nullable = false)
     private Integer memberId;

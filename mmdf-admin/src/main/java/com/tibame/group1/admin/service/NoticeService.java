@@ -48,8 +48,7 @@ public class NoticeService {
         memberNoticeCreate(member, noticeCategory, noticeTitle, noticeContent, false);
     }
 
-    private void sendNoticeEmail(
-            MemberEntity member, String noticeTitle, String noticeContent) {
+    private void sendNoticeEmail(MemberEntity member, String noticeTitle, String noticeContent) {
         EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
                 .setTitle(noticeTitle)
                 .addContent(noticeContent)

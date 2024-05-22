@@ -11,12 +11,6 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        .btn-primary {
-            color: #fff !important;
-            background-color: #007bff !important;
-            border-color: #007bff !important;
-        }
-
         .btn-secondary {
             color: #fff !important;
             background-color: #6c757d !important;
@@ -67,17 +61,18 @@
                                         <!-- 篩選條件 -->
                                         <div class="row mb-3">
                                             <div class="col-md-2 custom-select-wrapper">
-                                                <label for="isVerifiedFilter"
+                                                <label for="noticeCategory"
                                                        style="margin-bottom: 5px;">通知類型</label>
-                                                <select id="isVerifiedFilter" class="form-control">
+                                                <select id="noticeCategory" class="form-control">
                                                     <option value="">所有</option>
-                                                    <option value="general">一般商城通知</option>
-                                                    <option value="auction">競標商城通知</option>
-                                                    <option value="chat">聊天室通知</option>
-                                                    <option value="customerService">客服通知</option>
-                                                    <option value="news">最新消息</option>
-                                                    <option value="market">市集通知</option>
-                                                    <option value="system">系統通知</option>
+                                                    <option value="0">一般商城</option>
+                                                    <option value="1">競標商城</option>
+                                                    <option value="2">聊天室</option>
+                                                    <option value="3">客服</option>
+                                                    <option value="4">最新消息</option>
+                                                    <option value="5">市集</option>
+                                                    <option value="6">系統</option>
+                                                    <option value="7">其他</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 custom-select-wrapper-input">
@@ -94,22 +89,16 @@
                                                        style="margin-bottom: 5px;">發送時間結束</label>
                                                 <input type="date" id="sendingTimeEnd" class="form-control">
                                             </div>
-                                            <div class="col-md-3 custom-select-wrapper-input">
-                                                <label for="searchInput" style="margin-bottom: 5px;">文字搜尋</label>
-                                                <input type="text" id="searchInput" class="form-control"
-                                                       placeholder="輸入通知標題或內容">
-                                            </div>
                                             <div class="col-md-3 align-self-end d-flex justify-content-between">
-                                                <button id="searchBtn" class="btn btn-primary">搜尋</button>
                                                 <button id="resetFilters" class="btn btn-secondary ml-2">重置篩選條件
                                                 </button>
                                             </div>
                                         </div>
                                         <!-- 主要表格 -->
-                                        <table id="memberTable" class="table table-striped">
+                                        <table id="noticeTable" class="table table-striped">
                                             <thead>
                                             <tr>
-                                                <th>種類</th>
+                                                <th>類型</th>
                                                 <th>標題</th>
                                                 <th>內容</th>
                                                 <th>發送時間</th>
@@ -167,48 +156,151 @@
     let userData = {};
     $(document).ready(function () {
         // 當篩選條件改變時，重新加載資料
-        $("#isVerifiedFilter, #sendingTimeBegin, #sendingTimeEnd").on("change", function () {
+        $("#noticeCategory, #sendingTimeBegin, #sendingTimeEnd").on("change", function () {
             fetchMemberData();
         });
 
         // 當點擊重置按鈕時，重置篩選條件並重新加載資料
         $("#resetFilters").on("click", function () {
-            $("#isVerifiedFilter").val("");
-            $("#sendingTimeBegin").val("");
-            $("#sendingTimeEnd").val("");
-            $("#searchInput").val("");
-            fetchMemberData();
-        });
-
-        // 查詢按鈕點擊事件
-        $("#searchBtn").on("click", function () {
-            $("#isVerifiedFilter").val("");
+            $("#noticeCategory").val("");
             $("#sendingTimeBegin").val("");
             $("#sendingTimeEnd").val("");
             fetchMemberData();
         });
 
-        $.ajax({
-            url: "/api/memberNotice/all",
-            method: "get",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            success(response) {
-                apiResponseJSON(response, {
-                    onSuccess(data) {
+        function fetchMemberData(pageNumber = 0, pageSize = 5) {
+            const noticeCategory = $("#noticeCategory").val();
+            const sendingTimeBegin = $("#sendingTimeBegin").val();
+            const sendingTimeEnd = $("#sendingTimeEnd").val();
 
-                    },
-                    onError(message) {
-                        console.log(message);
-                    }
-                });
-            },
-            error(xhr, status, error) {
-                $("#modalBody").html("伺服器連線失敗: " + error);
-                $("#myModal").modal("show");
+            let startTime = "";
+            let endTime = "";
+
+            if (sendingTimeBegin && sendingTimeEnd) {
+                // 有選擇起始日期和結束日期
+                startTime = `${sendingTimeBegin}T00:00:00`;
+                endTime = `${sendingTimeEnd}T23:59:59`;
+            } else if (sendingTimeBegin) {
+                // 只有選擇起始日期
+                startTime = `${sendingTimeBegin}T00:00:00`;
+                // 取得當前日期和時間
+                const now = new Date();
+                const currentDateString = now.toISOString().split('T')[0];
+                const currentTimeString = now.toTimeString().split(' ')[0];
+                endTime = `${currentDateString}T${currentTimeString}`;
+            } else if (sendingTimeEnd) {
+                // 只有選擇結束日期
+                endTime = `${sendingTimeEnd}T23:59:59`;
             }
-        });
+            userData.noticeCategory = noticeCategory === "" ? null : noticeCategory;
+            userData.sendingTimeBegin = startTime === "" ? null : formatDateTime(startTime);
+            userData.sendingTimeEnd = endTime === "" ? null : formatDateTime(endTime);
+            $.ajax({
+                url: `/api/memberNotice/all?page=${pageNumber}&sizePerPage=${pageSize}`,
+                method: "post",
+                contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            const memberNoticeList = data.memberNoticeList;
+                            const totalPages = data.pages.totalPages;
+
+                            // 清空表格和分頁
+                            $("#noticeTable tbody").empty();
+                            $(".pagination").empty();
+
+                            // 若查無資料
+                            if (data.pages.totalCount === 0) {
+                                $("#alertMessage").show();
+                            } else {
+                                $("#alertMessage").hide();
+                                // 處理顯示資料的邏輯
+                            }
+
+                            // 插入資料
+                            memberNoticeList.forEach(notice => {
+                                $("#noticeTable tbody").append(`
+                                    <tr>
+                                        <th>${getNoticeCategoryText(notice.noticeCategory)}</th>
+                                        <th>${notice.noticeTitle}</th>
+                                        <th>${notice.noticeContent}</th>
+                                        <th>${notice.sendingTime}</th>
+                                    </tr>
+                                `);
+                            });
+
+                            // 插入分頁按鈕
+                            for (let i = 0; i < totalPages; i++) {
+                                $(".pagination").append(`
+                                    <li class="page-item ${i === pageNumber ? "active" : ""}">
+                                        <a class="page-link" href="#">${i + 1}</a>
+                                    </li>
+                                `);
+                            }
+
+                            // 分頁按鈕點擊事件
+                            $(".pagination .page-link").on("click", function (e) {
+                                e.preventDefault();
+                                const pageIndex = parseInt($(this).text()) - 1;
+                                fetchMemberData(pageIndex);
+                                // 滾動到頁面頂部
+                                $("html, body").animate({scrollTop: 0}, 50);
+                            });
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        }
+
+        fetchMemberData();
+
+        function getNoticeCategoryText(category) {
+            switch (category) {
+                case "0":
+                    return "一般商城";
+                case "1":
+                    return "競標商城";
+                case "2":
+                    return "聊天室";
+                case "3":
+                    return "客服";
+                case "4":
+                    return "最新消息";
+                case "5":
+                    return "市集";
+                case "6":
+                    return "系統";
+                default:
+                    return "其他";
+            }
+        }
+
+        function formatDateTime(isoString) {
+            let date = new Date(isoString);
+            let year = date.getFullYear();
+            let month = padZero(date.getMonth() + 1);
+            let day = padZero(date.getDate());
+            let hours = padZero(date.getHours());
+            let minutes = padZero(date.getMinutes());
+            let seconds = padZero(date.getSeconds());
+
+            return year + month + day + hours + minutes + seconds;
+        }
+
+        function padZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
     });
 </script>
 </body>
