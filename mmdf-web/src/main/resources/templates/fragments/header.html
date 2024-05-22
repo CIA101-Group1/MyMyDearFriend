@@ -1,5 +1,21 @@
 <!--header area start-->
 
+<style>
+    #unreadNoticeCount, #unreadNoticeCount-android {
+        position: absolute;
+        top: -9px;
+        right: -11px;
+        width: 19px;
+        height: 19px;
+        line-height: 19px;
+        background: #F53737;
+        border-radius: 100%;
+        text-align: center;
+        font-weight: 400;
+        font-size: 11px;
+        color: #fff;
+    }
+</style>
 <!--offcanvas menu area start-->
 <div class="off_canvars_overlay">
 
@@ -83,10 +99,12 @@
                             </div>
                             <!--mini cart end-->
                         </div>
+
                         <!-- 通知 -->
-                        <div class="header_account-list top_links">
-                            <a href="#">
-                                <i class="icon icon-Mail"></i>
+                        <div class="header_account-list top_links mini_cart_wrapper">
+                            <a href="/memberNotice/all">
+                                <i class="icon icon-Mail" id="icon-Notice-android"></i><span
+                                    id="unreadNoticeCount-android" class="item_count" style="display: none"></span>
                             </a>
                         </div>
                         <div class="header_account-list top_links">
@@ -362,10 +380,12 @@
                             </div>
                             <!-- 通知 -->
                             <div class="header_account-list top_links">
-                                <a href="#">
-                                    <i class="icon icon-Mail"></i>
+                                <a href="/memberNotice/all">
+                                    <i class="icon icon-Mail" id="icon-Notice"></i><span
+                                        id="unreadNoticeCount" class="item_count" style="display: none"></span>
                                 </a>
                             </div>
+
                             <!-- 會員 -->
                             <div class="header_account-list top_links">
                                 <a href="#"><i class="icon icon-User" id="icon-User"></i></a>
@@ -414,4 +434,5 @@
 <!--header area end-->
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
 <script src="/js/icon-member.js"></script>

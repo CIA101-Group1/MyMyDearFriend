@@ -1,6 +1,9 @@
 package com.tibame.group1.db.specification;
 
+import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.MemberNoticeEntity;
+
+import jakarta.persistence.criteria.Join;
 
 import org.springframework.data.jpa.domain.Specification;
 
@@ -27,6 +30,16 @@ public class MemberNoticeSpecifications {
             } else {
                 return criteriaBuilder.between(root.get("sendingTime"), start, end);
             }
+        };
+    }
+
+    public static Specification<MemberNoticeEntity> hasMemberId(Integer memberId) {
+        return (root, query, criteriaBuilder) -> {
+            if (null == memberId) {
+                return criteriaBuilder.conjunction();
+            }
+            Join<MemberNoticeEntity, MemberEntity> memberJoin = root.join("member");
+            return criteriaBuilder.equal(memberJoin.get("memberId"), memberId);
         };
     }
 }

@@ -12,6 +12,4 @@ public class MemberNoticeReqDTO {
     private String sendingTimeBegin;
 
     private String sendingTimeEnd;
-
-    private String searchText;
 }
