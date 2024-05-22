@@ -9,12 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeEditReqDTO {
+    private Integer employeeId;
+
     @Pattern(
-            regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,20}$",
-            message = "帳號：只能是中、英文字母、數字和_ , 且長度必需在2到20之間")
+            regexp = "^[(a-zA-Z0-9_)]{2,20}$",
+            message = "帳號：只能是英文字母、數字和_ , 且長度必需在2到20之間")
     private String employeeAccount;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]{6,16}$", message = "密碼：只能是數字和英文字母，且長度必須在6到16之間")
+    @Pattern(regexp = "^[a-zA-Z0-9]{6,100}$", message = "密碼：只能是數字和英文字母，且長度必須在6到16之間")
     private String employeePassword;
 
     @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z]{2,20}$", message = "姓名：只能是中、英文字母，且長度必需在2到20之間")
@@ -27,6 +29,8 @@ public class EmployeeEditReqDTO {
     private String employeePhone;
 
     private String employeeGender;
+
+    private String employeeCreateTime;
 
     private Integer employeeStatus;
 

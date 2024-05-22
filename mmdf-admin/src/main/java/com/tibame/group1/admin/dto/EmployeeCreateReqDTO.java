@@ -36,5 +36,7 @@ public class EmployeeCreateReqDTO {
     @NotEmpty(message = "性別請勿空白")
     private String employeeGender;
 
+    private Integer employeeStatus;
+
 
 }
