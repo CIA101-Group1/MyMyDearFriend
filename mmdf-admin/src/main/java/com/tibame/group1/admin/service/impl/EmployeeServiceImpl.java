@@ -80,6 +80,37 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public EmployeeDetailResDTO employeeDetailById(AdminLoginSourceDTO adminLoginSource, Integer employeeId)
+        throws CheckRequestErrorException{
+        EmployeeEntity employee = employeeRepository.findById(employeeId).orElse(null);
+        if (null == employee){
+            throw new CheckRequestErrorException("查無此員工資料");
+        }
+        EmployeeDetailResDTO resDTO = new EmployeeDetailResDTO();
+        resDTO.setEmployeeId(employee.getEmployeeId());
+        resDTO.setEmployeeAccount(employee.getEmployeeAccount());
+        resDTO.setEmployeePassword(employee.getEmployeePassword());
+        resDTO.setEmployeeName(employee.getEmployeeName());
+        resDTO.setEmployeeEmail(employee.getEmployeeEmail());
+        resDTO.setEmployeePhone(employee.getEmployeePhone());
+        resDTO.setEmployeeGender(employee.getEmployeeGender());
+        resDTO.setEmployeeCreateTime(
+                null == employee.getEmployeeCreateTime()
+                ? ""
+                        :DateUtils.dateToSting(employee.getEmployeeCreateTime())
+        );
+        resDTO.setEmployeeStatus(employee.getEmployeeStatus());
+        return resDTO;
+    }
+
+    /**
+     * 用name查詢員工
+     * @param adminLoginSourceDTO
+     * @param employeeName
+     * @return
+     */
+
+    @Override
     @Transactional(readOnly = true)
     public List<EmployeeAllResDTO> employeeAll(
             AdminLoginSourceDTO adminLoginSourceDTO, String employeeName) {
@@ -129,9 +160,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throws CheckRequestErrorException, IOException {
         EmployeeEditResDTO resDTO = new EmployeeEditResDTO();
         EmployeeEntity employee =
-                employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
+                employeeRepository.findById(req.getEmployeeId()).orElse(null);
         if (null == employee) {
-            throw new CheckRequestErrorException("查無此會員資料");
+            resDTO.setStatus(EmployeeEditResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
+            return resDTO;
         }
         if ((null != req.getEmployeeAccount())) {
             employee.setEmployeeAccount(req.getEmployeeAccount());
