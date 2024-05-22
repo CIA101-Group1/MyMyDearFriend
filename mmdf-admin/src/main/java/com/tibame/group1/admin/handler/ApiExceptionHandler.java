@@ -6,4 +6,5 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
 @Slf4j
-public class ApiExceptionHandler extends com.tibame.group1.common.handler.ApiExceptionHandler {}
+public abstract class ApiExceptionHandler
+        extends com.tibame.group1.common.handler.ApiExceptionHandler {}
