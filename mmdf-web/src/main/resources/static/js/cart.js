@@ -158,8 +158,8 @@ function getCart() {
                 $("#cart_tbody").append(
                     `<tr>
                         <td colspan="1" class="seller">
-                        <input type="checkbox" class="seller-checkbox" data-seller-id="${sellerId}" style="margin-right: 20px">
-                        賣家: ${items[0].sellerName} </td>
+                        <input type="checkbox" id="checkbox${sellerId}" class="seller-checkbox form-check-input" data-seller-id="${sellerId}" style="margin-right: 20px">
+                        <label class="form-check-label" for="checkbox${sellerId}">賣家: ${items[0].sellerName}</label></td>
                         <td colspan="5"></td>
                     </tr>`
                 );
@@ -215,65 +215,3 @@ function updateSelectedSellerTotal() {
         $("#cart_total").text("$0");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// function getCart() {
-//     $.ajax({
-//         url: "/api/cart/get",
-//         method: "GET",
-//         headers: {
-//             "authorization": localStorage.getItem("authorization")
-//         },
-//         success(response) {
-//             // console.log(response);
-//             let cartList = response.data;
-//             let total = 0;
-//
-//             cartList.forEach(function (cartItem) {
-//                 total += cartItem.subtotal;
-//                 let seller = cartItem.sellerId;
-//                 $("#cart_tbody").append(
-//                     `<tr>
-//                         <td class="product_thumb">
-//                             <input type="checkbox" style="margin-right: 30px">
-//                             <a><img id="cart_image" src="data:image/jpeg;base64,${cartItem.imageBase64}" alt="商品圖片" style="height: 80px;width: 80px;margin-right: 50px\"/></a>
-//                         </td>
-//                         <td class="product_name">
-//                             <input id="productId" value="${cartItem.productId}" type="hidden" />
-//                             <a href="#">
-//                                 ${cartItem.productName}
-//                             </a>
-//                         </td>
-//                         <td class="product_price">
-//                             ${cartItem.price}
-//                         </td>
-//                         <td class="product_quantity">
-//                             <label>數量:</label>
-//                             <input id="quantity" min="1" max="100" value="${cartItem.quantity}" type="number" onkeydown="preventEnter(event)" />
-//                         </td>
-//                         <td class="product_total"> $
-//                             ${cartItem.subtotal}
-//                         </td>
-//                         <td class="product_remove">
-//                             <a id="remove"><i class="fa fa-trash-o"></i></a>
-//                         </td>
-//                     </tr>`
-//                 );
-//             });
-//             $("#cart_total").text("$" + total);
-//         },
-//         error(xhr, status, error) {
-//             console.error("There was a problem :", error);
-//         },
-//     });
-// }
