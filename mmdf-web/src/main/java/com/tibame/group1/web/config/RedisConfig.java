@@ -4,7 +4,6 @@ import com.tibame.group1.common.utils.RedisUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -13,7 +12,6 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -29,16 +27,8 @@ public class RedisConfig implements CacheErrorHandler {
     }
 
     @Bean
-    @Qualifier("redisConnectionFactoryCart")
-    public RedisConnectionFactory redisConnectionFactoryCart() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory();
-        factory.setDatabase(3);
-        return factory;
-    }
-
-    @Bean
-    @Qualifier("redisTemplateCart")
-    public RedisTemplate<String, Object> redisTemplateCart(@Qualifier("redisConnectionFactoryCart") RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplateCart(
+            RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         // 設置Key和Value的序列化方式
