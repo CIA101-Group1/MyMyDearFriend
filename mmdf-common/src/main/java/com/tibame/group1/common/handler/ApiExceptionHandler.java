@@ -41,7 +41,7 @@ public abstract class ApiExceptionHandler {
     /** 查無http服務錯誤處理 */
     @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
     @ResponseStatus(value = HttpStatus.OK)
-    public abstract String handleNoHandlerFoundException();
+    public abstract String handleNoHandlerFoundException() throws AuthorizationException;
 
     /** http傳輸資訊錯誤處理 */
     @ExceptionHandler(HttpMessageNotReadableException.class)
