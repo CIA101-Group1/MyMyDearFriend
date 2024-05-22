@@ -89,7 +89,7 @@ public interface ProductService {
     List<ProductImgEntity> getProductImgListByProductId(Integer productId);
 
 
-    void updateReviewStatus(int productId) throws Exception;
+    void updateReviewStatus(int productId, String reviewStatus) throws Exception;
 
 
 }

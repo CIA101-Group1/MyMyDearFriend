@@ -156,404 +156,143 @@
                     </tr>
                 </table>
                 <!-- /top2 -->
+            </TD>
+            <!--                        <td>查詢所有該賣家所以訂單明細</td>-->
 
-                <!--                &lt;!&ndash; top3 &ndash;&gt;-->
-                <!--                <TABLE border=0 cellPadding=0 cellSpacing=0 width=750>-->
-                <!--                    <TBODY>-->
-                <!--                    <TR>-->
-                <!--                        <TD width=200 valign=top align=center>-->
-                <!--                            <div align=right>-->
-                <!--                                <table width=198 border=0 cellspacing=0 cellpadding=0 bgcolor=dddddd>-->
-                <!--                                    <tr>-->
-                <!--                                        <td><img src="images/userlogin.gif" width="198" height="30" border="0" alt="">-->
-                <!--                                        </td>-->
-                <!--                                    </tr>-->
-                <!--                                </table>-->
-                <!--                                <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>-->
-                <!--                                    <tr height=24 bgcolor=ffffff>-->
-                <!--                                        <form id="loginForm" action="#"-->
-                <!--                                              method="post" target="_blank">-->
-                <!--                                            <td width=60 align=center><font color=aaaaaa>帳 號</font></td>-->
-                <!--                                            <td width=137 align=center>-->
-                <!--                                                <div class="form-floating mb-3">-->
-                <!--                                                    <input class="form-control" id="username" name="username" size=12-->
-                <!--                                                           class="form1"-->
-                <!--                                                           style="background-color: rgb(210,232,255); color: #7B7B7B; border: 1px solid #7B7B7B">-->
-                <!--                                                    <label for="username"></label>-->
-                <!--                                                </div>-->
-                <!--                                            </td>-->
-                <!--                                        </form>-->
-                <!--                                    </tr>-->
-                <!--                                    <tr height=24 bgcolor=ffffff>-->
-                <!--                                        <td align=center><font color=aaaaaa>密　码</font></td>-->
-                <!--                                        <td align=center>-->
-                <!--                                            <div class="form-floating mb-3">-->
-                <!--                                                <input class="form-control" id="password" name="password" maxlength=16-->
-                <!--                                                       size=12 type=password class="form1"-->
-                <!--                                                       style="background-color: rgb(210,232,255); color: #7B7B7B; border: 1px solid #7B7B7B">-->
-                <!--                                                <label for="password"></label>-->
-                <!--                                            </div>-->
-                <!--                                        </td>-->
-                <!--                                    </tr>-->
-                <!--                                    <tr height=24 bgcolor=ffffff>-->
-                <!--                                        <td align=center><font color=aaaaaa>验证码</font></td>-->
-                <!--                                        <td align=center>-->
-                <!--                                            <div class="form-floating mb-3">-->
-                <!--                                                <input class="form-control" id="verifycode" name="verifycode"-->
-                <!--                                                       maxlength=16 value="8358" size=12 type=password class="form1"-->
-                <!--                                                       style="background-color: rgb(210,232,255); color: #7B7B7B; border: 1px solid #7B7B7B">-->
-                <!--                                                <label for="verifycode"></label>-->
-                <!--                                            </div>-->
-                <!--                                        </td>-->
-                <!--                                    </tr>-->
-                <!--                                    <tr height=24 bgcolor=ffffff>-->
-                <!--                                        <td colspan="2" align=center>-->
-                <!--                                            <button type="submit" class="btn btn-primary">登入</button>-->
-                <!--                                        </td>-->
-                <!--                                    </tr>-->
-                <!--                                </table>-->
-
-<!--</div>-->
-</TD>
-<!--                        <td>查詢所有該賣家所以訂單明細</td>-->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12 mt-5 mb-5">
-            <table id="products" class="table table-bordered table-responsive-sm">
-                <colgroup>
-                    <!-- 第一欄寬度 -->
-                    <col style="width: 3%;">
-                    <!-- 第二欄寬度 -->
-                    <col style="width: 5%;">
-                    <!-- 第三欄寬度 -->
-                    <col style="width: 20%;">
-                    <!-- 第四欄寬度 -->
-                    <col style="width: 30%;">
-                    <!-- 第五欄寬度 -->
-                    <col style="width: 5%;">
-                    <!-- 第六欄寬度 -->
-                    <col style="width: 2%;">
-                    <!-- 第七欄寬度 -->
-                    <col style="width: 35%;">
-                    <!-- 第八欄寬度 -->
-                    <col style="width: 5%;">
-                    <!-- 第九欄寬度 -->
-                    <col style="width: 5%;">
-                    <!-- 第十欄寬度 -->
-                    <col style="width: 10%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>編號</th>
-                    <!--                                        <th>賣家編號</th>-->
-                    <th>分類</th>
-                    <th>品名</th>
-                    <th>內容</th>
-                    <th>價格</th>
-                    <th>數量</th>
-                    <th>圖片</th>
-                    <th>審核</th>
-                    <th>上下架</th>
-                    <th>修改</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="product : ${productPage.content}">
-                    <td th:text="${product.productId}">1</td>
-                    <!--                                        <td th:text="${product.sellerId}">sellerId</td>-->
-                    <td th:text="${product.productCategoryEntity.categoryName}">
-                    </td>
-
-                    <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
-                        name
-                    </td>
-                    <td th:text="${product.description}">0.00</td>
-
-                    <td th:text="${product.price}">0.00</td>
-                    <td th:text="${product.quantity}">0.00</td>
-
-                    <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
-                        th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
-                        <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
-                             style="height: 120px;width: 120px" alt=""/>
-                    </td>
-                    <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
-
-                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '默認'}">
-                        0.00
-                    </td>
-                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
-                        0.00
-                    </td>
-                    <td>
-                        <a th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}"
-                           class="btn btn-primary">修改</a>
-                    </td>
-
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-</TR>
-</TBODY>
-</TABLE>
-<!-- /top3 -->
-
-<table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-    <!--			<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-    <tr bgcolor=ffffff>
-        <td width=200 height=200 align=center valign=top>
-            <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                <tr>
-                    <td>
-                        <table width="190" border="0" cellspacing="0" cellpadding="0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 mt-5 mb-5">
+                        <table id="products" class="table table-bordered table-responsive-sm">
+                            <colgroup>
+                                <!-- 第一欄寬度 -->
+                                <col style="width: 3%;">
+                                <!-- 第二欄寬度 -->
+                                <col style="width: 5%;">
+                                <!-- 第三欄寬度 -->
+                                <col style="width: 20%;">
+                                <!-- 第四欄寬度 -->
+                                <col style="width: 30%;">
+                                <!-- 第五欄寬度 -->
+                                <col style="width: 5%;">
+                                <!-- 第六欄寬度 -->
+                                <col style="width: 2%;">
+                                <!-- 第七欄寬度 -->
+                                <col style="width: 35%;">
+                                <!-- 第八欄寬度 -->
+                                <col style="width: 5%;">
+                                <!-- 第九欄寬度 -->
+                                <col style="width: 5%;">
+                                <!-- 第十欄寬度 -->
+                                <col style="width: 10%;">
+                            </colgroup>
+                            <thead>
                             <tr>
-                                <td width="60">&nbsp;</td>
-                                <td width="130">
-                                    <div align="center"><b><a href="#"></a>
-                                        <a href="index.htm">
-                                            <font size="4">
-                                                首页
-                                            </font></a></b></div>
-                                </td>
+                                <th>編號</th>
+                                <!--                                        <th>賣家編號</th>-->
+                                <th>分類</th>
+                                <th>品名</th>
+                                <th>內容</th>
+                                <th>價格</th>
+                                <th>數量</th>
+                                <th>圖片</th>
+                                <th>審核</th>
+                                <th>上下架</th>
+                                <th>修改</th>
                             </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+                            </thead>
+                            <tbody>
+                            <tr th:each="product : ${productPage.content}">
+                                <td th:text="${product.productId}">1</td>
+                                <!--                                        <td th:text="${product.sellerId}">sellerId</td>-->
+                                <td th:text="${product.productCategoryEntity.categoryName}"></td>
 
+                                <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
+                                    name
+                                </td>
 
-            <!--Button1.Content.Begin-->
-            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-                <!--			<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-                <tr bgcolor=ffffff>
-                    <td width=200 height=80 align=center valign=top>
-                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                            <tr>
+                                <td th:text="${product.description}">0.00</td>
+
+                                <td th:text="${product.price}">0.00</td>
+
+                                <td th:text="${product.quantity}">0.00</td>
+
+                                <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
+                                    th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
+                                    <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
+                                         style="height: 120px;width: 120px" alt=""/>
+                                </td>
+                                <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
+
+                                <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '默認'}">
+                                    0.00
+                                </td>
+                                <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
+                                    0.00
+                                </td>
                                 <td>
-                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td width="60">&nbsp;</td>
-                                            <td width="130">
-                                                <div align="center"><b><a href="#"></a>
-                                                    <!--Button1.Link-->
-                                                    <a href="#">
-                                                        <font size="4">
-                                                            <!--Button1-->
-                                                            公司简介
-                                                        </font></a></b></div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <a th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}"
+                                       class="btn btn-primary">修改</a>
                                 </td>
+
                             </tr>
+                            </tbody>
                         </table>
-                    </td>
-                </tr>
-            </table>
-            <!--Button1.Content.End-->
 
-
-            <!--Button2.Content.Begin-->
-            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-                <tr bgcolor=ffffff>
-                    <td width=200 height=80 align=center valign=top>
-                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                            <tr>
-                                <td>
-                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td width="60">&nbsp;</td>
-                                            <td width="130">
-                                                <div align="center"><b><a href="#"></a>
-                                                    <!--Button2.Link-->
-                                                    <a href="#">
-                                                        <font size="4">
-                                                            <!--Button2-->
-                                                            产品介绍
-                                                        </font></a></b></div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <!--Button2.Content.End-->
-
-
-            <!--Button3.Content.Begin-->
-            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-                <tr bgcolor=ffffff>
-                    <td width=200 height=80 align=center valign=top>
-                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                            <tr>
-                                <td>
-                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td width="60">&nbsp;</td>
-                                            <td width="130">
-                                                <div align="center"><b>
-                                                    <!--Button3.Link-->
-                                                    <a href="#">
-                                                        <font size="4">
-                                                            <!--Button3-->
-                                                            技术支持
-                                                        </font></a></b></div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <!--Button3.Content.End-->
-
-
-            <!--Button4.Content.Begin-->
-            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-                <tr bgcolor=ffffff>
-                    <td width=200 height=80 align=center valign=top>
-                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                            <tr>
-                                <td>
-                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td width="60">&nbsp;</td>
-                                            <td width="130">
-                                                <div align="center"><b><a href="#"></a>
-                                                    <!--Button4.Link-->
-                                                    <a href="#">
-                                                        <font size="4">
-                                                            <!--Button4-->
-                                                            企业新闻
-                                                        </font></a></b></div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <!--Button4.Content.End-->
-
-
-            <!--Button5.Content.Begin-->
-            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-                <tr bgcolor=ffffff>
-                    <td width=200 height=80 align=center valign=top>
-                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                            <tr>
-                                <td>
-                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td width="60">&nbsp;</td>
-                                            <td width="130">
-                                                <div align="center"><b><a href="#"></a>
-                                                    <!--Button5.Link-->
-                                                    <a href="#">
-                                                        <font size="4">
-                                                            <!--Button5-->
-                                                            常见问题
-                                                        </font></a></b></div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <!--Button5.Content.End-->
-
-
-            <!--Button6.Content.Begin-->
-            <table width="300" border="0" cellspacing="0" cellpadding="0" height="30">
-                <!--		<table width="220" border="0" cellspacing="0" cellpadding="0" height="50" background="images/index_lm.gif">-->
-                <tr bgcolor=ffffff>
-                    <td width=200 height=80 align=center valign=top>
-                        <table width=198 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-                            <tr>
-                                <td>
-                                    <table width="190" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td width="60">&nbsp;</td>
-                                            <td width="130">
-                                                <div align="center"><b><a href="#"></a>
-                                                    <!--Button6.Link-->
-                                                    <a href="#">
-                                                        <font size="4">
-                                                            <!--Button6-->
-                                                            联系我们</font></a>
-                                                </b></div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-
-
-        <td valign=top align=right>
-            <div align="left"><a href=http://www.cn666.com target=_blank><img src="images/CN666.gif"
-                                                                              width="548" height="80"
-                                                                              border="0"
-                                                                              alt="中安数据，竭诚为您服务"></a>
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item"
+                                    th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/select(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                                    th:classappend="${productPage.number == i} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/select(page=${i}, size=${productPage.size})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/select(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <form th:action="@{/product/seller/select}" method="get">
+                                        <input type="hidden" name="size" th:value="${productPage.size}">
+                                        <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
+                                               step="1" value="${productPage.number}" style="width: 50px;">
+                                        <button type="submit" class="btn btn-primary">Go</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
-            <table width=548 border=0 cellspacing=1 cellpadding=0 bgcolor=cccccc>
-                <tr height=200 bgcolor=ffffff>
-                    <TD width=548 align=right bgcolor=0>
-                        <img src="/assets/img/Team.png" width="546" height="141" border="0" alt=""></TD>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
 
-<!-- /content3 -->
-<br><br><br>
+        </TR>
+    </TABLE>
 
-<!-- bottom -->
-<table width=748 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
-    <tr bgcolor=ffffff height=18>
-        <!--                        <td valign=absmiddle align=center>-->
-        <!--                            关于公司 ┋ 网站留言 ┋ 友情链接 ┋ 与我在线 ┋ 幫助-->
-        <!--                        </td>-->
-        <th>修改人</th>
-        <th>審核人</th>
-        <th>狀態</th>
-    </tr>
-    <tbody>
-    <tr>
-        <td th:text="1">Peter</td>
-        <td th:text="1">Peter</td>
-        <td th:text="審核中">審核中</td>
-</table>
-<!-- /bottom -->
-<div align=center>
-    <br>copyright by www.wish8.com 2024/05--賣~買 Dear Friends
-    <br><br>
-</div>
-</td>
-<td width=10></td>
-</tr>
-</table>
+    <br><br><br>
+
+    <!-- bottom -->
+    <table width=748 border=0 cellspacing=1 cellpadding=0 bgcolor=dddddd>
+        <tr bgcolor=ffffff height=18>
+            <th>修改人</th>
+            <th>審核人</th>
+            <th>狀態</th>
+        </tr>
+        <tbody>
+        <tr>
+            <td th:text="1">Peter</td>
+            <td th:text="1">Peter</td>
+            <td th:text="審核中">審核中</td>
+    </table>
+    <!-- /bottom -->
+    <div align=center>
+        <br>copyright by www.wish8.com 2024/05--賣~買 Dear Friends
+        <br><br>
+    </div>
 </div>
 
 <th:block th:replace="~{/fragments/js}"/>

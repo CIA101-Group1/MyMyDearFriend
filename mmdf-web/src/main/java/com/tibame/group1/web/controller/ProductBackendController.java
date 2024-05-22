@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/")
@@ -128,5 +130,22 @@ public class ProductBackendController {
         res.setData(productService.queryGetAll(reqDTO));
         return res;
     }
+
+    @PutMapping("/seller/product/updateReviewStatus")
+    @ResponseBody
+    public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            productService.updateReviewStatus(productId, reviewStatus);
+            // 获取更新后的审核状态
+            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
+            response.put("reviewStatus", newReviewStatus);
+            response.put("success", "審核狀態已成功更新");
+        } catch (Exception e) {
+            response.put("error", "無法更新審核狀態");
+        }
+        return response;
+    }
+
 
 }

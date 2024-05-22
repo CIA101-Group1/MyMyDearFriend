@@ -38,9 +38,9 @@ public class ProductCreateReqDTO {
             message = "數量：請填入0-9數字，最多10個位數")
     private String quantity;
 
-//  reviewStatus;
+    private String reviewStatus;
 
-//  productStatus;
+    private String productStatus;
 
     private String image;
 

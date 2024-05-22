@@ -224,21 +224,23 @@
                                             <!-- 商品名称 -->
                                             <div class="form-group">
                                                 <label for="name">商品名稱:</label>
-                                                <input type="text" class="form-control" id="name" name="name" required>
+                                                <input type="text" class="form-control" id="name" name="name">
                                             </div>
                                             <!-- 商品描述 -->
                                             <div class="form-group">
                                                 <label for="description">商品描述:</label>
-                                                <input type="text" class="form-control" id="description" name="description" required>
+                                                <input type="text" class="form-control" id="description"
+                                                       name="description">
                                             </div>
                                             <!-- 分类 -->
                                             <div class="form-group">
                                                 <label for="categoryId">分類:</label>
-                                                <select id="categoryId" name="categoryId" class="form-control" required>
+                                                <select id="categoryId" name="categoryId" class="form-control">
                                                     <option value="">請選擇分類</option>
                                                     <!-- 使用Thymeleaf渲染选项 -->
-                                                    <option th:each="category : ${categories}" th:value="${category.id}"
-                                                            th:text="${category.name}"></option>
+                                                    <option th:each="category : ${productCategoryList}"
+                                                            th:value="${category.categoryId}"
+                                                            th:text="${category.categoryName}"></option>
                                                 </select>
                                             </div>
                                             <!-- 最低价格 -->
@@ -254,8 +256,7 @@
                                             <!-- 買家編號 -->
                                             <div class="form-group">
                                                 <label for="memberId">買家編號:</label>
-                                                <input type="text" class="form-control" id="memberId" name="memberId"
-                                                       required>
+                                                <input type="text" class="form-control" id="memberId" name="memberId">
                                             </div>
                                             <!-- 審核状态 -->
                                             <div id="reviewStatus">
@@ -350,7 +351,7 @@
                                     <!--                                        <td th:text="${product.sellerId}">sellerId</td>-->
                                     <td th:text="${product.productCategoryEntity.categoryName}"></td>
 
-                                    <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
+                                    <td th:text="${product.name}" class="text-truncate" style="max-width: 80px;">
                                         name
                                     </td>
 
@@ -381,6 +382,10 @@
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <div id="alertMessage" class="alert alert-warning"
+                                 style="display: none; text-align: center;">查無資料
+                            </div>
 
                             <nav>
                                 <ul class="pagination">
@@ -421,34 +426,13 @@
 </div>
 <!--shop  area end-->
 
+<script src="/js/api-response-utils.js"></script>
+
 <script>
     $(document).ready(function () {
-        /** Category */
-        // 加載商品分類選項
-        $.ajax({
-            url: '/api/productCategory/getAll',
-            type: 'GET',
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            success: function (res) {
-                console.log(res);
-                let data = res.data;
-                let categoryIdSelect = $('#categoryId');
-                categoryIdSelect.empty();
-                categoryIdSelect.append(`<option value="">請選擇分類</option>`);
-                data.forEach(function (category) {
-                    categoryIdSelect.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
-                });
-            },
-            error: function (error) {
-                alert("伺服器連線失敗: " + error);
-            }
-        });
 
         $('#searchForm').submit(function (e) {
             e.preventDefault(); // 阻止表单默认提交
-
             // 获取表单数据
             var formData = $(this).serialize();
 
@@ -460,53 +444,54 @@
                 headers: {
                     "authorization": localStorage.getItem("authorization")
                 },
-                success: function (res) {
-                    if (res.code === "0") {
-                        alert('搜索成功');
-                        $('#searchModal').modal('hide');
-
-                        // 清空表格数据
-                        $('#products tbody').empty();
-
-                        // 遍历搜索结果并显示到页面上
-                        res.data.forEach(function (product) {
-                            var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
-
-                            // 添加商品行到表格
-                            $('#products tbody').append(`
-                                <tr>
-                                    <td th:text="${product.productId}"></td>
-                                    <td th:text="${product.productCategoryEntity.categoryName}"></td>
-                                    <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
-                                        name
-                                    </td>
-
-                                    <td th:text="${product.description}">0.00</td>
-
-                                    <td th:text="${product.price}">0.00</td>
-
-                                    <td th:text="${product.quantity}">0.00</td>
-
-                                    <td>
-                                        <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
-                                    </td>
-                                    <td th:utext="${reviewStatusList[product.reviewStatus]}"></td>
-                                    <td th:utext="${productStatusList[product.productStatus]}"></td>
-                                </tr>
-                            `);
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            // 清空表格数据
+                            $('#products tbody').empty();
+                            if (response.code === "0") {
+                                alert('搜索成功');
+                                $('#searchModal').modal('hide');
+                                // 遍历搜索结果并显示到页面上
+                                response.data.forEach(function (product) {
+                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                                    var reviewStatus = reviewStatusList[product.reviewStatus];
+                                    // 添加商品行到表格
+                                    $('#products tbody').append(`
+                                        <tr>
+                                            <td>${product.productId}</td>
+                                            <td>${product.productCategoryEntity.categoryName}</td>
+                                            <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
+                                            <td>${product.description}</td>
+                                            <td>${product.price}</td>
+                                            <td>${product.quantity}</td>
+                                            <td>
+                                                <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                            </td>
+                                            <td>${reviewStatus}</td>
+                                            <td>${product.productStatus}</td>
+                                            <td>
+                                                <a href="/seller/product/getOne/${product.productId}"
+                                                   class="btn btn-primary">修改</a>
+                                            </td>
+                                        </tr>
+                                    `);
+                                });
+                            } else {
+                                alert('搜索失败！' + response.message);
+                                $("#alertMessage").show();
+                                console.log(response);
+                                }
+                            }
                         });
-                    } else {
-                        alert('搜索失败！' + res.message);
-                        console.log(res);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        alert('搜索失败');
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                    alert('搜索失败');
-                }
+                });
             });
         });
-    });
 </script>
 
 

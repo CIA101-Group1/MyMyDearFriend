@@ -36,10 +36,10 @@ public class ProductUpdateReqDTO {
     private String quantity;
 
 //    @NotEmpty(message = "上下架：請勿空白")
-//    private String reviewStatus;
+    private String reviewStatus;
 
 //    @NotEmpty(message = "審核狀態：請勿空白")
-//    private String productStatus;
+    private String productStatus;
 
 //    0517
     private String image;

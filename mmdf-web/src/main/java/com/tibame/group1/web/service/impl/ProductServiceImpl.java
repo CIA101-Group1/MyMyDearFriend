@@ -81,7 +81,8 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
-
+        product.setReviewStatus(0);
+        product.setProductStatus(0);
         product = productRepository.save(product);
 
 //     productImg
@@ -130,6 +131,8 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
+        product.setReviewStatus(0);
+        product.setProductStatus(0);
         product = productRepository.save(product);
 
         if (req.getUpdateImg()) {
@@ -332,13 +335,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateReviewStatus(int productId) throws Exception {
+    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
         // 根据产品ID从数据库中获取产品对象
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new Exception("Product not found with id: " + productId));
 
         // 更新产品的审核状态 ，上架
-        product.setReviewStatus(1);
+        product.setReviewStatus(Integer.valueOf(reviewStatus));
 
         // 保存更新后的产品对象回数据库
         productRepository.save(product);

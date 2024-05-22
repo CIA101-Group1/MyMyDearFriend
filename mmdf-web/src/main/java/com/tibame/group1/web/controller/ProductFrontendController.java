@@ -63,6 +63,9 @@ public class ProductFrontendController {
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size) {
         {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);
 
@@ -138,22 +141,6 @@ public class ProductFrontendController {
         }
     }
 
-    @PostMapping("/seller/product/updateReviewStatus/{productId}")
-    @ResponseBody
-    public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            productService.updateReviewStatus(productId);
-            // 获取更新后的审核状态
-            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
-            response.put("reviewStatus", newReviewStatus);
-            response.put("success", "審核狀態已成功更新");
-        } catch (Exception e) {
-            response.put("error", "無法更新審核狀態");
-        }
-        return response;
-    }
-
     @GetMapping("/buyer/proCategory/getOne/{categoryId}")
     public String getOneByCategory(@PathVariable("categoryId") String productId, Model model) {
 
@@ -167,19 +154,17 @@ public class ProductFrontendController {
     }
 
 
-
-@GetMapping("api/destination")
-    public ResponseEntity<String> redirect(HttpServletRequest request){
+    @GetMapping("api/destination")
+    public ResponseEntity<String> redirect(HttpServletRequest request) {
         System.out.println("收到redirect");
         return null;
-}
-
+    }
 
 
     @GetMapping("/admin/pro/review")
     public String adminReview(Model model,
-                                     @RequestParam(value = "page", defaultValue = "0") int page,
-                                     @RequestParam(value = "size", defaultValue = "10") int size) {
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size) {
         {
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);

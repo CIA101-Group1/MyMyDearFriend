@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 
 <head>
     <meta charset="utf-8">
@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>員工商品管理系統</title>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <!--    <th:block th:replace="~{/fragments/css}"/>-->
     <!-- CSS
@@ -40,11 +40,6 @@
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
-    <script th:src="@{/js/custom.js}"></script>
-
-    <script src="/js/api-response-utils.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         /* 樣式設置 */
@@ -219,9 +214,9 @@
                             <th>審<br>核</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="product-tbody">
                         <tr th:each="product : ${productPage.content}">
-                            <td th:text="${product.productId}">1</td>
+                            <td th:text="${product.productId}" id="productId">1</td>
                             <td th:text="${product.productCategoryEntity.categoryName}">
                             </td>
                             <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
@@ -240,7 +235,9 @@
 
                             <td th:text="${product.sellerId}">1</td>
 
-                            <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}">
+                            <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}"
+                                id="reviewStatus">
+
                                 0.00
                             </td>
                             <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
@@ -254,10 +251,12 @@
                                 <!--                                <button class="btn btn-primary" data-product-id="${product.productId}">-->
                                 <!--                                    審核成功-->
                                 <!--                                </button>-->
-                                <button class="btn btn-primary" th:attr="data-product-id=${product.productId}">
+                                <button id="test" class="btn btn-primary"
+                                        th:attr="data-product-id=${product.productId}">
                                     審核成功
                                 </button>
-
+                                <input type="hidden" th:value="${product.reviewStatus}"
+                                       id="hiddentest">
                             </td>
 
                         </tr>
@@ -300,44 +299,96 @@
 </div>
 <!--                    0515end-->
 <!--shop  area end-->
+<!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
+<script th:src="@{/js/custom.js}"></script>
+<script src="/js/api-response-utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     $(document).ready(function () {
-        $('button.btn').click(function () {
-            var productId = $(this).data('product-id');
-            updateReviewStatus(productId);
-            console.log(productId);
-        });
-    });
+        // 更新審核狀態
+        $("#product-tbody").on("click", ("#test"), function () {
+            var productId = $("#test").data("product-id");
 
-    function updateReviewStatus(productId) {
-        $.ajax({
-            type: "POST",
-            url: "/seller/product/updateReviewStatus/" + productId,
-            data: JSON.stringify({productId: productId}),
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            contentType: "application/json", // 設置請求頭的 Content-Type
-            success: function (response) {
-                // success(response) {
-                apiResponseJSON(response, {
-                    // onSuccess(data) {
-                    onSuccess: (data) => {
-                        console.log(data);
-                        // 检查 data 中是否有 reviewStatus
-                        if (response.hasOwnProperty("reviewStatus")) {
-                            $('#reviewStatus' + productId).text(response.reviewStatus);
+            // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+            // var reviewStatusValue = $("#hiddentest").val();
+            var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
+
+            // var tdText = $("#test").closest("tr").find("td").text();
+            console.log(reviewStatusValue);
+            // let revStatus = $(this).closest("tr").find("#reviewStatus");
+
+            $.ajax({
+                url: "/api/seller/product/updateReviewStatus",
+                method: "PUT",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                // contentType: "application/json",
+                // data: JSON.stringify(data),
+                data: {
+                    productId: productId,
+                    reviewStatus: 1
+                },
+                success(response) {
+                    console.log(response)
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log(data);
                         }
-                        console.log(response.success || response.error);
-                    }
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error(xhr.responseText);
-            }
+                    });
+                },
+                error: function (error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
         });
-    }
+
+
+        // console.log(data)
+        // console.log(revStatus.text())
+        // console.log($("#hiddentest").val())
+        // console.log(productId)
+
+
+    });
+    //     $('button.btn').click(function () {
+    //         var productId = $(this).data('product-id');
+    //         updateReviewStatus(productId);
+    //         console.log(productId);
+    //     });
+    // });
+    //
+    // function updateReviewStatus(productId) {
+    //     $.ajax({
+    //         type: "PUT",
+    //         url: "/seller/product/updateReviewStatus/" + productId,
+    //         data: JSON.stringify({productId: productId}),
+    //         headers: {
+    //             "authorization": localStorage.getItem("authorization")
+    //         },
+    //         contentType: "application/json", // 設置請求頭的 Content-Type
+    //         success: function (response) {
+    //             // success(response) {
+    //             apiResponseJSON(response, {
+    //                 // onSuccess(data) {
+    //                 onSuccess: (data) => {
+    //                     console.log(data);
+    //                     // 检查 data 中是否有 reviewStatus
+    //                     if (response.hasOwnProperty("reviewStatus")) {
+    //                         $('#reviewStatus' + productId).text(response.reviewStatus);
+    //                     }
+    //                     console.log(response.success || response.error);
+    //                 }
+    //             });
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error(xhr.responseText);
+    //         }
+    //     });
+    // }
 
 
     // 函數：顯示特定標籤的內容
@@ -436,12 +487,8 @@
 
 </script>
 
-
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
-
-<!--js-->
-<th:block th:replace="~{/fragments/js}"/>
 
 </body>
 </html>

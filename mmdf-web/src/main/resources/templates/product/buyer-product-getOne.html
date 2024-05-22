@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>賣家商品單一查詢</title>
+    <title>買家商品單一查詢</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!--css-->
@@ -40,10 +40,6 @@
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
-    <script src="/js/api-response-utils.js"></script>
-
-    <script th:src="@{/js/custom.js}"></script>
-
     <!-- 自訂 CSS 樣式 -->
     <style>
         .has-error .help-block.with-errors {
@@ -54,6 +50,13 @@
 
 </head>
 <body>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/api-response-utils.js"></script>
+<script th:src="@{/js/custom.js}"></script>
+
+
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
@@ -66,14 +69,13 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="product-details-tab">
-                    <div id="img-1" class="zoomWrapper single-zoom">
-                        <a th:if="${productEntity.productImgs != null and productEntity.productImgs.size() > 0}"
-                         th:id="'productImgId_' + ${productEntity.productImgs[0].imageId}"
+                    <div id="img-1" class="zoomWrapper single-zoom"
+                         th:if="${productEntity.productImgs != null and productEntity.productImgs.size() > 0}"
+                         th:id="'productImgTd_' + ${productEntity.productImgs[0].imageId}"
                          style="display: flex; justify-content: center; align-items: center;">
-                        </a>
+
                         <img th:src="'data:image/jpg;base64,'+${productEntity.productImgs[0].imageBase64}"
                              style="height: 300px;width: 300px" alt=""/>
-
                     </div>
                 </div>
             </div>
@@ -97,16 +99,17 @@
 
                         </div>
                         <div class="product_desc" th:text="${productEntity.description}">
-                            <p>No content provided</p>
+                            <h2>No content provided</h2>
                         </div>
                         <div class="product_seller">
-                            <h1>賣家編號</h1>
+                            <p>&#9812 賣家編號
                             <label th:text="${productEntity.sellerId}">sellerId</label>
+                            </p>
                         </div>
                         <div class="product_variant quantity">
-                            <label>quantity</label>
+                            <label>商品數量</label>
                             <input min="1" max="100"  th:value="${productEntity.quantity}" type="number">
-                            <button class="button" type="submit">add to cart</button>
+                            <button class="button" type="submit">加入購物車</button>
 
                         </div>
                         <div class=" product_d_action">
@@ -142,9 +145,6 @@
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
-
-<!--js-->
-<th:block th:replace="~{/fragments/js}"/>
 
 </body>
 </html>
