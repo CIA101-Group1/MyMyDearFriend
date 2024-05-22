@@ -43,7 +43,7 @@ public class EmployeeBackendController {
         return res;
     }
 
-    @GetMapping("employee/detail")
+    @GetMapping("employee/detailOne")
     public @ResponseBody ResDTO<EmployeeDetailResDTO> employeeDetail(
             @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException {
@@ -51,6 +51,17 @@ public class EmployeeBackendController {
         res.setData(employeeService.employeeDetail(adminLoginSource));
         return res;
     }
+
+    @GetMapping("employee/detail")
+    public @ResponseBody ResDTO<EmployeeDetailResDTO> employeeDetailById(
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
+            @RequestParam(value = "employeeId") Integer employeeId
+    ) throws CheckRequestErrorException{
+        ResDTO<EmployeeDetailResDTO> res = new ResDTO<>();
+        res.setData(employeeService.employeeDetailById(adminLoginSource, employeeId));
+        return res;
+    }
+
 
     @GetMapping("employee/all")
     public @ResponseBody ResDTO<List<EmployeeAllResDTO>> employeeAll(
