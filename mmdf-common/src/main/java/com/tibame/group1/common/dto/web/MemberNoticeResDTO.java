@@ -6,10 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberNoticeResDTO {
-    private String memberNoticeId;
-
-    private String memberId;
-
     private String noticeTitle;
 
     private String noticeContent;
@@ -17,6 +13,4 @@ public class MemberNoticeResDTO {
     private String noticeCategory;
 
     private String sendingTime;
-
-    private String lastReadingTime;
 }
