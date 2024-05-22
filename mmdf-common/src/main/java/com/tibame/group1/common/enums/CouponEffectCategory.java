@@ -3,10 +3,12 @@ package com.tibame.group1.common.enums;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum CouponCategory {
+public enum CouponEffectCategory {
 
-    STACKABLE,
+    EFFECTIVE,
 
-    NON_STACKABLE
+    NON_EFFECTIVE
 
 }
+
+

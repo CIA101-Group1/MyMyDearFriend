@@ -1,6 +1,6 @@
 package com.tibame.group1.db.dto;
 
-import com.tibame.group1.common.enums.CouponCategory;
+import com.tibame.group1.common.enums.CouponStackCategory;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +31,7 @@ public class CouponReqDTO {
     private Date dateEnd;
 
     @NotNull
-    private CouponCategory addable;
+    private CouponStackCategory addable;
 
     @NotNull
     private String livemode;
