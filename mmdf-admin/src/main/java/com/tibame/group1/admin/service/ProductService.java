@@ -1,7 +1,7 @@
-package com.tibame.group1.web.service;
+package com.tibame.group1.admin.service;
 
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.db.dto.*;
-import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
@@ -28,22 +28,16 @@ public interface ProductService {
      * product
      */
 
-    ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) throws IOException;
-
     List<ProductEntity> productGetAll();
 
     //0517
-    ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
+    ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, AdminLoginSourceDTO adminLoginSource) throws IOException;
 
     /**
      * productImg
      */
 
-    ProductImgCreateResDTO productImgCreate(ProductImgCreateReqDTO req, LoginSourceDTO loginSource) throws IOException;
-
     List<ProductImgEntity> productImgGetAll() throws IOException;
-
-    ProductImgUpdateResDTO productImgUpdate(ProductImgUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
 
     ProductEntity getOneProduct(Integer productId);

@@ -1,16 +1,16 @@
-package com.tibame.group1.web.service.impl;
+package com.tibame.group1.admin.service.impl;
 
-import com.tibame.group1.db.dto.*;
-import com.tibame.group1.web.dto.LoginSourceDTO;
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
+import com.tibame.group1.admin.service.ProductService;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
+import com.tibame.group1.db.dto.*;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
-import com.tibame.group1.web.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -71,32 +71,6 @@ public class ProductServiceImpl implements ProductService {
      * product
      */
 
-    @Override
-    public ProductCreateResDTO productCreate(ProductCreateReqDTO req, LoginSourceDTO loginSource) {
-
-        ProductEntity product = new ProductEntity();
-        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
-        product.setCategoryId(Integer.valueOf(req.getCategoryId()));
-        product.setName(req.getName());
-        product.setDescription(req.getDescription());
-        product.setPrice(Integer.valueOf(req.getPrice()));
-        product.setQuantity(Integer.valueOf(req.getQuantity()));
-        product.setReviewStatus(0);
-        product.setProductStatus(0);
-        product = productRepository.save(product);
-
-//     productImg
-        ProductImgEntity productImg = new ProductImgEntity();
-        productImg.setImage(StringUtils.isEmpty(req.getImage()) ? null : ConvertUtils.base64ToBytes(req.getImage()));
-        productImg.setProductId(product.getProductId());
-
-        productImgRepository.save(productImg);
-
-        ProductCreateResDTO resDTO = new ProductCreateResDTO();
-        resDTO.setProductId(product.getProductId());
-        return resDTO;
-
-    }
 
     @Override
     public List<ProductEntity> productGetAll() {
@@ -122,10 +96,10 @@ public class ProductServiceImpl implements ProductService {
 
     //    0517
     @Override
-    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
+    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, AdminLoginSourceDTO adminLoginSource) {  //條件判斷
         ProductEntity product = new ProductEntity();
         product.setProductId(req.getProductId());
-        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
+//        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
         product.setCategoryId(Integer.valueOf(req.getCategoryId()));
         product.setName(req.getName());
         product.setDescription(req.getDescription());
@@ -193,31 +167,10 @@ public class ProductServiceImpl implements ProductService {
      */
 
     @Override
-    public ProductImgCreateResDTO productImgCreate(ProductImgCreateReqDTO req, LoginSourceDTO loginSource) {
-        ProductImgEntity productImg = new ProductImgEntity();
-        productImg.setProductId(Integer.valueOf(req.getProductId()));
-        productImg.setImage(req.getImage().getBytes());
-        productImg = productImgRepository.save(productImg);
-        ProductImgCreateResDTO resDTO = new ProductImgCreateResDTO();
-        resDTO.setImageId(productImg.getImageId());
-        return resDTO;
-    }
-
-    @Override
     public List<ProductImgEntity> productImgGetAll() {
         return productImgRepository.findAll();
     }
 
-    @Override
-    public ProductImgUpdateResDTO productImgUpdate(ProductImgUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
-        ProductImgEntity productImg = new ProductImgEntity();
-        productImg.setProductId(Integer.valueOf(req.getProductId()));
-        productImg.setImage(req.getImage().getBytes());
-        productImg = productImgRepository.save(productImg);
-        ProductImgUpdateResDTO resDTO = new ProductImgUpdateResDTO();
-        resDTO.setImageId(productImg.getImageId());
-        return resDTO;
-    }
 
     /***/
     @Override

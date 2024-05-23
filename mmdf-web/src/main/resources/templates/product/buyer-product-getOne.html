@@ -1,0 +1,150 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>買家商品單一查詢</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <!--css-->
+    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+    <!-- CSS
+ ========================= -->
+    <!--bootstrap min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
+    <!--owl carousel min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
+    <!--slick min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
+    <!--magnific popup min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
+    <!--font awesome css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
+    <!--ionicons min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
+    <!--animate css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
+    <!--jquery ui min css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
+    <!--slinky menu css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
+    <!--plugins css-->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+
+    <!-- add member css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+    <!-- 自訂 CSS 樣式 -->
+    <style>
+        .has-error .help-block.with-errors {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+<body>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/api-response-utils.js"></script>
+<script th:src="@{/js/custom.js}"></script>
+
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!--product details start-->
+<div class="product_details mt-100 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="product-details-tab">
+                    <div id="img-1" class="zoomWrapper single-zoom"
+                         th:if="${productEntity.productImgs != null and productEntity.productImgs.size() > 0}"
+                         th:id="'productImgTd_' + ${productEntity.productImgs[0].imageId}"
+                         style="display: flex; justify-content: center; align-items: center;">
+
+                        <img th:src="'data:image/jpg;base64,'+${productEntity.productImgs[0].imageBase64}"
+                             style="height: 300px;width: 300px" alt=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="product_d_right">
+                    <form action="#">
+
+                        <h3 th:text="${productEntity.name}"> name </h3>
+                        <div class=" product_ratting">
+                            <ul>
+                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                            </ul>
+
+                        </div>
+                        <div class="price_box">
+                            <span>$</span><span class="price" th:text="${productEntity.price}">00.00</span>
+
+                        </div>
+                        <div class="product_desc" th:text="${productEntity.description}">
+                            <h2>No content provided</h2>
+                        </div>
+                        <div class="product_seller">
+                            <p>&#9812 賣家編號
+                            <label th:text="${productEntity.sellerId}">sellerId</label>
+                            </p>
+                        </div>
+                        <div class="product_variant quantity">
+                            <label>商品數量</label>
+                            <input min="1" max="100"  th:value="${productEntity.quantity}" type="number">
+                            <button class="button" type="submit">加入購物車</button>
+
+                        </div>
+                        <div class=" product_d_action">
+                            <ul>
+                                <li><a href="#" title="Add to wishlist"><span>&#10084;&#65039;</span> + Add to Wishlist</a></li>
+                            </ul>
+                        </div>
+<!--                        <div class="product_meta">-->
+<!--                                <span th:each="category : ${productCategoryList}"-->
+<!--                                      th:if="${productEntity.productId eq category.productId}">-->
+<!--                                商品分類: <span th:text="${category.categoryName}"></span>-->
+<!--                                <a href="#">Category</a></span>-->
+<!--                        </div>-->
+
+                    </form>
+                    <div class="product_social">
+                        <ul>
+                            <li><a class="facebook" href="#" title="facebook"><i class="fa fa-facebook"></i> Like</a></li>
+                            <li><a class="twitter" href="#" title="twitter"><i class="fa fa-twitter"></i> tweet</a></li>
+                            <li><a class="pinterest" href="#" title="pinterest"><i class="fa fa-pinterest"></i> save</a></li>
+                            <li><a class="google-plus" href="#" title="google +"><i class="fa fa-google-plus"></i> share</a></li>
+                            <li><a class="linkedin" href="#" title="linkedin"><i class="fa fa-linkedin"></i> linked</a></li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--product details end-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+</body>
+</html>
