@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申請提領</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/api-response-utils.js"></script>
+</body>
+</html>

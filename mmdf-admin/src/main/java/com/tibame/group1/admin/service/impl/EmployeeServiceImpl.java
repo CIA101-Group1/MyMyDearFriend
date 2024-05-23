@@ -80,21 +80,63 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResDTO employeeAll(
+    public EmployeeDetailResDTO employeeDetailById(AdminLoginSourceDTO adminLoginSource, Integer employeeId)
+        throws CheckRequestErrorException{
+        EmployeeEntity employee = employeeRepository.findById(employeeId).orElse(null);
+        if (null == employee){
+            throw new CheckRequestErrorException("查無此員工資料");
+        }
+        EmployeeDetailResDTO resDTO = new EmployeeDetailResDTO();
+        resDTO.setEmployeeId(employee.getEmployeeId());
+        resDTO.setEmployeeAccount(employee.getEmployeeAccount());
+        resDTO.setEmployeePassword(employee.getEmployeePassword());
+        resDTO.setEmployeeName(employee.getEmployeeName());
+        resDTO.setEmployeeEmail(employee.getEmployeeEmail());
+        resDTO.setEmployeePhone(employee.getEmployeePhone());
+        resDTO.setEmployeeGender(employee.getEmployeeGender());
+        resDTO.setEmployeeCreateTime(
+                null == employee.getEmployeeCreateTime()
+                ? ""
+                        :DateUtils.dateToSting(employee.getEmployeeCreateTime())
+        );
+        resDTO.setEmployeeStatus(employee.getEmployeeStatus());
+        return resDTO;
+    }
+
+    /**
+     * 用name查詢員工
+     * @param adminLoginSourceDTO
+     * @param employeeName
+     * @return
+     */
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmployeeAllResDTO> employeeAll(
             AdminLoginSourceDTO adminLoginSourceDTO, String employeeName) {
-        EmployeeEntity exampleEntity = new EmployeeEntity();
-        exampleEntity.setEmployeeName(employeeName);
 
-        // 使ExampleMatcher定義匹配規則，使用默認的匹配器，即全匹配
-        ExampleMatcher matcher = ExampleMatcher.matching();
+        List<EmployeeEntity> employees;
 
-        // 將範例對象匹配規則組合成Example對象
-        Example<EmployeeEntity> example = Example.of(exampleEntity, matcher);
+        if (employeeName == null || employeeName.isEmpty()) {
+            // 如果 employeeName 为空，则直接查询所有员工
+            employees = employeeRepository.findAll();
+        } else {
+            // 如果 employeeName 不为空，则使用 ExampleMatcher 进行匹配查询
+            EmployeeEntity exampleEntity = new EmployeeEntity();
+            exampleEntity.setEmployeeName(employeeName);
 
-        // 調用findAll方法進行查詢
-        List<EmployeeEntity> employees = employeeRepository.findAll(example);
+            // 使用包含匹配器
+            ExampleMatcher matcher = ExampleMatcher.matching()
+                    .withMatcher("employeeName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
-        // 將查詢結果轉為EmployeeAllResDTO對象
+            // 将示例对象和匹配器组合成 Example 对象
+            Example<EmployeeEntity> example = Example.of(exampleEntity, matcher);
+
+            // 调用 findAll 方法进行查询
+            employees = employeeRepository.findAll(example);
+        }
+
+        // 将查询结果转换为 EmployeeAllResDTO 对象
         List<EmployeeAllResDTO> employeeList = new ArrayList<>();
         for (EmployeeEntity employee : employees) {
             EmployeeAllResDTO resDTO = new EmployeeAllResDTO();
@@ -108,10 +150,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             resDTO.setEmployeeStatus(employee.getEmployeeStatus());
             employeeList.add(resDTO);
         }
-        EmployeeResDTO res = new EmployeeResDTO();
-        res.setEmployeeList(employeeList);
-        return res;
+        return employeeList;
     }
+
 
     @Override
     public EmployeeEditResDTO employeeEdit(
@@ -119,9 +160,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throws CheckRequestErrorException, IOException {
         EmployeeEditResDTO resDTO = new EmployeeEditResDTO();
         EmployeeEntity employee =
-                employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
+                employeeRepository.findById(req.getEmployeeId()).orElse(null);
         if (null == employee) {
-            throw new CheckRequestErrorException("查無此會員資料");
+            resDTO.setStatus(EmployeeEditResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
+            return resDTO;
         }
         if ((null != req.getEmployeeAccount())) {
             employee.setEmployeeAccount(req.getEmployeeAccount());
@@ -140,6 +182,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         if (null != req.getEmployeeGender()) {
             employee.setEmployeeGender(req.getEmployeeGender());
+        }
+        if (null != req.getEmployeeStatus()) {
+            employee.setEmployeeStatus(req.getEmployeeStatus());
         }
         employeeRepository.save(employee);
         resDTO.setStatus(EmployeeEditResDTO.Status.EDIT_SUCCESS.getCode());

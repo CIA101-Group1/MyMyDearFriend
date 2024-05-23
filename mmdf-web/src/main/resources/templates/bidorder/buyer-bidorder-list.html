@@ -1,0 +1,204 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的競標訂單</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.jqueryui.min.css"/>
+
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<!-- <th:block th:replace="~{/fragments/breadcrumb}"/> -->
+
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active">
+                            <h3>我的競標訂單</h3>
+                            <table id="bidOrderTable" class="table table-bordered dt-responsive nowrap"
+                                   style="width: 100%;">
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal for Product Details -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailModalLabel">訂單詳細資料</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>訂單編號：</strong><span id="orderId"></span></p>
+                <p><strong>商品編號：</strong><span id="productId"></span></p>
+                <p><strong>買家編號：</strong><span id="buyerId"></span></p>
+                <p><strong>小計：</strong><span id="subtotal"></span></p>
+                <p><strong>優惠金額：</strong><span id="discount"></span></p>
+                <p><strong>總計：</strong><span id="total"></span></p>
+                <p><strong>訂單狀態：</strong><span id="status"></span></p>
+                <p><strong>訂單建立時間：</strong><span id="createTime"></span></p>
+                <p><strong>訂單更新時間：</strong><span id="updateTime"></span></p>
+            </div>
+            <!-- <div class="modal-footer"> -->
+            <!--     <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button> -->
+            <!-- </div> -->
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+        fetchBidOrders();
+    })
+
+    function fetchBidOrders() {
+        $.ajax({
+            url: "/api/buyer/bidorder",
+            type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success: function (response) {
+                console.log(response);
+                $('#bidOrderTable').dataTable({
+                    "data": response.data,
+                    "columns": [
+                        {data: "orderId", title: "訂單編號"},
+                        {data: "productId", title: "商品編號"},
+                        {data: "subtotal", title: "金額"},
+                        {data: "createTime", title: "建立時間"},
+                        {data: "status", title: "訂單狀態"},
+                        {
+                            data: "orderId", title: "操作",
+                            render: function (data, type, row) {
+                                return `
+                                    <button><i class="fa fa-eye" aria-hidden="true" onclick="viewOrder(${data})"></i></button>
+                                    <form action="/bidorder/checkout/${data}"><button>付款</button></form>
+                                    `
+                            }
+                        },
+                    ],
+                    "columnDefs": [
+                        {
+                            targets: 0,
+                            width: "10px",
+                        },
+                        {
+                            targets: 1,
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css({
+                                    "white-space": "nowrap",
+                                    "overflow": "hidden",
+                                    "text-overflow": "ellipsis",
+                                    "max-width": "150px"
+                                });
+                            },
+                            width: "10%",
+                        },
+                        {
+                            targets: 2,
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css({
+                                    "white-space": "nowrap",
+                                    "overflow": "hidden",
+                                    "text-overflow": "ellipsis",
+                                    "max-width": "150px"
+                                });
+                            },
+                            width: "20%",
+                        },
+                        // {
+                        //     targets: 8,
+                        //     width: "10px",
+                        //     responsivePriority: 1,
+                        // }
+                    ],
+                });
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+    function viewOrder(orderId) {
+        $.ajax({
+            url: `/api/bidorder/${orderId}`,
+            type: "GET",
+            success: function (response) {
+                console.log(response);
+                const order = response.data;
+                $('#orderId').text(order.orderId);
+                $('#productId').text(order.productId);
+                $('#buyerId').text(order.buyerId);
+                $('#subtotal').text(order.subtotal);
+                $('#discount').text(order.discount);
+                $('#total').text(order.total);
+                $('#status').text(order.status);
+                $('#createTime').text(order.createTime);
+                $('#updateTime').text(order.updateTime);
+
+                $('#orderDetailModal').modal('show');
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    function goCheckout(orderId) {
+        $.ajax({
+            url: `/bidorder/${orderId}`,
+            type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

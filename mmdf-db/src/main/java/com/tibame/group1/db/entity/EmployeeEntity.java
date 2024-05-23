@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Immutable
+//@Immutable
 @Table(name = "employee")
 public class EmployeeEntity {
     @Id

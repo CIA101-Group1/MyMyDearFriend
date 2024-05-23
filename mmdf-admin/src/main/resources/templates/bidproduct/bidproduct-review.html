@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico"/>
+    <title>競標商品審核</title>
+    <th:block th:replace="~{/fragments/css}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+</head>
+
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">競標商品審核</h1>
+                <table id="bidProductTable" class="table  table-bordered dt-responsive nowrap"
+                       style="width: 100%;">
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal for Product Details -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailModalLabel">商品詳細資料</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>商品編號：</strong><span id="productId"></span></p>
+                <p><strong>商品名稱：</strong><span id="name"></span></p>
+                <p><strong>商品描述：</strong><span id="description"></span></p>
+                <p><strong>商品分類：</strong><span id="category"></span></p>
+                <p><strong>商品狀況：</strong><span id="condition"></span></p>
+                <p><strong>起標價：</strong><span id="startPrice"></span></p>
+                <p><strong>商品狀態：</strong><span id="status"></span></p>
+                <p><strong>最近更新時間：</strong><span id="lastModified"></span></p>
+                <!-- <p><strong>商品圖片：</strong><span id="images"></span></p> -->
+                <div id="productImages" class="d-flex flex-wrap"></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- <div class="modal-header"> -->
+            <!--     &lt;!&ndash; <h5 class="modal-title" id="rejectDetailModalLabel">商品詳細資料</h5> &ndash;&gt; -->
+            <!--     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+            <!--         <span aria-hidden="true">&times;</span> -->
+            <!--     </button> -->
+            <!-- </div> -->
+            <div class="modal-body">
+                <form id="rejectForm">
+                    <div class="form-group">
+                        <label for="rejectReason">審核不通過原因</label>
+                        <select id="rejectReason" name="rejectReason" class="form-control" required>
+                            <option value="low_quality_images">圖文不符、圖片模糊、圖片不完整</option>
+                            <option value="incomplete_information">商品資訊不完整</option>
+                            <option value="invalid_category">商品分類不正確</option>
+                            <option value="prohibited_item">禁止銷售的商品</option>
+                            <option value="other">其他</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rejectDescription">描述</label>
+                        <textarea class="form-control" id="rejectDescription" name="description" rows="5"></textarea>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <button class="btn btn-primary" type="submit">送出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+
+<script>
+    const API_URL = "/api/bidproduct";
+    let myDataTable;
+    let PRODUCT_ID;
+
+    $(document).ready(function () {
+        fetchBidProductsNeedReview();
+    })
+
+    function fetchBidProductsNeedReview() {
+        $.ajax({
+            url: "/api/bidproduct/query",
+            type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            data: {
+                "status": [0, -1],
+            },
+            success: function (response) {
+                console.log(response);
+                myDataTable = $('#bidProductTable').DataTable({
+                    "data": response.data,
+                    "columns": [
+                        {data: "productId", title: "商品編號"},
+                        {
+                            data: "images", title: "縮圖",
+                            render: function (data, type, full, meta) {
+                                return `<img src="data:image/jpeg;base64, ${data[0].image}" style="height: 80px; display: block;margin: 0 auto;" alt="商品縮圖"/>`;
+                            }
+                        },
+                        {data: "name", title: "商品名稱"},
+                        {data: "category.categoryName", title: "商品分類"},
+                        {data: "condition.conditionName", title: "商品狀況"},
+                        {data: "startPrice", title: "起標價"},
+                        {data: "status", title: "商品狀態"},
+                        {data: "lastModified", title: "最近更新時間"},
+                        {
+                            data: "productId", title: "操作",
+                            render: function (data, type, row) {
+                                return `
+                                    <button type="button" class="btn btn-info btn-sm mb-2 d-block" onclick="viewProduct(${data})">查看</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm mb-2 d-block" onclick="approveProduct(${data})">通過</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm mb-2 d-block" onclick="rejectProduct(${data})">不通過</button>
+                                    `
+                            }
+                        },
+                    ],
+                    "columnDefs": [
+                        {
+                            targets: 0,
+                            width: "10px",
+                        },
+                        {
+                            targets: 1,
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css({
+                                    "white-space": "nowrap",
+                                    "overflow": "hidden",
+                                    "text-overflow": "ellipsis",
+                                    "max-width": "150px"
+                                });
+                            },
+                            width: "10%",
+                        },
+                        {
+                            targets: 2,
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css({
+                                    "white-space": "nowrap",
+                                    "overflow": "hidden",
+                                    "text-overflow": "ellipsis",
+                                    "max-width": "150px"
+                                });
+                            },
+                            width: "20%",
+                        },
+                        {
+                            targets: 8,
+                            width: "10px",
+                            responsivePriority: 1,
+                        }
+                    ],
+                });
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    function viewProduct(productId) {
+        $.ajax({
+            url: `${API_URL}/${productId}`,
+            type: "GET",
+            success: function (response) {
+                const product = response.data;
+                $('#productId').text(product.productId);
+                $('#name').text(product.name);
+                $('#description').text(product.description);
+                $('#category').text(product.category.categoryName);
+                $('#condition').text(product.condition.conditionName);
+                $('#startPrice').text(product.startPrice);
+                $('#status').text(product.status);
+                $('#lastModified').text(product.lastModified);
+                // 商品圖片
+                $('#productImages').empty();
+                product.images.forEach(image => {
+                    const imgElement = `<img src="data:image/jpeg;base64,${image.image}" class="img-thumbnail m-1" style="max-width: 150px; max-height: 150px;" alt="商品圖片"/>`;
+                    $('#productImages').append(imgElement);
+                });
+                $('#productDetailModal').modal('show');
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    $("#rejectForm").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: `/api/bidproduct/${PRODUCT_ID}`,
+            type: "PUT",
+            data: {
+                status: -1
+            },
+            success: function (response) {
+                console.log(response)
+                if (response.code === "0") {
+                    alert("操作成功");
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    })
+
+    function approveProduct(productId) {
+        if (confirm("確定要通過嗎？")) {
+            $.ajax({
+                url: `/api/bidproduct/${productId}`,
+                type: "PUT",
+                data: {
+                    status: 1
+                },
+                success: function (response) {
+                    if (response.code === "0") {
+                        alert("操作成功");
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+    }
+
+    function rejectProduct(productId) {
+        PRODUCT_ID = productId
+        $('#rejectModal').modal('show');
+    }
+
+
+</script>
+</body>
+
+</html>
