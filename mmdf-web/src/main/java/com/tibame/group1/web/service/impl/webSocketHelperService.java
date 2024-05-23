@@ -3,18 +3,19 @@ package com.tibame.group1.web.service.impl;
 import com.google.gson.Gson;
 import com.tibame.group1.db.repository.AIMessageResponseRepository;
 import com.tibame.group1.web.dto.AiMessageDTO;
-import org.apache.poi.ss.formula.functions.T;
+import com.tibame.group1.web.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class webSocketService implements WebSocketHandler {
+public class webSocketHelperService implements WebSocketHandler {
 
     private ConcurrentMap<WebSocketSession, String> customers = new ConcurrentHashMap<>();
 
     private Gson gson = new Gson();
+
 
     @Autowired private AIMessageResponseRepository aiRepostiory;
 
