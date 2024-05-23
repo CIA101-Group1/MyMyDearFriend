@@ -2,7 +2,7 @@ spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/mmdf?serverTimezone=Asia/Taipei"
     username: "root"
-    password: "cb820119"
+    password: "root"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false
@@ -14,19 +14,19 @@ spring:
     redis:
       host: "localhost"
       port: 6379
-      password: "mmdf"
+      password: ""
 
 logging:
   file:
     path: "logs/"
 
 config:
-  # 是否使用local環境運行
+  # 是否使用local方式啟動，自己測試環境時可換成true
   use-local: false
   #  跨域允許網域
   cors-allow-origin: "*"
-  # 是否使用local方式啟動，自己測試環境時可換成true
-  use-test-member: false
+  # 是否使用測試使用者
+  use-test-member: true
   # 測試使用者用登入憑證
   test-member-authorization: "A123456789"
   # 測試使用者帳號
@@ -50,8 +50,14 @@ config:
   # 信箱驗證碼存活時間
   email-verify-code-survival-minute: 1440
   # 測試寄驗證信用信箱帳號
-  test-send-email: "qwer1234@gmail.com"
+  test-send-email: "mymydearfriend1@gmail.com"
   # 測試寄驗證信用信箱密碼
-  test-email-cid: "qwer1234"
-  # 發送驗證信間隔時間
-  email-sending-cooldown-second: 30
+  test-email-cid: "fzyhczktflpemjwg"
+  # 發送信箱驗證信間隔時間
+  email-verify-sending-cooldown-second: 30
+  # web 網址
+  web-u-rL: "http://mymydearfriend:8002"
+  # 發送重設密碼驗證信間隔時間
+  cid-reset-sending-cooldown-second: 30
+  # 重設密碼驗證碼存活時間
+  cid-reset-verify-code-survival-minute: 30
