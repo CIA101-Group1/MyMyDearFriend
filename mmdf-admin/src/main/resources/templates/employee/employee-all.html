@@ -135,13 +135,11 @@
         });
         function fetchEmployeeData() {
             const searchName = $("#searchInput").val().trim();
+            const authorization = localStorage.getItem("authorization");
             $.ajax({
-                url: `/api/employee/all?name=${searchName}`,
+                url: `/api/employee/all?name=${searchName}&authorization=${authorization}`,
                 method: "GET",
                 contentType: "application/json",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
