@@ -133,13 +133,6 @@
             $("#searchInput").val("");
             fetchEmployeeData();
         });
-
-        // 監聽創建新員工按鈕的點擊事件
-        $("#createEmployeeButton").on("click", function (){
-            // 導航到創建資料畫面，這裡的 URL 可能需要根據實際情況修改
-            window.location.href = "/employee/create";
-        });
-
         function fetchEmployeeData() {
             const searchName = $("#searchInput").val().trim();
             $.ajax({
