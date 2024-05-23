@@ -42,16 +42,11 @@ public class ProductFrontendController {
                              @RequestParam(value = "page", defaultValue = "0") int page,
                              @RequestParam(value = "size", defaultValue = "12") int size) {
         {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
             //BackEndController
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);
-
-            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
-            model.addAttribute("reviewStatusList", reviewStatusList);
-
-            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
-            model.addAttribute("productStatusList", productStatusList);
-
             return "/product/buyer-product-select";
         }
     }
@@ -128,6 +123,9 @@ public class ProductFrontendController {
                                      @RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "size", defaultValue = "10") int size) {
         {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);
 
@@ -153,19 +151,32 @@ public class ProductFrontendController {
         return "/product/buyer-proCategory-select";
     }
 
+//    @GetMapping("/admin/pro/review")
+//    public String adminReview(Model model,
+//                              @RequestParam(value = "page", defaultValue = "0") int page,
+//                              @RequestParam(value = "size", defaultValue = "10") int size) {
+//        {
+//            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+//            model.addAttribute("productPage", productPage);
+//
+//            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+//            model.addAttribute("reviewStatusList", reviewStatusList);
+//
+//            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+//            model.addAttribute("productStatusList", productStatusList);
+//
+//            return "/product/index";
+//        }
+//    }
 
-    @GetMapping("api/destination")
-    public ResponseEntity<String> redirect(HttpServletRequest request) {
-        System.out.println("收到redirect");
-        return null;
-    }
-
-
-    @GetMapping("/admin/pro/review")
-    public String adminReview(Model model,
+    @GetMapping("product/seller/status")
+    public String productstatus(Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size) {
         {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);
 
@@ -174,8 +185,14 @@ public class ProductFrontendController {
 
             HashMap<Integer, String> productStatusList = productService.getProductStatusList();
             model.addAttribute("productStatusList", productStatusList);
-
-            return "/product/index";
+            return "/product/seller-product-status";
         }
     }
+
+    @GetMapping("api/destination")
+    public ResponseEntity<String> redirect(HttpServletRequest request) {
+        System.out.println("收到redirect");
+        return null;
+    }
+
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 
 <head>
     <meta charset="utf-8">
@@ -67,7 +67,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container d-flex justify-content-center">
-        <a class="navbar-brand" href="/">資料查看</a>
+        <a class="navbar-brand" href="/">資料修改</a>
     </div>
 </nav>
 
@@ -76,6 +76,7 @@
         <div class="col-lg-8 mt-5 mb-5">
             <form id="product_form" role="form" data-toggle="validator">
                 <div class="form-group">
+                    <input type="submit" id="fast" value="快速修改" class="btn btn-danger btn-block"/>
 <!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;"></div>-->
                 </div>
                 <div class="form-group row">
@@ -182,7 +183,7 @@
 
                 <input type="submit" value="修改" class="btn btn-danger btn-block"/>
             </form>
-<!--            <input type="submit" id="fast" value="一鍵修改" class="btn btn-danger btn-block"/>-->
+
         </div>
     </div>
 </div>
@@ -286,49 +287,6 @@
                 // 發送 AJAX 請求
                 updateProductData(userData);
             }
-
-
-            // if (!pond.getFile()) {
-            //     alert('請上傳圖片');
-            //     return false;
-            // }
-
-            // let file = pond.getFile().file;
-            // let image = null;
-            // // 如果表單驗證通過
-            // if (file) {
-            //     // 獲取表單數據
-            //     let productId = $('#productId').val();
-            //     let categoryId = $('#categoryId').val();
-            //     let name = $('#name').val();
-            //     let price = $('#price').val();
-            //     let quantity = $('#quantity').val();
-            //     let description = $('#description').val();
-            //
-            //     if (file) {
-            //         // 使用 FileReader 讀取文件內容，轉為 Base64 格式
-            //         var reader = new FileReader();
-            //         reader.onload = function (event) {
-            //             var base64String = event.target.result.split(',')[1]; // 提取 base64 字串
-            //             image = base64String;
-            //
-            //             // 構造請求數據對象
-            //             let userData = {
-            //                 productId: productId,
-            //                 name: name,
-            //                 price: price,
-            //                 quantity: quantity,
-            //                 description: description,
-            //                 categoryId: categoryId,
-            //                 image: image,
-            //                 updateImg: updateImg
-            //             };
-            //             // 發送 AJAX 請求
-            //             updateProductData(userData);
-            //         };
-            //         reader.readAsDataURL(file);
-            //     }
-            // }
         });
 
         // 定義一個函數來發送 AJAX 請求並創建產品數據
@@ -341,8 +299,6 @@
                 },
                 data: JSON.stringify(userData), // 將數據轉換為 JSON 格式
                 contentType: "application/json", // 設置請求頭的 Content-Type
-                // success: function (res) {
-                //     console.log(res);
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
@@ -358,17 +314,17 @@
         }
 
         // 監聽點擊事件
-    //     $('#fast').validator().on('click', function (e) {
-    //         // 阻止表單的預設行為
-    //         e.preventDefault();
-    //
-    //         // 修改欄位資料
-    //         $('#categoryId').val(1);
-    //         $('#name').val('新的商品名稱');
-    //         $('#price').val(99);
-    //         $('#quantity').val(99);
-    //         $('#description').val('新的描述');
-    //     });
+        $('#fast').validator().on('click', function (e) {
+            // 阻止表單的預設行為
+            e.preventDefault();
+
+            // 修改欄位資料
+            $('#categoryId').val(6);
+            $('#name').val('MMDF快樂購買');
+            $('#price').val(99999);
+            $('#quantity').val(8888);
+            $('#description').val('我就是來置入式行銷!!!My My Dear Friends 與你同在~~~');
+        });
     });
 
 </script>

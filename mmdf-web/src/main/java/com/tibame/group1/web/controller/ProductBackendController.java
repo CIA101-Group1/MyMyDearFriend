@@ -147,5 +147,21 @@ public class ProductBackendController {
         return response;
     }
 
+    @PutMapping("/seller/product/updateProductStatus")
+    @ResponseBody
+    public Map<String, String> updateProductStatus(@RequestParam("productId") int productId, @RequestParam("productStatus") String productStatus) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            productService.updateProductStatus(productId, productStatus);
+            // 获取更新后的审核状态
+            String newProductStatus = productService.getProductStatusList().get(1); // 1为审核通过状态
+            response.put("productStatus", newProductStatus);
+            response.put("success", "審核狀態已成功更新");
+        } catch (Exception e) {
+            response.put("error", "無法更新審核狀態");
+        }
+        return response;
+    }
+
 
 }

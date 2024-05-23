@@ -347,4 +347,17 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Override
+    public void updateProductStatus(int productId, String productStatus) throws Exception {
+        // 根据产品ID从数据库中获取产品对象
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+
+        // 更新产品的审核状态 ，上架
+        product.setProductStatus(Integer.valueOf(productStatus));
+
+        // 保存更新后的产品对象回数据库
+        productRepository.save(product);
+    }
+
 }

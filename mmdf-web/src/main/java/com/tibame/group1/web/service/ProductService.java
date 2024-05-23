@@ -91,5 +91,7 @@ public interface ProductService {
 
     void updateReviewStatus(int productId, String reviewStatus) throws Exception;
 
+    void updateProductStatus(int productId, String reviewStatus) throws Exception;
+
 
 }

@@ -91,7 +91,7 @@
             <div class="tab" onclick="showTabContent('new')">內部公告</div>
             <div class="tab" onclick="showTabContent('star')">客戶評價</div>
             <div class="tab" onclick="showTabContent('assess')">業績</div>
-            <div class="tab" onclick="showTabContent('supplier')">供應商</div>
+            <div class="tab" onclick="showTabContent('supplier')">各部門分機</div>
         </div>
 
         <!-- 標籤內容 -->
@@ -151,10 +151,92 @@
         <div class="row">
             <div class="col-lg-1 col-md-12">
                 <!--                    0515start-->
-                <button type="button" class="btn btn-success " data-toggle="modal"
+                <button type="button" class="btn btn-success float-right" data-toggle="modal"
                         data-target="#searchModal" id="search">
                     搜索清單
                 </button>
+
+                <!-- 搜索模态框 -->
+                <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
+                     aria-labelledby="searchModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <!-- 模态框头部 -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="searchModalLabel">搜索商品</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- 模态框内容 -->
+                            <div class="modal-body">
+                                <!-- 搜索表单 -->
+                                <form id="searchForm" th:action="@{/api/product/query}" method="get">
+                                    <!-- 商品名称 -->
+                                    <div class="form-group">
+                                        <label for="name">商品名稱:</label>
+                                        <input type="text" class="form-control" id="name" name="name">
+                                    </div>
+                                    <!-- 商品描述 -->
+                                    <div class="form-group">
+                                        <label for="description">商品描述:</label>
+                                        <input type="text" class="form-control" id="description"
+                                               name="description">
+                                    </div>
+                                    <!-- 分类 -->
+                                    <div class="form-group">
+                                        <label for="categoryId">分類:</label>
+                                        <select id="categoryId" name="categoryId" class="form-control">
+                                            <option value="">請選擇分類</option>
+                                            <!-- 使用Thymeleaf渲染选项 -->
+                                            <option th:each="category : ${productCategoryList}"
+                                                    th:value="${category.categoryId}"
+                                                    th:text="${category.categoryName}"></option>
+                                        </select>
+                                    </div>
+                                    <!-- 最低价格 -->
+                                    <div class="form-group">
+                                        <label for="minPrice">最低價格：</label>
+                                        <input type="number" id="minPrice" name="minPrice" min="0">
+                                    </div>
+                                    <!-- 最高价格 -->
+                                    <div class="form-group">
+                                        <label for="maxPrice">最高價格：</label>
+                                        <input type="number" id="maxPrice" name="maxPrice" min="0">
+                                    </div>
+                                    <!-- 買家編號 -->
+                                    <div class="form-group">
+                                        <label for="memberId">買家編號:</label>
+                                        <input type="text" class="form-control" id="memberId" name="memberId">
+                                    </div>
+                                    <!-- 審核状态 -->
+                                    <div id="reviewStatusDiv">
+                                        <label><input type="checkbox" name="reviewStatus" value="0">
+                                            審核中</label>
+                                        <label><input type="checkbox" name="reviewStatus" value="1">
+                                            通過</label>
+                                        <label><input type="checkbox" name="reviewStatus" value="2">
+                                            未通過</label>
+                                    </div>
+                                    <!-- 商品状态 -->
+                                    <div id="productStatus">
+                                        <label><input type="radio" name="label" value="0"><span
+                                                class="round button">未上架</span></label>
+                                        <label><input type="radio" name="label" value="1"><span
+                                                class="round button">上架</span></label>
+                                    </div>
+                                    <!-- 模态框底部 -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">搜索</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -244,13 +326,6 @@
                                 0.00
                             </td>
                             <td>
-                                <!--                                <button onclick="updateReviewStatus(${product.productId})" class="btn btn-primary">-->
-                                <!--                                    審核成功-->
-                                <!--                                </button>-->
-                                <!--                                <button onclick="updateReviewStatus('${product.productId}')" class="btn btn-primary">審核成功</button>-->
-                                <!--                                <button class="btn btn-primary" data-product-id="${product.productId}">-->
-                                <!--                                    審核成功-->
-                                <!--                                </button>-->
                                 <button id="test" class="btn btn-primary"
                                         th:attr="data-product-id=${product.productId}">
                                     審核成功
@@ -313,12 +388,9 @@
             var productId = $("#test").data("product-id");
 
             // 使用 jQuery 的 val() 方法來獲取 input 元素的值
-            // var reviewStatusValue = $("#hiddentest").val();
             var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
 
-            // var tdText = $("#test").closest("tr").find("td").text();
             console.log(reviewStatusValue);
-            // let revStatus = $(this).closest("tr").find("#reviewStatus");
 
             $.ajax({
                 url: "/api/seller/product/updateReviewStatus",
@@ -326,14 +398,11 @@
                 headers: {
                     "authorization": localStorage.getItem("authorization")
                 },
-                // contentType: "application/json",
-                // data: JSON.stringify(data),
                 data: {
                     productId: productId,
                     reviewStatus: 1
                 },
                 success(response) {
-                    console.log(response)
                     apiResponseJSON(response, {
                         onSuccess(data) {
                             console.log(data);
@@ -346,50 +415,115 @@
             });
         });
 
+        $('#searchForm').submit(function (e) {
+            e.preventDefault(); // 阻止表单默认提交
+            // 获取表单数据
+            var formData = $(this).serialize();
 
-        // console.log(data)
-        // console.log(revStatus.text())
-        // console.log($("#hiddentest").val())
-        // console.log(productId)
+            // 发送 Ajax 请求
+            $.ajax({
+                url: '/api/product/query',
+                type: 'GET',
+                data: formData,
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log(data);
+                            // 清空表格数据
+                            $('#products tbody').empty();
+                            if (response.code === "0") {
+                                alert('搜索成功');
+                                $('#searchModal').modal('hide');
+                                // 遍历搜索结果并显示到页面上
+                                response.data.forEach(function (product) {
+                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                                    var reviewStatusTexts = {
+                                        "0": "審核中",
+                                        "1": "通過",
+                                        "2": "未通過"
+                                    };
+                                    var productStatusTexts = {
+                                        "0": "下架",
+                                        "1": "上架"
+                                    }
 
+                                    // 添加商品行到表格
+                                    $('#products tbody').append(`
+                                        <tr>
+                                            <td>${product.productId}</td>
+                                            <td>${product.productCategoryEntity.categoryName}</td>
+                                            <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
+                                            <td>${product.description}</td>
+                                            <td>${product.price}</td>
+                                            <td>${product.quantity}</td>
+                                            <td>
+                                                <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                            </td>
+                                            <td>${product.sellerId}</td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+
+                                            <td>${productStatusTexts[product.productStatus]}</td>
+                                            <td>
+                                                <button id="test" class="btn btn-primary"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核成功
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddentest">
+                                            </td>
+                                        </tr>
+                                    `);
+                                });
+
+                                $("#product-tbody").on("click", ("#test"), function () {
+                                    var productId = $("#test").data("product-id");
+
+                                    // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+                                    var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
+
+                                    console.log(reviewStatusValue);
+
+                                    $.ajax({
+                                        url: "/api/seller/product/updateReviewStatus",
+                                        method: "PUT",
+                                        headers: {
+                                            "authorization": localStorage.getItem("authorization")
+                                        },
+                                        data: {
+                                            productId: productId,
+                                            reviewStatus: 1
+                                        },
+                                        success(response) {
+                                            apiResponseJSON(response, {
+                                                onSuccess(data) {
+                                                    console.log(data);
+                                                }
+                                            });
+                                        },
+                                        error: function (error) {
+                                            alert("伺服器連線失敗: " + error);
+                                        }
+                                    });
+                                });
+
+                            } else {
+                                alert('搜索失败！' + response.message);
+                                console.log(response);
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert('搜索失败');
+                }
+            });
+        });
 
     });
-    //     $('button.btn').click(function () {
-    //         var productId = $(this).data('product-id');
-    //         updateReviewStatus(productId);
-    //         console.log(productId);
-    //     });
-    // });
-    //
-    // function updateReviewStatus(productId) {
-    //     $.ajax({
-    //         type: "PUT",
-    //         url: "/seller/product/updateReviewStatus/" + productId,
-    //         data: JSON.stringify({productId: productId}),
-    //         headers: {
-    //             "authorization": localStorage.getItem("authorization")
-    //         },
-    //         contentType: "application/json", // 設置請求頭的 Content-Type
-    //         success: function (response) {
-    //             // success(response) {
-    //             apiResponseJSON(response, {
-    //                 // onSuccess(data) {
-    //                 onSuccess: (data) => {
-    //                     console.log(data);
-    //                     // 检查 data 中是否有 reviewStatus
-    //                     if (response.hasOwnProperty("reviewStatus")) {
-    //                         $('#reviewStatus' + productId).text(response.reviewStatus);
-    //                     }
-    //                     console.log(response.success || response.error);
-    //                 }
-    //             });
-    //         },
-    //         error: function (xhr, status, error) {
-    //             console.error(xhr.responseText);
-    //         }
-    //     });
-    // }
-
 
     // 函數：顯示特定標籤的內容
     function showTabContent(tabName) {
