@@ -1,4 +1,4 @@
-package com.tibame.group1.web.dto;
+package com.tibame.group1.db.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;

@@ -1,25 +1,21 @@
-package com.tibame.group1.web.dto;
+package com.tibame.group1.db.dto;
 
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
-import com.tibame.group1.db.entity.ProductImgEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
-
 @Getter
 @Setter
-public class ProductGetOneResDTO {
-    private Integer productId;
-    private Integer sellerId;
-    private Integer categoryId;
+public class ProductCompoundResDTO {
+    private String productId;
+    private String sellerId;
+    private String categoryId;
     private String name;
     private String description;
-    private Integer price;
-    private Integer reviewStatus;
-    private Integer productStatus;
+    private String price;
+    private String reviewStatus;
+    private String productStatus;
 //    private Set<ProductImgEntity> productImgs;
     private ProductCategoryEntity productCategory;
     private MemberEntity memberEntity;

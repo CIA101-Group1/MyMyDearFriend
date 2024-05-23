@@ -1,4 +1,4 @@
-package com.tibame.group1.web.dto;
+package com.tibame.group1.db.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -7,9 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductImgUpdateReqDTO {
-
-    private String imageId;
+public class ProductImgCreateReqDTO {
 
     @NotEmpty(message = "商品編號請勿空白")
     private String productId;

@@ -1,15 +1,15 @@
-package com.tibame.group1.web.dto;
+package com.tibame.group1.db.dto;
 
-import com.tibame.group1.web.annotation.CheckLogin;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductImgCreateReqDTO {
+public class ProductImgUpdateReqDTO {
+
+    private String imageId;
 
     @NotEmpty(message = "商品編號請勿空白")
     private String productId;
