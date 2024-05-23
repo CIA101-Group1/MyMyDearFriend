@@ -141,22 +141,39 @@
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
+                            let targetPage;
                             switch (data.status) {
                                 case "0":
                                     $("#modalBody").html("登入成功！(提醒：信箱尚未驗證)");
                                     localStorage.setItem("authorization", data.authorization);
                                     $("#myModal").modal("show");
-                                    setTimeout(function () {
-                                        window.location.href = "/";
-                                    }, 2000);
+                                    targetPage = localStorage.getItem("targetPage");
+                                    if (targetPage) {
+                                        localStorage.removeItem("targetPage"); // 登入後移除儲存的目標頁面
+                                        setTimeout(function () {
+                                            window.location.href = targetPage; // 導向目標頁面
+                                        }, 2000);
+                                    } else {
+                                        setTimeout(function () {
+                                            window.location.href = "/";
+                                        }, 2000);
+                                    }
                                     break;
                                 case "1":
                                     $("#modalBody").html("登入成功！");
                                     localStorage.setItem("authorization", data.authorization);
                                     $("#myModal").modal("show");
-                                    setTimeout(function () {
-                                        window.location.href = "/";
-                                    }, 2000);
+                                    targetPage = localStorage.getItem("targetPage");
+                                    if (targetPage) {
+                                        localStorage.removeItem("targetPage"); // 登入後移除儲存的目標頁面
+                                        setTimeout(function () {
+                                            window.location.href = targetPage; // 導向目標頁面
+                                        }, 2000);
+                                    } else {
+                                        setTimeout(function () {
+                                            window.location.href = "/";
+                                        }, 2000);
+                                    }
                                     break;
                                 case "-1":
                                     $("#modalBody").html("帳號或密碼錯誤，請重試");
