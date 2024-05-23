@@ -65,13 +65,13 @@
                                 <div class="dropdown_links_list">
                                     <h3>錢包管理</h3>
                                     <ul>
-                                        <li><a href="#">查看錢包餘額</a>
+                                        <li><a href="#" id="wallet-history-android">錢包交易紀錄</a>
                                         </li>
-                                        <li><a href="#">儲值錢包</a>
+                                        <li><a href="#" id="wallet-add-android">儲值錢包</a>
                                         </li>
-                                        <li><a href="#">申請提領</a>
+                                        <li><a href="#" id="wallet-withdraw-android">申請提領</a>
                                         </li>
-                                        <li><a href="#">申請紀錄</a>
+                                        <li><a href="#" id="wallet-withdraw-history-android">申請提領紀錄</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -312,13 +312,13 @@
                                     <div class="dropdown_links_list">
                                         <h3>錢包管理</h3>
                                         <ul>
-                                            <li><a href="#">查看錢包餘額</a>
+                                            <li><a href="#" id="wallet-history">錢包交易紀錄</a>
                                             </li>
-                                            <li><a href="#">儲值錢包</a>
+                                            <li><a href="#" id="wallet-add">儲值錢包</a>
                                             </li>
-                                            <li><a href="#">申請提領</a>
+                                            <li><a href="#" id="wallet-withdraw">申請提領</a>
                                             </li>
-                                            <li><a href="#">申請紀錄</a>
+                                            <li><a href="#" id="wallet-withdraw-history">申請提領紀錄</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -345,6 +345,19 @@
     </div>
 </header>
 <!--header area end-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+        </div>
+    </div>
+</div>
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
