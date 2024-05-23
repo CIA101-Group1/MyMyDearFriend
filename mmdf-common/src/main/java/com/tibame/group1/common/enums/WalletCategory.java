@@ -16,14 +16,33 @@ public enum WalletCategory {
 
     WITHDRAWAL("2", "提領成功"),
 
-    REFUND("3","退款完成"),
+    REFUND("3", "退款完成"),
 
-    DEPOSIT("4","入帳申請"),
+    DEPOSIT("4", "入帳申請"),
 
-    FEE("5","手續費"),
+    FEE("5", "手續費"),
 
-    TEST("6", "測試用");
+    TEST("6", "測試用"),
+
+    WITHDRAW("7", "提款");
 
     private final String code;
     private final String message;
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public static WalletCategory fromCode(String code) {
+        for (WalletCategory category : WalletCategory.values()) {
+            if (category.getCode().equals(code)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("無效的代碼: " + code);
+    }
 }

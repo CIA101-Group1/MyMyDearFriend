@@ -77,9 +77,15 @@ public class CartDaoImpl implements CartDao {
             cart.setPrice(product.getPrice());
             cart.setQuantity((Integer) map.get(key));
             cart.setSubtotal(product.getPrice() * (Integer) map.get(key));
-            ProductImgEntity image = productImgRepository.findByProductEntity_ProductId(product.getProductId()).get(0);
-            String imageBase64 = Base64.getEncoder().encodeToString(image.getImage());
-            cart.setImageBase64(imageBase64);
+            // 查詢商品圖片
+            List<ProductImgEntity> images = productImgRepository.findByProductEntity_ProductId(product.getProductId());
+            if(!images.isEmpty()){
+                ProductImgEntity image = images.get(0);
+                String imageBase64 = Base64.getEncoder().encodeToString(image.getImage());
+                cart.setImageBase64(imageBase64);
+            }else{
+                cart.setImageBase64(null);
+            }
             cartList.add(cart);
         }
         return cartList;

@@ -1,9 +1,11 @@
 package com.tibame.group1.web.service.impl;
 
+import com.tibame.group1.common.enums.WalletCategory;
 import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.db.dao.WalletHistoryDAO;
 import com.tibame.group1.db.dto.WalletReqDTO;
+import com.tibame.group1.web.dto.TopUpReqDTO;
 import com.tibame.group1.web.service.WalletHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,5 +31,14 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     @Override
     public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
         return walletHistoryDAO.getWallets(walletQueryParams);
+    }
+
+    @Override
+    public Integer topUp(TopUpReqDTO topUpReqDTO) {
+        WalletReqDTO walletReqDTO = new WalletReqDTO();
+        walletReqDTO.setMemberID(topUpReqDTO.getMemberID());
+        walletReqDTO.setChangeAmount(topUpReqDTO.getTopUpAmount());
+        walletReqDTO.setChangeType(WalletCategory.TOP_UP);
+        return walletHistoryDAO.createWalletHistory(walletReqDTO);
     }
 }
