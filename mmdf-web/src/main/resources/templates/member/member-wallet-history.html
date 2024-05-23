@@ -23,6 +23,18 @@
         .wallet-buttons .btn {
             margin-right: 10px;
         }
+
+        .btn-primary {
+            color: #fff !important;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+
+        .btn-secondary {
+            color: #fff !important;
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+        }
     </style>
 </head>
 <body>
@@ -59,8 +71,8 @@
                                 </div>
                             </div>
                             <div class="wallet-buttons mt-3">
-                                <a href="/wallet/deposit" class="btn btn-primary">儲值錢包</a>
-                                <a href="/wallet/withdraw" class="btn btn-secondary">申請提領</a>
+                                <button type="button" class="btn btn-primary" id="walletAdd">儲值錢包</button>
+                                <button type="button" class="btn btn-secondary" id="walletWithdraw">申請提領</button>
                             </div>
                         </div>
                     </div>
@@ -95,5 +107,19 @@
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    let errorMessage = "";
+    $(document).ready(function () {
+
+        $("#walletAdd").click(function () {
+            window.location.href = "/member/walletAdd";
+        });
+
+        $("#walletWithdraw").click(function () {
+            window.location.href = "/member/walletWithdraw";
+        });
+    });
+</script>
 </body>
 </html>
