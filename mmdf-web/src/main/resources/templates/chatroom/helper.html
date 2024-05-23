@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Customer Service</title>
+</head>
+<body>
+<h1>AI 客服</h1>
+<label for="question">請輸入您的問題：</label>
+<input type="text" id="question" name="question">
+<button onclick="getAnswer()">提交</button>
+
+<h2>回答：</h2>
+<p id="answer"></p>
+
+<script>
+    async function getAnswer() {
+        const question = document.getElementById('question').value;
+        const response = await fetch('/api/customer-service/get-answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+        document.getElementById('answer').innerText = data.answer;
+    }
+</script>
+</body>
+</html>
