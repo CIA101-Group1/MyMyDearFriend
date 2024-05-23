@@ -1,0 +1,143 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>範例</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!--Checkout page section-->
+<div class="Checkout_section mt-100">
+    <div class="container">
+        <div class="checkout_form">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <form>
+                        <h3>訂單明細</h3>
+                        <div class="col-lg-12 mb-20">
+                            <label for="name" class="form-label">姓名 <span>*</span></label>
+                            <input type="text" class="form-control" id="name">
+                        </div>
+                        <div class="col-lg-12 mb-20">
+                            <label for="phone">電話 <span>*</span></label>
+                            <input type="text" class="form-control" id="phone">
+                        </div>
+                        <div class="col-lg-12 mb-20">
+                            <label for="email"> 電子郵件 <span>*</span></label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                        <div class="col-12 mb-20">
+                            <label for="address"> 地址 <span>*</span></label>
+                            <input type="text" class="form-control" id="address">
+                        </div>
+                        <div class="col-12 mb-20">
+                            <label> 優惠卷 </label>
+                            <input type="text" class="form-control" >
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <form action="#">
+                        <h3>訂單商品</h3>
+                        <div class="order_table table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>商品</th>
+                                    <th>總計</th>
+                                </tr>
+                                </thead>
+                                <tbody id="checkout_tbody">
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>商品總金額</th>
+                                    <td id="cart_subtotal"></td>
+                                </tr>
+                                <tr>
+                                    <th>折扣</th>
+                                    <td><strong id="discount"></strong></td>
+                                </tr>
+                                <tr class="order_total">
+                                    <th>總付款金額</th>
+                                    <td><strong id="order_total"></strong></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="payment_method">
+                            <div class="order_button" style="position: relative;">
+                                <button type="button" style="position: absolute; right: 0; bottom: -20px; width: 100px; height: 40px">結帳</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Checkout page section end-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script>
+    $(document).ready(function() {
+        // 頁面加載時讀取LocalStorage中的數據
+        let data = loadSelectedCartData();
+
+        let tbody = $("#checkout_tbody");
+        tbody.empty(); // 清空現有的表格內容
+
+        let cartSubtotal = 0;
+
+        // 動態生成表格內容
+        data.items.forEach(function (item) {
+            cartSubtotal += parseFloat(item.subtotal);
+            tbody.append(
+                `<tr>
+                    <td>${item.productName} <strong> × ${item.quantity}</strong></td>
+                    <td>$${item.subtotal}</td>
+                </tr>`
+            );
+        });
+
+        // 更新小計和總計
+        let discount = 5.00; // 假設折扣是5元
+        let orderTotal = cartSubtotal - discount;
+
+        $("#cart_subtotal").text(`$${cartSubtotal.toFixed(2)}`);
+        $("#discount").text(`$${discount.toFixed(2)}`);
+        $("#order_total").text(`$${orderTotal.toFixed(2)}`);
+
+    });
+
+    // 讀取LocalStorage中的數據
+    function loadSelectedCartData() {
+        let selectedCartData = localStorage.getItem("selectedCartData");
+        if (selectedCartData) {
+            selectedCartData = JSON.parse(selectedCartData);
+            console.log("Loaded Selected Seller Data:", selectedCartData);
+        }
+        return selectedCartData;
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>員工個人詳細資料</title>
+    <th:block th:replace="~{/fragments/css}"/>
+
+</head>
+
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!-- 主要內容 -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <!-- 員工詳細資料及修改資料部分 -->
+                    <div class="card my-4">
+                        <div class="card-header">
+                            <h2 class="m-0 fw-bold">員工個人詳細資料</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="employeeForm">
+                                <div class="mb-3">
+                                    <label for="employeeId" class="form-label">員工編號：</label>
+                                    <input type="text" class="form-control" id="employeeId" name="employeeId" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeAccount" class="form-label">帳號：</label>
+                                    <input type="text" class="form-control" id="employeeAccount" name="employeeAccount" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeePassword" class="form-label">密碼：</label>
+                                    <input type="password" class="form-control" id="employeePassword"
+                                           name="employeePassword" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeName" class="form-label">姓名：</label>
+                                    <input type="text" class="form-control" id="employeeName" name="employeeName" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeePhone" class="form-label">電話：</label>
+                                    <input type="tel" class="form-control" id="employeePhone" name="employeePhone" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeEmail" class="form-label">電子郵件：</label>
+                                    <input type="email" class="form-control" id="employeeEmail" name="employeeEmail" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeGender" class="form-label">性別：</label>
+                                    <select class="form-select" id="employeeGender" name="employeeGender" readonly>
+                                        <option value="M">男性</option>
+                                        <option value="F">女性</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeCreateTime" class="form-label">建立時間：</label>
+                                    <input type="text" class="form-control" id="employeeCreateTime"
+                                           name="employeeCreateTime" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeStatus" class="form-label">狀態：</label>
+                                    <select class="form-select" id="employeeStatus" name="employeeStatus" readonly>
+                                        <option value="1">啟用</option>
+                                        <option value="0">停用</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" id="cancelBtn" class="btn btn-primary">返回</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+        // 获取请求参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const authorization = urlParams.get("authorization");
+
+// 检查必要参数是否存在
+        if (!authorization) {
+            console.error("Authorization token is missing.");
+            return;
+        }
+
+// 构建请求 URL
+        const apiUrl = "/api/employee/";
+        const detailUrl = apiUrl + "detailOne";
+
+        $.ajax({
+            url: detailUrl,
+            method: "get",
+            headers: {
+                "authorization": authorization
+            },
+            data: {
+                "authorization": authorization
+            },
+            success(response) {
+                if (response.code === "0") {
+                    const data = response.data;
+                    $("#employeeId").val(data.employeeId);
+                    $("#employeeAccount").val(data.employeeAccount);
+                    $("#employeePassword").val(data.employeePassword);
+                    $("#employeeName").val(data.employeeName);
+                    $("#employeeEmail").val(data.employeeEmail);
+                    $("#employeePhone").val(data.employeePhone);
+                    $("#employeeGender").val(data.employeeGender);
+                    // 提取并显示日期部分
+                    const dateOnly = data.employeeCreateTime.substring(0, 8);
+                    $("#employeeCreateTime").val(formatDate(dateOnly));
+                    $("#employeeStatus").val(data.employeeStatus);
+                } else {
+                    console.error("API returned an error: " + response.message);
+                }
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+
+
+        function formatDate(dateStr) {
+            const year = dateStr.substring(0, 4);
+            const month = dateStr.substring(4, 6);
+            const day = dateStr.substring(6, 8);
+            return `${year}-${month}-${day}`;
+        }
+
+        $("#cancelBtn").click(function () {
+            // 點選取消後跳轉到/home
+            window.location.href = "/home";
+        });
+    });
+</script>
+
+</body>
+</html>

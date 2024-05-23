@@ -1,25 +1,38 @@
 package com.tibame.group1.admin.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Controller
 public class EmployeeFrontedController {
 
     @GetMapping("/employee/login")
-    public String employeeLogin(Model model) {
+    public String employeeLogin() {
         return "/employee/employee-login"; //要導入的html
     }
 
-    @GetMapping("employee/detail")
-    public String employeeDetail(Model model, @RequestParam("employeeAccount") String employeeAccount,
-                                 @RequestParam("employeePassword") String employeePassword) {
-        return "employee-detail";  //要導入的html
+    @GetMapping("/employee/detail")
+    public String employeeDetail() {
+        return "employee/employee-detail";  //要導入的html
     }
 
+    @GetMapping("/employee/all")
+    public String index() {
+        return "/employee/employee-all";
+    }
 
+    @GetMapping("/employee/create")
+    public String employeeCreate() {
+        return "employee/employee-create";
+    }
+
+    @GetMapping("/employee/detailOne")
+    public String employeeDetailOne() {
+        return "employee/employee-detail-one";
+    }
 }
+
+
+

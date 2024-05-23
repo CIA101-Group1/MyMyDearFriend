@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>創建員工</title>
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!-- 主要內容 -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <!-- 員工創建表單 -->
+                    <div class="card my-4">
+                        <div class="card-header">
+                            <h2 class="m-0 fw-bold">創建員工</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="employeeForm">
+                                <div class="mb-3">
+                                    <label for="employeeAccount" class="form-label">帳號：</label>
+                                    <input type="text" class="form-control" id="employeeAccount" name="employeeAccount">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeePassword" class="form-label">密碼：</label>
+                                    <input type="text" class="form-control" id="employeePassword" name="employeePassword">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeName" class="form-label">姓名：</label>
+                                    <input type="text" class="form-control" id="employeeName" name="employeeName">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeePhone" class="form-label">電話：</label>
+                                    <input type="tel" class="form-control" id="employeePhone" name="employeePhone">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeEmail" class="form-label">電子郵件：</label>
+                                    <input type="email" class="form-control" id="employeeEmail" name="employeeEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeGender" class="form-label">性別：</label>
+                                    <select class="form-select" id="employeeGender" name="employeeGender">
+                                        <option value="M">男性</option>
+                                        <option value="F">女性</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeStatus" class="form-label">狀態：</label>
+                                    <select class="form-select" id="employeeStatus" name="employeeStatus">
+                                        <option value="1" selected>啟用</option>
+                                        <option value="0">停用</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" id="createBtn" class="btn btn-primary">創建</button>
+                                    <button type="button" id="cancelBtn" class="btn btn-secondary">取消</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#createBtn").click(function () {
+            let errorMessage = "";
+            // 驗證表單欄位
+            const employeeAccount = $("#employeeAccount").val().trim();
+            if (employeeAccount === "" || !/^[A-Za-z0-9_]{2,20}$/.test(employeeAccount)) {
+                errorMessage += "<li>員工帳號必須是英文字母、數字和_，且長度必需在2到20之間</li>";
+            }
+
+            const employeePassword = $("#employeePassword").val().trim();
+            if (employeePassword === "" || !/^[a-zA-Z0-9]{6,16}$/.test(employeePassword)) {
+                errorMessage += "<li>密碼只能是數字和英文字母，且長度必須在6到16之間</li>";
+            }
+
+            const employeeName = $("#employeeName").val().trim();
+            if (employeeName === "" || !/^[A-Za-z\u4e00-\u9fa5]{2,20}$/.test(employeeName)) {
+                errorMessage += "<li>姓名必須是中、英文字母，且長度必需在2到20之間</li>";
+            }
+
+            const employeePhone = $("#employeePhone").val().trim();
+            if (employeePhone === "" || !/^\d{10}$/.test(employeePhone)) {
+                errorMessage += "<li>電話必須是10位數字，且不含符號</li>";
+            }
+
+            const employeeEmail = $("#employeeEmail").val().trim();
+            if (employeeEmail === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(employeeEmail)) {
+                errorMessage += "<li>請填寫正確的電子郵件格式</li>";
+            }
+
+            if (errorMessage !== "") {
+                $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+                $("#myModal").modal("show");
+                return false;
+            }
+
+            // 構建 userData 對象
+            const userData = {
+                employeeAccount: employeeAccount,
+                employeePassword: employeePassword,
+                employeeName: employeeName,
+                employeePhone: employeePhone,
+                employeeEmail: employeeEmail,
+                employeeGender: $("#employeeGender").val(),
+                employeeStatus: $("#employeeStatus").val()
+            };
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const authorization = urlParams.get("authorization");
+
+            if (!authorization) {
+                console.error("Authorization token is missing.");
+                return;
+            }
+
+            $.ajax({
+                url: "/api/employee/create?authorization=" + encodeURIComponent(authorization), // 在URL中添加authorization參數
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+                    console.log("AJAX 請求成功，伺服器回應: ", response);
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log("成功處理回應數據: ", data);
+                            $("#modalBody").html("新增成功");
+                            $("#myModal").modal("show");
+                            setTimeout(function () {
+                                // 跳轉到 employee/all 畫面，使用原來的授權碼進行跳轉
+                                var authorization = localStorage.getItem("authorization");
+                                var url = '/employee/all';
+                                if (authorization) {
+                                    url += '?authorization=' + encodeURIComponent(authorization);
+                                }
+                                console.log('goToEmployeeAll href: ', url);
+                                window.location.href = url;
+                            }, 2000);
+
+                        },
+                        onError(message) {
+                            console.log("錯誤處理回應數據: ", message);
+                            $("#modalBody").html(message);
+                            $("#myModal").modal("show");
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    console.error("AJAX 請求失敗: ", error);
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        });
+
+        $("#cancelBtn").click(function () {
+            // 修改這裡以符合您的取消後應跳轉的URL
+            var authorization = localStorage.getItem("authorization");
+            var url = '/employee/all';
+            if (authorization) {
+                url += '?authorization=' + encodeURIComponent(authorization);
+            }
+            console.log('goToEmployeeAll href: ', url);
+            window.location.href = url;
+        });
+    });
+</script>
+
+</body>
+</html>

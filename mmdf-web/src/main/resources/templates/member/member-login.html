@@ -6,19 +6,34 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>會員登入</title>
-    <!--Filepond JS-->
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
-    <!--    Filepond CSS    -->
-    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-          rel="stylesheet"/>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .row {
+            margin: auto;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            color: #fff !important;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+
+        .btn-secondary {
+            color: #fff !important;
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+        }
+
+        .btn-warning {
+            color: #212529 !important;
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
+        }
+    </style>
 </head>
 <body>
 <!--header-->
@@ -27,31 +42,31 @@
 <!--breadcrumb-->
 <th:block th:replace="~{/fragments/breadcrumb}"/>
 
-<!-- main start  -->
+<!-- main start -->
 <section class="main_content_area">
     <div class="container">
         <div class="account_dashboard">
             <div class="row">
-                <!-- Sidebar -->
-                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
-
                 <div class="col-sm-12 col-md-9 col-lg-9">
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="account-details">
-                            <h3>登入</h3>
+                            <h3 style="text-align: center;">會員登入</h3>
                             <div class="login">
                                 <div class="login_form_container">
                                     <div class="account_login_form">
                                         <form id="login-form">
-                                            <div id="errorMessage" style="color: red;"></div>
                                             <label for="memberAccount">帳號:</label>
                                             <input type="text" id="memberAccount" name="memberAccount"><br><br>
                                             <label for="cid">密碼:</label>
                                             <input type="password" id="cid" name="cid"><br><br>
-                                            <button type="submit">登入</button>
-                                            <button id="memberCreate" type="button">註冊</button>
-                                            <button id="memberCidForget" type="button">忘記密碼</button>
+                                            <button type="submit" class="btn btn-primary">登入</button>
+                                            <button type="button" id="memberCidForget" class="btn btn-secondary">
+                                                忘記密碼
+                                            </button>
+                                            <button type="button" id="memberCreate" class="btn btn-warning">
+                                                註冊
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
@@ -63,14 +78,31 @@
         </div>
     </div>
 </section>
-<!-- main end   -->
+<!-- main end -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 
 <!--js-->
-<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
 <script>
     let userData = {};
@@ -89,8 +121,9 @@
             }
 
             if (errorMessage !== "") {
-                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
-                return;
+                $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+                $("#myModal").modal("show");
+                return false;
             }
 
             userData = {
@@ -108,19 +141,43 @@
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
+                            let targetPage;
                             switch (data.status) {
                                 case "0":
-                                    alert("登入成功！(提醒：信箱尚未驗證)");
-                                    localStorage.setItem("authorization", response.data.authorization);
-                                    window.location.href = "/";
+                                    $("#modalBody").html("登入成功！(提醒：信箱尚未驗證)");
+                                    localStorage.setItem("authorization", data.authorization);
+                                    $("#myModal").modal("show");
+                                    targetPage = localStorage.getItem("targetPage");
+                                    if (targetPage) {
+                                        localStorage.removeItem("targetPage"); // 登入後移除儲存的目標頁面
+                                        setTimeout(function () {
+                                            window.location.href = targetPage; // 導向目標頁面
+                                        }, 2000);
+                                    } else {
+                                        setTimeout(function () {
+                                            window.location.href = "/";
+                                        }, 2000);
+                                    }
                                     break;
                                 case "1":
-                                    alert("登入成功！");
-                                    localStorage.setItem("authorization", response.data.authorization);
-                                    window.location.href = "/";
+                                    $("#modalBody").html("登入成功！");
+                                    localStorage.setItem("authorization", data.authorization);
+                                    $("#myModal").modal("show");
+                                    targetPage = localStorage.getItem("targetPage");
+                                    if (targetPage) {
+                                        localStorage.removeItem("targetPage"); // 登入後移除儲存的目標頁面
+                                        setTimeout(function () {
+                                            window.location.href = targetPage; // 導向目標頁面
+                                        }, 2000);
+                                    } else {
+                                        setTimeout(function () {
+                                            window.location.href = "/";
+                                        }, 2000);
+                                    }
                                     break;
                                 case "-1":
-                                    alert("帳號或密碼錯誤，請重試");
+                                    $("#modalBody").html("帳號或密碼錯誤，請重試");
+                                    $("#myModal").modal("show");
                                     break;
                             }
                         },
@@ -130,7 +187,8 @@
                     });
                 },
                 error(xhr, status, error) {
-                    alert("伺服器連線失敗: " + error);
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
                 }
             });
         });

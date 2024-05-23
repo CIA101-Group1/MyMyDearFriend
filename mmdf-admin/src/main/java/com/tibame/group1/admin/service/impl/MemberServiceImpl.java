@@ -1,20 +1,22 @@
-package com.tibame.group1.admin.service.Impl;
+package com.tibame.group1.admin.service.impl;
 
-import com.tibame.group1.admin.dto.MemberAllReqDTO;
-import com.tibame.group1.admin.dto.MemberAllResDTO;
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
+import com.tibame.group1.admin.dto.MemberReqDTO;
 import com.tibame.group1.admin.dto.MemberResDTO;
+import com.tibame.group1.admin.dto.MemberAllResDTO;
 import com.tibame.group1.admin.service.MemberService;
 import com.tibame.group1.common.dto.PagesResDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.DateUtils;
+import com.tibame.group1.common.utils.NumberUtils;
+import com.tibame.group1.common.utils.StringUtils;
+import com.tibame.group1.db.entity.EmployeeEntity;
 import com.tibame.group1.db.entity.MemberEntity;
+import com.tibame.group1.db.repository.EmployeeRepository;
 import com.tibame.group1.db.repository.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,25 +27,50 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired private MemberRepository memberRepository;
 
+    @Autowired private EmployeeRepository employeeRepository;
+
+    /**
+     * 後台超級管理員查詢會員資料
+     *
+     * @param req 查詢條件
+     * @param adminLoginSource 員工登入
+     * @param pageable 分頁資訊
+     * @return 查詢結果
+     */
     @Override
-    public MemberResDTO memberAll(MemberAllReqDTO req, Pageable pageable) {
-        MemberEntity exampleEntity = new MemberEntity();
-        exampleEntity.setIsVerified(req.getIsVerified());
-        exampleEntity.setSellerStatus(req.getSellerStatus());
+    public MemberAllResDTO memberAll(
+            MemberReqDTO req, AdminLoginSourceDTO adminLoginSource, Pageable pageable) {
+        MemberAllResDTO res = new MemberAllResDTO();
+        EmployeeEntity employee =
+                employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
+        if (null == employee) {
+            res.setStatus(MemberAllResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
+            return res;
+        }
 
-        // 使用ExampleMatcher定義匹配規則，這裡使用默認的匹配器，即全匹配
-        ExampleMatcher matcher = ExampleMatcher.matching();
-
-        // 將範例對象和匹配規則組合成Example對象
-        Example<MemberEntity> example = Example.of(exampleEntity, matcher);
-
-        // 調用findAll方法進行查詢和分頁
-        Page<MemberEntity> pageResult = memberRepository.findAll(example, pageable);
+        Page<MemberEntity> pageResult;
+        if (StringUtils.isEmpty(req.getSearchText())) {
+            MemberEntity filterEntity = new MemberEntity();
+            filterEntity.setIsVerified(req.getIsVerified());
+            filterEntity.setSellerStatus(req.getSellerStatus());
+            ExampleMatcher filterMatcher = ExampleMatcher.matching();
+            // 將範例對象和匹配規則組合成Example對象
+            Example<MemberEntity> filterExample = Example.of(filterEntity, filterMatcher);
+            // 調用findAll方法進行查詢和分頁
+            pageResult = memberRepository.findAll(filterExample, pageable);
+        } else {
+            pageResult =
+                    memberRepository.findByMemberIdOrMemberAccountOrEmail(
+                            NumberUtils.toInt(req.getSearchText()),
+                            req.getSearchText(),
+                            req.getSearchText(),
+                            pageable);
+        }
 
         // 把查詢結果從Page物件拿出來塞進去List裡面
-        List<MemberAllResDTO> memberList = new ArrayList<>();
+        List<MemberResDTO> memberList = new ArrayList<>();
         for (MemberEntity member : pageResult.getContent()) {
-            MemberAllResDTO resDTO = new MemberAllResDTO();
+            MemberResDTO resDTO = new MemberResDTO();
             resDTO.setMemberId(String.valueOf(member.getMemberId()));
             resDTO.setMemberAccount(member.getMemberAccount());
             resDTO.setName(member.getName());
@@ -80,9 +107,9 @@ public class MemberServiceImpl implements MemberService {
         PagesResDTO pagesResDTO = new PagesResDTO();
         pagesResDTO.setTotalPages(pageResult.getTotalPages());
         pagesResDTO.setTotalCount((int) pageResult.getTotalElements());
-        MemberResDTO res = new MemberResDTO();
         res.setMemberList(memberList);
         res.setPages(pagesResDTO);
+        res.setStatus(MemberAllResDTO.Status.SEARCH_SUCCESS.getCode());
         return res;
     }
 }

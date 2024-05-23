@@ -7,6 +7,7 @@ import com.tibame.group1.common.exception.EmailException;
 import com.tibame.group1.common.listener.EmailSentListener;
 import com.tibame.group1.common.utils.*;
 import com.tibame.group1.db.entity.MemberEntity;
+import com.tibame.group1.db.entity.MemberNoticeEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.dto.CidResetVerifySourceDTO;
@@ -14,6 +15,7 @@ import com.tibame.group1.web.dto.EmailVerifySourceDTO;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.MemberService;
+import com.tibame.group1.web.service.NoticeService;
 
 import jakarta.transaction.Transactional;
 
@@ -35,6 +37,8 @@ public class MemberServiceImpl implements MemberService {
     @Autowired private JwtService jwtService;
 
     @Autowired private ConfigProperties config;
+
+    @Autowired private NoticeService noticeService;
 
     /**
      * 前台使用者註冊會員
@@ -87,7 +91,9 @@ public class MemberServiceImpl implements MemberService {
         loginSource.setName(member.getName());
         loginSource.setEmail(member.getEmail());
         loginSource.setIsVerified(member.getIsVerified());
-        //        sendVerifyEmail(loginSource);
+        sendVerifyEmail(loginSource);
+        noticeService.memberNoticeCreate(
+                member, MemberNoticeEntity.NoticeCategory.SYSTEM, "註冊成功", "完成註冊會員", true);
         resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
         resDTO.setStatus(MemberCreateResDTO.Status.CREATE_SUCCESS.getCode());
         return resDTO;

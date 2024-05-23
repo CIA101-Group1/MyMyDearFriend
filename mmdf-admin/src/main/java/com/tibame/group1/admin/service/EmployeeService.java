@@ -1,23 +1,40 @@
 package com.tibame.group1.admin.service;
 
 import com.tibame.group1.admin.dto.*;
-import com.tibame.group1.admin.dto.AdminLoginReqDTO;
 import com.tibame.group1.common.dto.web.LoginResDTO;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.exception.DateException;
 
+
 import java.io.IOException;
+import java.util.List;
 
 public interface EmployeeService {
+    // 員工創建也要驗證登入
+    EmployeeCreateResDTO employeeCreate(
+            EmployeeCreateReqDTO req, AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException, DateException;
 
-    EmployeeCreateResDTO employeeCreate(EmployeeCreateReqDTO req) throws DateException, IOException;
+    /**
+     * 登入員工看自己資訊
+     *
+     * @param adminLoginSource
+     * @return
+     * @throws CheckRequestErrorException
+     * @throws IOException
+     */
+    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException, IOException;
 
-    EmployeeDetailResDTO employeeDetail(AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException;
+    EmployeeDetailResDTO employeeDetailById(AdminLoginSourceDTO adminLoginSource, Integer employeeId)
+        throws CheckRequestErrorException;
 
-    void employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
+
+    EmployeeEditResDTO employeeEdit(EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException;
 
     LoginResDTO employeeLogin(AdminLoginReqDTO req) throws IOException;
 
-
+    List<EmployeeAllResDTO> employeeAll(AdminLoginSourceDTO adminLoginSource, String employeeName)
+            throws CheckRequestErrorException, IOException, DateException;
 }

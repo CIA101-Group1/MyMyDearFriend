@@ -1,7 +1,6 @@
 package com.tibame.group1.web;
 
 import com.tibame.group1.web.service.InitTestMemberService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

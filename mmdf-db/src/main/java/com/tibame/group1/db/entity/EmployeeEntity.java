@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Immutable
+//@Immutable
 @Table(name = "employee")
 public class EmployeeEntity {
     @Id
@@ -20,7 +20,7 @@ public class EmployeeEntity {
     @Column(name = "employee_account", nullable = false, length = 20)
     private String employeeAccount;
 
-    @Column(name = "employee_password", nullable = false, length = 200)
+    @Column(name = "employee_password", nullable = false, length = 1000)
     private String employeePassword;
 
     @Column(name = "employee_name", nullable = false, length = 20)
@@ -35,8 +35,10 @@ public class EmployeeEntity {
     @Column(name = "employee_gender", nullable = false)
     private String employeeGender;
 
+    @Column(name = "employee_createtime")
     private Date employeeCreateTime;
 
+    @Column(name = "employee_status")
     private Integer employeeStatus;
 
 }
