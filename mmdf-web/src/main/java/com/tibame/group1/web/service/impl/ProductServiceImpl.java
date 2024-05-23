@@ -1,5 +1,6 @@
 package com.tibame.group1.web.service.impl;
 
+import com.tibame.group1.db.dto.*;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
@@ -9,7 +10,6 @@ import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
-import com.tibame.group1.web.dto.*;
 import com.tibame.group1.web.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -81,7 +81,8 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
-
+        product.setReviewStatus(0);
+        product.setProductStatus(0);
         product = productRepository.save(product);
 
 //     productImg
@@ -119,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
 //        return resDTO;
 //    }
 
-//    0517
+    //    0517
     @Override
     public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
         ProductEntity product = new ProductEntity();
@@ -130,6 +131,8 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(req.getDescription());
         product.setPrice(Integer.valueOf(req.getPrice()));
         product.setQuantity(Integer.valueOf(req.getQuantity()));
+        product.setReviewStatus(0);
+        product.setProductStatus(0);
         product = productRepository.save(product);
 
         if (req.getUpdateImg()) {
@@ -266,7 +269,7 @@ public class ProductServiceImpl implements ProductService {
 //                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
     }
 
-//0515
+    //0515
     @Override
     public Page<ProductEntity> productGetAll(Pageable pageable) {
         //1.查所有商品
@@ -331,5 +334,30 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+    @Override
+    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
+        // 根据产品ID从数据库中获取产品对象
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+
+        // 更新产品的审核状态 ，上架
+        product.setReviewStatus(Integer.valueOf(reviewStatus));
+
+        // 保存更新后的产品对象回数据库
+        productRepository.save(product);
+    }
+
+    @Override
+    public void updateProductStatus(int productId, String productStatus) throws Exception {
+        // 根据产品ID从数据库中获取产品对象
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+
+        // 更新产品的审核状态 ，上架
+        product.setProductStatus(Integer.valueOf(productStatus));
+
+        // 保存更新后的产品对象回数据库
+        productRepository.save(product);
+    }
 
 }

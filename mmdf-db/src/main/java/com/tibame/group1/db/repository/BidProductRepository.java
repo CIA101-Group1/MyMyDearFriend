@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface BidProductRepository extends JpaRepository<BidProductEntity, Integer> {
@@ -16,10 +17,15 @@ public interface BidProductRepository extends JpaRepository<BidProductEntity, In
             "SELECT bp FROM BidProductEntity bp "
                     + "WHERE (:categoryId IS NULL OR bp.categoryId = :categoryId) "
                     + "AND (:name IS NULL OR bp.name LIKE %:name%) "
-                    + "AND (:status IS NULL OR bp.status = :status) "
+                    + "AND (:status IS NULL OR bp.status IN (:status)) "
                     + "ORDER BY bp.productId")
     List<BidProductEntity> findByCompositeQuery(
             @Param("categoryId") Integer categoryId,
             @Param("name") String name,
-            @Param("status") Integer status);
+            @Param("status") List<Integer> status);
+
+    List<BidProductEntity> findAllByStatus(Integer status);
+
+    List<BidProductEntity> findByEndTimeBeforeAndStatus(Timestamp endTime, Integer status);
+
 }

@@ -3,15 +3,20 @@ package com.tibame.group1.web.controller;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.web.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -35,19 +40,14 @@ public class ProductFrontendController {
     @GetMapping("product/buyer/select")
     public String getProduct(Model model,
                              @RequestParam(value = "page", defaultValue = "0") int page,
-                             @RequestParam(value = "size", defaultValue = "10") int size) {
+                             @RequestParam(value = "size", defaultValue = "12") int size) {
         {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
             //BackEndController
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);
-
-            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
-            model.addAttribute("reviewStatusList", reviewStatusList);
-
-            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
-            model.addAttribute("productStatusList", productStatusList);
-
-        return "/product/buyer-product-select";
+            return "/product/buyer-product-select";
         }
     }
 
@@ -58,6 +58,9 @@ public class ProductFrontendController {
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size) {
         {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
             Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
             model.addAttribute("productPage", productPage);
 
@@ -74,17 +77,17 @@ public class ProductFrontendController {
 
     @GetMapping("product/seller/create")
     public String ProductCreate(Model model) {
-        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
         model.addAttribute("productCategoryList", productCategoryList);
         return "/product/seller-product-create"; // 要導入的html
     }
 
-    @GetMapping("product/seller/update")
-    public String ProductUpdate(Model model) {
-        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
-        model.addAttribute("productCategoryList", productCategoryList);
-        return "/product/seller-product-update"; // 要導入的html
-    }
+//    @GetMapping("product/seller/update")
+//    public String ProductUpdate(Model model) {
+//        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+//        model.addAttribute("productCategoryList", productCategoryList);
+//        return "/product/seller-product-update"; // 要導入的html
+//    }
 
     /**
      * 透過商品ID取得單一商品，進入修改畫面
@@ -94,10 +97,102 @@ public class ProductFrontendController {
         ProductEntity productEntity = productService.getOneSellerProduct(productId);
         model.addAttribute("productEntity", productEntity);
 
-        List<ProductCategoryEntity> productCategoryList =productService. getAllCategory();
+        List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
         model.addAttribute("productCategoryList", productCategoryList);
 
-        return "/product/product-getOne";
+        return "/product/seller-product-getOne-update";
+    }
+
+
+//    0518 my
+
+    @GetMapping("/buyer/product/getOne/{productId}")
+    public String getOneBuyerProduct(@PathVariable("productId") String productId, Model model) {
+
+        ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
+        model.addAttribute("productEntity", productEntity);
+
+        List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+
+        return "/product/buyer-product-getOne";
+    }
+
+    @GetMapping("/admin/product/review")
+    public String adminReviewProduct(Model model,
+                                     @RequestParam(value = "page", defaultValue = "0") int page,
+                                     @RequestParam(value = "size", defaultValue = "10") int size) {
+        {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+
+            return "/product/admin-product-review";
+        }
+    }
+
+    @GetMapping("/buyer/proCategory/getOne/{categoryId}")
+    public String getOneByCategory(@PathVariable("categoryId") String productId, Model model) {
+
+        ProductEntity productEntity = productService.getOneProduct(Integer.valueOf(productId));
+        model.addAttribute("productEntity", productEntity);
+
+        List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+        model.addAttribute("productCategoryList", productCategoryList);
+
+        return "/product/buyer-proCategory-select";
+    }
+
+//    @GetMapping("/admin/pro/review")
+//    public String adminReview(Model model,
+//                              @RequestParam(value = "page", defaultValue = "0") int page,
+//                              @RequestParam(value = "size", defaultValue = "10") int size) {
+//        {
+//            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+//            model.addAttribute("productPage", productPage);
+//
+//            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+//            model.addAttribute("reviewStatusList", reviewStatusList);
+//
+//            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+//            model.addAttribute("productStatusList", productStatusList);
+//
+//            return "/product/index";
+//        }
+//    }
+
+    @GetMapping("product/seller/status")
+    public String productstatus(Model model,
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size) {
+        {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+            return "/product/seller-product-status";
+        }
+    }
+
+    @GetMapping("api/destination")
+    public ResponseEntity<String> redirect(HttpServletRequest request) {
+        System.out.println("收到redirect");
+        return null;
     }
 
 }

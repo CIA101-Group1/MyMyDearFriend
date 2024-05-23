@@ -26,8 +26,8 @@
                 <div class="collapse" id="bidProductCollapse" aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/bidproduct/list">競標商品查詢</a>
-                        <a class="nav-link" href="/bidproduct/review">競標商品審核</a>
+                        <a class="nav-link" onclick="goToBidProductAll()">競標商品查詢</a>
+                        <a class="nav-link" onclick="goToBidProductReview()">競標商品審核</a>
                     </nav>
                 </div>
                 <!-- 線下市集 -->
@@ -92,6 +92,26 @@
     function goToMemberAll() {
         var authorization = localStorage.getItem("authorization");
         var url = '/member/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToBidProductAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/bidproduct/list';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToBidProductReview() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/bidproduct/review';
         if(authorization) {
             url += '?authorization=' + encodeURIComponent(authorization);
         }
