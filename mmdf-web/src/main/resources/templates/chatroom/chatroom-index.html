@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二手交易平台聊天室</title>
+    <link rel="stylesheet" href="/chatroom/css/chatroom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-$END$
+<div class="container">
+    <div class="sidebar">
+        <div class="friends-list-header">
+            <h2>好友列表</h2>
+            <button id="toggleFriendsList" class="toggle-button"><i class="fas fa-bars"></i></button>
+        </div>
+        <ul id="friendList" class="friend-list">
+            <!-- 好友列表將動態生成 -->
+        </ul>
+    </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img id="chatAvatar" src="default-avatar.png" alt="Avatar">
+            <div>
+                <h3 id="chatWith">選擇好友以開始聊天</h3>
+                <p id="chatWithId">ID: </p>
+            </div>
+        </div>
+        <div id="chatMessages" class="chat-messages">
+            <!-- 聊天訊息將動態生成 -->
+        </div>
+        <div class="message-input">
+            <input type="text" id="messageInput" placeholder="輸入訊息...">
+            <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+            <label for="fileInput" class="file-label"><i class="fas fa-paperclip"></i></label>
+            <input type="file" id="fileInput">
+        </div>
+    </div>
+</div>
+<script src="/chatroom/js/chatroom.js"></script>
 </body>
 </html>

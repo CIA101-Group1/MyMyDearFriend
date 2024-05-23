@@ -5,29 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Customer Service</title>
 </head>
-<body>
+<body onload="connect();">
 <h1>AI 客服</h1>
 <label for="question">請輸入您的問題：</label>
 <input type="text" id="question" name="question">
-<button onclick="getAnswer()">提交</button>
+<button onclick="sendQuestion()">提交</button>
 
 <h2>回答：</h2>
 <p id="answer"></p>
 
 <script>
-    async function getAnswer() {
-        const question = document.getElementById('question').value;
-        const response = await fetch('/api/customer-service/get-answer', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ question })
-        });
+    var endPointURL = "ws://" + window.location.host + "/service?=123";
+    // var webSocket = new WebSocket(endPointURL);
+    function connect() {
+        // create a websocket
+        webSocket = new WebSocket(endPointURL);
 
-        const data = await response.json();
-        document.getElementById('answer').innerText = data.answer;
+        webSocket.onopen = function (event) {
+            console.log("Connect Success!");
+        };
     }
+    webSocket.onmessage = function (event){
+        jsonObj = JSON.parse(event.data);
+        if("Helper" === jsonObj.type){
+            var answer = jsonObj.AiMessage;
+            document.getElementById("answer").innerText = answer;
+        }
+
+    }
+    function  sendQuestion() {
+        var question = document.getElementById('question');
+        var message = question.value.trim();
+        var jsonObj = {
+            "type":"",
+            "aiMessage":message,
+            "aiMethod":""
+        }
+        webSocket.send(JSON.stringify(jsonObj));
+        question.value="";
+    }
+    // async function getAnswer() {
+    //     const question = document.getElementById('question').value;
+    //     const response = await fetch('/api/customer-service/get-answer', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ question })
+    //     });
+    //
+    //     const data = await response.json();
+    //     document.getElementById('answer').innerText = data.answer;
+
 </script>
 </body>
 </html>

@@ -1,10 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能客服聊天室</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/service-helper/css/service-helper.css">
 </head>
 <body>
-$END$
+<div id="app">
+    <div class="container my-5">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-success text-white">
+                <span class="fw-bold">智能客服</span>
+                <span class="badge bg-light text-success">在線</span>
+            </div>
+            <div class="card-body chat-messages overflow-auto p-3">
+                <div v-for="message in messages" :key="message.id" :class="['message', message.type]">
+                    <div class="content p-2 rounded" :class="message.type === 'received' ? 'bg-light' : 'bg-success text-white'">
+                        <template v-if="message.type === 'text'">{{ message.content }}</template>
+                        <template v-else>
+                            <img :src="message.content" class="img-fluid rounded" />
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex">
+                <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="form-control me-2" placeholder="輸入訊息...">
+                <input type="file" ref="fileInput" @change="sendFile" class="d-none">
+                <!-- <button @click="triggerFileInput" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-paperclip"></i> -->
+                </button>
+                <button @click="sendMessage" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="/service-helper/js/service-helper.js"></script>
 </body>
 </html>
