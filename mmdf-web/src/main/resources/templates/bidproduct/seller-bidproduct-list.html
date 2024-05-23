@@ -1,0 +1,167 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>競標商品總覽</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<!-- <th:block th:replace="~{/fragments/breadcrumb}"/> -->
+
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-seller}"/>
+
+                <div class="col-sm-12 col-md-10 col-lg-10">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active">
+                            <h3>競標商品總覽</h3>
+                            <table id="BidProductTable" class="stripe" style="width: 100%">
+                                <thead style="background-color: #e5e5e5; border-bottom: 3px solid #F53737;">
+                                <tr>
+                                    <th>編號</th>
+                                    <th>縮圖</th>
+                                    <th>分類</th>
+                                    <th>商品狀況</th>
+                                    <th>商品名稱</th>
+                                    <th>起標價</th>
+                                    <th>商品狀態</th>
+                                    <th>最近更新時間</th>
+                                    <th>查看</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#BidProductTable').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100],
+            "searching": true,
+            "paging": true,
+            "ordering": true,
+            // "processing": true,
+            // "serverSide": true, // Enable server-side processing
+            "language": {
+                "processing": "處理中...",
+                "loadingRecords": "載入中...",
+                "lengthMenu": "顯示 _MENU_ 筆結果",
+                "zeroRecords": "沒有符合的結果",
+                "info": "顯示第 _START_ 至 _END_ 筆結果，共<span style='color: red';> _TOTAL_ </span>筆",
+                "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
+                "infoPostFix": "",
+                "search": "搜尋:",
+                "paginate": {
+                    "first": "第一頁",
+                    "previous": "上一頁",
+                    "next": "下一頁",
+                    "last": "最後一頁"
+                },
+                "aria": {
+                    "sortAscending": ": 升冪排列",
+                    "sortDescending": ": 降冪排列"
+                }
+            },
+            "ajax": {
+                "url": "/api/seller/bidproduct",
+                "type": "GET",
+                "headers": {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                "dataSrc": "data"
+            },
+            "columns": [
+                {"data": "productId"},
+                {
+                    "data": "images",
+                    "render": function (data, type, full, meta) {
+                        return `<img src="data:image/jpeg;base64, ${data[0].image}" width="100px" alt="商品縮圖"/>`;
+                    }
+                },
+                {
+                    "data": "category",
+                    "render": function (data, type, full, meta) {
+                        // return data.categoryId + '-[' + data.categoryName + ']';
+                        return `[${data.categoryName}]`;
+                    }
+                },
+                {
+                    "data": "condition",
+                    "render": function (data, type, full, meta) {
+                        // return data.categoryId + '-[' + data.categoryName + ']';
+                        return `[${data.conditionName}]`;
+                    }
+                },
+                {"data": "name"},
+                {"data": "startPrice"},
+                {"data": "status"},
+                {
+                    "data": "lastModified",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    "data": "productId",
+                    "render": function (data, type, full, meta) {
+                        return `<a href="/bidproduct-detail/${data}">
+                                <input type="button" value="詳情">
+                                </a>`;
+                    }
+                },
+                {
+                    "data": "productId",
+                    "render": function (data, type, full, meta) {
+                        return `<a href="/seller/bidproduct-edit/${data}">
+                                <input type="button" value="編輯商品">
+                                </a>
+                                <form method="get" action="/emp/update" style="margin-bottom: 0px;">
+                                <input type="submit" value="提前結束競標">
+                                <input type="hidden" name="empno" value="${data}">
+                                </form>`;
+                    }
+                }
+            ]
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

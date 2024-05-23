@@ -1,0 +1,152 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>競標訂單結帳</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumbs area start-->
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <h3>競標訂單結帳</h3>
+                    <ul>
+                        <!-- <li><a href="/">home</a></li> -->
+                        <!-- <li>競標訂單結帳</li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+
+<!--Checkout page section-->
+<div class="Checkout_section mt-50">
+    <div class="container">
+        <div class="checkout_form">
+            <div class="row">
+                <div class="col-12">
+                    <form action="#">
+                        <h3>訂單內容</h3>
+                        <div class="order_table table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>商品</th>
+                                    <th>金額</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td> Handbag fringilla <strong> × 1</strong></td>
+                                    <td> $165.00</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <form action="#">
+                        <h3>收貨資訊</h3>
+                        <div class="row">
+                            <div class="col-12 mb-20">
+                                <label>姓名 <span>*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-lg-6 mb-20">
+                                <label>Phone<span>*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-lg-6 mb-20">
+                                <label> Email <span>*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-12">
+                                <label>地址<span>*</span></label>
+                            </div>
+                            <div class="col-lg-6 mb-20">
+                                <select class="form-control" name="cuntry" id="county_box">
+                                </select>
+                            </div>
+
+                            <div class="col-lg-6 mb-20">
+                                <select class="form-control" name="cuntry" id="district_box">
+                                </select>
+                            </div>
+                            <div class="col-12 mb-20">
+                                <input class="form-control" type="text" th:placeholder="地址">
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-notes">
+                                    <label for="order_note">訂單備註</label>
+                                    <textarea id="order_note" rows="5">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <form action="#">
+                        <h3>付款資訊</h3>
+                        <div class="row">
+
+                            <div class="col-12 mb-20">
+                                <label>錢包餘額</label>
+                                <input type="text" value="999">
+                                <label>錢包密碼 <span>*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-12 mb-20">
+                                <div>
+                                    <span>小計：</span>
+                                    <span><strong th:text="'$'+ ${BidOrder.subtotal}"></strong></span>
+                                </div>
+                                <div>
+                                    <span>折扣：</span>
+                                    <span><strong>-$0</strong></span>
+                                </div>
+                                <div>
+                                    <span>運費：</span>
+                                    <span><strong>$30</strong></span>
+                                </div>
+                                <div>
+                                    <span>合計：</span>
+                                    <span><strong>$220</strong></span>
+                                </div>
+                                <div class="mt-20">
+                                    <button type="submit" class="btn btn-success w-100">去結帳</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Checkout page section end-->
+
+    <!--footer-->
+    <th:block th:replace="~{/fragments/footer}"/>
+
+    <!--js-->
+    <th:block th:replace="~{/fragments/js}"/>
+    <script src="/js/address-of-tw.js"></script>
+</body>
+</html>

@@ -1,5 +1,8 @@
 package com.tibame.group1.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tibame.group1.common.enums.BidOrderStatus;
+import com.tibame.group1.common.enums.BidProductStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,65 +20,89 @@ public class BidOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Integer id;
+    private Integer orderId;
+
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "product_id", nullable = false)
+    // private com.tibame.group1.db.entity.BidProductEntity product;
+    //
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "buyer_id", nullable = false)
+    // private MemberEntity buyer;
+    //
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "seller_id", nullable = false)
+    // private MemberEntity seller;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private com.tibame.group1.db.entity.BidProductEntity product;
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "buyer_id", nullable = false)
-    private MemberEntity buyer;
+    @Column(name = "buyer_id", nullable = false)
+    private Integer buyerId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "seller_id", nullable = false)
-    private MemberEntity seller;
-
-    @Column(name = "member_coupon_id1")
-    private Integer memberCouponId1;
-
-    @Column(name = "member_coupon_id2")
-    private Integer memberCouponId2;
+    @Column(name = "seller_id", nullable = false)
+    private Integer sellerId;
 
     @NotNull
-    @Column(name = "price_before_discount", nullable = false)
-    private Integer priceBeforeDiscount;
+    @Column(name = "subtotal", nullable = false)
+    private Integer subtotal;
 
-    @NotNull
-    @Column(name = "discount", nullable = false)
+    @Column(name = "discount")
     private Integer discount;
 
-    @NotNull
-    @Column(name = "price_after_discount", nullable = false)
-    private Integer priceAfterDiscount;
+    @Column(name = "total")
+    private Integer total;
 
     @NotNull
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
     @Column(name = "create_time", nullable = false)
     private Timestamp createTime;
 
     @NotNull
-    @Column(name = "order_status", nullable = false)
-    private Integer orderStatus;
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
+    @Column(name = "update_time", nullable = false)
+    private Timestamp updateTime;
+
+    @NotNull
+    @Column(name = "status", nullable = false)
+    private Integer status;
+
+    public String getStatus() {
+        return BidOrderStatus.fromCode(status).getMessage();
+    }
+
+    public void setStatus(BidOrderStatus status) {
+        this.status = status.getCode();
+    }
+
+    public Integer getStatusCode() {
+        return this.status;
+    }
 
     @Size(max = 20)
-    @NotNull
-    @Column(name = "name", nullable = false, length = 20)
+    @Column(name = "name", length = 20)
     private String name;
 
     @Size(max = 20)
-    @NotNull
-    @Column(name = "phone", nullable = false, length = 20)
+    @Column(name = "phone", length = 20)
     private String phone;
 
     @Size(max = 40)
-    @NotNull
-    @Column(name = "address", nullable = false, length = 40)
+    @Column(name = "address", length = 40)
     private String address;
 
-    @NotNull
-    @Column(name = "fee", nullable = false)
+    @Column(name = "fee")
     private Integer fee;
 }
