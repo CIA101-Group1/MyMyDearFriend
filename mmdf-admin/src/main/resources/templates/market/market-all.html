@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>查詢市集資料</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定義表格樣式 */
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            white-space: nowrap; /* 不換行 */
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper::after {
+            content: "\f0d7"; /* Font Awesome Unicode for caret down */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(0);
+            pointer-events: none;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .input-group button {
+            margin-left: 10px;
+        }
+        /* 渐变背景颜色 */
+        .table tbody tr:nth-last-child(1) {
+            background: linear-gradient(to right, #f8f9fa, #ffffff); /* 设置渐变背景颜色 */
+        }
+
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h2 class="mt-4">市集資料列表</h2>
+                <!-- 篩選條件 -->
+                <div class="row mb-3">
+                    <div class="col-md-6 input-group">
+                        <input type="text" id="searchInput" class="form-control" placeholder="輸入活動名稱">
+                        <button id="searchButton" class="btn btn-primary">查詢</button>
+                        <button id="resetButton" class="btn btn-secondary">重置</button>
+                    </div>
+                </div>
+                <!-- 新增創建市集按鈕 -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <button id="createMarketButton" class="btn btn-success">創建市集活動</button>
+                    </div>
+                </div>
+                <!-- 主要表格 -->
+                <table id="marketTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>市集編號</th>
+                        <th>活動名稱</th>
+                        <th>活動地點</th>
+                        <th>活動開始時間</th>
+                        <th>報名開始時間</th>
+                        <th>報名結束時間</th>
+                        <th>目前報名人數</th>
+                        <th>活動狀態</th>
+                        <th>活動照片</th>
+                        <th>操作</th> <!-- 新增一個欄位用於顯示操作按鈕 -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 這裡將市集資料動態插入 -->
+                    </tbody>
+                </table>
+                <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">查無資料</div>
+            </div>
+        </main>
+    </div>
+</div>
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchButton").on("click", function () {
+            fetchMarketData();
+        });
+
+        $("#resetButton").on("click", function () {
+            $("#searchInput").val("");
+            fetchMarketData();
+        });
+        function fetchMarketData() {
+            const searchName = $("#searchInput").val().trim();
+            $.ajax({
+                url: `/api/market/all?name=${searchName}`,
+                method: "GET",
+                contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log(data)
+                            // 清空表格
+                            $("#marketTable tbody").empty();
+
+                            // 若查無資料
+                            if (data.length === 0) {
+                                $("#alertMessage").show();
+                            } else {
+                                $("#alertMessage").hide();
+
+                                // 插入市集資料
+                                data.forEach(market => {
+                                    $("#marketTable tbody").append(`
+                                     <tr>
+                                        <td>${market.marketId}</td>
+                                        <td>${market.marketName}</td>
+                                        <td>${market.marketLocation}</td>
+                                        <td>${formatDate(market.marketStart)}</td>
+                                        <td>${formatDate(market.startDate)}</td>
+                                        <td>${formatDate(market.endDate)}</td>
+                                        <td>${market.applicantPopulation}</td>
+                                        <td>${market.marketStatus}</td>
+                                        <td><img src="${market.marketImage}" alt="Market Image"></td>
+                                        <td><button class="btn btn-primary detail-button" data-market-id="${market.marketId}">詳細資料</button></td>
+                                     </tr>
+                                   `);
+                                });
+
+                                /// 在fetchMarketData函數中的相應位置修改，當點擊修改按鈕時將token作為URL參數傳遞到detail.html頁面中
+                                $(".detail-button").on("click", function () {
+                                    // 取得被點擊員工的 ID
+                                    const marketId = $(this).data("market-id");
+                                    // 獲取token
+                                    var authorization = localStorage.getItem("authorization");
+                                    // 導航到修改資料畫面，將token作為URL參數傳遞
+                                    window.location.href = `/market/detail?id=${marketId}&authorization=${authorization}`;
+                                });
+
+                                // 監聽創建新員工按鈕的點擊事件
+                                $("#createMarketButton").on("click", function (){
+                                    // 取得token
+                                    var authorization = localStorage.getItem("authorization");
+                                    // 將token作為URL參數傳遞
+                                    window.location.href = "/market/create?authorization=" + authorization;
+                                });
+
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    alert("伺服器連線失敗: " + error);
+                }
+            });
+        }
+
+        // 初始加載資料
+        fetchMarketData();
+    });
+    // 格式化日期
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+</script>
+</body>
+</html>
+
