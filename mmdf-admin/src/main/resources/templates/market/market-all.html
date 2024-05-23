@@ -7,7 +7,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>查詢員工資料</title>
+    <title>查詢市集資料</title>
     <th:block th:replace="~{/fragments/css}"/>
     <style>
         /* 自定義表格樣式 */
@@ -69,6 +69,11 @@
         .input-group button {
             margin-left: 10px;
         }
+        /* 渐变背景颜色 */
+        .table tbody tr:nth-last-child(1) {
+            background: linear-gradient(to right, #f8f9fa, #ffffff); /* 设置渐变背景颜色 */
+        }
+
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -83,35 +88,39 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h2 class="mt-4">員工資料列表</h2>
+                <h2 class="mt-4">市集資料列表</h2>
                 <!-- 篩選條件 -->
                 <div class="row mb-3">
                     <div class="col-md-6 input-group">
-                        <input type="text" id="searchInput" class="form-control" placeholder="輸入員工姓名">
+                        <input type="text" id="searchInput" class="form-control" placeholder="輸入活動名稱">
                         <button id="searchButton" class="btn btn-primary">查詢</button>
                         <button id="resetButton" class="btn btn-secondary">重置</button>
                     </div>
                 </div>
-                <!-- 新增創建新員工按鈕 -->
+                <!-- 新增創建市集按鈕 -->
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <button id="createEmployeeButton" class="btn btn-success">創建新員工資料</button>
+                        <button id="createMarketButton" class="btn btn-success">創建市集活動</button>
                     </div>
                 </div>
                 <!-- 主要表格 -->
-                <table id="employeeTable" class="table table-striped">
+                <table id="marketTable" class="table table-striped">
                     <thead>
                     <tr>
-                        <th>員工編號</th>
-                        <th>帳號</th>
-                        <th>姓名</th>
-                        <th>建立時間</th>
-                        <th>狀態</th>
+                        <th>市集編號</th>
+                        <th>活動名稱</th>
+                        <th>活動地點</th>
+                        <th>活動開始時間</th>
+                        <th>報名開始時間</th>
+                        <th>報名結束時間</th>
+                        <th>目前報名人數</th>
+                        <th>活動狀態</th>
+                        <th>活動照片</th>
                         <th>操作</th> <!-- 新增一個欄位用於顯示操作按鈕 -->
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- 這裡將員工資料動態插入 -->
+                    <!-- 這裡將市集資料動態插入 -->
                     </tbody>
                 </table>
                 <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">查無資料</div>
@@ -126,25 +135,29 @@
 <script>
     $(document).ready(function () {
         $("#searchButton").on("click", function () {
-            fetchEmployeeData();
+            fetchMarketData();
         });
 
         $("#resetButton").on("click", function () {
             $("#searchInput").val("");
-            fetchEmployeeData();
+            fetchMarketData();
         });
-        function fetchEmployeeData() {
+        function fetchMarketData() {
             const searchName = $("#searchInput").val().trim();
             const authorization = localStorage.getItem("authorization");
             $.ajax({
-                url: `/api/employee/all?name=${searchName}&authorization=${authorization}`,
+                url: `/api/market/all?name=${searchName}&authorization=${authorization}`,
                 method: "GET",
                 contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
+                            console.log(data)
                             // 清空表格
-                            $("#employeeTable tbody").empty();
+                            $("#marketTable tbody").empty();
 
                             // 若查無資料
                             if (data.length === 0) {
@@ -152,36 +165,40 @@
                             } else {
                                 $("#alertMessage").hide();
 
-                                // 插入員工資料
-                                data.forEach(employee => {
-                                    $("#employeeTable tbody").append(`
-                                            <tr>
-                                                <td>${employee.employeeId}</td>
-                                                <td>${employee.employeeAccount}</td>
-                                                <td>${employee.employeeName}</td>
-                                                <td>${formatDate(employee.employeeCreateTime)}</td>
-                                                <td>${employee.employeeStatus}</td>
-                                                <td><button class="btn btn-primary detail-button" data-employee-id="${employee.employeeId}">詳細資料</button></td>
-                                            </tr>
-                                        `);
+                                // 插入市集資料
+                                data.forEach(market => {
+                                    $("#marketTable tbody").append(`
+                                     <tr>
+                                        <td>${market.marketId}</td>
+                                        <td>${market.marketName}</td>
+                                        <td>${market.marketLocation}</td>
+                                        <td>${formatDate(market.marketStart)}</td>
+                                        <td>${formatDate(market.startDate)}</td>
+                                        <td>${formatDate(market.endDate)}</td>
+                                        <td>${market.applicantPopulation}</td>
+                                        <td>${market.marketStatus}</td>
+                                        <td><img src="${market.marketImage}" alt="Market Image"></td>
+                                        <td><button class="btn btn-primary detail-button" data-market-id="${market.marketId}">詳細資料</button></td>
+                                     </tr>
+                                   `);
                                 });
 
-                                /// 在fetchEmployeeData函數中的相應位置修改，當點擊修改按鈕時將token作為URL參數傳遞到edit.html頁面中
+                                /// 在fetchMarketData函數中的相應位置修改，當點擊修改按鈕時將token作為URL參數傳遞到detail.html頁面中
                                 $(".detail-button").on("click", function () {
                                     // 取得被點擊員工的 ID
-                                    const employeeId = $(this).data("employee-id");
+                                    const marketId = $(this).data("market-id");
                                     // 獲取token
                                     var authorization = localStorage.getItem("authorization");
                                     // 導航到修改資料畫面，將token作為URL參數傳遞
-                                    window.location.href = `/employee/detail?id=${employeeId}&authorization=${authorization}`;
+                                    window.location.href = `/market/detail?id=${marketId}&authorization=${authorization}`;
                                 });
 
                                 // 監聽創建新員工按鈕的點擊事件
-                                $("#createEmployeeButton").on("click", function (){
+                                $("#createMarketButton").on("click", function (){
                                     // 取得token
                                     var authorization = localStorage.getItem("authorization");
                                     // 將token作為URL參數傳遞
-                                    window.location.href = "/employee/create?authorization=" + authorization;
+                                    window.location.href = "/market/create?authorization=" + authorization;
                                 });
 
                             }
@@ -198,7 +215,7 @@
         }
 
         // 初始加載資料
-        fetchEmployeeData();
+        fetchMarketData();
     });
     // 格式化日期
     function formatDate(dateString) {

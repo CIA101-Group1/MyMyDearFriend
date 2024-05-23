@@ -1,13 +1,12 @@
-package com.tibame.group1.web.controller;
+package com.tibame.group1.admin.controller;
 
+import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
+import com.tibame.group1.admin.service.ProductService;
 import com.tibame.group1.common.dto.ResDTO;
 import com.tibame.group1.db.dto.*;
-import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.db.entity.ProductCategoryEntity;
 import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
-import com.tibame.group1.web.annotation.CheckLogin;
-import com.tibame.group1.web.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ public class ProductBackendController {
     private ProductService productService;
 
     @PostMapping("productCategory/create")
-    @CheckLogin
     public @ResponseBody ResDTO<ProductCategoryCreateResDTO> productCategoryCreate(
             @Valid @RequestBody ProductCategoryCreateReqDTO req) throws IOException {
         ResDTO<ProductCategoryCreateResDTO> res = new ResDTO<>();
@@ -41,20 +39,10 @@ public class ProductBackendController {
         return res;
     }
     @PostMapping("productCategory/update")
-    @CheckLogin
     public @ResponseBody ResDTO<ProductCategoryUpdateResDTO> productCategoryUpdate(
             @Valid @RequestBody ProductCategoryUpdateReqDTO req) throws IOException {
         ResDTO<ProductCategoryUpdateResDTO> res = new ResDTO<>();
         res.setData(productService.productCategoryUpdate(req));
-        return res;
-    }
-
-    @PostMapping("product/create")
-    @CheckLogin
-    public @ResponseBody ResDTO<ProductCreateResDTO> productCreate(
-            @Valid @RequestBody ProductCreateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
-        ResDTO<ProductCreateResDTO> res = new ResDTO<>();
-        res.setData(productService.productCreate(req, loginSource));
         return res;
     }
 
@@ -77,39 +65,19 @@ public class ProductBackendController {
 
 //    0517
     @PostMapping("product/update")
-    @CheckLogin
     public ResDTO<ProductUpdateResDTO> productGetOne(
-            @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
+            @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) throws IOException {
         ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
-        res.setData(productService.productUpdate(req, loginSource));
+        res.setData(productService.productUpdate(req, adminLoginSource));
         return res;
     }
 
     /* productImg */
 
-    @PostMapping("productImg/create")
-    @CheckLogin
-    public @ResponseBody ResDTO<ProductImgCreateResDTO> productImgCreate(
-            @Valid @RequestBody ProductImgCreateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
-        ResDTO<ProductImgCreateResDTO> res = new ResDTO<>();
-        res.setData(productService.productImgCreate(req, loginSource));
-        return res;
-    }
-
     @GetMapping("productImg/getAll")
-    @CheckLogin
     public @ResponseBody ResDTO<List<ProductImgEntity>> productImgGetAll() throws IOException {
         ResDTO<List<ProductImgEntity>> res = new ResDTO<>();
         res.setData(productService.productImgGetAll());
-        return res;
-    }
-
-    @PostMapping("productImg/update")
-    @CheckLogin
-    public @ResponseBody ResDTO<ProductImgUpdateResDTO> productImgUpdate(
-            @Valid @RequestBody ProductImgUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
-        ResDTO<ProductImgUpdateResDTO> res = new ResDTO<>();
-        res.setData(productService.productImgUpdate(req, loginSource));
         return res;
     }
 

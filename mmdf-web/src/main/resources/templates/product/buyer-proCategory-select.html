@@ -95,7 +95,6 @@
                                             </div>
                                             <div class="price_box">
                                                 <span class="current_price">$888,888,888</span>
-                                                <span class="old_price">$1,111,111,110</span>
                                             </div>
                                         </figcaption>
                                     </figure>
@@ -121,7 +120,6 @@
                                             </div>
                                             <div class="price_box">
                                                 <span class="current_price">$1,000,000</span>
-                                                <span class="old_price">$10,000,000</span>
                                             </div>
                                         </figcaption>
                                     </figure>
@@ -147,7 +145,6 @@
                                             </div>
                                             <div class="price_box">
                                                 <span class="current_price">$888,888,888</span>
-                                                <!-- <span class="old_price">$20.00</span>  -->
                                             </div>
                                         </figcaption>
                                     </figure>
@@ -194,97 +191,15 @@
                 <!--shop toolbar start-->
                 <div class="shop_toolbar_wrapper">
 
-                    <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                    <button type="button" class="btn btn-success " data-toggle="modal"
                             data-target="#searchModal" id="search">
                         搜索清單
                     </button>
 
-                    <!-- 搜索模态框 -->
-                    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
-                         aria-labelledby="searchModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <!-- 模态框头部 -->
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="searchModalLabel">搜索商品</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <!-- 模态框内容 -->
-                                <div class="modal-body">
-                                    <!-- 搜索表单 -->
-                                    <form id="searchForm" th:action="@{/api/product/query}" method="get">
-                                        <!-- 商品名称 -->
-                                        <div class="form-group">
-                                            <label for="name">商品名稱:</label>
-                                            <input type="text" class="form-control" id="name" name="name">
-                                        </div>
-                                        <!-- 商品描述 -->
-                                        <div class="form-group">
-                                            <label for="description">商品描述:</label>
-                                            <input type="text" class="form-control" id="description"
-                                                   name="description">
-                                        </div>
-                                        <!-- 分类 -->
-                                        <div class="form-group">
-                                            <label for="categoryId">分類:</label>
-                                            <select id="categoryId" name="categoryId" class="form-control">
-                                                <option value="">請選擇分類</option>
-                                                <!-- 使用Thymeleaf渲染选项 -->
-                                                <option th:each="category : ${productCategoryList}"
-                                                        th:value="${category.categoryId}"
-                                                        th:text="${category.categoryName}"></option>
-                                            </select>
-                                        </div>
-                                        <!-- 最低价格 -->
-                                        <div class="form-group">
-                                            <label for="minPrice">最低價格：</label>
-                                            <input type="number" id="minPrice" name="minPrice" min="0">
-                                        </div>
-                                        <!-- 最高价格 -->
-                                        <div class="form-group">
-                                            <label for="maxPrice">最高價格：</label>
-                                            <input type="number" id="maxPrice" name="maxPrice" min="0">
-                                        </div>
-                                        <!-- 買家編號 -->
-                                        <div class="form-group">
-                                            <label for="memberId">買家編號:</label>
-                                            <input type="text" class="form-control" id="memberId" name="memberId">
-                                        </div>
-                                        <!-- 審核状态 -->
-                                        <div id="reviewStatus">
-                                            <label><input type="checkbox" name="reviewStatus" value="0">
-                                                審核中</label>
-                                            <label><input type="checkbox" name="reviewStatus" value="1">
-                                                通過</label>
-                                            <label><input type="checkbox" name="reviewStatus" value="2">
-                                                未通過</label>
-                                        </div>
-                                        <!-- 商品状态 -->
-                                        <div id="productStatus">
-                                            <label><input type="radio" name="label" value="0"><span
-                                                    class="round button">未上架</span></label>
-                                            <label><input type="radio" name="label" value="1"><span
-                                                    class="round button">上架</span></label>
-                                        </div>
-                                        <!-- 模态框底部 -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                Close
-                                            </button>
-                                            <button type="submit" class="btn btn-primary">搜索</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <!--shop toolbar end-->
                 <div class="row shop_wrapper">
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-12 " th:each="product : ${productPage.content}">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-12 " th:each="product : ${productPage.content}" th:if="${product.categoryId == desiredCategoryId}">
                         <article class="single_product">
                             <figure>
                                 <div class="product_thumb">
@@ -330,7 +245,6 @@
                             </figure>
                         </article>
                     </div>
-
                 </div>
 
                 <div class="shop_toolbar t_bottom">
@@ -371,101 +285,11 @@
 </div>
 <!--shop  area end-->
 
-<!--js-->
-<th:block th:replace="~{/fragments/js}"/>
-<script src="/js/api-response-utils.js"></script>
-<script src="/js/api-response-utils.js"></script>
-
-<script>
-    $(document).ready(function () {
-
-        $('#searchForm').submit(function (e) {
-            e.preventDefault(); // 阻止表单默认提交
-            // 获取表单数据
-            var formData = $(this).serialize();
-
-            // 发送 Ajax 请求
-            $.ajax({
-                url: '/api/product/query',
-                type: 'GET',
-                data: formData,
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
-                success(response) {
-                    apiResponseJSON(response, {
-                        onSuccess(data) {
-                            console.log(data);
-                            // 清空表格数据
-                            $('.single_product').empty();
-                            if (response.code === "0") {
-                                alert('搜索成功');
-                                // 遍历搜索结果并显示到页面上
-                                response.data.forEach(function (product) {
-                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? 'data:image/jpg;base64,' + product.productImgs[0].imageBase64 : '';
-
-                                    // 构建产品HTML
-                                    var productHTML = `
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
-                                        <article class="single_product">
-                                            <figure>
-                                                <div class="product_thumb">
-                                                    <a class="primary_img" href="/buyer/product/getOne/${product.productId}">
-                                                        <img src="${imageSrc}" style="height: 150px;width: 150px" alt=""/>
-                                                    </a>
-                                                    <div class="action_links">
-                                                        <ul>
-                                                            <li class="quick_button"><a href="#" data-toggle="modal" data-target="#modal_box" title="quick view"><i class="icon icon-Eye"></i></a></li>
-                                                            <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i class="icon icon-Heart"></i></a></li>
-                                                            <li class="compare"><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="product_content grid_content">
-                                                    <div class="product_rating">
-                                                        <ul>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                    <h4 class="product_name"><a href="/buyer/product/getOne/${product.productId}">${product.name}</a></h4>
-                                                    <div class="price_box">
-                                                        <span class="current_price">${product.price}</span>
-                                                    </div>
-                                                    <div class="add_to_cart">
-                                                        <a href="orderlist.html" title="Add to cart">加入購物車</a>
-                                                    </div>
-                                                </div>
-                                            </figure>
-                                        </article>
-                                    </div>
-                                `;
-
-                                    // 添加产品到搜索结果
-                                    $('.product_grid').append(productHTML);
-                                });
-                            } else {
-                                alert('搜索失败！' + response.message);
-                                console.log(response);
-                            }
-                        }
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                    alert('搜索失败');
-                }
-            });
-        });
-    });
-</script>
-
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
 </body>
 </html>

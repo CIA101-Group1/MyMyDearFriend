@@ -90,11 +90,12 @@
                 <!-- 錯誤訊息將顯示在這裡 -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
             </div>
         </div>
     </div>
 </div>
+
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
@@ -206,6 +207,11 @@
             console.log('goToEmployeeAll href: ', url);
             window.location.href = url;
         });
+
+        $("#closeModalBtn").click(function () {
+            $("#myModal").modal("hide");
+        });
+
     });
 </script>
 
