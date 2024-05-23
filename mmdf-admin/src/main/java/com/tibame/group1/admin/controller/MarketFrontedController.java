@@ -5,9 +5,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
 public class MarketFrontedController {
 
-    @GetMapping("market/all")
-    public String index(){return "/market-all";}
+    @GetMapping("/market/all")
+    public String marketAll(){return "/market/market-all";}
+
+    @GetMapping("/market/create")
+    public String marketCreate(){return "market/market-create";}
+
+    @GetMapping("/market/detail")
+    public String marketDetail() {
+        return "market/market-detail";}
 }

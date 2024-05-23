@@ -14,7 +14,7 @@ public class MarketEditResDTO {
     public enum Status {
         EDIT_SUCCESS("1", "修改成功"),
 
-        MEMBER_NOTFOUND("-1", "查無此會員資料");
+        MARKET_NOTFOUND("-1", "查無此市集資料");
 
         private final String code;
 

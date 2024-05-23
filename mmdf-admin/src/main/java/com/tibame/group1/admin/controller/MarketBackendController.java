@@ -40,11 +40,22 @@ public class MarketBackendController {
     }
 
     @GetMapping("market/detail")
-    public @ResponseBody ResDTO<List<MarketDetailResDTO>> marketDetail(
-            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource)
-        throws  CheckRequestErrorException,IOException{
-        ResDTO<List<MarketDetailResDTO>> res = new ResDTO<>();
-        res.setData(marketService.marketDetail(adminLoginSource));
+    public @ResponseBody ResDTO<MarketDetailResDTO> marketDetailById(
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
+        @RequestParam(value = "marketId") Integer marketId)
+        throws  CheckRequestErrorException{
+        ResDTO<MarketDetailResDTO> res = new ResDTO<>();
+        res.setData(marketService.marketDetailById(adminLoginSource, marketId));
+        return res;
+    }
+
+    @GetMapping("market/all")
+    public @ResponseBody ResDTO<List<MarketAllResDTO>> marketAll(
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE)AdminLoginSourceDTO adminLoginSource,
+            @RequestParam(value = "name", required = false) String marketName)
+        throws CheckRequestErrorException,IOException,DateException{
+        ResDTO<List<MarketAllResDTO>> res = new ResDTO<>();
+        res.setData(marketService.marketAll(adminLoginSource,marketName));
         return res;
     }
 }
