@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>市集詳細資料</title>
+    <!--Filepond JS-->
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet"/>
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body class="sb-nav-fixed">
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!-- 主要內容 -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <!-- 市集詳細資料及修改資料部分 -->
+                    <div class="card my-4">
+                        <div class="card-header">
+                            <h2 class="m-0 fw-bold">市集詳細資料</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="marketForm">
+                                <div class="mb-3">
+                                    <label for="marketId" class="form-label">市集編號：</label>
+                                    <input type="text" class="form-control" id="marketId" name="marketId" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketName" class="form-label">活動名稱：</label>
+                                    <input type="text" class="form-control" id="marketName" name="marketName">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketDescription" class="form-label">活動說明：</label>
+                                    <input type="text" class="form-control" id="marketDescription" name="marketDescription">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketLocation" class="form-label">活動地點：</label>
+                                    <input type="text" class="form-control" id="marketLocation" name="marketLocation">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketStart" class="form-label">活動開始日期：</label>
+                                    <input type="date" class="form-control" id="marketStart" name="marketStart">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketEnd" class="form-label">活動結束日期：</label>
+                                    <input type="date" class="form-control" id="marketEnd" name="marketEnd">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketFee" class="form-label">活動費用：</label>
+                                    <input type="text" class="form-control" id="marketFee" name="marketFee">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="applicantPopulation" class="form-label">目前報名人數：</label>
+                                    <input type="text" class="form-control" id="applicantPopulation" name="applicantPopulation" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="applicantLimit" class="form-label">報名人數上限：</label>
+                                    <input type="text" class="form-control" id="applicantLimit" name="applicantLimit">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="startDate" class="form-label">開始報名日期：</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endDate" class="form-label">報名結束日期：</label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="marketStatus" class="form-label">狀態：</label>
+                                    <select class="form-select" id="marketStatus" name="marketStatus">
+                                        <option value="1" selected>尚未上架</option>
+                                        <option value="2">已上架</option>
+                                        <option value="3">活動結束</option>
+                                        <option value="0">活動取消</option>
+                                    </select>
+                                </div>
+
+                                <!-- 顯示活動照片和修改按鈕 -->
+                                <div id="profile-image-container">
+                                    <label for="profile-image">活動照片：</label>
+                                    <img id="profile-image" src="" alt="活動照片">
+                                    <button type="button" id="modify-button" class="btn btn-secondary">修改</button>
+                                    <button type="button" class="btn btn-warning" id="remove-button" style="display: none;">移除</button>
+                                </div>
+
+                                <!-- 上傳檔案的區塊 -->
+                                <div id="upload-section" style="display: none;">
+                                    <label for="filepond">更新活動照片：</label>
+                                    <input id="filepond" type="file" class="filepond" name="upFiles" data-max-file-size="3MB" data-max-files="5"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <button type="button" id="saveBtn" class="btn btn-primary">儲存</button>
+                                    <button type="button" id="cancelBtn" class="btn btn-primary">取消</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    let inputElement = document.querySelector("#filepond");
+    let pond = FilePond.create(inputElement);
+    pond.setOptions({
+        required: false,
+        storeAsFile: true,
+        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br>',
+        itemInsertLocation: "after",
+        imagePreviewHeight: "150px",
+        imagePreviewTransparencyIndicator: "grid",
+    });
+
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authorization = urlParams.get("authorization");
+        const marketId = urlParams.get("id");
+
+        if (!authorization || !marketId) {
+            console.error("Authorization token or market ID is missing.");
+            return;
+        }
+
+        const apiUrl = "/api/market/";
+        const detailUrl = apiUrl + "detail";
+        const editUrl = apiUrl + "edit?id=" + marketId;
+
+        $.ajax({
+            url: detailUrl,
+            method: "get",
+            headers: { "authorization": authorization },
+            data: { "marketId": marketId },
+            success(response) {
+                if (response.code === "0") {
+                    const data = response.data;
+                    $("#marketId").val(data.marketId);
+                    $("#marketName").val(data.marketName);
+                    $("#marketDescription").val(data.marketDescription);
+                    $("#marketLocation").val(data.marketLocation);
+                    $("#marketStart").val(formatDate(data.marketStart));
+                    $("#marketEnd").val(formatDate(data.marketEnd));
+                    $("#marketFee").val(data.marketFee);
+                    $("#applicantPopulation").val(data.applicantPopulation);
+                    $("#applicantLimit").val(data.applicantLimit);
+                    $("#startDate").val(formatDate(data.startDate));
+                    $("#endDate").val(formatDate(data.endDate));
+                    $("#marketStatus").val(data.marketStatus);
+                    $("#profile-image").attr("src", "data:image/jpeg;base64," + data.marketImage);
+                } else {
+                    console.error("API returned an error: " + response.message);
+                }
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+
+        $("#modify-button").click(function () {
+            $(this).hide();
+            $("#upload-section").show();
+            $("#remove-button").show();
+        });
+
+        $("#filepond").change(function () {
+            let file;
+            if (pond.getFile() !== null) {
+                file = pond.getFile().file;
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#profile-image").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        $("#remove-button").click(function () {
+            $("#profile-image").attr("src", "");
+            $(this).hide();
+        });
+
+        $("#saveBtn").click(function () {
+            let errorMessage = "";
+            const marketName = $("#marketName").val().trim();
+            const marketDescription = $("#marketDescription").val().trim();
+            const marketLocation = $("#marketLocation").val().trim();
+            const marketStart = $("#marketStart").val().trim();
+            const marketEnd = $("#marketEnd").val().trim();
+            const marketFee = $("#marketFee").val().trim();
+            const applicantLimit = $("#applicantLimit").val().trim();
+            const startDate = $("#startDate").val().trim();
+            const endDate = $("#endDate").val().trim();
+
+            if (!marketName) errorMessage += "<li>活動名稱不可空白</li>";
+            if (!marketDescription) errorMessage += "<li>活動說明不可空白</li>";
+            if (!marketLocation) errorMessage += "<li>活動地點不可空白</li>";
+            if (!marketStart) errorMessage += "<li>活動開始日期不可空白</li>";
+            if (!marketEnd) errorMessage += "<li>活動結束日期不可空白</li>";
+            if (!marketFee) errorMessage += "<li>報名費用不可空白</li>";
+            if (!applicantLimit) errorMessage += "<li>報名人數上限不可空白</li>";
+            if (!startDate) errorMessage += "<li>報名開始日期不可空白</li>";
+            if (!endDate) errorMessage += "<li>報名結束日期不可空白</li>";
+
+            if (errorMessage !== "") {
+                $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+                $("#myModal").modal("show");
+                return false;
+            }
+
+            function formatDateToYMD(dateStr) {
+                return dateStr.replace(/-/g, '');
+            }
+
+            let userData = {
+                marketId,
+                marketName,
+                marketDescription,
+                marketLocation,
+                marketStart: formatDateToYMD(marketStart),
+                marketEnd: formatDateToYMD(marketEnd),
+                marketFee,
+                applicantLimit,
+                startDate: formatDateToYMD(startDate),
+                endDate: formatDateToYMD(endDate),
+                marketStatus: $("#marketStatus").val()
+            };
+
+            if (pond.getFile() !== null) {
+                let file = pond.getFile().file;
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    userData.marketImage = e.target.result;
+                    saveUserData();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                saveUserData();
+            }
+
+            function saveUserData() {
+                $.ajax({
+                    url: editUrl + "&authorization=" + encodeURIComponent(authorization),
+                    method: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify(userData),
+                    success(response) {
+                        apiResponseJSON(response, {
+                            onSuccess(data) {
+                                console.log("成功處理回應數據: ", data);
+                                $("#modalBody").html("修改成功");
+                                $("#myModal").modal("show");
+                                setTimeout(function () {
+                                    window.location.href = '/market/all?authorization=' + encodeURIComponent(authorization);
+                                }, 3000);
+                            },
+                            onError(message) {
+                                console.log("錯誤處理回應數據: ", message);
+                                $("#modalBody").html(message);
+                                $("#myModal").modal("show");
+                            }
+                        });
+                    },
+                    error(xhr, status, error) {
+                        console.error("AJAX 請求失敗: ", error);
+                        $("#modalBody").html("伺服器連線失敗: " + error);
+                        $("#myModal").modal("show");
+                    }
+                });
+            }
+        });
+
+        $("#closeModalBtn").click(function () {
+            $("#myModal").modal("hide");
+        });
+
+        function formatDate(dateStr) {
+            const year = dateStr.substring(0, 4);
+            const month = dateStr.substring(4, 6);
+            const day = dateStr.substring(6, 8);
+            return `${year}-${month}-${day}`;
+        }
+
+        $("#cancelBtn").click(function () {
+            window.location.href = '/market/all?authorization=' + encodeURIComponent(authorization);
+        });
+    });
+</script>
+</body>
+</html>
