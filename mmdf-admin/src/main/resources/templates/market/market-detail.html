@@ -156,20 +156,17 @@
 
     $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
-        const authorization = urlParams.get("authorization");
         const marketId = urlParams.get("id");
+
+        const authorization = localStorage.getItem("authorization");
 
         if (!authorization || !marketId) {
             console.error("Authorization token or market ID is missing.");
             return;
         }
 
-        const apiUrl = "/api/market/";
-        const detailUrl = apiUrl + "detail";
-        const editUrl = apiUrl + "edit?id=" + marketId;
-
         $.ajax({
-            url: detailUrl,
+            url: `/api/market/detail?id=${marketId}&authorization=${authorization}`,
             method: "get",
             headers: { "authorization": authorization },
             data: { "marketId": marketId },
@@ -222,27 +219,68 @@
         });
 
         $("#saveBtn").click(function () {
+            const userData = {
+                marketId: $("#marketId").val(),
+                marketName: $("#marketName").val(),
+                marketDescription: $("#marketDescription").val(),
+                marketLocation: $("#marketLocation").val(),
+                marketStart: formatDateToYMD($("#marketStart").val()),
+                marketEnd: formatDateToYMD($("#marketEnd").val()),
+                marketFee: $("#marketFee").val(),
+                applicantLimit: $("#applicantLimit").val(),
+                startDate: formatDateToYMD($("#startDate").val()),
+                endDate: formatDateToYMD($("#endDate").val()),
+                marketStatus: $("#marketStatus").val()
+            };
+
             let errorMessage = "";
+            // 驗證表單欄位
             const marketName = $("#marketName").val().trim();
+            if (!marketName) {
+                errorMessage += "<li>活動名稱不可空白</li>";
+            }
+
             const marketDescription = $("#marketDescription").val().trim();
+            if (!marketDescription) {
+                errorMessage += "<li>活動說明不可空白</li>";
+            }
+
             const marketLocation = $("#marketLocation").val().trim();
-            const marketStart = $("#marketStart").val().trim();
-            const marketEnd = $("#marketEnd").val().trim();
+            if (!marketLocation) {
+                errorMessage += "<li>活動地點不可空白</li>";
+            }
+
+            const marketStart = $("#marketStart").val().trim().split("-").join("");
+            if (!marketStart) {
+                errorMessage += "<li>活動開始日期不可空白</li>";
+            }
+
+            const marketEnd = $("#marketEnd").val().trim().split("-").join("");
+            if (!marketEnd) {
+                errorMessage += "<li>活動結束日期不可空白</li>";
+            }
+
             const marketFee = $("#marketFee").val().trim();
+            if (!marketFee) {
+                errorMessage += "<li>報名費用不可空白</li>";
+            }
+
             const applicantLimit = $("#applicantLimit").val().trim();
-            const startDate = $("#startDate").val().trim();
-            const endDate = $("#endDate").val().trim();
+            if (!applicantLimit) {
+                errorMessage += "<li>報名人數上限不可空白</li>";
+            }
 
-            if (!marketName) errorMessage += "<li>活動名稱不可空白</li>";
-            if (!marketDescription) errorMessage += "<li>活動說明不可空白</li>";
-            if (!marketLocation) errorMessage += "<li>活動地點不可空白</li>";
-            if (!marketStart) errorMessage += "<li>活動開始日期不可空白</li>";
-            if (!marketEnd) errorMessage += "<li>活動結束日期不可空白</li>";
-            if (!marketFee) errorMessage += "<li>報名費用不可空白</li>";
-            if (!applicantLimit) errorMessage += "<li>報名人數上限不可空白</li>";
-            if (!startDate) errorMessage += "<li>報名開始日期不可空白</li>";
-            if (!endDate) errorMessage += "<li>報名結束日期不可空白</li>";
+            const startDate = $("#startDate").val().trim().split("-").join("");
+            if (!startDate) {
+                errorMessage += "<li>報名開始日期不可空白</li>";
+            }
 
+            const endDate = $("#endDate").val().trim().split("-").join("");
+            if (!endDate) {
+                errorMessage += "<li>報名結束日期不可空白</li>";
+            }
+
+            // 如果有錯誤訊息，則顯示到 #modalBody 中並回傳 false
             if (errorMessage !== "") {
                 $("#modalBody").html("<ul>" + errorMessage + "</ul>");
                 $("#myModal").modal("show");
@@ -253,19 +291,7 @@
                 return dateStr.replace(/-/g, '');
             }
 
-            let userData = {
-                marketId,
-                marketName,
-                marketDescription,
-                marketLocation,
-                marketStart: formatDateToYMD(marketStart),
-                marketEnd: formatDateToYMD(marketEnd),
-                marketFee,
-                applicantLimit,
-                startDate: formatDateToYMD(startDate),
-                endDate: formatDateToYMD(endDate),
-                marketStatus: $("#marketStatus").val()
-            };
+
 
             if (pond.getFile() !== null) {
                 let file = pond.getFile().file;
@@ -279,9 +305,11 @@
                 saveUserData();
             }
 
+
             function saveUserData() {
+                const authorization = localStorage.getItem("authorization");
                 $.ajax({
-                    url: editUrl + "&authorization=" + encodeURIComponent(authorization),
+                    url:`/api/market/edit?authorization=${authorization}`,
                     method: "post",
                     contentType: "application/json",
                     data: JSON.stringify(userData),
