@@ -38,9 +38,9 @@
                                     <label for="orderCategory"
                                            style="margin-bottom: 5px;">訂單類型</label>
                                     <select id="orderCategory" class="form-control">
-                                        <option value="ALL">全部</option>
                                         <option value="BUYER">買家</option>
                                         <option value="SELLER">賣家</option>
+                                        <option value="BOTH">全部</option>
                                     </select>
                                 </div>
                             </div>
@@ -209,8 +209,7 @@
         }
 
         // 初始化時加載所有訂單
-        fetchOrders("ALL");
-        // fetchOrders("BUYER");
+        fetchOrders("BUYER");
 
         // 監聽 select 的變化事件
         $("#orderCategory").change(function () {

@@ -10,10 +10,10 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@IdClass(FavoriteProductListEntity.FavoriteProductListPK.class)
+@IdClass(FavoriteProductEntity.FavoriteProductListPK.class)
 @Table(name = "favorite_product_list")
 @Immutable
-public class FavoriteProductListEntity {
+public class FavoriteProductEntity {
     @Id
     @Column(name = "member_id", nullable = false)
     private Integer memberId;

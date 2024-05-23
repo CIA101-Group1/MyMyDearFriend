@@ -57,7 +57,7 @@ public class OrderBackendController {
     @CheckLogin
     public @ResponseBody ResDTO<List<OrderResDTO>> orderGetAll(
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource,
-            @RequestParam(name = "identity", defaultValue = "BOTH") OrderMemberIdentity identity)
+            @RequestParam(name = "identity", defaultValue = "BOTH"  ) OrderMemberIdentity identity)
             throws CheckRequestErrorException {
         ResDTO<List<OrderResDTO>> res = new ResDTO<>();
         res.setData(orderService.orderGetAll(loginSource, identity));

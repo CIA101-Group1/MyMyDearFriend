@@ -125,8 +125,6 @@
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success(response) {
-                    console.log(response.data);
-                    console.log(subtotal.text(response.data));
                     // 重新取得購物車資料
                     $(subtotal).text(response.data);
                     updateSelectedSellerTotal()
