@@ -28,8 +28,8 @@ public class BidProductServiceImpl implements BidProductService {
     @Autowired private BidProductRepository bidProductRepository;
     @Autowired private BidProductImageRepository bidProductImageRepository;
 
-    @Value("${bid.product.duration.unit}")
-    private String durationUnit;
+    // @Value("${bid.product.duration.unit}")
+    // private String durationUnit;
 
     @Transactional(readOnly = true)
     @Override
@@ -61,7 +61,7 @@ public class BidProductServiceImpl implements BidProductService {
             product.setStatus(BidProductStatus.START);
             Instant now = Instant.now();
             product.setStartTime(Timestamp.from(now));
-            ChronoUnit chronoUnit = "minutes".equals(durationUnit) ? ChronoUnit.MINUTES : ChronoUnit.HOURS;
+            ChronoUnit chronoUnit = ChronoUnit.HOURS;
             product.setEndTime(Timestamp.from(now.plus(product.getDuration(), chronoUnit)));
             product.setLastModified(Timestamp.from(now));
         } else if (newStatus == -1) {
@@ -70,37 +70,6 @@ public class BidProductServiceImpl implements BidProductService {
         }
         bidProductRepository.save(product);
     }
-
-    // @Override
-    // public void update(Integer productId, BidProductAddReqDTO req)
-    //         throws IOException, CheckRequestErrorException {
-    //     BidProductEntity bidProduct =
-    //             bidProductRepository
-    //                     .findById(productId)
-    //                     .orElseThrow(() -> new CheckRequestErrorException("查無此商品資料"));
-    //
-    //     bidProduct.setCategoryId(req.getCategoryId());
-    //     bidProduct.setConditionId(req.getConditionId());
-    //     bidProduct.setName(req.getName());
-    //     bidProduct.setDescription(req.getDescription());
-    //     bidProduct.setStartPrice(req.getStartPrice());
-    //     bidProduct.setDuration(req.getDuration());
-    //     bidProduct.setStatus(BidProductStatus.END);
-    //     bidProduct.setLastModified(Timestamp.from(Instant.now()));
-    //     Integer productId2 = bidProductRepository.save(bidProduct).getProductId();
-    //
-    //     bidProductImageRepository.deleteByProductId(productId);
-    //
-    //     int position = 1;
-    //
-    //     for (MultipartFile image : req.getImages()) {
-    //         BidProductImageEntity bidProductImage = new BidProductImageEntity();
-    //         bidProductImage.setProductId(productId2);
-    //         bidProductImage.setImage(image.getBytes());
-    //         bidProductImage.setPosition(position++);
-    //         bidProductImageRepository.save(bidProductImage);
-    //     }
-    // }
 
     @Override
     public List<BidProductEntity> findByCompositeQuery(
