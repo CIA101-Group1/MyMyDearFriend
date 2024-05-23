@@ -1,18 +1,15 @@
 package com.tibame.group1.admin.service.impl;
 
-import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
+import com.tibame.group1.admin.dto.MemberAllResDTO;
 import com.tibame.group1.admin.dto.MemberReqDTO;
 import com.tibame.group1.admin.dto.MemberResDTO;
-import com.tibame.group1.admin.dto.MemberAllResDTO;
 import com.tibame.group1.admin.service.MemberService;
 import com.tibame.group1.common.dto.PagesResDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.common.utils.NumberUtils;
 import com.tibame.group1.common.utils.StringUtils;
-import com.tibame.group1.db.entity.EmployeeEntity;
 import com.tibame.group1.db.entity.MemberEntity;
-import com.tibame.group1.db.repository.EmployeeRepository;
 import com.tibame.group1.db.repository.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,26 +24,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired private MemberRepository memberRepository;
 
-    @Autowired private EmployeeRepository employeeRepository;
-
     /**
      * 後台超級管理員查詢會員資料
      *
      * @param req 查詢條件
-     * @param adminLoginSource 員工登入
      * @param pageable 分頁資訊
      * @return 查詢結果
      */
     @Override
-    public MemberAllResDTO memberAll(
-            MemberReqDTO req, AdminLoginSourceDTO adminLoginSource, Pageable pageable) {
+    public MemberAllResDTO memberAll(MemberReqDTO req, Pageable pageable) {
         MemberAllResDTO res = new MemberAllResDTO();
-        EmployeeEntity employee =
-                employeeRepository.findById(adminLoginSource.getEmployeeId()).orElse(null);
-        if (null == employee) {
-            res.setStatus(MemberAllResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
-            return res;
-        }
 
         Page<MemberEntity> pageResult;
         if (StringUtils.isEmpty(req.getSearchText())) {

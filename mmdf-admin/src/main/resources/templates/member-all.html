@@ -216,12 +216,12 @@
                                 const formattedAddress = member.address.replace(/_/g, "");
                                 const scoreSum = member.scoreSum !== null && member.scoreSum !== undefined ? member.scoreSum : "-";
                                 const scoreNumber = member.scoreNumber !== null && member.scoreNumber !== undefined ? member.scoreNumber : "-";
-                                const imageSrc = member.imageBase64 ? `data:image/jpeg;base64,${member.imageBase64}` : "";
+                                const imageSrc = member.imageBase64 ? `data:image/jpeg;base64,${member.imageBase64}` : "/image/default-avatar.png";
 
                                 $("#memberTable tbody").append(`
                                     <tr>
                                         <td>${member.memberId}</td>
-                                        <td>${imageSrc ? `<img src="${imageSrc}" alt="會員大頭照" style="max-width: 50px; max-height: 50px;" />` : "無"}</td>
+                                        <td><img src=${imageSrc} alt="會員大頭照" style="max-width: 50px; max-height: 50px;"/></td>
                                         <td>${member.memberAccount}</td>
                                         <td>${member.name}</td>
                                         <td>${member.phone}</td>
@@ -231,11 +231,11 @@
                                         <td>${formattedAddress}</td>
                                         <td>${member.isVerified ? "已驗證" : "未驗證"}</td>
                                         <td>${member.verifySendingTime}</td>
-                                        <td>${member.verifiedTime}</td>
+                                        <td>${member.verifiedTime ? member.verifiedTime : "未驗證"}</td>
                                         <td>${member.joinTime}</td>
                                         <td>${member.walletAmount}</td>
                                         <td>${member.walletAvailableAmount}</td>
-                                        <td>${member.sellerStatus ? "已開通賣家功能" : "未開通賣家功能"}</td>
+                                        <td>${member.sellerStatus ? "已開通" : "未開通"}</td>
                                         <td>${scoreSum}/${scoreNumber}</td>
                                         <td>${member.cidResetSendingTime}</td>
                                     </tr>
