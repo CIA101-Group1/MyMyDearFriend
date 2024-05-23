@@ -69,9 +69,17 @@ public class BidProductEntity {
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
     @Column(name = "start_time")
     private Timestamp startTime;
 
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
     @Column(name = "end_time")
     private Timestamp endTime;
 
@@ -83,8 +91,11 @@ public class BidProductEntity {
     // @Column(name = "status", nullable = false)
     // private BidProductStatus status;
 
-    public BidProductStatus getStatus() {
-        return BidProductStatus.fromValue(status);
+    // public String getStatus() {
+    //     return BidProductStatus.fromValue(status).getDescription();
+    // }
+    public String getStatus() {
+        return BidProductStatus.fromValue(status).getDescription();
     }
 
     public void setStatus(BidProductStatus status) {
@@ -103,6 +114,6 @@ public class BidProductEntity {
 
     @OneToMany(mappedBy = "product")
     @OrderBy("imageId asc")
-    private Set<com.tibame.group1.db.entity.BidProductImageEntity> bidProductImages =
+    private Set<com.tibame.group1.db.entity.BidProductImageEntity> images =
             new LinkedHashSet<>();
 }

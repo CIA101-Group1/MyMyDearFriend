@@ -1,0 +1,162 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>結帳</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!--Checkout page section-->
+<div class="Checkout_section mt-100">
+    <div class="container">
+        <div class="checkout_form">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <form action="#">
+                        <h3>收件人資訊</h3>
+                        <div class="row">
+
+                            <div class="col-12 mb-20">
+                                <label>姓名 <span>*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-lg-6 mb-20">
+                                <label>Phone<span>*</span></label>
+                                <input type="text">
+
+                            </div>
+                            <div class="col-lg-6 mb-20">
+                                <label> Email Address <span>*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-12">
+                                <label>地址<span>*</span></label>
+                            </div>
+                            <div class="col-lg-6 mb-20">
+                                <select class="form-control" name="cuntry" id="county_box">
+                                </select>
+                            </div>
+
+                            <div class="col-lg-6 mb-20">
+                                <select class="form-control" name="cuntry" id="district_box">
+                                </select>
+                            </div>
+                            <div class="col-12 mb-20">
+                                <input class="form-control" type="text" th:placeholder="地址">
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-notes">
+                                    <label for="order_note">訂單備註</label>
+                                    <textarea id="order_note" rows="5">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <form action="#">
+                        <h3>Your order</h3>
+                        <div class="order_table table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td> Handbag fringilla <strong> × 2</strong></td>
+                                    <td> $165.00</td>
+                                </tr>
+                                <tr>
+                                    <td> Handbag justo <strong> × 2</strong></td>
+                                    <td> $50.00</td>
+                                </tr>
+                                <tr>
+                                    <td> Handbag elit <strong> × 2</strong></td>
+                                    <td> $50.00</td>
+                                </tr>
+                                <tr>
+                                    <td> Handbag Rutrum <strong> × 1</strong></td>
+                                    <td> $50.00</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>Cart Subtotal</th>
+                                    <td>$215.00</td>
+                                </tr>
+                                <tr>
+                                    <th>Shipping</th>
+                                    <td><strong>$5.00</strong></td>
+                                </tr>
+                                <tr class="order_total">
+                                    <th>Order Total</th>
+                                    <td><strong>$220.00</strong></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="payment_method">
+                            <div class="panel-default">
+                                <input id="payment" name="check_method" type="radio" data-target="createp_account"/>
+                                <label for="payment" data-toggle="collapse" data-target="#method"
+                                       aria-controls="method">Create an account?</label>
+
+                                <div id="method" class="collapse one" data-parent="#accordion">
+                                    <div class="card-body1">
+                                        <p>Please send a check to Store Name, Store Street, Store Town, Store State /
+                                            County, Store Postcode.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-default">
+                                <input id="payment_defult" name="check_method" type="radio"
+                                       data-target="createp_account"/>
+                                <label for="payment_defult" data-toggle="collapse" data-target="#collapsedefult"
+                                       aria-controls="collapsedefult">PayPal <img src="assets/img/icon/papyel.png"
+                                                                                  alt=""></label>
+
+                                <div id="collapsedefult" class="collapse one" data-parent="#accordion">
+                                    <div class="card-body1">
+                                        <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
+                                            account.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <button type="submit" class="btn btn-success w-100">去結帳</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Checkout page section end-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/address-of-tw.js"></script>
+</body>
+</html>

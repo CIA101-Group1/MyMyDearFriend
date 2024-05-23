@@ -1,0 +1,238 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>新增競標商品</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet"/>
+    <style>
+        .filepond--item {
+            width: 20%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<!-- <th:block th:replace="~{/fragments/breadcrumb}"/> -->
+
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-seller}"/>
+
+                <div class="col-sm-12 col-md-10 col-lg-10">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active">
+                            <h3>新增競標商品</h3>
+                            <form id="addForm" class="contact_message" method="post" action="/api/emp" enctype="multipart/form-data">
+                                <input type="hidden" id="productId" name="productId">
+                                <div class="form-group row">
+                                    <label for="name" class="col-sm-2 col-form-label">商品名稱</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="categoryId" class="col-sm-2 col-form-label">商品分類</label>
+                                    <div class="col-sm-10">
+                                        <select id="categoryId" name="categoryId" class="form-control" required></select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="conditionId" class="col-sm-2 col-form-label">商品狀況</label>
+                                    <div class="col-sm-10">
+                                        <select id="conditionId" name="conditionId" class="form-control" required></select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="description" class="col-sm-2 col-form-label">商品描述</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="startPrice" class="col-sm-2 col-form-label">起標價</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="startPrice" name="startPrice" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="duration" class="col-sm-2 col-form-label">競標時間長度</label>
+                                    <div class="col-sm-10">
+                                        <select id="duration" name="duration" class="form-control" required>
+                                            <option value="1">1天</option>
+                                            <option value="3">3天</option>
+                                            <option value="5">5天</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="filepond" class="col-sm-2">商品圖片(最多3張)</label>
+                                    <div class="col-sm-10">
+                                        <input
+                                                id="filepond"
+                                                type="file"
+                                                class="filepond"
+                                                name="images"
+                                                data-max-file-size="3MB"
+                                                data-max-files="3"
+                                                multiple
+                                                required
+                                        />
+                                    </div>
+                                </div>
+                                <!-- <button class="btn btn-light" type="submit">送出</button> -->
+                                <!-- <input class="btn btn-dark float-right w-25" type="submit" value="送出"> -->
+                                <button type="submit">送出</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<!--Filepond JS-->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+<script>
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    const inputElement = document.querySelector("#filepond");
+    const pond = FilePond.create(inputElement);
+    pond.setOptions({
+        required: true,
+        storeAsFile: true,
+        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br> ',
+        itemInsertLocation: "after",
+        imagePreviewHeight: "150px",
+        imagePreviewTransparencyIndicator: "grid",
+    });
+    pond.on("warning", (error, file) => {
+        console.log("Warning", error, file);
+        if (error.body === "Max files") {
+            alert("檔案數量超過限制");
+        }
+    });
+    $(document).ready(function () {
+        // AJAX get all product category
+        $.ajax({
+            url: '/api/bidproductcategory',
+            method: 'GET',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === "0") {
+                    let categories = res.data;
+                    let categoryId = $('#categoryId');
+                    categoryId.empty();
+                    categories.forEach(function (category) {
+                        categoryId.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
+                    });
+                } else {
+                    console.error('Error: ' + res.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+        // AJAX get all product condition
+        $.ajax({
+            url: '/api/bidproductcondition',
+            type: 'GET',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === "0") {
+                    let conditions = res.data;
+                    let conditionId = $('#conditionId');
+                    conditionId.empty();
+                    conditions.forEach(function (condition) {
+                        conditionId.append(`<option value="${condition.conditionId}">${condition.conditionName}</option>`);
+                    });
+                } else {
+                    console.error('Error: ' + res.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+        // AJAX Add new product
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+
+            let form = $(this);
+
+            let formData = new FormData($('#addForm')[0]);
+
+            $.ajax({
+                url: "/api/bidproduct",
+                method: "POST",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    console.log(res);
+                    // Clear previous validation feedback
+                    $('.is-invalid').removeClass('is-invalid');
+                    form.find('.invalid-feedback').text('');
+                    // form.removeClass('was-validated');
+                    if (res.code === "0") {
+                        alert("新增成功");
+                        window.location.href = '/seller/bidproduct';
+                    } else if (res.code === "-1") {
+                        // Form submission failed due to validation errors
+                        res.data.forEach(function (error) {
+                            let fieldName = error.key; // Assuming your server response includes field names
+                            let errorMessage = error.errorMessage;
+                            let field = form.find('#' + fieldName);
+                            field.addClass('is-invalid');
+                            field.siblings('.invalid-feedback').text(errorMessage);
+                        });
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    })
+
+</script>
+</body>
+</html>
