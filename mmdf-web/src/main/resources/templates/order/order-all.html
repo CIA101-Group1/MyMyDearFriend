@@ -1,10 +1,278 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品訂單</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+
+    <style>
+        .table td, .table th {
+            padding: .75rem;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
 </head>
 <body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
 
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="orders" style="margin-left: 20px">
+                            <!-- 主要內容 -->
+                            <div style="display: flex; justify-content: center; align-items: center">
+                                <h3>訂單</h3>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-2 custom-select-wrapper">
+                                    <label for="orderCategory"
+                                           style="margin-bottom: 5px;">訂單類型</label>
+                                    <select id="orderCategory" class="form-control">
+                                        <option value="BUYER">買家</option>
+                                        <option value="SELLER">賣家</option>
+                                        <option value="BOTH">全部</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 主要表格 -->
+                            <table id="orderTable" class="table table-hover"
+                                   style=" text-align: center; vertical-align: middle">
+                                <thead>
+                                <tr>
+                                    <th>訂單編號</th>
+                                    <th>成立時間</th>
+                                    <th>訂單狀態</th>
+                                    <th>訂單金額</th>
+                                    <th>訂單詳情</th>
+                                </tr>
+                                </thead>
+                                <tbody id="orderTbody">
+                                </tbody>
+                            </table>
+                            <!-- 分頁控件 -->
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center" id="pagination">
+                                    <!-- 分頁按鈕會動態生成 -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end   -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
+<script>
+    $(document).ready(function () {
+        // 訂單狀態對應表
+        const orderStatusMap = {
+            0: "待出貨",
+            1: "已出貨",
+            2: "完成",
+            3: "退貨"
+        };
+
+        // 格式化日期函數
+        function formatDate(dateString) {
+            let date = new Date(dateString);
+            let year = date.getFullYear();
+            let month = String(date.getMonth() + 1).padStart(2, '0');
+            let day = String(date.getDate()).padStart(2, '0');
+            let hours = String(date.getHours()).padStart(2, '0');
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+
+        // 當前頁碼和每頁顯示的記錄數
+        let currentPage = 1;
+        const recordsPerPage = 5;
+
+        // 發送 AJAX 請求的函數
+        function fetchOrders(identity) {
+            // 切換類型時將頁碼重置為1
+            currentPage = 1;
+            $.ajax({
+                url: `/api/order/getAll?identity=${identity}`,
+                method: "GET",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    let orders = response.data;
+                    let tbody = $("#orderTbody");
+                    tbody.empty(); // 清空現有的表格內容
+
+                    if (orders === null) {
+                        // 如果訂單為空，顯示提示消息
+                        tbody.append(`<tr><td colspan="5">查無訂單資料</td></tr>`);
+                    } else {
+                        // 設置分頁
+                        setupPagination(orders);
+                        // 顯示當前頁的訂單
+                        displayOrders(orders, currentPage);
+                    }
+                },
+                error(xhr, status, error) {
+                    console.error("There was a problem :", error);
+                },
+            });
+        }
+
+        // 設置分頁控件
+        function setupPagination(orders) {
+            const totalPages = Math.ceil(orders.length / recordsPerPage);
+            let pagination = $("#pagination");
+            pagination.empty(); // 清空現有的分頁內容
+
+            // 生成上一頁按鈕
+            let prevButton = $("<li class='page-item'><a class='page-link' href='#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>");
+            prevButton.on("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayOrders(orders, currentPage);
+                    updatePagination();
+                }
+            });
+            pagination.append(prevButton);
+
+            // 生成分頁按鈕
+            for (let i = 1; i <= totalPages; i++) {
+                let pageButton = $(`<li class='page-item'><a class='page-link' href='#'>${i}</a></li>`);
+                pageButton.on("click", function () {
+                    currentPage = i;
+                    displayOrders(orders, currentPage);
+                    updatePagination();
+                });
+                pagination.append(pageButton);
+            }
+
+            // 生成下一頁按鈕
+            let nextButton = $("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>");
+            nextButton.on("click", function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayOrders(orders, currentPage);
+                    updatePagination();
+                }
+            });
+            pagination.append(nextButton);
+
+            // 更新分頁按鈕的活躍狀態
+            function updatePagination() {
+                pagination.find(".page-item").removeClass("active");
+                pagination.find(`.page-item:nth-child(${currentPage + 1})`).addClass("active");
+            }
+
+            // 初始化時設置第一頁為活躍狀態
+            updatePagination();
+        }
+
+        // 顯示指定頁碼的訂單
+        function displayOrders(orders, page) {
+            let tbody = $("#orderTbody");
+            tbody.empty(); // 清空現有的表格內容
+
+            let start = (page - 1) * recordsPerPage;
+            let end = start + recordsPerPage;
+            let paginatedOrders = orders.slice(start, end);
+
+            paginatedOrders.forEach(order => {
+                let statusText = orderStatusMap[order.orderStatus];
+                let formattedDate = formatDate(order.createTime);
+                let row = `<tr>
+                    <td>${order.orderId}</td>
+                    <td>${formattedDate}</td>
+                    <td>${statusText}</td>
+                    <td>${order.priceAfterDiscount}</td>
+                    <td><a href="#collapse${order.orderId}" class="view" data-toggle="collapse" style="color: red">查看詳情</a></td>
+                </tr>
+                <tr class="collapse" id="collapse${order.orderId}">
+                    <td colspan="5">
+                        <div class="card card-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr><th>買家會員</th><td>${order.buyerName}</td></tr>
+                                    <tr><th>賣家會員</th><td>${order.sellerName}</td></tr>
+                                    <tr><th>收件人姓名</th><td>${order.name}</td></tr>
+                                    <tr><th>電話</th><td>${order.phone}</td></tr>
+                                    <tr><th>寄送地址</th><td>${order.address}</td></tr>
+                                    <tr><th>優惠前價格</th><td>${order.priceBeforeDiscount}</td></tr>
+                                    <tr><th>優惠金額</th><td>${order.discount}</td></tr>
+                                    <tr><th>訂單實付金額</th><td>${order.priceAfterDiscount}</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="products">
+                                <table class="table ">
+                                    <thead>
+                                        <tr class="table-secondary">
+                                            <th>商品圖片</th>
+                                            <th>商品名稱</th>
+                                            <th>商品數量</th>
+                                            <th>購買價格</th>
+                                            <th>小計</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${order.orderDetailList.map(product => {
+                                            const subtotal = product.quantity * product.price;
+                                            return `
+                                            <tr>
+                                                <td><img src="data:image/jpeg;base64,${product.imageBase64}" alt="商品圖片" style="height: 80px;width: 80px"/></td>
+                                                <td>${product.name}</td>
+                                                <td>${product.quantity}</td>
+                                                <td>${product.price}</td>
+                                                <td>${subtotal}</td>
+                                            </tr>
+                                        `;
+                                         }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`;
+                tbody.append(row);
+            });
+        }
+
+        // 初始化時加載所有訂單
+        fetchOrders("BUYER");
+
+        // 監聽 select 的變化事件
+        $("#orderCategory").change(function () {
+            let selectedValue = $(this).val();
+            fetchOrders(selectedValue);
+        });
+    });
+</script>
 </body>
 </html>

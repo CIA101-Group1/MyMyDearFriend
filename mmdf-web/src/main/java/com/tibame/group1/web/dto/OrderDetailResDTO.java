@@ -17,4 +17,6 @@ public class OrderDetailResDTO {
     private String name;
 
     private String seller;
+
+    private String imageBase64;
 }
