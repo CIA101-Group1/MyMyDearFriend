@@ -183,17 +183,15 @@
             const isVerified = $("#isVerifiedFilter").val();
             const sellerStatus = $("#sellerStatusFilter").val();
             const searchText = $("#searchInput").val().trim();
+            const authorization = localStorage.getItem("authorization");
             // 更新 userData
             userData.isVerified = isVerified === "" ? null : isVerified === "true";
             userData.sellerStatus = sellerStatus === "" ? null : sellerStatus === "true";
             userData.searchText = searchText === "" ? null : searchText;
             $.ajax({
-                url: `/api/member/all?page=${pageNumber}&sizePerPage=${pageSize}`,
+                url: `/api/member/all?authorization=${authorization}&page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",
                 contentType: "application/json",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
                 data: JSON.stringify(userData),
                 success(response) {
                     apiResponseJSON(response, {
