@@ -5,11 +5,21 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全部訂單</title>
+    <title>商品訂單</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+
+    <style>
+        .table td, .table th {
+            padding: .75rem;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
 </head>
 <body>
 <!--header-->
@@ -45,7 +55,7 @@
                                 </div>
                             </div>
                             <!-- 主要表格 -->
-                            <table id="orderTable" class="table table-striped table-hover"
+                            <table id="orderTable" class="table table-hover"
                                    style=" text-align: center; vertical-align: middle">
                                 <thead>
                                 <tr>
@@ -79,6 +89,7 @@
 
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <th:block th:replace="~{/fragments/js}"/>
 <script>
     $(document).ready(function () {
@@ -202,7 +213,52 @@
                     <td>${formattedDate}</td>
                     <td>${statusText}</td>
                     <td>${order.priceAfterDiscount}</td>
-                    <td><a href="#" class="view" style="color: red">view</a></td>
+                    <td><a href="#collapse${order.orderId}" class="view" data-toggle="collapse" style="color: red">查看詳情</a></td>
+                </tr>
+                <tr class="collapse" id="collapse${order.orderId}">
+                    <td colspan="5">
+                        <div class="card card-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr><th>買家會員</th><td>${order.buyerName}</td></tr>
+                                    <tr><th>賣家會員</th><td>${order.sellerName}</td></tr>
+                                    <tr><th>收件人姓名</th><td>${order.name}</td></tr>
+                                    <tr><th>電話</th><td>${order.phone}</td></tr>
+                                    <tr><th>寄送地址</th><td>${order.address}</td></tr>
+                                    <tr><th>優惠前價格</th><td>${order.priceBeforeDiscount}</td></tr>
+                                    <tr><th>優惠金額</th><td>${order.discount}</td></tr>
+                                    <tr><th>訂單實付金額</th><td>${order.priceAfterDiscount}</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="products">
+                                <table class="table ">
+                                    <thead>
+                                        <tr class="table-secondary">
+                                            <th>商品圖片</th>
+                                            <th>商品名稱</th>
+                                            <th>商品數量</th>
+                                            <th>購買價格</th>
+                                            <th>小計</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${order.orderDetailList.map(product => {
+                                            const subtotal = product.quantity * product.price;
+                                            return `
+                                            <tr>
+                                                <td><img src="data:image/jpeg;base64,${product.imageBase64}" alt="商品圖片" style="height: 80px;width: 80px"/></td>
+                                                <td>${product.name}</td>
+                                                <td>${product.quantity}</td>
+                                                <td>${product.price}</td>
+                                                <td>${subtotal}</td>
+                                            </tr>
+                                        `;
+                                         }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
                 </tr>`;
                 tbody.append(row);
             });

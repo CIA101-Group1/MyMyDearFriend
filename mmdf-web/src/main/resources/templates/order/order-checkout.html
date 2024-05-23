@@ -233,7 +233,7 @@
                 Swal.fire({
                     title: "錯誤",
                     icon: "error",
-                    text: "請填寫所有必填欄位",
+                    text: "請確認所有必填欄位正確填寫",
                     confirmButtonText: "確認"
                 });
             }
@@ -244,16 +244,71 @@
     // 表單驗證函數
     function validateForm() {
         let isValid = true;
+
         $("#checkout_form input[required]").each(function () {
-            if ($(this).val() === "") {
+            $(this).removeClass("is-invalid");
+            clearErrorMessage($(this));
+        });
+
+        $("#checkout_form input[required]").each(function () {
+            if ($(this).val().trim() === "") {
                 isValid = false;
                 $(this).addClass("is-invalid");
-            } else {
-                $(this).removeClass("is-invalid");
+                showErrorMessage($(this), "此欄位為必填項目");
             }
         });
+
+        // 檢查電話號碼是否為數字
+        let phone = $("#phone").val();
+        if (phone.trim() === "") {
+            isValid = false;
+            $("#phone").addClass("is-invalid");
+            showErrorMessage($("#phone"), "此欄位為必填項目");
+        }else if (!/^\d+$/.test(phone)) {
+            isValid = false;
+            $("#phone").addClass("is-invalid");
+            showErrorMessage($("#phone"), "電話號碼只能包含數字");
+        } else {
+            $("#phone").removeClass("is-invalid");
+            clearErrorMessage($("#phone"));
+        }
+
+        // 檢查電子郵件格式
+        let email = $("#email").val();
+        if (email.trim() === "") {
+            isValid = false;
+            $("#email").addClass("is-invalid");
+            showErrorMessage($("#email"), "此欄位為必填項目");
+        }else if (email && !validateEmail(email)) {
+            isValid = false;
+            $("#email").addClass("is-invalid");
+            showErrorMessage($("#email"), "請輸入有效的電子郵件地址");
+        } else {
+            $("#email").removeClass("is-invalid");
+            clearErrorMessage($("#email"));
+        }
+
         return isValid;
     }
+
+    // 顯示錯誤訊息
+    function showErrorMessage(element, message) {
+        if (element.next(".invalid-feedback").length === 0) {
+            element.after(`<div class="invalid-feedback">${message}</div>`);
+        }
+    }
+
+    // 清除錯誤訊息
+    function clearErrorMessage(element) {
+        element.next(".invalid-feedback").remove();
+    }
+
+    // 驗證電子郵件格式
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
 
     // 讀取LocalStorage中的數據
     function loadSelectedCartData() {

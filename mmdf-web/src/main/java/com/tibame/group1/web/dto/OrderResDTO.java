@@ -16,6 +16,10 @@ public class OrderResDTO {
     
     private Integer sellerId;
 
+    private String buyerName;
+
+    private String sellerName;
+
     private Integer memberCouponId1;
 
     private Integer memberCouponId2;

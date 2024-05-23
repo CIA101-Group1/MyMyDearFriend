@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -32,8 +33,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired private ProductRepository productRepository;
 
+    @Autowired private ProductImgRepository productImgRepository;
+
     @Override
-    public OrderCreateResDTO orderCreate(OrderCreateReqDTO req, LoginSourceDTO loginSource) throws CheckRequestErrorException{
+    public OrderCreateResDTO orderCreate(OrderCreateReqDTO req, LoginSourceDTO loginSource)
+            throws CheckRequestErrorException {
         // 檢查會員是否存在
         MemberEntity buyer = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         if (buyer == null) {
@@ -60,12 +64,14 @@ public class OrderServiceImpl implements OrderService {
         // 建立訂單詳情
         for (OrderBuyProductDTO buyProduct : req.getBuyProductList()) {
             // 檢查 product 是否存在，庫存是否足夠
-            ProductEntity product = productRepository.findById(buyProduct.getProductId()).orElse(null);
+            ProductEntity product =
+                    productRepository.findById(buyProduct.getProductId()).orElse(null);
             if (product == null) {
                 log.warn("查無商品 {}", buyProduct.getProductId());
                 throw new CheckRequestErrorException("查無商品");
             } else if (product.getQuantity() < buyProduct.getQuantity()) {
-                log.warn("商品 {} 庫存量不足，無法購買。剩餘庫存 {} ，欲購買數量 {}",
+                log.warn(
+                        "商品 {} 庫存量不足，無法購買。剩餘庫存 {} ，欲購買數量 {}",
                         buyProduct.getProductId(),
                         product.getQuantity(),
                         buyProduct.getQuantity());
@@ -90,7 +96,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResDTO> orderGetAll(LoginSourceDTO loginSource, OrderMemberIdentity identity) throws CheckRequestErrorException {
+    public List<OrderResDTO> orderGetAll(LoginSourceDTO loginSource, OrderMemberIdentity identity)
+            throws CheckRequestErrorException {
         List<OrderEntity> orderList = new ArrayList<>();
         List<OrderResDTO> resList = new ArrayList<>();
         // 檢查 user 是否存在
@@ -101,9 +108,9 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 判斷使用者身分
-        switch (identity.name()){
-            // 取得全部訂單
-            case "ALL" :
+        switch (identity.name()) {
+                // 取得全部訂單
+            case "ALL":
                 // 查詢訂單，檢查訂單是否存在
                 orderList = orderRepository.findAll();
                 if (orderList.isEmpty()) {
@@ -112,18 +119,20 @@ public class OrderServiceImpl implements OrderService {
                 }
                 break;
 
-            // 取得使用者全部訂單
-            case "BOTH" :
+                // 取得使用者全部訂單
+            case "BOTH":
                 // 查詢訂單，檢查訂單是否存在
-                orderList = orderRepository.findBySellerIdOrBuyerIdOrderByCreateTimeDesc(user.getMemberId(), user.getMemberId());
+                orderList =
+                        orderRepository.findBySellerIdOrBuyerIdOrderByCreateTimeDesc(
+                                user.getMemberId(), user.getMemberId());
                 if (orderList.isEmpty()) {
                     log.warn("查無訂單");
                     throw new CheckRequestErrorException("查無訂單");
                 }
                 break;
 
-            // 取得 Buyer 全部訂單
-            case "BUYER" :
+                // 取得 Buyer 全部訂單
+            case "BUYER":
                 // 查詢訂單，檢查訂單是否存在
                 orderList = orderRepository.findByBuyerIdOrderByCreateTimeDesc(user.getMemberId());
                 if (orderList.isEmpty()) {
@@ -132,8 +141,8 @@ public class OrderServiceImpl implements OrderService {
                 }
                 break;
 
-            // 取得 Seller 全部訂單
-            case "SELLER" :
+                // 取得 Seller 全部訂單
+            case "SELLER":
                 // 查詢訂單，檢查訂單是否存在
                 orderList = orderRepository.findBySellerIdOrderByCreateTimeDesc(user.getMemberId());
                 if (orderList.isEmpty()) {
@@ -143,14 +152,26 @@ public class OrderServiceImpl implements OrderService {
                 break;
         }
 
-        for(OrderEntity order : orderList){
+        for (OrderEntity order : orderList) {
             OrderResDTO res = new OrderResDTO();
+            MemberEntity buyer = memberRepository.findById(order.getBuyerId()).orElse(null);
+            if (buyer == null) {
+                log.warn("查無會員資料 {}", loginSource.getMemberId());
+                throw new CheckRequestErrorException("查無會員資料");
+            }
+            MemberEntity seller = memberRepository.findById(order.getSellerId()).orElse(null);
+            if (seller == null) {
+                log.warn("查無會員資料 {}", loginSource.getMemberId());
+                throw new CheckRequestErrorException("查無會員資料");
+            }
             // 查詢訂單詳情
-            List<OrderDetailResDTO> orderDetailList =  orderDetail(order.getId(), loginSource);
+            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getId(), loginSource);
             // 將查詢資料轉換至 List<OrderResDTO>
             res.setOrderId(order.getId());
             res.setBuyerId(order.getBuyerId());
             res.setSellerId(order.getSellerId());
+            res.setBuyerName(buyer.getName());
+            res.setSellerName(seller.getName());
             res.setMemberCouponId1(order.getMemberCouponId1());
             res.setMemberCouponId2(order.getMemberCouponId2());
             res.setPriceBeforeDiscount(order.getPriceBeforeDiscount());
@@ -169,7 +190,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResDTO orderGetById(Integer orderId, LoginSourceDTO loginSource) throws CheckRequestErrorException{
+    public OrderResDTO orderGetById(Integer orderId, LoginSourceDTO loginSource)
+            throws CheckRequestErrorException {
         // 檢查 user 是否存在
         MemberEntity user = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         if (user == null) {
@@ -184,7 +206,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 查詢訂單詳情
-        List<OrderDetailResDTO> orderDetailList =  orderDetail(orderId, loginSource);
+        List<OrderDetailResDTO> orderDetailList = orderDetail(orderId, loginSource);
 
         // 將查詢資料轉換至 OrderResDTO
         OrderResDTO res = new OrderResDTO();
@@ -207,7 +229,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDetailResDTO> orderDetail(Integer orderId, LoginSourceDTO loginSource) throws CheckRequestErrorException {
+    public List<OrderDetailResDTO> orderDetail(Integer orderId, LoginSourceDTO loginSource)
+            throws CheckRequestErrorException {
         // 檢查 user 是否存在
         MemberEntity user = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         if (user == null) {
@@ -222,7 +245,7 @@ public class OrderServiceImpl implements OrderService {
         }
         // 查詢訂單詳情，檢查訂單詳情是否存在
         List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderId(orderId);
-        if(orderDetailList.isEmpty()){
+        if (orderDetailList.isEmpty()) {
             log.warn("查無訂單詳情 {}", orderId);
             throw new CheckRequestErrorException("查無訂單詳情");
         }
@@ -231,15 +254,16 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetailResDTO> list = new ArrayList<>();
         for (OrderDetailEntity orderDetail : orderDetailList) {
             // 檢查商品是否存在
-            ProductEntity product = productRepository.findById(orderDetail.getProductId()).orElse(null);
-            if(product == null){
+            ProductEntity product =
+                    productRepository.findById(orderDetail.getProductId()).orElse(null);
+            if (product == null) {
                 log.warn("查無商品 {}", orderDetail.getProductId());
                 throw new CheckRequestErrorException("查無商品");
             }
             // 檢查賣家是否存在
             MemberEntity seller = memberRepository.findById(product.getSellerId()).orElse(null);
-            if(seller == null){
-                log.warn("查無賣家 {}",  product.getSellerId());
+            if (seller == null) {
+                log.warn("查無賣家 {}", product.getSellerId());
                 throw new CheckRequestErrorException("查無賣家");
             }
             OrderDetailResDTO res = new OrderDetailResDTO();
@@ -249,13 +273,24 @@ public class OrderServiceImpl implements OrderService {
             res.setPrice(orderDetail.getPrice());
             res.setName(product.getName());
             res.setSeller(seller.getName());
+            // 查詢商品圖片
+            List<ProductImgEntity> images =
+                    productImgRepository.findByProductEntity_ProductId(product.getProductId());
+            if (!images.isEmpty()) {
+                ProductImgEntity image = images.get(0);
+                String imageBase64 = Base64.getEncoder().encodeToString(image.getImage());
+                res.setImageBase64(imageBase64);
+            } else {
+                res.setImageBase64(null);
+            }
             list.add(res);
         }
         return list;
     }
 
     @Override
-    public OrderUpdateResDTO orderUpdate(OrderUpdateReqDTO req, LoginSourceDTO loginSource) throws  CheckRequestErrorException{
+    public OrderUpdateResDTO orderUpdate(OrderUpdateReqDTO req, LoginSourceDTO loginSource)
+            throws CheckRequestErrorException {
         // 檢查 user 是否存在
         MemberEntity user = memberRepository.findById(loginSource.getMemberId()).orElse(null);
         if (user == null) {

@@ -43,38 +43,40 @@ $(document).ready(function () {
         });
     })
 
-    // 新增商品至購物車
-    $("#add_to_cart").on("click", function (){
-        // 取得商品資料
-        let data ={
-            productId: 102,
-            quantity: 10
-        }
-
-        $.ajax({
-            url: "/api/cart/add",
-            method: "POST",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success(response){
-                Swal.fire({
-                    title: '加入成功!',
-                    icon: 'success',
-                    confirmButtonText: '確認'
-                });
-                // 清空mini購物車資料重新取得mini購物車資料
-                $("div.cart_gallery").empty();
-                getMiniCart();
-            },
-            error(xhr, status, error){
-                console.error("There was a problem :", error);
-            }
-        })
-    })
 })
+
+// 新增商品至購物車
+function addToCart(productId, quantity) {
+    // 取得商品資料
+    let data ={
+        productId: productId,
+        quantity: quantity
+    }
+
+    $.ajax({
+        url: "/api/cart/add",
+        method: "POST",
+        headers: {
+            "authorization": localStorage.getItem("authorization")
+        },
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success(response){
+            Swal.fire({
+                title: '加入成功!',
+                icon: 'success',
+                confirmButtonText: '確認'
+            });
+            // 清空mini購物車資料重新取得mini購物車資料
+            $("div.cart_gallery").empty();
+            getMiniCart();
+        },
+        error(xhr, status, error){
+            console.error("There was a problem :", error);
+        }
+    })
+}
+
 
 // 取得mini購物車資料
 function getMiniCart() {
