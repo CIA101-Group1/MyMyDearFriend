@@ -2,13 +2,13 @@
     <!-- Nav tabs -->
     <div class="dashboard_tab_button">
         <ul role="tablist" class="nav flex-column dashboard-list">
-            <li><a href="#" class="nav-link active" id="member-center">會員中心</a></li>
+            <li><a href="#" class="nav-link" id="member-center">會員中心</a></li>
             <li><a href="#orders" class="nav-link">優惠券</a></li>
             <li><a href="/member/walletHistory" class="nav-link">錢包管理</a></li>
             <li><a href="/order/favorite" class="nav-link">商品收藏</a></li>
             <li><a href="/order/all" class="nav-link">商品訂單</a></li>
             <li><a href="#address" class="nav-link">競標紀錄</a></li>
-            <li><a href="#account-details" class="nav-link">競標商品訂單</a></li>
+            <li><a href="/buyer/bidorder" class="nav-link">競標訂單</a></li>
             <li><a href="#address" class="nav-link">市集報名紀錄</a></li>
             <li><a href="/memberNotice/all" class="nav-link">通知</a></li>
         </ul>
@@ -17,20 +17,62 @@
 
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script>
-    $(document).ready(function() {
-        // 點擊會員中心連結時觸發事件
-        $("#member-center").click(function(e) {
-            e.preventDefault();
-            // 檢查 localstorage 中是否存在驗證碼
-            let verifyCode = localStorage.getItem("authorization");
-
-            // 如果本地存儲中存在驗證碼，則跳轉到會員資料畫面
-            if (verifyCode) {
-                window.location.href = "/member/detail";
-            } else {
-                // 如果本地存儲中不存在驗證碼，則跳轉到登入畫面
-                window.location.href = "/member/login";
+    $(document).ready(function () {
+        // 根據當前URL設置active class
+        function setActiveLink() {
+            let currentUrl = window.location.href;
+            $(".nav-link").each(function () {
+                let link = $(this).attr("href");
+                if (currentUrl.includes(link) && link !== "#" && !link.startsWith("#")) {
+                    $(".nav-link").removeClass("active");
+                    $(this).addClass("active");
+                }
+            });
+            if (currentUrl.includes("/member/wallet")) {
+                $(".nav-link[href='/member/walletHistory']").addClass("active");
             }
+            if (currentUrl.includes("/member/detail") || currentUrl.includes("/member/login")) {
+                $(".nav-link#member-center").addClass("active");
+            }
+        }
+
+        setActiveLink();
+
+        // 監聽所有.nav-link的點擊事件
+        $(".nav-link").on("click", function (e) {
+            e.preventDefault();
+            let linkUrl = $(this).attr("href");
+
+            // 點擊會員中心連結時的特定處理邏輯
+            if (this.id === "member-center") {
+                // 檢查 localStorage 中是否存在驗證碼
+                let verifyCode = localStorage.getItem("authorization");
+
+                // 如果本地存儲中存在驗證碼，則跳轉到會員資料畫面
+                if (verifyCode) {
+                    window.location.href = "/member/detail";
+                } else {
+                    // 如果本地存儲中不存在驗證碼，則跳轉到登入畫面
+                    window.location.href = "/member/login";
+                }
+                return;
+            }
+
+            // 更新active class
+            $(".nav-link").removeClass("active");
+            $(this).addClass("active");
+
+            // 手動跳轉頁面
+            if (linkUrl.startsWith("/")) {
+                window.location.href = linkUrl;
+            } else {
+                window.location.hash = linkUrl;
+            }
+        });
+
+        // 監聽瀏覽器的返回按鈕事件
+        $(window).on("popstate", function () {
+            setActiveLink();
         });
     });
 </script>

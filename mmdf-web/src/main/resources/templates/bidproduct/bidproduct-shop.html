@@ -1,0 +1,555 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>範例</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<!-- <th:block th:replace="~{/fragments/breadcrumb}"/> -->
+
+<!--shop area start-->
+<div class="shop_area shop_reverse mt-100 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-12">
+                <!--sidebar widget start-->
+                <aside class="sidebar_widget">
+                    <div class="widget_inner">
+                        <div class="widget_list widget_search">
+                            <div class="widget_title">
+                                <h3>商品搜尋</h3>
+                            </div>
+                            <form action="#">
+                                <input type="text">
+                                <button type="submit">搜尋</button>
+                            </form>
+                        </div>
+                        <div class="widget_list tags_widget">
+                            <h3>商品分類</h3>
+                            <div class="tag_cloud" id="categoryTag">
+                                <a href="#">Men</a>
+                                <a href="#">Women</a>
+                                <a href="#">Watches</a>
+                            </div>
+                        </div>
+                        <div class="widget_list widget_color">
+                            <h3>商品狀況</h3>
+                            <ul id="conditionList">
+                                <li>
+                                    <a href="#">Black</a>
+                                </li>
+                                <li>
+                                    <a href="#">Black</a>
+                                </li>
+                                <li>
+                                    <a href="#">Black</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="widget_list widget_filter">
+                            <h3>Filter by price</h3>
+                            <form action="#">
+                                <div id="slider-range"></div>
+                                <button type="submit">Filter</button>
+                                <input type="text" name="text" id="amount"/>
+                            </form>
+                        </div>
+                    </div>
+                </aside>
+                <!--sidebar widget end-->
+            </div>
+            <div class="col-lg-9 col-md-12">
+                <!--shop wrapper start-->
+                <!--shop toolbar start-->
+                <div class="shop_toolbar_wrapper">
+                    <div class="shop_toolbar_btn">
+                        <h4>競標商品</h4>
+
+                        <!--
+                        <button data-role="grid_3" type="button" class="active btn-grid-3" data-toggle="tooltip"
+                                title="3"></button>
+
+                        <button data-role="grid_4" type="button" class=" btn-grid-4" data-toggle="tooltip"
+                                title="4"></button>
+
+                        <button data-role="grid_list" type="button" class="btn-list" data-toggle="tooltip"
+                                title="List"></button>
+                        -->
+                    </div>
+                    <div class="d-flex justify-content-between">
+
+                    <div class="niceselect_option">
+                        <form class="select_option" action="#">
+                            <select name="orderby" id="short">
+                                <option selected value="1">商品排序&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</option>
+                                <option value="2">時間: 快結束優先</option>
+                                <option value="3">時間: 新刊登優先</option>
+                                <option value="4">價格: 最低價優先</option>
+                                <option value="5">價格: 最高價優先</option>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="niceselect_option">
+                        <form class="select_option" action="#">
+                            <select name="orderby" id="shorts">
+                                <option selected value="1">每頁顯示 6 個&nbsp&nbsp</option>
+                                <option value="2">每頁顯示 12 個</option>
+                                <option value="2">每頁顯示 18 個</option>
+                                <option value="2">每頁顯示 24 個</option>
+                            </select>
+                        </form>
+                    </div>
+                    </div>
+
+                    <!-- <div class="page_amount">
+                                  <p>Showing 1–9 of 21 results</p>
+                              </div> -->
+                </div>
+                <!--shop toolbar end-->
+                <div class="row shop_wrapper" id="productList">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                        <article class="single_product">
+                            <figure>
+                                <div class="product_thumb">
+                                    <a class="primary_img" href="product-details.html"
+                                    ><img src="assets/img/product/product3.jpg" alt=""
+                                    /></a>
+                                </div>
+                                <div class="product_content grid_content">
+                                    <h4 class="product_name"
+                                    ><a href="product-details.html"> quidem totam, voluptatem quae quasi possimus
+                                        iusto!</a></h4
+                                    >
+                                    <div class="price_box">
+                                        <span class="current_price">$145.00</span>
+                                        <span class="old_price">$178.00</span>
+                                    </div>
+                                    <div class="add_to_cart2" style="margin-top: 16px">
+                                        <a href="cart.html" title="Add to cart"
+                                           style="color: #fff; background: #F53737; border-color: #F53737; line-height: 36px; padding: 5px 30px; border-radius: 25px">去出價</a>
+                                    </div>
+                                </div>
+                            </figure>
+                        </article>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                        <article class="single_product">
+                            <figure>
+                                <div class="product_thumb">
+                                    <div class="label_product">
+                                        <span class="label_new">new</span>
+                                    </div>
+                                    <a class="primary_img" href="product-details.html"
+                                    ><img src="assets/img/product/product1.jpg" alt=""
+                                    /></a>
+                                    <a class="secondary_img" href="product-details.html"
+                                    ><img src="assets/img/product/product2.jpg" alt=""
+                                    /></a>
+                                    <div class="action_links">
+                                        <ul>
+                                            <li class="quick_button"
+                                            ><a href="#" data-toggle="modal" data-target="#modal_box"
+                                                title="quick view">
+                                                <i class="icon icon-Eye"></i></a
+                                            ></li>
+                                            <li class="wishlist"
+                                            ><a href="wishlist.html" title="Add to Wishlist"><i
+                                                    class="icon icon-Heart"></i></a
+                                            ></li>
+                                            <li class="compare"
+                                            ><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="product_content grid_content">
+                                    <div class="product_rating">
+                                        <ul>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                    <h4 class="product_name"
+                                    ><a href="product-details.html">Lorem ipsum dolor sit amet, elit, the display
+                                        aliquid!</a></h4
+                                    >
+                                    <div class="price_box">
+                                        <span class="current_price">$155.00</span>
+                                        <span class="old_price">$188.00</span>
+                                    </div>
+                                    <div class="add_to_cart">
+                                        <a href="cart.html" title="Add to cart">Add to Cart</a>
+                                    </div>
+                                </div>
+                                <div class="product_content list_content">
+                                    <div class="swatches-colors">
+                                        <ul>
+                                            <li><a class="color1" href="javascript:void(0)"></a></li>
+                                            <li><a class="color2" href="javascript:void(0)"></a></li>
+                                            <li><a class="color4" href="javascript:void(0)"></a></li>
+                                            <li><a class="color3" href="javascript:void(0)"></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product_rating">
+                                        <ul>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                    <h4 class="product_name"
+                                    ><a href="product-details.html">Lorem ipsum dolor sit amet, elit, the display
+                                        aliquid!</a></h4
+                                    >
+                                    <div class="product_desc">
+                                        <p
+                                        >Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                            incididunt ut
+                                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                            exercitation ullamco…</p
+                                        >
+                                    </div>
+                                    <div class="price_box">
+                                        <span class="current_price">$155.00</span>
+                                        <span class="old_price">$188.00</span>
+                                    </div>
+
+                                    <div class="action_links list_action_right">
+                                        <ul>
+                                            <li class="add_to_cart"><a href="cart.html" title="Add to cart">Add to
+                                                Cart</a></li>
+                                            <li class="quick_button"
+                                            ><a href="#" data-toggle="modal" data-target="#modal_box"
+                                                title="quick view">
+                                                <i class="icon icon-Eye"></i></a
+                                            ></li>
+                                            <li class="wishlist"
+                                            ><a href="wishlist.html" title="Add to Wishlist"><i
+                                                    class="icon icon-Heart"></i></a
+                                            ></li>
+                                            <li class="compare"
+                                            ><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </figure>
+                        </article>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                        <article class="single_product">
+                            <figure>
+                                <div class="product_thumb">
+                                    <div class="label_product">
+                                        <span class="label_new">new</span>
+                                        <span class="label_sale">10%</span>
+                                    </div>
+                                    <a class="primary_img" href="product-details.html"
+                                    ><img src="assets/img/product/product5.jpg" alt=""
+                                    /></a>
+                                    <a class="secondary_img" href="product-details.html"
+                                    ><img src="assets/img/product/product6.jpg" alt=""
+                                    /></a>
+                                    <div class="action_links">
+                                        <ul>
+                                            <li class="quick_button"
+                                            ><a href="#" data-toggle="modal" data-target="#modal_box"
+                                                title="quick view">
+                                                <i class="icon icon-Eye"></i></a
+                                            ></li>
+                                            <li class="wishlist"
+                                            ><a href="wishlist.html" title="Add to Wishlist"><i
+                                                    class="icon icon-Heart"></i></a
+                                            ></li>
+                                            <li class="compare"
+                                            ><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="product_content grid_content">
+                                    <div class="product_rating">
+                                        <ul>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                    <h4 class="product_name"
+                                    ><a href="product-details.html"> iusto dignissimos illum. Quis provident
+                                        ratione.</a></h4
+                                    >
+                                    <div class="price_box">
+                                        <span class="current_price">$165.00</span>
+                                        <span class="old_price">$198.00</span>
+                                    </div>
+                                    <div class="add_to_cart">
+                                        <a href="cart.html" title="Add to cart">Add to Cart</a>
+                                    </div>
+                                    <div class="swatches-colors">
+                                        <ul>
+                                            <li><a class="color1" href="javascript:void(0)"></a></li>
+                                            <li><a class="color2" href="javascript:void(0)"></a></li>
+                                            <li><a class="color3" href="javascript:void(0)"></a></li>
+                                            <li><a class="color4" href="javascript:void(0)"></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="product_content list_content">
+                                    <div class="swatches-colors">
+                                        <ul>
+                                            <li><a class="color1" href="javascript:void(0)"></a></li>
+                                            <li><a class="color2" href="javascript:void(0)"></a></li>
+                                            <li><a class="color4" href="javascript:void(0)"></a></li>
+                                            <li><a class="color3" href="javascript:void(0)"></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product_rating">
+                                        <ul>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                            <li
+                                            ><a href="#"><i class="icon icon-Star"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                    <h4 class="product_name"
+                                    ><a href="product-details.html">iusto dignissimos illum. Quis provident ratione
+                                        maiores.</a></h4
+                                    >
+                                    <div class="product_desc">
+                                        <p
+                                        >Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                            incididunt ut
+                                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                            exercitation ullamco…</p
+                                        >
+                                    </div>
+                                    <div class="price_box">
+                                        <span class="current_price">$165.00</span>
+                                        <span class="old_price">$198.00</span>
+                                    </div>
+
+                                    <div class="action_links list_action_right">
+                                        <ul>
+                                            <li class="add_to_cart"><a href="cart.html" title="Add to cart">Add to
+                                                Cart</a></li>
+                                            <li class="quick_button"
+                                            ><a href="#" data-toggle="modal" data-target="#modal_box"
+                                                title="quick view">
+                                                <i class="icon icon-Eye"></i></a
+                                            ></li>
+                                            <li class="wishlist"
+                                            ><a href="wishlist.html" title="Add to Wishlist"><i
+                                                    class="icon icon-Heart"></i></a
+                                            ></li>
+                                            <li class="compare"
+                                            ><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a
+                                            ></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </figure>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="shop_toolbar t_bottom">
+                    <div class="pagination">
+                        <ul>
+                            <li class="current">1</li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li class="next"><a href="#">next</a></li>
+                            <li><a href="#">>></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--shop toolbar end-->
+                <!--shop wrapper end-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--shop  area end-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<script>
+    $(document).ready(function () {
+        // AJAX get all product category
+        $.ajax({
+            url: '/api/bidproductcategory',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.code === "0") {
+                    let categories = response.data;
+                    let categoryTag = $('#categoryTag');
+
+                    // Clear any existing categories
+                    categoryTag.empty();
+
+                    // Append each category to the tag cloud
+                    $.each(categories, function (index, category) {
+                        let categoryLink = $('<a>').attr('href', '#').text(category.categoryName);
+                        categoryTag.append(categoryLink);
+                    });
+                } else {
+                    console.error('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+        // AJAX get all product condition
+        $.ajax({
+            url: '/api/bidproductcondition',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.code === "0") {
+                    let conditions = response.data;
+                    let conditionList = $('#conditionList');
+
+                    // Clear any existing categories
+                    conditionList.empty();
+
+                    // Append each category to the tag cloud
+                    $.each(conditions, function (index, condition) {
+                        let conditionLink = $('<a>').attr('href', '#').text(condition.conditionName);
+                        let conditionItem = $('<li>').append(conditionLink);
+                        conditionList.append(conditionItem);
+                    });
+                } else {
+                    console.error('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+        // AJAX get all bid product
+        $.ajax({
+            url: '/api/bidproduct/query',
+            type: 'GET',
+            data: {
+                status: 2,
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.code === "0") {
+                    let products = response.data;
+                    let productList = $('#productList');
+
+                    // Clear any existing products
+                    productList.empty();
+
+                    // Append each product to the product list
+                    $.each(products, function (index, product) {
+                        let productHtml = `
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                        <article class="single_product">
+                            <figure>
+                                <div class="product_thumb">
+                                    <a class="primary_img" href="/bidproduct-detail/${product.productId}">
+                                        <img src="data:image/jpeg;base64, ${product.images[0].image}" alt="${product.name}" style="height: 200px;">
+                                    </a>
+                                </div>
+                                <div class="product_content grid_content">
+                                    <h4 class="product_name text-truncate">
+                                        <a href="/bidproduct-detail/${product.productId}">${product.name}</a>
+                                    </h4>
+                                    <div class="price_box">
+                                        <span class="current_price">NT$${product.startPrice}</span>
+                                    </div>
+                                    <div>
+                                        <span>${product.status === "競標中" ? product.endTime : "已結標" }</span>
+                                    </div>
+                                    <div class="add_to_cart2" style="margin-top: 16px">
+                                        <a href="/bidproduct-detail/${product.productId}" title="Add to cart"
+                                           style="color: #fff; background: #F53737; border-color: #F53737; line-height: 36px; padding: 5px 30px; border-radius: 25px">去出價</a>
+                                    </div>
+                                </div>
+                            </figure>
+                        </article>
+                    </div>
+                `;
+                        productList.append(productHtml);
+                    });
+                } else {
+                    console.error('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

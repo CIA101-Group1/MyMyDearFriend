@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 
 <head>
     <meta charset="utf-8">
@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>賣家新增商品</title>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <!--    <th:block th:replace="~{/fragments/css}"/>-->
     <!-- CSS
@@ -180,6 +180,7 @@
     </div>
 </div>
 
+<script src="/js/api-response-utils.js"></script>
 
 <script src='/assets/js/vendor/jquery-3.4.1.min.js'></script>
 <!--引用 Validator-->
@@ -259,9 +260,15 @@
                 },
                 data: JSON.stringify(userData), // 將數據轉換為 JSON 格式
                 contentType: "application/json", // 設置請求頭的 Content-Type
-                success: function (res) {
-                    console.log(res);
-                    alert("商品新增成功");
+                // success: function (res) {
+                success(response) {
+                    apiResponseJSON(response, {
+                            onSuccess(data) {
+                                console.log(data);
+                                alert("商品新增成功");
+                                window.location.href = '/product/seller/select';
+                            }
+                    });
                 },
                 error: function (error) {
                     alert("伺服器連線失敗: " + error);

@@ -1,0 +1,459 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>商品詳情</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<!-- <th:block th:replace="~{/fragments/breadcrumb}"/> -->
+
+<!--product details start-->
+<div class="product_details mt-100 mb-100">
+    <div class="container">
+        <div class="row">
+
+            <!-- <div th:each="image : ${images}"> -->
+            <!--     <img th:src="'data:image/jpeg;base64,' + ${image}" alt="Product Image"> -->
+            <!-- </div> -->
+
+            <div class="col-lg-6 col-md-6">
+                <div class="product-details-tab">
+                    <div id="img-1" class="zoomWrapper single-zoom">
+                        <a href="#">
+                            <img id="zoom1" th:src="'data:image/jpeg;base64,' + ${images[0]}"
+                                 th:data-zoom-image="'data:image/jpeg;base64,' + ${images[0]}"
+                                 style="height: 400px; display: block; margin: 0 auto;"
+                                 alt="Product Image">
+                        </a>
+
+                    </div>
+                    <div class="single-zoom-thumb">
+                        <ul class="s-tab-zoom owl-carousel single-product-active" id="gallery_01">
+                            <li th:each="image : ${images}">
+                                <a href="#" class="elevatezoom-gallery active" data-update=""
+                                   th:data-image="'data:image/jpeg;base64,' + ${image}"
+                                   th:data-zoom-image="'data:image/jpeg;base64,' + ${image}">
+                                    <!-- 设置图片的src为Base64编码的字符串 -->
+                                    <img th:src="'data:image/jpeg;base64,' + ${image}" alt=""/>
+                                </a>
+                            </li>
+
+                            <!-- <li> -->
+                            <!--     &lt;!&ndash; <a href="#" class="elevatezoom-gallery active" data-update="" data-image="assets/img/product/productbig4.jpg" data-zoom-image="assets/img/product/productbig4.jpg"> -->
+                            <!--         <img src="assets/img/product/productbig4.jpg" alt="zo-th-1"/> -->
+                            <!--     </a> &ndash;&gt; -->
+                            <!--     <a href="#" class="elevatezoom-gallery active" data-update="" -->
+                            <!--        data-image="assets/img/product/aaa.jpg" data-zoom-image="assets/img/product/aaa.jpg"> -->
+                            <!--         <img src="assets/img/product/aaa.jpg" alt="zo-th-1"/> -->
+                            <!--     </a> -->
+                            <!-- </li> -->
+                            <!-- <li> -->
+                            <!--     <a href="#" class="elevatezoom-gallery active" data-update="" -->
+                            <!--        data-image="assets/img/product/productbig1.jpg" -->
+                            <!--        data-zoom-image="assets/img/product/productbig1.jpg"> -->
+                            <!--         <img src="assets/img/product/productbig1.jpg" alt="zo-th-1"/> -->
+                            <!--     </a> -->
+
+                            <!-- </li> -->
+                            <!-- <li> -->
+                            <!--     <a href="#" class="elevatezoom-gallery active" data-update="" -->
+                            <!--        data-image="assets/img/product/productbig2.jpg" -->
+                            <!--        data-zoom-image="assets/img/product/productbig2.jpg"> -->
+                            <!--         <img src="assets/img/product/productbig2.jpg" alt="zo-th-1"/> -->
+                            <!--     </a> -->
+
+                            <!-- </li> -->
+                            <!-- <li> -->
+                            <!--     <a href="#" class="elevatezoom-gallery active" data-update="" -->
+                            <!--        data-image="assets/img/product/productbig3.jpg" -->
+                            <!--        data-zoom-image="assets/img/product/productbig3.jpg"> -->
+                            <!--         <img src="assets/img/product/productbig3.jpg" alt="zo-th-1"/> -->
+                            <!--     </a> -->
+
+                            <!-- </li> -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="product_d_right">
+                    <form action="#">
+                        <input type="hidden" id="productId" th:value="${bidProductEntity.productId}">
+                        <h1><a href="#" th:text="${bidProductEntity.name}"></a></h1>
+
+                        <!-- <div class=" product_ratting"> -->
+                        <!--     <ul> -->
+                        <!--         <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--         <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--         <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--         <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--         <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--         <li class="review"><a href="#"> (customer review ) </a></li> -->
+                        <!--     </ul> -->
+                        <!-- </div> -->
+
+                        <div class="price_box">
+                            <span class="current_price">NT$</span>
+                            <span class="current_price" id="currentPrice"></span>
+                        </div>
+                        <div>
+                            <a id="showBids" class="text-primary">出價紀錄</a>
+                        </div>
+                        <div>
+                            <span id="endTime" th:text="${bidProductEntity.endTime}" style="visibility: hidden"></span>
+                        </div>
+                        <div id="countdownTimer" class="p-3 mb-2 bg-white border border-warning"></div>
+                        <div class="product_variant quantity">
+                            <input id="placeBidInput" min="1" value="" type="number">
+                            <button class="button" id="placeBidButton">出價</button>
+                        </div>
+                        <div class="product_desc">
+                            <p th:text="${bidProductEntity.description}"></p>
+                        </div>
+                        <!-- <div class="product_variant color"> -->
+                        <!--     <h3>Available Options</h3> -->
+                        <!--     <label>color</label> -->
+                        <!--     <ul> -->
+                        <!--         <li class="color1"><a href="#"></a></li> -->
+                        <!--         <li class="color2"><a href="#"></a></li> -->
+                        <!--         <li class="color3"><a href="#"></a></li> -->
+                        <!--         <li class="color4"><a href="#"></a></li> -->
+                        <!--     </ul> -->
+                        <!-- </div> -->
+
+                        <!-- <div class=" product_d_action"> -->
+                        <!--     <ul> -->
+                        <!--         <li><a href="#" title="Add to wishlist">+ 加入收藏</a></li> -->
+                        <!--     </ul> -->
+                        <!-- </div> -->
+                        <div class="product_meta">
+                            <span>商品分類:<a href="#"
+                                              th:text="${bidProductEntity.category.getCategoryName()}">Clothing</a></span>
+                        </div>
+                        <div class="product_meta">
+                            <span>商品狀況:<a href="#" th:text="${bidProductEntity.condition.getConditionName()}">Clothing</a></span>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--product details end-->
+
+<!--product info start-->
+<div class="product_d_info mb-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="product_d_inner">
+                    <div class="product_info_button">
+                        <ul class="nav" role="tablist">
+                            <li>
+                                <a class="active" data-toggle="tab" href="#info" role="tab" aria-controls="info"
+                                   aria-selected="false">商品描述</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#sheet" role="tab" aria-controls="sheet"
+                                   aria-selected="false">出價紀錄</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#reviews" role="tab" aria-controls="sheet"
+                                   aria-selected="false">Reviews</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            <div class="product_info_content">
+                                <p th:text="${bidProductEntity.description}"></p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="sheet" role="tabpanel">
+                            <div class="product_d_table">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>出價者</th>
+                                            <th>出價金額</th>
+                                            <th>出價時間</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>$2000</td>
+                                            <td>2024/05/12 23:20:53</td>
+                                        </tr>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>$1000</td>
+                                            <td>2024/05/12 13:20:23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>$900</td>
+                                            <td>2024/05/12 09:20:53</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="reviews" role="tabpanel">
+                            <div class="reviews_wrapper">
+                                <h2>1 review for Donec eu furniture</h2>
+                                <div class="reviews_comment_box">
+                                    <div class="comment_thmb">
+                                        <img src="assets/img/blog/comment2.jpg" alt="">
+                                    </div>
+                                    <div class="comment_text">
+                                        <div class="reviews_meta">
+                                            <div class="star_rating">
+                                                <ul>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <p><strong>admin </strong>- September 12, 2022</p>
+                                            <span>roadthemes</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="comment_title">
+                                    <h2>Add a review </h2>
+                                    <p>Your email address will not be published. Required fields are marked </p>
+                                </div>
+                                <div class="product_ratting mb-10">
+                                    <h3>Your rating</h3>
+                                    <ul>
+                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product_review_form">
+                                    <form action="#">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="review_comment">Your review </label>
+                                                <textarea name="comment" id="review_comment"></textarea>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <label for="author">Name</label>
+                                                <input id="author" type="text">
+
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <label for="email">Email </label>
+                                                <input id="email" type="text">
+                                            </div>
+                                        </div>
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--product info end-->
+
+<!-- Modal for product's bids -->
+<div class="modal fade" id="bidsModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailModalLabel">商品出價紀錄</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>會員名稱</th>
+                        <th>出價金額</th>
+                        <th>出價時間</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script>
+    const AUTH_TOKEN = localStorage.getItem("authorization");
+    const PRODUCTID = $("#productId").val()
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        updateCountdownTimer();
+        setInterval(updateCountdownTimer, 1000);
+        getCurrentPrice();
+    })
+
+    function updateCountdownTimer() {
+        // 從控制器中獲取 endTime 的值，假設它是以 "yyyy-mm-dd hh:mm:ss" 格式的字符串
+        let endTime = $("#endTime").text();
+
+        // 計算從現在到 endTime 的時間間隔
+        var endTimestamp = new Date(endTime).getTime();
+        var now = new Date().getTime();
+        var timeRemaining = endTimestamp - now;
+
+        // 計算天數、小時、分鐘和秒數
+        var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        // 在頁面中顯示計時器
+        var countdownTimerElement = document.getElementById("countdownTimer");
+        countdownTimerElement.innerHTML = `${days} 天 ${hours} 時 ${minutes} 分 ${seconds} 秒 結束`;
+    }
+
+    function getCurrentPrice() {
+        $.ajax({
+            url: `/api/bidproduct/${PRODUCTID}/currentPrice`,
+            method: "GET",
+            headers: {
+                "authorization": AUTH_TOKEN
+            },
+            dataType: "json",
+            success: function (res) {
+                if (res.code === "0") {
+                    console.log(res.data)
+                    $("#currentPrice").text(res.data);
+                    $("#placeBidInput").val(res.data + 100);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        })
+    }
+
+    function getBidsForProduct() {
+        $.ajax({
+            url: `/api/bidproduct/${PRODUCTID}/bid`,
+            method: "GET",
+            headers: {
+                "authorization": AUTH_TOKEN
+            },
+            data: {
+                productId: PRODUCTID,
+            },
+            dataType: "json",
+            success: function (res) {
+                if (res.code === "0") {
+                    console.log(res.data);
+                    let bids = res.data;
+                    let html = '';
+                    if (!bids.length) {
+                        html += '<tr><td colspan="3">目前沒有出價記錄</td></tr>';
+                    } else {
+                        bids.forEach(bid => {
+                            html += `<tr>
+                            <td>${bid.member.memberAccount}</td>
+                            <td>${bid.amount}</td>
+                            <td>${bid.bidTime}</td>
+                        </tr>`;
+                        });
+                    }
+
+                    $("#bidsModal .modal-body table tbody").html(html);
+
+                } else {
+                    console.error(res);
+                    alert(res.message)
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+    }
+
+    $("#placeBidButton").click(function (e) {
+        e.preventDefault();
+        let currentPrice = $("#currentPrice").text;
+        let newPrice = $("#placeBidInput").val();
+        if (AUTH_TOKEN !== null) {
+            if (newPrice < currentPrice) {
+                $.ajax({
+                    url: "/api/bid",
+                    method: "POST",
+                    headers: {
+                        "authorization": AUTH_TOKEN
+                    },
+                    data: {
+                        productId: PRODUCTID,
+                        amount: newPrice
+                    },
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code === "0") {
+                            alert("出價成功")
+                        } else {
+                            console.error(res);
+                            alert(res.message)
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error: ' + error);
+                    }
+                });
+            } else {
+                alert("你的出價金額必須高於現在最高金額")
+            }
+        } else {
+            if (confirm("請先登入: 要現在登入嗎？")) {
+                location.href = "/member/login"
+            }
+        }
+
+    })
+
+    $("#showBids").click(function (e) {
+        e.preventDefault();
+        getBidsForProduct();
+        $('#bidsModal').modal('show');
+    })
+</script>
+</body>
+</html>
