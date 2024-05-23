@@ -6,6 +6,7 @@ import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.*;
 import com.tibame.group1.db.repository.*;
 import com.tibame.group1.web.dto.*;
+import com.tibame.group1.web.service.NoticeService;
 import com.tibame.group1.web.service.OrderService;
 
 import jakarta.transaction.Transactional;
@@ -34,6 +35,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired private ProductRepository productRepository;
 
     @Autowired private ProductImgRepository productImgRepository;
+
+    @Autowired private NoticeService noticeService;
 
     @Override
     public OrderCreateResDTO orderCreate(OrderCreateReqDTO req, LoginSourceDTO loginSource)
@@ -89,7 +92,8 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setPrice(buyProduct.getPrice());
             orderDetailRepository.save(orderDetail);
         }
-
+        noticeService.memberNoticeCreate(
+                buyer, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "訂單已成立", "恭喜訂單新增成功! 您的訂單編號: "+ order.getId(), true);
         OrderCreateResDTO resDTO = new OrderCreateResDTO();
         resDTO.setOrderId(order.getId());
         return resDTO;
