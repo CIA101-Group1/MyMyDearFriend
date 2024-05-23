@@ -144,8 +144,9 @@
         });
         function fetchMarketData() {
             const searchName = $("#searchInput").val().trim();
+            const authorization = localStorage.getItem("authorization");
             $.ajax({
-                url: `/api/market/all?name=${searchName}`,
+                url: `/api/market/all?name=${searchName}&authorization=${authorization}`,
                 method: "GET",
                 contentType: "application/json",
                 headers: {
