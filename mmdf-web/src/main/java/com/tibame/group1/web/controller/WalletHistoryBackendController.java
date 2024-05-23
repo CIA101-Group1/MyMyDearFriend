@@ -6,6 +6,7 @@ import com.tibame.group1.db.dto.WalletReqDTO;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.LoginSourceDTO;
+import com.tibame.group1.web.dto.TopUpReqDTO;
 import com.tibame.group1.web.service.WalletHistoryService;
 
 import jakarta.validation.Valid;
@@ -23,6 +24,21 @@ public class WalletHistoryBackendController {
     @Autowired private WalletHistoryService walletHistoryService;
 
     /** todo: 錢包分頁功能與每筆細項，用List */
+
+    @CheckLogin
+    @PostMapping("/wallets/top-up")
+    public ResponseEntity<WalletHistoryEntity> topUp(
+            @RequestBody @Valid TopUpReqDTO topUpReqDTO,
+            @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
+
+        Integer walletID = walletHistoryService.topUp(topUpReqDTO);
+
+        WalletHistoryEntity wallet = walletHistoryService.getWalletHistoryById(walletID);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(wallet);
+    }
+
+
     @CheckLogin
     @GetMapping("/wallets")
     public ResponseEntity<List<WalletHistoryEntity>> getAllWalletHistory(

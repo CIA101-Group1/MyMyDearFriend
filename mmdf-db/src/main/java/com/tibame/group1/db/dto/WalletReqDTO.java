@@ -19,4 +19,7 @@ public class WalletReqDTO {
 
   @NotNull
   private WalletCategory changeType;
+
+  @NotNull
+  private Integer totalAmount;
 }
