@@ -25,7 +25,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class EmployeeServiceImpl implements EmployeeService {
 
-    @Autowired EmployeeRepository employeeRepository;
+    @Autowired private EmployeeRepository employeeRepository;
 
     @Autowired private JwtService jwtService;
 
