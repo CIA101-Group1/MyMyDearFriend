@@ -59,7 +59,7 @@
         const authorization = localStorage.getItem("authorization");
 
         $.ajax({
-            url: `/api/order/all?authorization=${authorization}`,
+            url: `/api/order/getAll?authorization=${authorization}`,
             method: "GET",
             success(response) {
                 let orders = response.data;
