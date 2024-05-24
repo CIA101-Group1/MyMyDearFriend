@@ -1,6 +1,7 @@
 package com.tibame.group1.common.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * todo 是否要加上金錢顯示
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 
 
 @AllArgsConstructor
+@Getter
 public enum WalletCategory {
 
     PAYMENT("0", "付款完成"),
@@ -24,7 +26,9 @@ public enum WalletCategory {
 
     TEST("6", "測試用"),
 
-    WITHDRAW("7", "提款");
+    WITHDRAW("7", "提款"),
+
+    MARKET("8", "市集報名費");
 
     private final String code;
     private final String message;
