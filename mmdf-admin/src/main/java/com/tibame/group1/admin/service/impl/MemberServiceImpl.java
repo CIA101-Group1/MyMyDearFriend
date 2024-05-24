@@ -77,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
                             : DateUtils.dateToSting(member.getVerifiedTime()));
             resDTO.setJoinTime(DateUtils.dateToSting(member.getJoinTime()));
             resDTO.setWalletAmount(member.getWalletAmount());
-            resDTO.setWalletAvailableAmount(member.getWalletAvailableAmount());
+            resDTO.setWalletAvailableAmount(member.getWalletWithdrawAmount());
             resDTO.setSellerStatus(member.getSellerStatus());
             resDTO.setScoreNumber(member.getScoreNumber());
             resDTO.setScoreSum(member.getScoreSum());

@@ -71,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
         member.setIsVerified(false);
         member.setJoinTime(new Date());
         member.setWalletAmount(0);
-        member.setWalletAvailableAmount(0);
+        member.setWalletWithdrawAmount(0);
         member.setWalletCid(CommonUtils.encryptToMD5(req.getWalletCid()));
         member.setWalletQuestion(req.getWalletQuestion());
         member.setWalletAnswer(req.getWalletAnswer());
