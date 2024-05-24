@@ -47,6 +47,11 @@ public class OrderServiceImpl implements OrderService {
             log.warn("查無會員資料 {}", loginSource.getMemberId());
             throw new CheckRequestErrorException("查無會員資料");
         }
+        MemberEntity seller = memberRepository.findById(req.getSellerId()).orElse(null);
+        if (seller == null) {
+            log.warn("查無會員資料 {}", loginSource.getMemberId());
+            throw new CheckRequestErrorException("查無會員資料");
+        }
         // 建立訂單
         OrderEntity order = new OrderEntity();
         order.setBuyerId(buyer.getMemberId());
@@ -64,6 +69,18 @@ public class OrderServiceImpl implements OrderService {
         order.setFee((int) (req.getPriceBeforeDiscount() * 0.03));
         order = orderRepository.save(order);
 
+        // 買賣家錢包餘額計算
+        if (buyer.getWalletAmount() < order.getPriceAfterDiscount()){
+            log.warn("買家錢包餘額不足");
+            throw new CheckRequestErrorException("錢包餘額不足，請先儲值");
+        }else{
+            buyer.setWalletAmount(buyer.getWalletAmount() - order.getPriceAfterDiscount());
+            memberRepository.save(buyer);
+        }
+
+        seller.setWalletAmount(seller.getWalletAmount() + order.getPriceBeforeDiscount() - order.getFee());
+        memberRepository.save(seller);
+
         // 建立訂單詳情
         for (OrderBuyProductDTO buyProduct : req.getBuyProductList()) {
             // 檢查 product 是否存在，庫存是否足夠
@@ -78,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
                         buyProduct.getProductId(),
                         product.getQuantity(),
                         buyProduct.getQuantity());
-                throw new CheckRequestErrorException("商品庫存量不足，無法購買");
+                throw new CheckRequestErrorException("商品庫存量不足，無法購買。"+ product.getName() +" 剩餘庫存: " + product.getQuantity());
             }
 
             // 扣除商品庫存
