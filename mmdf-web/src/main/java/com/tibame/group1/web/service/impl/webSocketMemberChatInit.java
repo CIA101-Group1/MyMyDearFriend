@@ -90,11 +90,6 @@ public class webSocketMemberChatInit implements WebSocketHandler {
             System.out.println("會員編號：" + memberId + " -> 正在聊天室初始化...");
 
 
-//            CKIPService ckipService = new CKIPService();
-            String doc = "尋找商品的詳情，若能夠欣賞到一個商品的詳情的美。";
-            System.out.println(ckipService.getAnswer(doc));
-
-
             // ------------ 檢查Reids是否有重複資料 ------------//
             Set<String> keys = redisTemplate.keys("chatroom" + ":" + memberId + ":*");
             if (keys == null || keys.size() == 0) {

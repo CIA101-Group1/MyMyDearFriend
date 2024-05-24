@@ -32,13 +32,26 @@ public class webSocketService implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
             throws Exception {
         JsonObject jsonObj = gson.fromJson(message.getPayload().toString(), JsonObject.class);
-        if ("member".equals(jsonObj.get("type").toString())) {
+        String type = jsonObj.get("type").getAsString();
+        if ("member".equals(type)) {
             String authorization = jsonObj.get("authorization").getAsString();
             LoginSourceDTO loginSource = jwtService.decodeLogin(authorization);
             members.put(session, loginSource);
             waitMembers.add(session);
         }
-        if("service".equals(jsonObj.get("type").toString())){
+        if("service".equals(type)){
+
+        }
+
+        if("service_getCustomer".equals(type)){
+            if(serivces.containsKey(session)&&serivces.get(session) == jsonObj.get("id").getAsString()){
+
+            }
+        }
+        if("message".equals(type)){
+
+        }
+        if("end".equals(type)){
 
         }
 
