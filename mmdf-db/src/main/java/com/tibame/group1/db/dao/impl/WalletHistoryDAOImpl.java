@@ -70,7 +70,10 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
       case TOP_UP:
       case DEPOSIT:
         return currentWalletAmount + changeAmount;
+      case PAYMENT:
       case WITHDRAW:
+      case FEE:
+      case MARKET:
         return currentWalletAmount - changeAmount;
       default:
         throw new IllegalArgumentException("無效的變更類型: " + changeType);
