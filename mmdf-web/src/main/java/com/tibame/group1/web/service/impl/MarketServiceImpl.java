@@ -21,7 +21,7 @@ public class MarketServiceImpl implements MarketService {
     private MarketRepository marketRepository;
 
     @Override
-    public List<MarketResDTO> getMarketByStatus(LoginSourceDTO loginSource) {
+    public List<MarketResDTO> getMarketByStatus() {
         List<MarketEntity> markets = marketRepository.findByMarketStatus(2);
 
         // 將查詢結果轉換為MarketResDTO
