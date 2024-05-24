@@ -23,7 +23,7 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
   @Override
   public WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId) {
     String sql =
-            "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, total_amount\n"
+            "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, wallet_amount\n"
                     + "FROM wallet_history WHERE wallet_history_id = :wallet_history_id";
 
     Map<String, Object> map = new HashMap<>();
@@ -41,19 +41,19 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
 
   @Override
   public Integer createWalletHistory(WalletReqDTO walletReqDTO) {
-    // 計算新的 totalAmount
-    Integer currentTotalAmount = getCurrentTotalAmount(walletReqDTO.getMemberID());
-    Integer newTotalAmount = calculateNewTotalAmount(currentTotalAmount, walletReqDTO.getChangeAmount(), walletReqDTO.getChangeType());
+    // 計算新的 walletAmount
+    Integer currentWalletAmount = getCurrentWalletAmount(walletReqDTO.getMemberID());
+    Integer newWalletAmount = calculateNewWalletAmount(currentWalletAmount, walletReqDTO.getChangeAmount(), walletReqDTO.getChangeType());
 
     String sql =
-            "INSERT INTO wallet_history (change_time, member_id, change_amount, change_type, total_amount) "
-                    + "VALUES (:changeTime, :memberID, :changeAmount, :changeType, :totalAmount)";
+            "INSERT INTO wallet_history (change_time, member_id, change_amount, change_type, wallet_amount) "
+                    + "VALUES (:changeTime, :memberID, :changeAmount, :changeType, :walletAmount)";
 
     Map<String, Object> map = new HashMap<>();
     map.put("memberID", walletReqDTO.getMemberID());
     map.put("changeAmount", walletReqDTO.getChangeAmount());
     map.put("changeType", walletReqDTO.getChangeType().toString());
-    map.put("totalAmount", newTotalAmount);
+    map.put("walletAmount", newWalletAmount);
 
     Date now = new Date();
     map.put("changeTime", now);
@@ -65,28 +65,28 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
     return walletID;
   }
 
-  private Integer calculateNewTotalAmount(Integer currentTotalAmount, Integer changeAmount, WalletCategory changeType) {
+  private Integer calculateNewWalletAmount(Integer currentWalletAmount, Integer changeAmount, WalletCategory changeType) {
     switch (changeType) {
       case TOP_UP:
       case DEPOSIT:
-        return currentTotalAmount + changeAmount;
+        return currentWalletAmount + changeAmount;
       case WITHDRAW:
-        return currentTotalAmount - changeAmount;
+        return currentWalletAmount - changeAmount;
       default:
         throw new IllegalArgumentException("無效的變更類型: " + changeType);
     }
   }
 
-  private Integer getCurrentTotalAmount(Integer memberID) {
-    String sql = "SELECT total_amount FROM wallet_history WHERE member_id = :memberID ORDER BY change_time DESC LIMIT 1";
+  private Integer getCurrentWalletAmount(Integer memberID) {
+    String sql = "SELECT wallet_amount FROM wallet_history WHERE member_id = :memberID ORDER BY change_time DESC LIMIT 1";
 
     Map<String, Object> map = new HashMap<>();
     map.put("memberID", memberID);
 
-    List<Integer> totalAmounts = namedParameterJdbcTemplate.queryForList(sql, map, Integer.class);
+    List<Integer> walletAmounts = namedParameterJdbcTemplate.queryForList(sql, map, Integer.class);
 
-    if (!totalAmounts.isEmpty()) {
-      return totalAmounts.get(0);
+    if (!walletAmounts.isEmpty()) {
+      return walletAmounts.get(0);
     } else {
       return 0;
     }
@@ -95,7 +95,7 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
   @Override
   public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
     String sql =
-            "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, total_amount " +
+            "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, wallet_amount " +
                     "FROM wallet_history WHERE 1=1";
 
     Map<String, Object> map = new HashMap<>();
