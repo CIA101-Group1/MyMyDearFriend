@@ -195,18 +195,26 @@
                                     contentType: "application/json",
                                     data: JSON.stringify(orderData),
                                     success(response) {
-                                        console.log(response.data);
-                                        Swal.fire({
-                                            title: "成功",
-                                            icon: "success",
-                                            text: "訂單已成功創建！",
-                                            confirmButtonText: "確認"
-                                        }).then(() => {
-                                            // 在成功創建訂單後，清空購物車localStorage
-                                            localStorage.removeItem("selectedCartData");
-                                            // 重導到訂單頁面
-                                            window.location.href = "/order/all";
-                                        });
+                                        if(response.code === -9){
+                                            Swal.fire({
+                                                title: "失敗",
+                                                icon: "error",
+                                                text: response.message,
+                                                confirmButtonText: "確認"
+                                            });
+                                        }else{
+                                            Swal.fire({
+                                                title: "成功",
+                                                icon: "success",
+                                                text: "訂單已成功創建！",
+                                                confirmButtonText: "確認"
+                                            }).then(() => {
+                                                // 在成功創建訂單後，清空購物車localStorage
+                                                localStorage.removeItem("selectedCartData");
+                                                // 重導到訂單頁面
+                                                window.location.href = "/order/all";
+                                            });
+                                        }
                                     },
                                     error(xhr, status, error) {
                                         console.error("There was a problem :", error);
