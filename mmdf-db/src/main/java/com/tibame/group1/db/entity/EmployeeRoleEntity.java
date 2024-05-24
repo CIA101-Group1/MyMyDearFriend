@@ -11,7 +11,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Immutable
 @Table(name = "employee_role")
 public class EmployeeRoleEntity {
     //嵌入式主鍵
@@ -40,6 +39,7 @@ public class EmployeeRoleEntity {
         //覆寫equals()方法
         @Override
         public boolean equals(Object o) {
+            if(this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             EmployeeRoleId that = (EmployeeRoleId) o;
             return Objects.equals(employeeId, that.getEmployeeId()) &&

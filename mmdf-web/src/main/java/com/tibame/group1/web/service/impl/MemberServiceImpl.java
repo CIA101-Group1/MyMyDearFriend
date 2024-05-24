@@ -122,6 +122,7 @@ public class MemberServiceImpl implements MemberService {
         resDTO.setCity(member.getCity());
         resDTO.setAddress(member.getAddress());
         resDTO.setIsVerified(member.getIsVerified());
+        resDTO.setWalletAmount(member.getWalletAmount());
         resDTO.setSellerStatus(member.getSellerStatus());
         resDTO.setScoreNumber(member.getScoreNumber());
         resDTO.setScoreSum(member.getScoreSum());
