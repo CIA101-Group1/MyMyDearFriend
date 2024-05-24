@@ -55,12 +55,60 @@ public class InitTestMemberService {
         member.setVerifySendingTime(new Date());
         member.setVerifiedTime(new Date());
         member.setWalletAmount(0);
-        member.setWalletAvailableAmount(0);
+        member.setWalletWithdrawAmount(0);
         member.setWalletCid(config.getWalletCid());
         member.setWalletQuestion(config.getWalletQuestion());
         member.setWalletAnswer(config.getWalletAnswer());
         member.setSellerStatus(false);
         memberRepository.save(member);
         log.info("完成初始化測試使用者");
+
+        // 建立測試使用者資料
+        member = new MemberEntity();
+        member.setMemberAccount(config.getMemberAccount() + '2');
+        member.setCid(CommonUtils.encryptToMD5(config.getCid()));
+        member.setName(config.getName());
+        member.setPhone(config.getPhone());
+        member.setEmail(config.getEmail()  + '2');
+        member.setBirth(new Date());
+        member.setTwPersonId(config.getTwPersonId());
+        member.setCity("臺北市");
+        member.setAddress("臺北市_中山區_testAccount");
+        member.setIsVerified(true);
+        member.setJoinTime(new Date());
+        member.setVerifySendingTime(new Date());
+        member.setVerifiedTime(new Date());
+        member.setWalletAmount(0);
+        member.setWalletWithdrawAmount(0);
+        member.setWalletCid(config.getWalletCid());
+        member.setWalletQuestion(config.getWalletQuestion());
+        member.setWalletAnswer(config.getWalletAnswer());
+        member.setSellerStatus(false);
+        memberRepository.save(member);
+        log.info("完成初始化測試使用者2");
+
+        // 建立測試使用者資料
+        member = new MemberEntity();
+        member.setMemberAccount(config.getMemberAccount()  + '3');
+        member.setCid(CommonUtils.encryptToMD5(config.getCid()));
+        member.setName(config.getName());
+        member.setPhone(config.getPhone());
+        member.setEmail(config.getEmail()  + '3');
+        member.setBirth(new Date());
+        member.setTwPersonId(config.getTwPersonId());
+        member.setCity("臺北市");
+        member.setAddress("臺北市_中山區_testAccount");
+        member.setIsVerified(true);
+        member.setJoinTime(new Date());
+        member.setVerifySendingTime(new Date());
+        member.setVerifiedTime(new Date());
+        member.setWalletAmount(0);
+        member.setWalletWithdrawAmount(0);
+        member.setWalletCid(config.getWalletCid());
+        member.setWalletQuestion(config.getWalletQuestion());
+        member.setWalletAnswer(config.getWalletAnswer());
+        member.setSellerStatus(false);
+        memberRepository.save(member);
+        log.info("完成初始化測試使用者3");
     }
 }

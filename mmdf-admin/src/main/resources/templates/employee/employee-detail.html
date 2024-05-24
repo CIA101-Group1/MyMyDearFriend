@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>員工詳細資料</title>
+    <th:block th:replace="~{/fragments/css}"/>
+
+</head>
+
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!-- 主要內容 -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <!-- 員工詳細資料及修改資料部分 -->
+                    <div class="card my-4">
+                        <div class="card-header">
+                            <h2 class="m-0 fw-bold">員工詳細資料</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="employeeForm">
+                                <div class="mb-3">
+                                    <label for="employeeId" class="form-label">員工編號：</label>
+                                    <input type="text" class="form-control" id="employeeId" name="employeeId" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeAccount" class="form-label">帳號：</label>
+                                    <input type="text" class="form-control" id="employeeAccount" name="employeeAccount">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeePassword" class="form-label">密碼：</label>
+                                    <input type="password" class="form-control" id="employeePassword"
+                                           name="employeePassword">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeName" class="form-label">姓名：</label>
+                                    <input type="text" class="form-control" id="employeeName" name="employeeName">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeePhone" class="form-label">電話：</label>
+                                    <input type="tel" class="form-control" id="employeePhone" name="employeePhone">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeEmail" class="form-label">電子郵件：</label>
+                                    <input type="email" class="form-control" id="employeeEmail" name="employeeEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeGender" class="form-label">性別：</label>
+                                    <select class="form-select" id="employeeGender" name="employeeGender">
+                                        <option value="M">男性</option>
+                                        <option value="F">女性</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeCreateTime" class="form-label">建立時間：</label>
+                                    <input type="text" class="form-control" id="employeeCreateTime"
+                                           name="employeeCreateTime" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="employeeStatus" class="form-label">狀態：</label>
+                                    <select class="form-select" id="employeeStatus" name="employeeStatus">
+                                        <option value="1">啟用</option>
+                                        <option value="0">停用</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" id="saveBtn" class="btn btn-primary">儲存</button>
+                                    <button type="button" id="cancelBtn" class="btn btn-primary">取消</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+        // 從 URL 中獲取授權和員工 ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const employeeId = urlParams.get("id");
+
+        const authorization = localStorage.getItem("authorization");
+
+        // 檢查是否成功獲取員工 ID
+        if (!employeeId) {
+            console.error("Employee ID is missing in the URL.");
+            return;
+        }
+
+        // 發送 AJAX 請求
+        $.ajax({
+            url: `/api/employee/detail?id=${employeeId}&authorization=${authorization}`,
+            method: "get",
+            contentType: "application/json",
+            data: {
+                "employeeId": employeeId
+            },
+            success(response) {
+                if (response.code === "0") {
+                    const data = response.data;
+                    // 更新页面内容
+                    $("#employeeId").val(data.employeeId);
+                    $("#employeeAccount").val(data.employeeAccount);
+                    $("#employeePassword").val(data.employeePassword);
+                    $("#employeeName").val(data.employeeName);
+                    $("#employeeEmail").val(data.employeeEmail);
+                    $("#employeePhone").val(data.employeePhone);
+                    $("#employeeGender").val(data.employeeGender);
+                    $("#employeeCreateTime").val(formatDate(data.employeeCreateTime));
+                    $("#employeeStatus").val(data.employeeStatus);
+                } else {
+                    console.error("API returned an error: " + response.message);
+                }
+            },
+            error(xhr, status, error) {
+                alert("服务器连接失败: " + error);
+            }
+        });
+    });
+
+
+    $("#saveBtn").click(function () {
+        const userData = {
+            employeeId: $("#employeeId").val(),
+            employeeAccount: $("#employeeAccount").val(),
+            employeePassword: $("#employeePassword").val(),
+            employeeName: $("#employeeName").val(),
+            employeeEmail: $("#employeeEmail").val(),
+            employeePhone: $("#employeePhone").val(),
+            employeeGender: $("#employeeGender").val(),
+            employeeStatus: $("#employeeStatus").val()
+        };
+
+        let errorMessage = "";
+        const employeeAccount = $("#employeeAccount").val().trim();
+        if (employeeAccount === "" || !/^[A-Za-z0-9_]{2,20}$/.test(employeeAccount)) {
+            errorMessage += "<li>員工帳號必須是英文字母、數字和_，且長度必需在2到20之間</li>";
+        }
+
+        const employeePassword = $("#employeePassword").val().trim();
+        if (employeePassword === "" || !/^[a-zA-Z0-9]{6,50}$/.test(employeePassword)) {
+            errorMessage += "<li>密碼：只能是數字和英文字母，且長度必須在6到16之間</li>";
+        }
+
+        const employeeName = $("#employeeName").val().trim();
+        if (employeeName === "" || !/^[A-Za-z\u4e00-\u9fa5]{2,20}$/.test(employeeName)) {
+            errorMessage += "<li>姓名必須是中、英文字母，且長度必需在2到20之間</li>";
+        }
+
+        const employeePhone = $("#employeePhone").val().trim();
+        if (employeePhone === "" || !/^\d{10}$/.test(employeePhone)) {
+            errorMessage += "<li>電話必須是10位數字，且不含符號</li>";
+        }
+
+        const employeeEmail = $("#employeeEmail").val().trim();
+        if (employeeEmail === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(employeeEmail)) {
+            errorMessage += "<li>請填寫正確的電子郵件格式</li>";
+        }
+
+        if (errorMessage !== "") {
+            $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+            $("#myModal").modal("show");
+            return false;
+        }
+
+        const authorization = localStorage.getItem("authorization");
+        $.ajax({
+            url: `/api/employee/edit?authorization=${authorization}`, // 在URL中添加authorization參數
+            method: "post",
+            contentType: "application/json",
+            data: JSON.stringify(userData),
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        console.log("成功處理回應數據: ", data);
+                        // 设置成功消息
+                        const successMessage = "修改成功";
+                        // 将成功消息显示在模态框中
+                        $("#modalBody").html(successMessage);
+                        $("#myModal").modal("show");
+                        // 3秒后跳转到另一个页面
+                        setTimeout(function () {
+                            var authorization = localStorage.getItem("authorization");
+                            var url = '/employee/all';
+                            if (authorization) {
+                                url += '?authorization=' + encodeURIComponent(authorization);
+                            }
+                            console.log('goToEmployeeAll href: ', url);
+                            window.location.href = url;
+                        }, 3000);
+                    },
+                    onError(message) {
+                        console.log("錯誤處理回應數據: ", message);
+                        $("#modalBody").html(message);
+                        $("#myModal").modal("show");
+                    }
+                });
+            },
+            error(xhr, status, error) {
+                console.error("AJAX 請求失敗: ", error);
+                $("#modalBody").html("伺服器連線失敗: " + error);
+                $("#myModal").modal("show");
+            }
+        });
+    });
+
+    $("#closeModalBtn").click(function () {
+        $("#myModal").modal("hide");
+    });
+
+    function formatDate(dateStr) {
+        const year = dateStr.substring(0, 4);
+        const month = dateStr.substring(4, 6);
+        const day = dateStr.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+
+    $("#cancelBtn").click(function () {
+        // 點選取消後跳轉到employee/all
+        var authorization = localStorage.getItem("authorization");
+        var url = '/employee/all';
+        if (authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToEmployeeAll href: ', url);
+        window.location.href = url;
+    });
+</script>
+
+</body>
+</html>

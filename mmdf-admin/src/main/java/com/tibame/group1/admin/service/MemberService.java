@@ -1,10 +1,10 @@
 package com.tibame.group1.admin.service;
 
-import com.tibame.group1.admin.dto.MemberAllReqDTO;
-import com.tibame.group1.admin.dto.MemberResDTO;
+import com.tibame.group1.admin.dto.MemberAllResDTO;
+import com.tibame.group1.admin.dto.MemberReqDTO;
 
 import org.springframework.data.domain.Pageable;
 
 public interface MemberService {
-    MemberResDTO memberAll(MemberAllReqDTO req, Pageable pageable);
+    MemberAllResDTO memberAll(MemberReqDTO req, Pageable pageable);
 }

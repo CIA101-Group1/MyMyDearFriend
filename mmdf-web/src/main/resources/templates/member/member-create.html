@@ -8,8 +8,6 @@
     <!--Filepond JS-->
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <!--    Filepond CSS    -->
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
@@ -19,7 +17,25 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
+        .row {
+            margin: auto;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            color: #fff !important;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+
         .dropdown select, .dropdown input {
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-right: 4px;
@@ -42,20 +58,16 @@
     <div class="container">
         <div class="account_dashboard">
             <div class="row">
-                <!-- Sidebar -->
-                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
-
                 <div class="col-sm-12 col-md-9 col-lg-9">
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="account-details">
-                            <h3>填寫會員資料</h3>
+                            <h3 style="text-align: center;">填寫會員資料</h3>
                             <div class="login">
                                 <div class="login_form_container">
                                     <div class="account_login_form">
                                         <!-- 我的 Code -->
                                         <form id="createForm">
-                                            <div id="errorMessage" style="color: red;"></div>
                                             <div>
                                                 <label for="memberAccount">帳號：</label>
                                                 <input type="text" id="memberAccount" name="memberAccount">
@@ -125,7 +137,7 @@
                                                 />
                                             </div>
                                             <div>
-                                                <button type="button" id="saveBtn">送出</button>
+                                                <button type="button" id="saveBtn" class="btn btn-primary">送出</button>
                                             </div>
                                         </form>
                                     </div>
@@ -139,10 +151,29 @@
     </div>
 </section>
 <!-- main end   -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
 <script src="/js/address-of-tw.js"></script>
 <script>
@@ -272,7 +303,8 @@
 
             // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
             if (errorMessage !== "") {
-                document.getElementById("errorMessage").innerHTML = "<ul>" + errorMessage + "</ul>";
+                $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+                $("#myModal").modal("show");
                 return false;
             }
             $("#errorMessage").text("");
@@ -290,15 +322,24 @@
                     onSuccess(data) {
                         switch (data.status) {
                             case "1":
-                                alert("註冊成功，請至信箱完成驗證");
-                                localStorage.setItem("authorization", response.data.authorization);
-                                window.location.href = "/";
+                                $("#modalBody").html("註冊成功，請至信箱完成驗證");
+                                localStorage.setItem("authorization", data.authorization);
+                                $("#myModal").modal("show");
+                                setTimeout(function () {
+                                    window.location.href = "/";
+                                }, 2000);
                                 break;
                             case "-1":
-                                alert("上傳檔案格式錯誤");
+                                $("#modalBody").html("上傳檔案格式錯誤");
+                                $("#myModal").modal("show");
                                 break;
                             case "-2":
-                                alert("該帳號已存在");
+                                $("#modalBody").html("該帳號已存在");
+                                $("#myModal").modal("show");
+                                break;
+                            case "-3":
+                                $("#modalBody").html("該信箱已存在");
+                                $("#myModal").modal("show");
                                 break;
                         }
                     },
@@ -308,7 +349,8 @@
                 });
             },
             error(xhr, status, error) {
-                alert("伺服器連線失敗: " + error);
+                $("#modalBody").html("伺服器連線失敗: " + error);
+                $("#myModal").modal("show");
             }
         });
     }

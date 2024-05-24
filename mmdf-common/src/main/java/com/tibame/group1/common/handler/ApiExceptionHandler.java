@@ -36,14 +36,12 @@ import java.util.List;
 
 @ControllerAdvice
 @Slf4j
-public class ApiExceptionHandler {
+public abstract class ApiExceptionHandler {
 
     /** 查無http服務錯誤處理 */
     @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
     @ResponseStatus(value = HttpStatus.OK)
-    public @ResponseBody ResDTO<?> handleNoHandlerFoundException() {
-        return new ResDTO<>(StatusCode.HTTP_ERROR);
-    }
+    public abstract String handleNoHandlerFoundException() throws AuthorizationException;
 
     /** http傳輸資訊錯誤處理 */
     @ExceptionHandler(HttpMessageNotReadableException.class)

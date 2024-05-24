@@ -6,9 +6,9 @@
                 <!-- 首頁 -->
                 <a class="nav-link" href="/home">後台首頁</a>
                 <!-- 員工 -->
-                <a class="nav-link" href="employee.html">員工管理</a>
+                <a onclick="goToEmployeeAll()" class="nav-link">員工管理</a>
                 <!-- 會員 -->
-                <a class="nav-link" href="/member/all">會員資料查詢</a>
+                <a onclick="goToMemberAll()" class="nav-link">會員資料查詢</a>
                 <!-- 錢包 -->
                 <a class="nav-link" href="offline-market.html">錢包管理</a>
                 <!-- 優惠券 -->
@@ -26,12 +26,12 @@
                 <div class="collapse" id="bidProductCollapse" aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/bidproduct/list">競標商品查詢</a>
-                        <a class="nav-link" href="/bidproduct/review">競標商品審核</a>
+                        <a class="nav-link" onclick="goToBidProductAll()">競標商品查詢</a>
+                        <a class="nav-link" onclick="goToBidProductReview()">競標商品審核</a>
                     </nav>
                 </div>
                 <!-- 線下市集 -->
-                <a class="nav-link" href="offline-market.html">線下市集管理</a>
+                <a onclick="goToMarketAll()" class="nav-link">線下市集管理</a>
                 <!-- 最新消息 -->
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                    data-bs-target="#newsCollapse" aria-expanded="false" aria-controls="collapseLayouts2">
@@ -74,3 +74,59 @@
         </div>
     </nav>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+    function goToEmployeeAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/employee/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToEmployeeAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToMemberAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/member/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToBidProductAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/bidproduct/list';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToBidProductReview() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/bidproduct/review';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToMarketAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/market/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+</script>
+

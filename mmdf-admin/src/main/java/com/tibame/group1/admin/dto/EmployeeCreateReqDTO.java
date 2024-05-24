@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class EmployeeCreateReqDTO {
@@ -33,6 +35,8 @@ public class EmployeeCreateReqDTO {
 
     @NotEmpty(message = "性別請勿空白")
     private String employeeGender;
+
+    private Integer employeeStatus;
 
 
 }

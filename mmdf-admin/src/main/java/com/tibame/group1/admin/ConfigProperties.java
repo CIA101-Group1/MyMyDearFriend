@@ -12,4 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("config")
 @Getter
 @Setter
-public class ConfigProperties extends com.tibame.group1.common.ConfigProperties {}
+public class ConfigProperties extends com.tibame.group1.common.ConfigProperties {
+    /** 測試寄通知信用信箱帳號 */
+    private String testSendEmail;
+
+    /** 測試寄通知信用信箱密碼 */
+    private String testEmailCid;
+}

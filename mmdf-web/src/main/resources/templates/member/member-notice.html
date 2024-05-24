@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .btn-secondary {
+            color: #fff !important;
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+        }
+
+        .dropdown select, .dropdown input {
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        .dropdown select:focus, .dropdown input:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <!-- 主要內容 -->
+                            <div id="layoutSidenav_content">
+                                <main>
+                                    <div class="container-fluid px-4">
+                                        <h3 class="mt-4">通知列表</h3>
+                                        <!-- 篩選條件 -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-2 custom-select-wrapper">
+                                                <label for="noticeCategory"
+                                                       style="margin-bottom: 5px;">通知類型</label>
+                                                <select id="noticeCategory" class="form-control">
+                                                    <option value="">所有</option>
+                                                    <option value="0">一般商城</option>
+                                                    <option value="1">競標商城</option>
+                                                    <option value="2">聊天室</option>
+                                                    <option value="3">客服</option>
+                                                    <option value="4">最新消息</option>
+                                                    <option value="5">市集</option>
+                                                    <option value="6">系統</option>
+                                                    <option value="7">其他</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 custom-select-wrapper-input">
+                                                <label for="sendingTimeBegin"
+                                                       style="margin-bottom: 5px;">發送時間起始</label>
+                                                <input type="date" id="sendingTimeBegin" class="form-control">
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-center justify-content-center"
+                                                 style="max-width: 40px;">
+                                                <span>~</span>
+                                            </div>
+                                            <div class="col-md-3 custom-select-wrapper-input">
+                                                <label for="sendingTimeEnd"
+                                                       style="margin-bottom: 5px;">發送時間結束</label>
+                                                <input type="date" id="sendingTimeEnd" class="form-control">
+                                            </div>
+                                            <div class="col-md-3 align-self-end d-flex justify-content-between">
+                                                <button id="resetFilters" class="btn btn-secondary ml-2">重置篩選條件
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- 主要表格 -->
+                                        <table id="noticeTable" class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>類型</th>
+                                                <th>標題</th>
+                                                <th>內容</th>
+                                                <th>發送時間</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <!-- 這裡將通知資料動態插入 -->
+                                            </tbody>
+                                        </table>
+                                        <div id="alertMessage" class="alert alert-warning"
+                                             style="display: none; text-align: center;">查無資料
+                                        </div>
+                                        <nav>
+                                            <ul class="pagination">
+                                                <!-- 這裡將動態插入分頁按鈕 -->
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end   -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    $(document).ready(function () {
+        // 當篩選條件改變時，重新加載資料
+        $("#noticeCategory, #sendingTimeBegin, #sendingTimeEnd").on("change", function () {
+            fetchMemberData();
+        });
+
+        // 當點擊重置按鈕時，重置篩選條件並重新加載資料
+        $("#resetFilters").on("click", function () {
+            $("#noticeCategory").val("");
+            $("#sendingTimeBegin").val("");
+            $("#sendingTimeEnd").val("");
+            fetchMemberData();
+        });
+
+        function fetchMemberData(pageNumber = 0, pageSize = 5) {
+            const noticeCategory = $("#noticeCategory").val();
+            const sendingTimeBegin = $("#sendingTimeBegin").val();
+            const sendingTimeEnd = $("#sendingTimeEnd").val();
+
+            let startTime = "";
+            let endTime = "";
+
+            if (sendingTimeBegin && sendingTimeEnd) {
+                // 有選擇起始日期和結束日期
+                startTime = `${sendingTimeBegin}T00:00:00`;
+                endTime = `${sendingTimeEnd}T23:59:59`;
+            } else if (sendingTimeBegin) {
+                // 只有選擇起始日期
+                startTime = `${sendingTimeBegin}T00:00:00`;
+                // 取得當前日期和時間
+                const now = new Date();
+                const currentDateString = now.toISOString().split('T')[0];
+                const currentTimeString = now.toTimeString().split(' ')[0];
+                endTime = `${currentDateString}T${currentTimeString}`;
+            } else if (sendingTimeEnd) {
+                // 只有選擇結束日期
+                endTime = `${sendingTimeEnd}T23:59:59`;
+            }
+            userData.noticeCategory = noticeCategory === "" ? null : noticeCategory;
+            userData.sendingTimeBegin = startTime === "" ? null : formatDateTime(startTime);
+            userData.sendingTimeEnd = endTime === "" ? null : formatDateTime(endTime);
+            $.ajax({
+                url: `/api/memberNotice/all?page=${pageNumber}&sizePerPage=${pageSize}`,
+                method: "post",
+                contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            const memberNoticeList = data.memberNoticeList;
+                            const totalPages = data.pages.totalPages;
+
+                            // 清空表格和分頁
+                            $("#noticeTable tbody").empty();
+                            $(".pagination").empty();
+
+                            // 若查無資料
+                            if (data.pages.totalCount === 0) {
+                                $("#alertMessage").show();
+                            } else {
+                                $("#alertMessage").hide();
+                                // 處理顯示資料的邏輯
+                            }
+
+                            // 插入資料
+                            memberNoticeList.forEach(notice => {
+                                $("#noticeTable tbody").append(`
+                                    <tr>
+                                        <th>${getNoticeCategoryText(notice.noticeCategory)}</th>
+                                        <th>${notice.noticeTitle}</th>
+                                        <th>${notice.noticeContent}</th>
+                                        <th>${notice.sendingTime}</th>
+                                    </tr>
+                                `);
+                            });
+
+                            // 插入分頁按鈕
+                            for (let i = 0; i < totalPages; i++) {
+                                $(".pagination").append(`
+                                    <li class="page-item ${i === pageNumber ? "active" : ""}">
+                                        <a class="page-link" href="#">${i + 1}</a>
+                                    </li>
+                                `);
+                            }
+
+                            // 分頁按鈕點擊事件
+                            $(".pagination .page-link").on("click", function (e) {
+                                e.preventDefault();
+                                const pageIndex = parseInt($(this).text()) - 1;
+                                fetchMemberData(pageIndex);
+                                // 滾動到頁面頂部
+                                $("html, body").animate({scrollTop: 0}, 50);
+                            });
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        }
+
+        fetchMemberData();
+
+        function getNoticeCategoryText(category) {
+            switch (category) {
+                case "0":
+                    return "一般商城";
+                case "1":
+                    return "競標商城";
+                case "2":
+                    return "聊天室";
+                case "3":
+                    return "客服";
+                case "4":
+                    return "最新消息";
+                case "5":
+                    return "市集";
+                case "6":
+                    return "系統";
+                default:
+                    return "其他";
+            }
+        }
+
+        function formatDateTime(isoString) {
+            let date = new Date(isoString);
+            let year = date.getFullYear();
+            let month = padZero(date.getMonth() + 1);
+            let day = padZero(date.getDate());
+            let hours = padZero(date.getHours());
+            let minutes = padZero(date.getMinutes());
+            let seconds = padZero(date.getSeconds());
+
+            return year + month + day + hours + minutes + seconds;
+        }
+
+        function padZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
+    });
+</script>
+</body>
+</html>

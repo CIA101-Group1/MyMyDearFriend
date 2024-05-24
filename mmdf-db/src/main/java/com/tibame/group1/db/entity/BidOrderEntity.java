@@ -1,53 +1,108 @@
 package com.tibame.group1.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tibame.group1.common.enums.BidOrderStatus;
+import com.tibame.group1.common.enums.BidProductStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Immutable;
-
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "bid_order")
-@Immutable
 public class BidOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bid_product_id", nullable = false)
-    private Integer bidProductId;
+    @Column(name = "order_id", nullable = false)
+    private Integer orderId;
 
-    @Column(name = "seller_id", nullable = false, length = 20)
-    private String sellerId;
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "product_id", nullable = false)
+    // private com.tibame.group1.db.entity.BidProductEntity product;
+    //
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "buyer_id", nullable = false)
+    // private MemberEntity buyer;
+    //
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "seller_id", nullable = false)
+    // private MemberEntity seller;
 
-    @Column(name = "category_id", nullable = false, length = 200)
-    private String categoryId;
+    @NotNull
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
-    @Column(name = "name", nullable = false, length = 20)
-    private String name;
+    @NotNull
+    @Column(name = "buyer_id", nullable = false)
+    private Integer buyerId;
 
-    @Column(name = "description", nullable = false, length = 20)
-    private String description;
+    @NotNull
+    @Column(name = "seller_id", nullable = false)
+    private Integer sellerId;
 
-    @Column(name = "start_price", nullable = false, length = 50)
-    private String startPrice;
+    @NotNull
+    @Column(name = "subtotal", nullable = false)
+    private Integer subtotal;
 
-    @Column(name = "duration", nullable = false)
-    private Date duration;
+    @Column(name = "discount")
+    private Integer discount;
 
-    @Column(name = "start_time")
-    private LocalDateTime startTime;
+    @Column(name = "total")
+    private Integer total;
 
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
+    @NotNull
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
+    @Column(name = "create_time", nullable = false)
+    private Timestamp createTime;
 
-    @Column(name = "status")
+    @NotNull
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8")
+    @Column(name = "update_time", nullable = false)
+    private Timestamp updateTime;
+
+    @NotNull
+    @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "image", columnDefinition = "mediumblob")
-    private byte[] image;
+    public String getStatus() {
+        return BidOrderStatus.fromCode(status).getMessage();
+    }
+
+    public void setStatus(BidOrderStatus status) {
+        this.status = status.getCode();
+    }
+
+    public Integer getStatusCode() {
+        return this.status;
+    }
+
+    @Size(max = 20)
+    @Column(name = "name", length = 20)
+    private String name;
+
+    @Size(max = 20)
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Size(max = 40)
+    @Column(name = "address", length = 40)
+    private String address;
+
+    @Column(name = "fee")
+    private Integer fee;
 }

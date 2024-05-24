@@ -7,6 +7,7 @@ import com.tibame.group1.common.exception.EmailException;
 import com.tibame.group1.common.listener.EmailSentListener;
 import com.tibame.group1.common.utils.*;
 import com.tibame.group1.db.entity.MemberEntity;
+import com.tibame.group1.db.entity.MemberNoticeEntity;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.ConfigProperties;
 import com.tibame.group1.web.dto.CidResetVerifySourceDTO;
@@ -14,6 +15,7 @@ import com.tibame.group1.web.dto.EmailVerifySourceDTO;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.MemberService;
+import com.tibame.group1.web.service.NoticeService;
 
 import jakarta.transaction.Transactional;
 
@@ -36,6 +38,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired private ConfigProperties config;
 
+    @Autowired private NoticeService noticeService;
+
     /**
      * 前台使用者註冊會員
      *
@@ -55,6 +59,10 @@ public class MemberServiceImpl implements MemberService {
         member.setCid(CommonUtils.encryptToMD5(req.getCid()));
         member.setName(req.getName());
         member.setPhone(req.getPhone());
+        if ((memberRepository.existsByEmail(req.getEmail()))) {
+            resDTO.setStatus(MemberCreateResDTO.Status.EXIST_EMAIL.getCode());
+            return resDTO;
+        }
         member.setEmail(req.getEmail());
         member.setBirth(DateUtils.stringToDate(req.getBirth(), DateUtils.DEFAULT_DATE_FORMAT));
         member.setTwPersonId(req.getTwPersonId());
@@ -63,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
         member.setIsVerified(false);
         member.setJoinTime(new Date());
         member.setWalletAmount(0);
-        member.setWalletAvailableAmount(0);
+        member.setWalletWithdrawAmount(0);
         member.setWalletCid(CommonUtils.encryptToMD5(req.getWalletCid()));
         member.setWalletQuestion(req.getWalletQuestion());
         member.setWalletAnswer(req.getWalletAnswer());
@@ -84,6 +92,8 @@ public class MemberServiceImpl implements MemberService {
         loginSource.setEmail(member.getEmail());
         loginSource.setIsVerified(member.getIsVerified());
         sendVerifyEmail(loginSource);
+        noticeService.memberNoticeCreate(
+                member, MemberNoticeEntity.NoticeCategory.SYSTEM, "註冊成功", "完成註冊會員", true);
         resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
         resDTO.setStatus(MemberCreateResDTO.Status.CREATE_SUCCESS.getCode());
         return resDTO;
