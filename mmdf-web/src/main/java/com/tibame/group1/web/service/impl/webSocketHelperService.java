@@ -29,7 +29,11 @@ public class webSocketHelperService implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String openSerivce = gson.toJson("{type:Welcome ,message: 歡迎使用客服聊天系統!\n請說明具體的問題}");
+        AiMessageDTO dto = new AiMessageDTO();
+        dto.setType("serviceLive");
+        dto.setAiMessage("歡迎使用客服聊天系統!\n請說明的問題，文字數盡量不要超過字");
+        String openSerivce = gson.toJson(dto);
+//        String openSerivce = gson.toJson("{type:\"welcome\" ,aiMessage: \"歡迎使用客服聊天系統!\n請說明具體的問題\"}");
         session.sendMessage(new TextMessage(openSerivce));
     }
 
@@ -38,18 +42,20 @@ public class webSocketHelperService implements WebSocketHandler {
             throws Exception {
         JsonObject jsonObj = gson.fromJson(message.getPayload().toString(), JsonObject.class);
         String type = jsonObj.get("type").getAsString();
-        if (!sessionMap.containsKey(session)) {
-            Integer memberId = jsonObj.get("memberId").getAsInt();
-            sessionMap.put(session, memberId);
-            // ==================================正式的用法====================================//
-            //            String authorization = jsonObj.get("authorization").getAsString(); //
-            //            LoginSourceDTO loginSource = jwtService.decodeLogin(authorization);//
-            //            sessionMap.put(session, Integer);                              //
-            // ==============================================================================//
-        }
+//        if (!sessionMap.containsKey(session)) {
+//            Integer memberId = jsonObj.get("memberId").getAsInt();
+//            sessionMap.put(session, memberId);
+//            // ==================================正式的用法====================================//
+//            //            String authorization = jsonObj.get("authorization").getAsString(); //
+//            //            LoginSourceDTO loginSource = jwtService.decodeLogin(authorization);//
+//            //            sessionMap.put(session, Integer);                              //
+//            // ==============================================================================//
+//        }
         if("question".equals(type)){
-            String question = jsonObj.get("question").getAsString();
+            String question = jsonObj.get("message").getAsString();
+            System.out.println(question);
             String answer = getAnswer(question);
+            System.out.println(answer);
             AiMessageDTO aiMessageDTO = new AiMessageDTO();
             aiMessageDTO.setAiMessage(answer);
             aiMessageDTO.setType("answer");

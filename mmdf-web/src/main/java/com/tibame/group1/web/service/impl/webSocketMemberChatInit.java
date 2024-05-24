@@ -39,8 +39,6 @@ public class webSocketMemberChatInit implements WebSocketHandler {
 
     @Autowired private MemberRepository memberRepository;
 
-    @Autowired private CKIPService ckipService;
-
     private Gson gson = new Gson();
 
     @Override
@@ -134,8 +132,10 @@ public class webSocketMemberChatInit implements WebSocketHandler {
                 dto.setId(friendId);
                 dto.setName(memberRepository.findById(friendId).get().getName());
                 byte[] avatarBytes = memberRepository.findById(friendId).get().getImage();
-                String avatarBase64 = Base64.getEncoder().encodeToString(avatarBytes);
-                dto.setAvatar("data:image/*;base64," + avatarBase64);
+                if (avatarBytes != null) {
+                    String avatarBase64 = Base64.getEncoder().encodeToString(avatarBytes);
+                    dto.setAvatar("data:image/*;base64," + avatarBase64);
+                }
                 String key = "chatroom:"+memberId+":"+chatroomRepository.findByRoom(memberId,friendId);
                 long lastIndex = listOps.size(key)-1;
 //                System.out.println(lastIndex);

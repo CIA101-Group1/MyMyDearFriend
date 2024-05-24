@@ -1,41 +1,58 @@
-/* styles.css */
-
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    height: 100%;
+/* 自定義樣式 */
+#chat-messages {
+    height: 300px;
+    overflow-y: auto;
 }
 
+#message-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#send-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#chat-message.col.border.p-3 {
+    height: 60vh;
+}
 .message {
-    margin-bottom: 10px;
     display: flex;
     align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+.message.helper {
+    text-align: left;
+    background-color: #f2f2f2;
+    align-self: flex-start;
+}
+.message.self {
+    text-align: right;
+    background-color: #d1ecf1;
+    align-self: flex-end;
+}
+.message.helper .avatar {
+    margin-right: 10px;
+}
+.message.self .avatar {
+    display: none;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
-.message.received {
-    justify-content: flex-start;
-}
-
-.message.sent {
-    justify-content: flex-end;
-}
-
-.message .content {
-    max-width: 60%;
-}
-
-.chat-messages {
-    height: 400px; /* Fixed height for scrollable chat area */
-}
-
-.btn i {
-    font-size: 1.2em;
-}
-
-@media (max-width: 768px) {
-    .container {
-        margin: 20px auto;
-    }
-}
+/*.chat-messages.sent {*/
+/*    background-color: #dcf8c6;*/
+/*    align-self: flex-end;*/
+/*    !*float: right;*!*/
+/*    text-align: right;*/
+/*}*/
+/*!*div.container_helper{*!*/
+/*!*    height: 100vh;*!*/
+/*!*    width: 10vh;*!*/
+/*!*    border:60vh;*!*/
+/*!*}*!*/

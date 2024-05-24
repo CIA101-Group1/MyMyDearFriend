@@ -1,63 +1,73 @@
-// script.js
+document.addEventListener('DOMContentLoaded', function () {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const customerMessage = document.getElementById("customer");
 
-new Vue({
-    el: '#app',
-    data: {
-        messages: [],
-        newMessage: '',
-        socket: null,
-    },
-    mounted() {
-        this.socket = new WebSocket('ws://你的WebSocket伺服器地址');
+    const helperURL = "ws://" + window.location.host + "/helper";
+    const servicLiveeURL = "ws://" + window.location.host + "/serivce";
 
-        this.socket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            this.messages.push({
-                id: this.messages.length + 1,
-                type: message.type === 'file' ? 'received-file' : 'received',
-                content: message.content
-            });
-            this.scrollToBottom();
-        };
-    },
-    methods: {
-        sendMessage() {
-            if (this.newMessage) {
-                this.messages.push({
-                    id: this.messages.length + 1,
-                    type: 'sent',
-                    content: this.newMessage
-                });
-                this.socket.send(JSON.stringify({ type: 'text', content: this.newMessage }));
-                this.newMessage = '';
-                this.scrollToBottom();
-            }
-        },
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
-        sendFile(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const fileContent = e.target.result;
-                    this.messages.push({
-                        id: this.messages.length + 1,
-                        type: 'sent-file',
-                        content: fileContent
-                    });
-                    this.socket.send(JSON.stringify({ type: 'file', content: fileContent }));
-                    this.scrollToBottom();
-                };
-                reader.readAsDataURL(file);
-            }
-        },
-        scrollToBottom() {
-            this.$nextTick(() => {
-                const chatMessages = this.$el.querySelector('.chat-messages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            });
+    const socket = new WebSocket(helperURL);
+
+    socket.onopen = function () {
+        console.log('WebSocket 連接已建立');
+
+    };
+
+    socket.onmessage = function (event) {
+        var jsonObj = JSON.parse(event.data);
+        var typeChat = jsonObj.type;
+        if (jsonObj.type === "answer" || jsonObj.type === "welcome") {
+            console.log("接收訊息中")
+            // var messageElement = document.createElement('div');
+            // messageElement.textContent = jsonObj.aiMessage;
+            // chatMessages.appendChild(messageElement);
+            // chatMessages.scrollTop = chatMessages.scrollHeight;
+            addMessage(jsonObj.aiMessage,'helper')
         }
+        if (jsonObj.type === "serviceLive") {
+            var h1text = document.getElementById("text-primarys");
+            h1text.innerText = '專員客服';
+            // socket.close();
+        }
+    };
+
+    sendButton.addEventListener('click', function () {
+        var message = messageInput.value.trim();
+        const div = document.createElement('div');
+        if (message !== '') {
+            var jsonObj = {type: 'question', message: message};
+            // div.classList.add('col','border','p-3','text-end');
+            // div.textContent = message;
+            // chatMessages.appendChild(div);
+            // chatMessages.scrollTop = chatMessages.scrollHeight;
+            addMessage(message,'self');
+            socket.send(JSON.stringify(jsonObj));
+            messageInput.value = '';
+        }
+    });
+
+    messageInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendButton.click();
+        }
+    });
+    function addMessage(text, type) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', type);
+
+        if (type === 'helper') {
+            const avatarImg = document.createElement('img');
+            avatarImg.src = '/service-helper/img/helper.jpg';
+            avatarImg.alt = '好友大頭貼';
+            avatarImg.classList.add('avatar');
+            messageDiv.appendChild(avatarImg);
+        }
+        const messageText = document.createElement('div');
+        messageText.textContent = text;
+        messageDiv.appendChild(messageText);
+
+        chatMessages.appendChild(messageDiv)
     }
 });

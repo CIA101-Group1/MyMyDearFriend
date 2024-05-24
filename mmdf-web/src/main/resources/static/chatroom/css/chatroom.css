@@ -1,42 +1,48 @@
 /* styles.css */
 
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-}
+/*body, html {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    font-family: Arial, sans-serif;*/
+/*    background-color: #f5f5f5;*/
+/*}*/
 
-.container {
+div.container_chatroom {
     display: flex;
     height: 100vh;
+    /*width: 90vw;*/
+    /*Margin-top:10px;*/
+    /*padding-top:10px;*/
+    margin-left: 10vh;
+    margin-right: 10vh;
 }
 
-.sidebar {
+div.sidebar {
     width: 300px;
     background-color: #fff;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     overflow-y: auto;
 }
 
-.friends-list-header {
+div.friends-list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 15px;
     border-bottom: 1px solid #ddd;
     background-color: #4CAF50;
     color: white;
     height: 60px; /* 與 chat-header 高度相同 */
+    border:10px;
 }
 
-.friend-list {
+div.friend-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.friend-list li {
+div.friend-list li {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -44,66 +50,66 @@ body, html {
     border-bottom: 1px solid #f1f1f1;
 }
 
-.friend-list li:hover {
+div.friend-list li:hover {
     background-color: #f9f9f9;
 }
 
-.friend-list li img {
+div.friend-list li img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.friend-list li .friend-info {
+div.friend-list li .friend-info {
     display: flex;
     flex-direction: column;
 }
 
-.friend-list li .friend-info .name {
+div.friend-list li .friend-info .name {
     font-weight: bold;
 }
 
-.friend-list li .friend-info .id {
+div.friend-list li .friend-info .id {
     color: #888;
     font-size: 0.9em;
 }
 
-.friend-list li.unread .name {
+div.friend-list li.unread .name {
     font-weight: bold;
 }
 
-.chat-container {
+div.chat-container {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.chat-header {
+div.chat-header {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 15px;
     border-bottom: 1px solid #ddd;
     background-color: #4CAF50;
     color: white;
     height: 60px; /* 與 friends-list-header 高度相同 */
 }
 
-.chat-header img {
+div.chat-header img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.chat-messages {
+div.chat-messages {
     flex: 1;
     padding: 10px;
     overflow-y: auto;
     background-color: #f9f9f9;
 }
 
-.chat-messages .message {
+div.chat-messages .message {
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -111,27 +117,28 @@ body, html {
     clear: both;
 }
 
-.chat-messages .sent {
+div.chat-messages .sent {
     background-color: #dcf8c6;
     align-self: flex-end;
     float: right;
 }
 
-.chat-messages .received {
+div.chat-messages .received {
     background-color: #fff;
     align-self: flex-start;
     float: left;
 }
 
-.message-input {
+div.message-input {
     display: flex;
     align-items: center;
     padding: 10px;
     border-top: 1px solid #ddd;
     background-color: #fff;
+    border:1px #888;
 }
 
-.message-input input[type="text"] {
+div.message-input input[type="text"] {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
@@ -139,7 +146,7 @@ body, html {
     margin-right: 10px;
 }
 
-.message-input button {
+div.message-input button {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -148,24 +155,25 @@ body, html {
     cursor: pointer;
 }
 
-.message-input button:hover {
+div.message-input button:hover {
     background-color: #45a049;
 }
 
-.message-input .file-label {
+div.message-input .file-label {
     background-color: #4CAF50;
     color: white;
     padding: 10px;
     border-radius: 50%;
     cursor: pointer;
     margin-left: 10px;
+    margin-bottom: 0px;
 }
 
-.message-input .file-label:hover {
+div.message-input .file-label:hover {
     background-color: #45a049;
 }
 
-.message-input input[type="file"] {
+div.message-input input[type="file"] {
     display: none;
 }
 
@@ -187,4 +195,7 @@ div.sidebar{
 }
 p.latest-message{
     margin:8px;
+}
+h3#chatWith{
+    margin:0;
 }

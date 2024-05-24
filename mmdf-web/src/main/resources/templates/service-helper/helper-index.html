@@ -1,45 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能客服聊天室</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/service-helper/css/service-helper.css">
+    <title>客服訊息</title>
+    <!-- 引入 Bootstrap CSS 文件 -->
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    <!-- 外部 CSS 文件 -->
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <link rel="stylesheet" type="text/css" href="/service-helper/css/service-helper.css">
 </head>
 <body>
-<div id="app">
-    <div class="container my-5">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center bg-success text-white">
-                <span class="fw-bold">智能客服</span>
-                <span class="badge bg-light text-success">在線</span>
-            </div>
-            <div class="card-body chat-messages overflow-auto p-3">
-                <div v-for="message in messages" :key="message.id" :class="['message', message.type]">
-                    <div class="content p-2 rounded" :class="message.type === 'received' ? 'bg-light' : 'bg-success text-white'">
-                        <template v-if="message.type === 'text'">{{ message.content }}</template>
-                        <template v-else>
-                            <img :src="message.content" class="img-fluid rounded" />
-                        </template>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer d-flex">
-                <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="form-control me-2" placeholder="輸入訊息...">
-                <input type="file" ref="fileInput" @change="sendFile" class="d-none">
-                <!-- <button @click="triggerFileInput" class="btn btn-outline-secondary me-2">
-                    <i class="fas fa-paperclip"></i> -->
-                </button>
-                <button @click="sendMessage" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--&lt;!&ndash;breadcrumb&ndash;&gt;-->
+<!--<th:block th:replace="~{/fragments/breadcrumb}"/>-->
+<!-- 聊天界面 --><!--style="margin-left: 50vh; margin-right: 50vh "-->
+<div class="container_helper" >
+    <!-- 標題 -->
+    <div class="row mt-3">
+        <div class="col text-center">
+            <h1 class="text-primary" id="text-primarys">智能客服</h1>
+        </div>
+    </div>
+    <!-- 訊息顯示區域 --><!-- style="height: 60vh"-->
+    <div class="row mt-3">
+        <div id="chat-messages" class="col border p-3"></div>
+    </div>
+    <!-- 訊息輸入區域 -->
+    <div class="row mt-3">
+        <div class="col">
+            <input type="text" id="message-input" class="form-control" placeholder="輸入訊息...">
+        </div>
+        <div class="col-auto">
+            <button id="send-button" class="btn btn-primary">發送</button>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<!-- 引入 Bootstrap JS 文件 -->
+<script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+<!-- 外部 JavaScript 文件 -->
 <script src="/service-helper/js/service-helper.js"></script>
 </body>
 </html>

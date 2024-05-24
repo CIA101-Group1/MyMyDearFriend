@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二手交易平台聊天室</title>
     <link rel="stylesheet" href="/chatroom/css/chatroom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /*div.footer_top{*/
+        /*    padding-top: 80px;*/
+        /*}*/
+        /*div.row.align-items-center{*/
+        /*    height: 5vw;*/
+        /*}*/
+        /*div.footer_bottom{*/
+        /*    height: 5vw;*/
+        /*}*/
+    </style>
 </head>
 <body>
-<div class="container">
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--&lt;!&ndash;breadcrumb&ndash;&gt;-->
+<!--<th:block th:replace="~{/fragments/breadcrumb}"/>-->
+<div class="container_chatroom">
     <div class="sidebar">
         <div class="friends-list-header">
             <h2>好友列表</h2>
@@ -37,6 +56,10 @@
         </div>
     </div>
 </div>
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
 <script src="/chatroom/js/chatroom.js"></script>
 </body>
 </html>

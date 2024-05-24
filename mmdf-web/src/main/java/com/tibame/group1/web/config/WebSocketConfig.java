@@ -20,19 +20,29 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(webSocketHandler(), "/message").setAllowedOrigins("*");
         registry.addHandler(webSocketService(), "/service").setAllowedOrigins("*");
         registry.addHandler(webSocketMemberChatInit(), "/chatroom").setAllowedOrigins("*");
+        registry.addHandler(webSocketHelperService(), "/helper").setAllowedOrigins("*");
     }
-    //聊天室功能
+
+    // 聊天室功能
     @Bean
     public WebSocketHandler webSocketHandler() {
         return new ChatWebCocketServiceImpl();
     }
-    //客服聊天室
+
+    // 客服聊天室
     @Bean
     public WebSocketHandler webSocketService() {
         return new webSocketHelperService();
     }
-    //初始化聊天室
-    @Bean WebSocketHandler webSocketMemberChatInit() {
+
+    // 初始化聊天室
+    @Bean
+    WebSocketHandler webSocketMemberChatInit() {
         return new webSocketMemberChatInit();
+    }
+
+    @Bean
+    WebSocketHandler webSocketHelperService() {
+        return new webSocketHelperService();
     }
 }

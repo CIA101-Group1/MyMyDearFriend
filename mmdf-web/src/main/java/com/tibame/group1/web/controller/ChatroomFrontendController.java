@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping(value="chatroom/")
+@RequestMapping(value="/chatroom")
 public class ChatroomFrontendController {
     
 //    @CheckLogin
@@ -37,7 +37,7 @@ public class ChatroomFrontendController {
         view.setViewName("/chatroom/helper");
         return view;
     }
-    @GetMapping(value = "chat/test")
+    @GetMapping(value = "/chat/test")
     public ModelAndView chatroomTest(Model model) {
         ModelAndView view = new ModelAndView();
         view.setViewName("/chatroom/chatroom-index");
