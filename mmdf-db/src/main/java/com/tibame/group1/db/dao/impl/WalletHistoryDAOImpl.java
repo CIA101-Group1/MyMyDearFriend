@@ -99,9 +99,13 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
   public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
     String sql =
             "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, wallet_amount " +
-                    "FROM wallet_history WHERE 1=1";
+                    "FROM wallet_history WHERE 1=1 ";
 
     Map<String, Object> map = new HashMap<>();
+
+    sql = sql + " AND member_id = :memberId ";
+    map.put("memberId",walletQueryParams.getMemberId());
+
 
     if (walletQueryParams.getWalletCategory() != null) {
       sql = sql + " AND change_type = :changeType";

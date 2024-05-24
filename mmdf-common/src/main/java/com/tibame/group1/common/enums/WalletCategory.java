@@ -26,7 +26,9 @@ public enum WalletCategory {
 
     TEST("6", "測試使用"),
 
-    MARKET("7", "市集報名費");
+    MARKET("7", "市集報名費"),
+
+    WITHDRAWAL("8", "XXX");
 
     private final String code;
     private final String message;
