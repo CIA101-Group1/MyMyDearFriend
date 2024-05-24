@@ -317,15 +317,15 @@
                                             <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                         </ul>
                                     </div>
-                                    <h4 class="product_name" th:text="${product.name}"><a
+                                    <h4 class="product_name" th:text="${product.name}"><a id="productName"
                                             th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
                                         <span style="font-size: large;"></span></a></h4>
                                     <div class="price_box">
                                         <span class="current_price" th:text="${product.price}"></span>
                                     </div>
                                     <div class="add_to_cart">
-                                        <a href="orderlist.html" title="Add to cart">加入購物車</a>
-                                    </div>
+                                        <a title="Add to cart" th:onclick="|addToCart(${product.productId}, 1);|" data-product-id="${product.productId}">加入購物車</a>
+                                    </div>'
                                 </div>
                             </figure>
                         </article>
@@ -431,12 +431,13 @@
                                                             <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                                         </ul>
                                                     </div>
-                                                    <h4 class="product_name"><a href="/buyer/product/getOne/${product.productId}">${product.name}</a></h4>
+                                                    <h4 class="product_name"><a id="productName" href="/buyer/product/getOne/${product.productId}">${product.name}</a></h4>
                                                     <div class="price_box">
                                                         <span class="current_price">${product.price}</span>
                                                     </div>
                                                     <div class="add_to_cart">
-                                                        <a href="orderlist.html" title="Add to cart">加入購物車</a>
+<!--                                                        <a href="orderlist.html" title="Add to cart" id="cart">加入購物車</a>-->
+                                                        <a title="Add to cart" th:onclick="|addToCart(${product.productId}, 1);|" data-product-id="${product.productId}">加入購物車</a>
                                                     </div>
                                                 </div>
                                             </figure>
@@ -459,6 +460,8 @@
                 }
             });
         });
+
+
     });
 </script>
 

@@ -109,7 +109,8 @@
                         <div class="product_variant quantity">
                             <label>商品數量</label>
                             <input min="1" max="100"  th:value="${productEntity.quantity}" type="number">
-                            <button class="button" type="submit">加入購物車</button>
+
+                            <button class="button" type="submit"  th:onclick="|addToCart(${productEntity.productId}, 1);|" data-product-id="${product.productId}">加入購物車</button>
 
                         </div>
                         <div class=" product_d_action">
