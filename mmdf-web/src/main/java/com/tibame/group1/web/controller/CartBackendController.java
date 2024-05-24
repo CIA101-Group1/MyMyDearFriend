@@ -21,7 +21,7 @@ public class CartBackendController {
 
     @PostMapping("cart/add")
     @CheckLogin
-    public @ResponseBody ResDTO<String> addItemToCart(
+    public @ResponseBody ResDTO<String> addProductToCart(
             @Valid @RequestBody CartReqDTO req,
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
             throws CheckRequestErrorException {

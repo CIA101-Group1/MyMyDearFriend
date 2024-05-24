@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品收藏</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .dashboard_content button {
+            color: white;
+            font-weight: 500;
+            border: 0;
+            background: #6565da;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+<!-- main start  -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="favorites">
+                            <!-- 主要內容 -->
+                            <div style="display: flex; justify-content: center; align-items: center">
+                                <h3>收藏商品</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="favoriteTable" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>圖片</th>
+                                        <th>商品</th>
+                                        <th>單價</th>
+                                        <th>加入購物車</th>
+                                        <th>移除</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="favorite_tbody"></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- main end   -->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<th:block th:replace="~{/fragments/js}"/>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/favorite/get",
+            method: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                // 清空表格內容
+                $("#favorite_tbody").empty();
+                let productList = response.data
+                // 假設response是一個包含收藏商品的列表
+                productList.forEach(function (product) {
+                    var row = `<tr>
+                        <td style="text-align: center; vertical-align: middle;">
+                        <a><img id="favorite_image" src="data:image/jpeg;base64,${product.imageBase64}" alt="商品圖片" style="height: 80px;width: 80px"/></a>
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;"><a href="#">${product.productName}</a></td>
+                        <td style="text-align: center; vertical-align: middle;">${product.price}</td>
+                        <td style="text-align: center; vertical-align: middle;">
+                        <button class="btn btn-danger" onclick="addToCart(${product.productId}, 1)">加入購物車</button>
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                        <button class="btn btn-danger" onclick="removeFavorite(${product.productId})"><i class="fa fa-trash-o"></i></button>
+                        </td>
+                    </tr>`;
+                    $("#favorite_tbody").append(row);
+                });
+            },
+            error(xhr, status, error) {
+                console.error("There was a problem :", error);
+            },
+        });
+    })
+
+    // 移除收藏商品
+    function removeFavorite(productId) {
+        Swal.fire({
+            title: "確認移除?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "確認",
+            cancelButtonText: "取消"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "商品已移除!",
+                    icon: "success",
+                    confirmButtonText: '確認'
+                });
+                $.ajax({
+                    url: `/api/favorite/remove/${productId}`,
+                    method: "DELETE",
+                    headers: {
+                        "authorization": localStorage.getItem("authorization")
+                    },
+                    success(response) {
+                        // 移除表格中的相應行
+                        $(`#favorite_tbody tr:has(button[onclick='removeFavorite(${productId})'])`).remove();
+                    },
+                    error(xhr, status, error) {
+                        console.error("There was a problem :", error);
+                    },
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

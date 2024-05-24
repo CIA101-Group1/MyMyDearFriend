@@ -12,10 +12,13 @@ public interface MarketService {
 
     MarketCreateResDTO marketCreate(MarketCreateReqDTO req, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException, DateException, IOException;
 
-    List<MarketDetailResDTO> marketDetail(AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException;
+    MarketDetailResDTO marketDetailById(AdminLoginSourceDTO adminLoginSource, Integer marketId) throws CheckRequestErrorException;
 
     MarketEditResDTO marketEdit(MarketEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
         throws CheckRequestErrorException,IOException, DateException;
+
+    List<MarketAllResDTO> marketAll(AdminLoginSourceDTO adminLoginSource, String marketName)
+        throws CheckRequestErrorException, IOException, DateException;
 
 
 }

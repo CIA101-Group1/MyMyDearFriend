@@ -1,6 +1,7 @@
 package com.tibame.group1.common.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * todo 是否要加上金錢顯示
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 
 
 @AllArgsConstructor
+@Getter
 public enum WalletCategory {
 
     PAYMENT("0", "付款完成"),
@@ -16,14 +18,35 @@ public enum WalletCategory {
 
     WITHDRAWAL("2", "提領成功"),
 
-    REFUND("3","退款完成"),
+    REFUND("3", "退款完成"),
 
-    DEPOSIT("4","入帳申請"),
+    DEPOSIT("4", "入帳申請"),
 
-    FEE("5","手續費"),
+    FEE("5", "手續費"),
 
-    TEST("6", "測試用");
+    TEST("6", "測試用"),
+
+    WITHDRAW("7", "提款"),
+
+    MARKET("8", "市集報名費");
 
     private final String code;
     private final String message;
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public static WalletCategory fromCode(String code) {
+        for (WalletCategory category : WalletCategory.values()) {
+            if (category.getCode().equals(code)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("無效的代碼: " + code);
+    }
 }

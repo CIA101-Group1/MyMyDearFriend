@@ -7,6 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MarketDetailResDTO {
+    private Integer marketId;
+
     private String marketName;
 
     private String marketDescription;
@@ -21,11 +23,15 @@ public class MarketDetailResDTO {
 
     private Integer marketFee;
 
+    private Integer applicantPopulation;
+
     private Integer applicantLimit;
 
     private String startDate;
 
     private String endDate;
+
+    private Integer marketStatus;
 
     private String status;
 
