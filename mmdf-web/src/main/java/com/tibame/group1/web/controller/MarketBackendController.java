@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("")
-public class MarketController {
+@RequestMapping("/api")
+public class MarketBackendController {
     @Autowired private MarketService marketService;
 
-    @GetMapping("")
-    public @ResponseBody ResDTO<List<MarketResDTO>> getMarketByStatus(
-            @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
+    @GetMapping("/market")
+    public @ResponseBody ResDTO<List<MarketResDTO>> getMarketByStatus(){
         ResDTO<List<MarketResDTO>> res = new ResDTO<>();
-        res.setData(marketService.getMarketByStatus(loginSource));
+        res.setData(marketService.getMarketByStatus());
         return res;
         }
 }
