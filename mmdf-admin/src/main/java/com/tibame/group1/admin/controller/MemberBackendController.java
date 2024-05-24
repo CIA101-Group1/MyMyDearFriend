@@ -1,8 +1,7 @@
 package com.tibame.group1.admin.controller;
 
-import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
-import com.tibame.group1.admin.dto.MemberReqDTO;
 import com.tibame.group1.admin.dto.MemberAllResDTO;
+import com.tibame.group1.admin.dto.MemberReqDTO;
 import com.tibame.group1.admin.service.MemberService;
 import com.tibame.group1.common.dto.ResDTO;
 import com.tibame.group1.common.utils.NumberUtils;
@@ -25,13 +24,12 @@ public class MemberBackendController {
     @Cacheable
     public @ResponseBody ResDTO<MemberAllResDTO> memberAll(
             @RequestBody MemberReqDTO req,
-            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
             @RequestParam(value = "page", defaultValue = "0") String pageNum,
             @RequestParam(value = "sizePerPage", defaultValue = "10") String sizePerPage) {
         Pageable pageable =
                 PageRequest.of(NumberUtils.toInt(pageNum), NumberUtils.toInt(sizePerPage));
         ResDTO<MemberAllResDTO> res = new ResDTO<>();
-        res.setData(memberService.memberAll(req, adminLoginSource, pageable));
+        res.setData(memberService.memberAll(req, pageable));
         return res;
     }
 }

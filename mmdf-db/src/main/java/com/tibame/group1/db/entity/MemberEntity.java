@@ -69,8 +69,8 @@ public class MemberEntity {
     @Column(name = "wallet_amount")
     private Integer walletAmount;
 
-    @Column(name = "wallet_available_amount")
-    private Integer walletAvailableAmount;
+    @Column(name = "wallet_withdraw_amount")
+    private Integer walletWithdrawAmount;
 
     @Column(name = "wallet_cid", nullable = false, length = 200)
     private String walletCid;
