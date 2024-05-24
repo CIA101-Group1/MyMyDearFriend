@@ -1,4 +1,4 @@
-package com.tibame.group1.web.service.impl;
+package com.tibame.group1.web.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -13,14 +13,13 @@ import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.RedisAndSQLConnectSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.socket.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class webSocketMemberChatInit implements WebSocketHandler {
+public class WebSocketChatroomFunction implements WebSocketHandler {
 
     // ------ 存放會員資料
     private ConcurrentHashMap<WebSocketSession, LoginSourceDTO> sessionMap =

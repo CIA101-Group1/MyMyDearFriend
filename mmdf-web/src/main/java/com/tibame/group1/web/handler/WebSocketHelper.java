@@ -1,4 +1,4 @@
-package com.tibame.group1.web.service.impl;
+package com.tibame.group1.web.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -6,7 +6,6 @@ import com.huaban.analysis.jieba.JiebaSegmenter;
 import com.huaban.analysis.jieba.SegToken;
 import com.tibame.group1.db.repository.AIMessageResponseRepository;
 import com.tibame.group1.web.dto.AiMessageDTO;
-import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
@@ -18,7 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class webSocketHelperService implements WebSocketHandler {
+public class WebSocketHelper implements WebSocketHandler {
 
     private ConcurrentMap<WebSocketSession, Integer> sessionMap = new ConcurrentHashMap<>();
     private JiebaSegmenter segmenter = new JiebaSegmenter();

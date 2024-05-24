@@ -1,8 +1,7 @@
-package com.tibame.group1.web.service.impl;
+package com.tibame.group1.web.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class webSocketService implements WebSocketHandler {
+public class WebSocketLiveService implements WebSocketHandler {
 
     private ConcurrentMap<WebSocketSession, LoginSourceDTO> members = new ConcurrentHashMap<>();
     private ConcurrentMap<WebSocketSession,String> serivces = new ConcurrentHashMap<>();

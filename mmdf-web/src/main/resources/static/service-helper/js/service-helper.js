@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const customerMessage = document.getElementById("customer");
 
     const helperURL = "ws://" + window.location.host + "/helper";
+    console.log(helperURL);
     const servicLiveeURL = "ws://" + window.location.host + "/serivce";
 
     const socket = new WebSocket(helperURL);

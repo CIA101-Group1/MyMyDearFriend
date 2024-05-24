@@ -1,7 +1,7 @@
 package com.tibame.group1.web.config;
 
-import com.tibame.group1.web.service.impl.webSocketMemberChatInit;
-import com.tibame.group1.web.service.impl.webSocketHelperService;
+import com.tibame.group1.web.handler.WebSocketChatroomFunction;
+import com.tibame.group1.web.handler.WebSocketHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.tibame.group1.web.service.impl.ChatWebCocketServiceImpl;
+import com.tibame.group1.web.handler.WebSocketChatroomMessage;
 
 @Configuration
 @EnableWebSocket
@@ -26,23 +26,23 @@ public class WebSocketConfig implements WebSocketConfigurer {
     // 聊天室功能
     @Bean
     public WebSocketHandler webSocketHandler() {
-        return new ChatWebCocketServiceImpl();
+        return new WebSocketChatroomMessage();
     }
 
     // 客服聊天室
     @Bean
     public WebSocketHandler webSocketService() {
-        return new webSocketHelperService();
+        return new WebSocketHelper();
     }
 
     // 初始化聊天室
     @Bean
     WebSocketHandler webSocketMemberChatInit() {
-        return new webSocketMemberChatInit();
+        return new WebSocketChatroomFunction();
     }
 
     @Bean
     WebSocketHandler webSocketHelperService() {
-        return new webSocketHelperService();
+        return new WebSocketHelper();
     }
 }

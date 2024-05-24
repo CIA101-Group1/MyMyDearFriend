@@ -1,4 +1,4 @@
-package com.tibame.group1.web.service.impl;
+package com.tibame.group1.web.handler;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
 import com.tibame.group1.db.entity.MessageEntity;
+import com.tibame.group1.web.service.impl.RedisAndSQLConnectSeviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,16 +20,12 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.tibame.group1.db.entity.ChatroomEntity;
 import com.tibame.group1.db.entity.ChatroomRedisEntity;
 import com.tibame.group1.db.repository.ChatroomRepository;
 import com.tibame.group1.db.repository.MessageRepository;
-import com.tibame.group1.web.dto.ChatStateDTO;
-import com.tibame.group1.web.dto.MemberFriendsDTO;
 import com.tibame.group1.web.dto.MessageDTO;
 
-public class ChatWebCocketServiceImpl implements WebSocketHandler {
+public class WebSocketChatroomMessage implements WebSocketHandler {
 
     private Gson gson = new Gson();
     // 使用者代入HashCode ->
