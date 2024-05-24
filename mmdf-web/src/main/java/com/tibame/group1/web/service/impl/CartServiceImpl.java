@@ -9,6 +9,7 @@ import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.CartService;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;

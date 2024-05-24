@@ -95,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
                         buyProduct.getProductId(),
                         product.getQuantity(),
                         buyProduct.getQuantity());
-                throw new CheckRequestErrorException("商品庫存量不足，無法購買。剩餘庫存: " + product.getQuantity());
+                throw new CheckRequestErrorException("商品庫存量不足，無法購買。"+ product.getName() +" 剩餘庫存: " + product.getQuantity());
             }
 
             // 扣除商品庫存

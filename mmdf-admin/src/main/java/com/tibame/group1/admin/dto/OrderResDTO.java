@@ -1,4 +1,4 @@
-package com.tibame.group1.web.dto;
+package com.tibame.group1.admin.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ public class OrderResDTO {
     private Integer orderId;
 
     private Integer buyerId;
-    
+
     private Integer sellerId;
 
     private String buyerName;

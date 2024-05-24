@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <title>查詢訂單資料</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h2 class="mt-4">訂單資料列表</h2>
+                <!-- 主要表格 -->
+                <table id="memberTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>成立時間</th>
+                        <th>訂單狀態</th>
+                        <th>訂單金額</th>
+                        <th>買家會員</th>
+                        <th>賣家會員</th>
+                        <th>收件人姓名</th>
+                        <th>電話</th>
+                        <th>寄送地址</th>
+                        <th>優惠前價格</th>
+                        <th>優惠金額</th>
+                        <th>商品詳情</th>
+                    </tr>
+                    </thead>
+                    <tbody id="orderTbody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<script>
+    $(document).ready(function (){
+        const authorization = localStorage.getItem("authorization");
+
+        $.ajax({
+            url: `/api/order/all?authorization=${authorization}`,
+            method: "GET",
+            success(response) {
+                let orders = response.data;
+                let tbody = $("#orderTbody");
+                tbody.empty(); // 清空現有的表格內容
+
+                if (orders === null || orders.length === 0) {
+                    // 如果訂單為空，顯示提示消息
+                    tbody.append(`<tr><td colspan="12">查無訂單資料</td></tr>`);
+                } else {
+                    orders.forEach(order => {
+                        let orderRow = `
+                            <tr>
+                                <td>${order.orderId}</td>
+                                <td>${new Date(order.createdTime).toLocaleString()}</td>
+                                <td>${order.orderStatus}</td>
+                                <td>${order.priceAfterDiscount}</td>
+                                <td>${order.buyerName}</td>
+                                <td>${order.sellerName}</td>
+                                <td>${order.name}</td>
+                                <td>${order.phone}</td>
+                                <td>${order.address}</td>
+                                <td>${order.priceBeforeDiscount}</td>
+                                <td>${order.discount}</td>
+                                <td></td>
+                            </tr>
+                        `;
+                        tbody.append(orderRow);
+                    });
+                }
+            },
+            error(xhr, status, error) {
+                console.error("There was a problem :", error);
+                Swal.fire({
+                    title: "錯誤",
+                    icon: "error",
+                    text: "無法取得訂單資料: " + error,
+                    confirmButtonText: "確認"
+                });
+            },
+        });
+    });
+</script>
+</body>
+
+</html>
