@@ -10,4 +10,5 @@ public class WalletQueryParams {
 
     private WalletCategory walletCategory;
     private String search;
+    private Integer memberId;
 }
