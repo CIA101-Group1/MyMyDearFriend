@@ -149,23 +149,6 @@
 </section>
 <!-- main end   -->
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 錯誤訊息將顯示在這裡 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 <!--js-->
@@ -189,11 +172,13 @@
 
     let userData = {};
     let errorMessage = "";
+    let fullAddress = "";
 
     $(document).ready(function () {
         $("#saveBtn").click(function (e) {
             e.preventDefault();
             errorMessage = "";
+            fullAddress = "";
             let memberAccount = $("#memberAccount").val().trim();
             if (memberAccount === "" || !/^[(一-龥)a-zA-Z0-9_]{2,20}$/.test(memberAccount)) {
                 errorMessage += "<li>會員帳號必須是中、英文字母、數字和_，且長度必需在2到20之間</li>";
@@ -230,17 +215,20 @@
             }
 
             // 獲取縣市和鄉鎮市區的值
-            let county = $('#county_box').val();
-            let district = $('#district_box').val();
+            let county = $("#county_box").val();
+            let district = $("#district_box").val();
             let address = $("#address").val().trim();
             // 檢查是否選擇了縣市和鄉鎮市區
-            if (county === "" || district === "") {
-                errorMessage += "<li>請選擇縣市和鄉鎮市區</li>";
+            if (county === "") {
+                errorMessage += "<li>請選擇縣市</li>";
+            }
+            if (district === "") {
+                errorMessage += "<li>請選擇鄉鎮市區</li>";
             }
             if (address === "") {
                 errorMessage += "<li>請填寫地址</li>";
             }
-            let fullAddress = county + "_" + district + "_" + address;
+            fullAddress = county + "_" + district + "_" + address;
 
             let walletCid = $("#walletCid").val().trim();
             if (walletCid === "" || !/^[a-zA-Z0-9]{6,16}$/.test(walletCid)) {
