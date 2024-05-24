@@ -253,8 +253,8 @@
                                     $("#score").text("無，尚未啟用賣家資格");
                                 }
 
-                                let base64Image = data.imageBase64;
-                                $("#profile-image").attr("src", "data:image/jpeg;base64," + base64Image);
+                                let base64Image = data.imageBase64 ? `data:image/jpeg;base64,${data.imageBase64}` : "/image/default-avatar.png";
+                                $("#profile-image").attr("src", base64Image);
 
                                 if (data.isVerified) {
                                     $("#email").after('<div class="verified">(信箱已驗證)</div>');
