@@ -55,7 +55,7 @@ public class InitTestMemberService {
         member.setVerifySendingTime(new Date());
         member.setVerifiedTime(new Date());
         member.setWalletAmount(0);
-        member.setWalletAvailableAmount(0);
+        member.setWalletWithdrawAmount(0);
         member.setWalletCid(config.getWalletCid());
         member.setWalletQuestion(config.getWalletQuestion());
         member.setWalletAnswer(config.getWalletAnswer());
@@ -79,7 +79,7 @@ public class InitTestMemberService {
         member.setVerifySendingTime(new Date());
         member.setVerifiedTime(new Date());
         member.setWalletAmount(0);
-        member.setWalletAvailableAmount(0);
+        member.setWalletWithdrawAmount(0);
         member.setWalletCid(config.getWalletCid());
         member.setWalletQuestion(config.getWalletQuestion());
         member.setWalletAnswer(config.getWalletAnswer());
@@ -103,7 +103,7 @@ public class InitTestMemberService {
         member.setVerifySendingTime(new Date());
         member.setVerifiedTime(new Date());
         member.setWalletAmount(0);
-        member.setWalletAvailableAmount(0);
+        member.setWalletWithdrawAmount(0);
         member.setWalletCid(config.getWalletCid());
         member.setWalletQuestion(config.getWalletQuestion());
         member.setWalletAnswer(config.getWalletAnswer());
