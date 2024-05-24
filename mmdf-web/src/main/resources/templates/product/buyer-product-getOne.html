@@ -94,9 +94,8 @@
                             </ul>
 
                         </div>
-                        <div class="price_box">
-                            <span>$</span><span class="price" th:text="${productEntity.price}">00.00</span>
-
+                        <div class="price_box" th:text="'$'+ ${productEntity.price}">
+                            00.00
                         </div>
                         <div class="product_desc" th:text="${productEntity.description}">
                             <h2>No content provided</h2>
@@ -104,6 +103,7 @@
                         <div class="product_seller">
                             <p>&#9812 賣家編號
                             <label th:text="${productEntity.sellerId}">sellerId</label>
+                                <a th:href="@{/product/seller/shop/{sellerId}(sellerId=${productEntity.sellerId})}"> &emsp; &emsp; &#x1F440 進入我的賣場 	&#x1F60E;</a>
                             </p>
                         </div>
                         <div class="product_variant quantity">

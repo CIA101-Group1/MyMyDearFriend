@@ -76,15 +76,15 @@
                                 <article class="single_product">
                                     <figure>
                                         <div class="product_thumb">
-                                            <a class="primary_img" href="http://localhost:8002/buyer/product/getOne/45"><img
+                                            <a class="primary_img" href="/buyer/product/getOne/45"><img
                                                     src="/assets/FrontEnd0516/img/product/healthycup.jpg" alt=""></a>
                                             <a class="secondary_img"
-                                               href="http://localhost:8002/buyer/product/getOne/45"><img
+                                               href="/buyer/product/getOne/45"><img
                                                     src="/assets/FrontEnd0516/img/product/guocup.jpg" alt=""></a>
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a
-                                                    href="http://localhost:8002/buyer/product/getOne/45">SQL營養液套組</a>
+                                                    href="/buyer/product/getOne/45">SQL營養液套組</a>
                                             </h4>
                                             <div class="product_rating">賣家評價
                                                 <ul>
@@ -105,15 +105,15 @@
                                 <article class="single_product">
                                     <figure>
                                         <div class="product_thumb">
-                                            <a class="primary_img" href="http://localhost:8002/buyer/product/getOne/44"><img
+                                            <a class="primary_img" href="/buyer/product/getOne/44"><img
                                                     src="/assets/FrontEnd0516/img/product/javamic.jpg" alt=""></a>
                                             <a class="secondary_img"
-                                               href="http://localhost:8002/buyer/product/getOne/44"><img
+                                               href="/buyer/product/getOne/44"><img
                                                     src="/assets/FrontEnd0516/img/product/mi.jpg" alt=""></a>
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a
-                                                    href="http://localhost:8002/buyer/product/getOne/44">JAVA麥克風</a>
+                                                    href="/buyer/product/getOne/44">JAVA麥克風</a>
                                             </h4>
                                             <div class="product_rating">賣家評價
                                                 <ul>
@@ -134,15 +134,15 @@
                                 <article class="single_product">
                                     <figure>
                                         <div class="product_thumb">
-                                            <a class="primary_img" href="http://localhost:8002/buyer/product/getOne/46"><img
+                                            <a class="primary_img" href="/buyer/product/getOne/46"><img
                                                     src="/assets/FrontEnd0516/img/product/meetingbag.jpg" alt=""></a>
                                             <a class="secondary_img"
-                                               href="http://localhost:8002/buyer/product/getOne/46"><img
+                                               href="/buyer/product/getOne/46"><img
                                                     src="/assets/FrontEnd0516/img/product/wubag1.jpg" alt=""></a>
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a
-                                                    href="http://localhost:8002/buyer/product/getOne/46"> 面試順利包</a>
+                                                    href="/buyer/product/getOne/46"> 面試順利包</a>
                                             </h4>
                                             <div class="product_rating">賣家評價
                                                 <ul>
@@ -163,15 +163,15 @@
                                 <article class="single_product">
                                     <figure>
                                         <div class="product_thumb">
-                                            <a class="primary_img" href="http://localhost:8002/buyer/product/getOne/42"><img
+                                            <a class="primary_img" href="/buyer/product/getOne/42"><img
                                                     src="/assets/FrontEnd0516/img/product/supermouse.jpg" alt=""></a>
                                             <a class="secondary_img"
-                                               href="http://localhost:8002/buyer/product/getOne/42"><img
+                                               href="/buyer/product/getOne/42"><img
                                                     src="/assets/FrontEnd0516/img/product/bigwumouse.jpg" alt=""></a>
                                         </div>
                                         <figcaption class="product_content">
                                             <h4 class="product_name"><a
-                                                    href="http://localhost:8002/buyer/product/getOne/42"> 吳神滑鼠</a>
+                                                    href="/buyer/product/getOne/42"> 吳神滑鼠</a>
                                             </h4>
                                             <div class="product_rating">賣家評價
                                                 <ul>
@@ -335,34 +335,33 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th>編號</th>
-                                    <!--                                        <th>賣家編號</th>-->
-                                    <th>分類</th>
-                                    <th>品名</th>
-                                    <th>內容</th>
-                                    <th>價格</th>
-                                    <th>數量</th>
-                                    <th>圖片</th>
-                                    <th>審核</th>
-                                    <th>上下架</th>
-                                    <th>修改</th>
+                                    <th style=" vertical-align: middle;">編號</th>
+                                    <th style=" vertical-align: middle;">分類</th>
+                                    <th style=" vertical-align: middle;">品名</th>
+                                    <th style=" vertical-align: middle;">內容</th>
+                                    <th style=" vertical-align: middle;">價格</th>
+                                    <th style=" vertical-align: middle;">數量</th>
+                                    <th style=" vertical-align: middle;">圖片</th>
+                                    <th style=" vertical-align: middle;">審核</th>
+                                    <th style=" vertical-align: middle;">上下架</th>
+                                    <th style=" vertical-align: middle;">修改</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="product : ${productPage.content}">
-                                    <td th:text="${product.productId}">1</td>
+                                    <td th:text="${product.productId}" style=" vertical-align: middle;">1</td>
                                     <!--                                        <td th:text="${product.sellerId}">sellerId</td>-->
-                                    <td th:text="${product.productCategoryEntity.categoryName}"></td>
+                                    <td th:text="${product.productCategoryEntity.categoryName}" style=" vertical-align: middle;"></td>
 
-                                    <td th:text="${product.name}" class="text-truncate" style="max-width: 80px;">
+                                    <td th:text="${product.name}" class="text-truncate" style="max-width: 80px; vertical-align: middle;">
                                         name
                                     </td>
 
-                                    <td th:text="${product.description}">0.00</td>
+                                    <td th:text="${product.description}" class="text-truncate" style="max-width: 50px; overflow: auto; text-overflow: clip;">0.00</td>
 
-                                    <td th:text="${product.price}">0.00</td>
+                                    <td th:text="${product.price}" style=" vertical-align: middle;">0.00</td>
 
-                                    <td th:text="${product.quantity}">0.00</td>
+                                    <td th:text="${product.quantity}" style=" vertical-align: middle;">0.00</td>
 
                                     <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
                                         th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
@@ -371,10 +370,10 @@
                                     </td>
                                     <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
 
-                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}">
+                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}" style=" vertical-align: middle;">
                                         0.00
                                     </td>
-                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '下架'}">
+                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '下架'}" style=" vertical-align: middle;">
                                         0.00
                                     </td>
                                     <td>
@@ -476,7 +475,7 @@
                                             <td>${product.productId}</td>
                                             <td>${product.productCategoryEntity.categoryName}</td>
                                             <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
-                                            <td>${product.description}</td>
+                                            <td class="text-truncate" style="max-width: 100px; max-height: 80px">${product.description}</td>
                                             <td>${product.price}</td>
                                             <td>${product.quantity}</td>
                                             <td>

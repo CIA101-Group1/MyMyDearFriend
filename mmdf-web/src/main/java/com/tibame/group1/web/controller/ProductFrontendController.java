@@ -94,7 +94,7 @@ public class ProductFrontendController {
      */
     @GetMapping("/seller/product/getOne/{productId}")
     public String getOneProduct(@PathVariable("productId") Integer productId, Model model) {
-        ProductEntity productEntity = productService.getOneSellerProduct(productId);
+        ProductEntity productEntity = productService.getOneProduct(productId);
         model.addAttribute("productEntity", productEntity);
 
         List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
@@ -188,6 +188,28 @@ public class ProductFrontendController {
             return "/product/seller-product-status";
         }
     }
+
+    @GetMapping("/product/seller/shop/{sellerId}")
+    public String getProductBySellerId(Model model,
+                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                       @RequestParam(value = "size", defaultValue = "10") int size) {
+        {
+            List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
+            model.addAttribute("productCategoryList", productCategoryList);
+
+            Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(page, size));
+            model.addAttribute("productPage", productPage);
+
+            HashMap<Integer, String> reviewStatusList = productService.getProductReviewStatusList();
+            model.addAttribute("reviewStatusList", reviewStatusList);
+
+            HashMap<Integer, String> productStatusList = productService.getProductStatusList();
+            model.addAttribute("productStatusList", productStatusList);
+
+            return "/product/seller-product-shop"; // 返回视图
+        }
+    }
+
 
     @GetMapping("api/destination")
     public ResponseEntity<String> redirect(HttpServletRequest request) {

@@ -69,6 +69,11 @@
     <div class="container d-flex justify-content-center">
         <a class="navbar-brand" href="/">資料修改</a>
     </div>
+    <a th:href="@{/product/seller/select}">
+        <button type="button" class="btn btn-success  ml-5" id="status">
+            返回商品查詢
+        </button>
+    </a>
 </nav>
 
 <div class="container">
@@ -77,14 +82,12 @@
             <form id="product_form" role="form" data-toggle="validator">
                 <div class="form-group">
                     <input type="submit" id="fast" value="快速修改" class="btn btn-danger btn-block"/>
-<!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;"></div>-->
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-md-1 col-form-label">商品編號</label>
                     <div class="col-md-2">
                         <input id="productId" name="productId" type="text" class="form-control" readonly="readonly"
-                               th:value="${productEntity.productId}"
-                        >
+                               th:value="${productEntity.productId}">
                     </div>
                 </div>
                 <div class="form-group row">

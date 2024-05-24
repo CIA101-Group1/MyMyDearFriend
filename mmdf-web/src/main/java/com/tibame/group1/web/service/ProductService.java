@@ -46,7 +46,7 @@ public interface ProductService {
     ProductImgUpdateResDTO productImgUpdate(ProductImgUpdateReqDTO req, LoginSourceDTO loginSource) throws IOException;
 
 
-    ProductEntity getOneProduct(Integer productId);
+//    ProductEntity getOneProduct(Integer productId);
 
     ProductCategoryEntity getOneCategory(Integer productId);
 
@@ -84,7 +84,8 @@ public interface ProductService {
 
 //    0517
 
-    ProductEntity getOneSellerProduct(Integer productId);
+    ProductEntity getOneProduct(Integer productId);
+
 
     List<ProductImgEntity> getProductImgListByProductId(Integer productId);
 

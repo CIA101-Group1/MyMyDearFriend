@@ -40,6 +40,15 @@
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
+    <script th:src="@{/js/custom.js}"></script>
+
+    <style>
+        .shop_wrapper .product_thumb a img {
+            margin: 0 auto;
+            width: inherit;
+        }
+    </style>
+
 </head>
 <body>
 <!--header-->
@@ -48,7 +57,6 @@
 <!--breadcrumb-->
 <th:block th:replace="~{/fragments/breadcrumb}"/>
 
-<script th:src="@{/js/custom.js}"></script>
 
 <!--shop  area start-->
 <div class="shop_area shop_reverse mt-100 mb-100">
@@ -59,18 +67,13 @@
                 <aside class="sidebar_widget">
                     <div class="widget_inner">
 
-                        <div class="widget_list widget_color" style="text-align: center;">
-
-                            <button type="button" class="btn btn-success " id="create"
-                                    onclick="window.location.href='/product/seller/create'">
-                                新增商品
-                            </button>
+                        <div class="widget_list widget_color" style="text-align: center; font-size: large">
+                            <strong> &#x1F498; 熱門商品推薦 &#x1F498; </strong>
                             <br>
                             <br>
                         </div>
 
                         <div class="widget_list widget_compare">
-                            <!--                            <h3>Compare</h3>-->
                             <div class="shop_sidebar_product">
                                 <article class="single_product">
                                     <figure>
@@ -225,7 +228,6 @@
                                     <div class="modal-body">
                                         <!-- 搜索表单 -->
                                         <form id="searchForm" th:action="@{/api/product/query}" method="get">
-                                            <label><input type="checkbox" name="reviewStatus" value="1" checked disabled>通過</label>
                                             <!-- 商品名称 -->
                                             <div class="form-group">
                                                 <label for="name">商品名稱:</label>
@@ -263,9 +265,18 @@
                                                 <label for="memberId">買家編號:</label>
                                                 <input type="text" class="form-control" id="memberId" name="memberId">
                                             </div>
+                                            <!-- 審核状态 -->
+                                            <div id="reviewStatus">
+                                                <label><input type="checkbox" name="reviewStatus" value="0">
+                                                    審核中</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="1">
+                                                    通過</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="2">
+                                                    未通過</label>
+                                            </div>
                                             <!-- 商品状态 -->
                                             <div id="productStatus">
-                                                <label><input type="radio" name="label" value="0" checked><span
+                                                <label><input type="radio" name="label" value="0"><span
                                                         class="round button">未上架</span></label>
                                                 <label><input type="radio" name="label" value="1"><span
                                                         class="round button">上架</span></label>
@@ -283,166 +294,116 @@
                             </div>
                         </div>
                     </div>
-                    <a th:href="@{/product/seller/select}">
-                        <button type="button" class="btn btn-success  ml-5" id="select">
-                            返回商品清單
-                        </button>
-                    </a>
-                    <a th:href="@{/product/seller/status}">
-                        <button type="button" class="btn btn-danger  ml-4" id="status">
-                            上下架確認送出
-                        </button>
-                    </a>
                 </div>
                 <br>
 
                 <!-- Navigation -->
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
                     <div class="container">
-                        <label class="navbar-brand">商品資料</label>
+                        <label class="navbar-brand">賣家商城</label>
                     </div>
                 </nav>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 mt-5 mb-5">
-                            <table id="products" class="table table-bordered table-responsive-sm">
-                                <colgroup>
-                                    <!-- 第一欄寬度 -->
-                                    <col style="width: 3%;">
-                                    <!-- 第二欄寬度 -->
-                                    <col style="width: 5%;">
-                                    <!-- 第三欄寬度 -->
-                                    <col style="width: 20%;">
-                                    <!-- 第四欄寬度 -->
-                                    <col style="width: 30%;">
-                                    <!-- 第五欄寬度 -->
-                                    <col style="width: 5%;">
-                                    <!-- 第六欄寬度 -->
-                                    <col style="width: 2%;">
-                                    <!-- 第七欄寬度 -->
-                                    <col style="width: 35%;">
-                                    <!-- 第八欄寬度 -->
-                                    <col style="width: 5%;">
-                                    <!-- 第九欄寬度 -->
-                                    <col style="width: 5%;">
-                                    <!-- 第十欄寬度 -->
-                                    <col style="width: 10%;">
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th>編號</th>
-                                    <th>分類</th>
-                                    <th>品名</th>
-                                    <th>內容</th>
-                                    <th>價格</th>
-                                    <th>數量</th>
-                                    <th>圖片</th>
-                                    <th>審核</th>
-                                    <th>上下架</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="product : ${productPage.content}" th:if="${product.reviewStatus == 1}">
-                                    <td th:text="${product.productId}">1</td>
-
-                                    <td th:text="${product.productCategoryEntity.categoryName}"></td>
-
-                                    <td th:text="${product.name}" class="text-truncate" style="max-width: 80px;">
-                                        name
-                                    </td>
-
-                                    <td th:text="${product.description}">0.00</td>
-
-                                    <td th:text="${product.price}">0.00</td>
-
-                                    <td th:text="${product.quantity}">0.00</td>
-
-                                    <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
-                                        th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
+                <div class="widget_list widget_compare">
+                    <div class="shop_sidebar_product" th:each="product : ${productPage.content}">
+                        <article class="single_product">
+                            <figure>
+                                <div class="product_thumb">
+                                    <a class="primary_img"
+                                       th:if="${product.productImgs != null and product.productImgs.size() > 0}"
+                                       th:id="'productImgTd_' + ${product.productImgs[0].imageId}"
+                                       th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
                                         <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
-                                             style="height: 120px;width: 120px" alt=""/>
-                                    </td>
-                                    <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
-
-                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}">
-                                        0.00
-                                    </td>
-                                    <td>
-                                        <button th:if="${product.productStatus == 0}"
-                                                id="StatusUp" class="btn btn-primary"
-                                                th:attr="data-product-id=${product.productId}">我要上架
-                                        </button>
-                                        <button th:unless="${product.productStatus == 0}"
-                                                id="StatusDown" class="btn btn-secondary"
-                                                th:attr="data-product-id=${product.productId}">我要下架
-                                        </button>
-                                    </td>
-
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <nav>
-                                <ul class="pagination">
-                                    <li class="page-item"
-                                        th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{/product/seller/select(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
-                                    </li>
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
-                                        th:classappend="${productPage.number == i} ? 'active'">
-                                        <a class="page-link"
-                                           th:href="@{/product/seller/select(page=${i}, size=${productPage.size})}"
-                                           th:text="${i + 1}">1</a>
-                                    </li>
-                                    <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{/product/seller/select(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <form th:action="@{/product/seller/select}" method="get">
-                                            <input type="hidden" name="size" th:value="${productPage.size}">
-                                            <label>
-                                                <input type="number" name="page" min="0"
-                                                       max="${productPage.totalPages - 1}"
-                                                       step="1" value="${productPage.number}" style="width: 50px;">
-                                            </label>
-                                            <button type="submit" class="btn btn-primary">Go</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </nav>
-
-                        </div>
+                                             style="height: 150px;width: 150px" alt=""/>
+                                    </a>
+                                </div>
+                                <figcaption class="product_content">
+                                    <div class="product_rating">
+                                        <ul>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="product_name" th:text="${product.name}"><a
+                                            th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
+                                        <span style="font-size: large;" ></span></a></h3>
+                                    <div class="product_desc"  th:text="${product.description}">
+                                        <p>商品描述</p>
+                                    </div>
+                                    <div class="price_box">
+                                        <span style="color: red">$</span><span class="current_price" th:text="${product.price}"></span>
+                                        <div class="action_links list_action_right">
+                                            <ul>
+                                                <li class="add_to_cart"><a href="orderlist.html"
+                                                                           title="Add to cart">加入購物車</a></li>
+                                                <li class="quick_button"><a href="#" data-toggle="modal"
+                                                                            data-target="#modal_box" title="quick view"> <i
+                                                        class="icon icon-Eye"></i></a></li>
+                                                <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i
+                                                        class="icon icon-Heart"></i></a></li>
+                                                <li class="compare"><a href="#" title="Add to Compare"><i
+                                                        class="icon icon-MusicMixer"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </div>
+                    <div class="shop_toolbar t_bottom">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item"
+                                    th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/shop/${sellerId}(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                                    th:classappend="${productPage.number == i} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/shop/${sellerId}(page=${i}, size=${productPage.size})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/shop/${sellerId}(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <form th:action="@{/product/seller/shop/${sellerId}}" method="get">
+                                        <input type="hidden" name="size" th:value="${productPage.size}">
+                                        <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
+                                               step="1" value="${productPage.number}" style="width: 50px;">
+                                        <button type="submit" class="btn btn-primary">Go</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-                <!--                    0515end-->
+
             </div>
         </div>
     </div>
+    <!--                    0515end-->
+</div>
+</div>
+</div>
 </div>
 <!--shop  area end-->
 
 <script src="/js/api-response-utils.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <script>
     $(document).ready(function () {
 
-        //
         $('#searchForm').submit(function (e) {
             e.preventDefault(); // 阻止表单默认提交
             // 获取表单数据
             var formData = $(this).serialize();
-            // 當勾選框的狀態改變時
-            $("input[name='reviewStatus']").change(function() {
-                // 如果勾選框被選中
-                if ($(this).is(":checked")) {
-                }
-            });
 
             // 发送 Ajax 请求
             $.ajax({
@@ -470,8 +431,8 @@
                                         "2": "未通過"
                                     };
                                     var productStatusTexts = {
-                                        "0": "我要上架",
-                                        "1": "我要下架"
+                                        "0": "下架",
+                                        "1": "上架"
                                     }
 
                                     // 添加商品行到表格
@@ -486,11 +447,12 @@
                                             <td>
                                                 <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
                                             </td>
-                                            <td>${reviewStatusTexts[1]}</td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+
+                                            <td>${productStatusTexts[product.productStatus]}</td>
                                             <td>
-                                                <button ${product.productStatus === "0" ? 'id="StatusUp"' : 'id="StatusDown"'} class="btn ${product.productStatus === "0" ? 'btn-primary' : 'btn-secondary'}" data-product-id="${product.productId}">
-                                                    ${product.productStatus === "0" ? '我要上架' : '我要下架'}
-                                                </button>
+                                                <a href="/seller/product/getOne/${product.productId}"
+                                                   class="btn btn-primary">修改</a>
                                             </td>
                                         </tr>
                                     `);
@@ -508,45 +470,6 @@
                 }
             });
         });
-        //
-
-
-        // 當按鈕被點擊時
-        $("button").click(function () {
-            // 取得產品ID
-            var productId = $(this).data("product-id");
-            // 判斷是上架還是下架
-            var isUp = $(this).attr('id') === "StatusUp";
-            // 更新按鈕狀態
-            $("#StatusUp").prop("disabled", isUp);
-            $("#StatusDown").prop("disabled", !isUp);
-
-            console.log(isUp);
-            // 發送Ajax請求
-            $.ajax({
-                url: "/api/seller/product/updateProductStatus", // 更新產品狀態的API路徑
-                type: "PUT",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
-                data: {
-                    productId: productId,
-                    productStatus: isUp ? 1 : 0 // 如果是上架，設定狀態為1，否則為0
-                },
-                success(response) {
-                    apiResponseJSON(response, {
-                        onSuccess(data) {
-                            console.log(data);
-                            // window.location.href = '/product/seller/status';
-                        }
-                    });
-                },
-                error: function (xhr, status, error) {
-                    alert("伺服器連線失敗: " + error);
-                }
-            });
-        });
-
     });
 </script>
 

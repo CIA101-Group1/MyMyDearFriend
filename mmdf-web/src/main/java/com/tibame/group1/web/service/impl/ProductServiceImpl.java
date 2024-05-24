@@ -149,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductEntity getOneSellerProduct(Integer productId) {
+    public ProductEntity getOneProduct(Integer productId) {
 
         //1.查所有商品
         ProductEntity productEntity = productRepository.findById(productId)
@@ -178,6 +178,38 @@ public class ProductServiceImpl implements ProductService {
 
         return productEntity;
     }
+
+
+    public ProductEntity getProductBySellerId(Integer productId) {
+
+        //1.查所有商品
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
+
+        //2.查商品分類
+        ProductCategoryEntity productCategoryEntity = productCategoryRepository.findById(productEntity.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("ProductCategory with id " + productEntity.getCategoryId() + " not found"));
+        //2-2.放入商品集合
+        productEntity.setProductCategoryEntity(productCategoryEntity);
+
+        //3.查商品照片
+        List<ProductImgEntity> productImgEntityList = getProductImgListByProductId(productId);
+        //3-1.如果照片不是空值,轉成base64
+        productImgEntityList.stream()
+                .filter(productImgEntity -> productImgEntity.getImage() != null)
+                .forEach(productImgEntity -> {
+                    byte[] image = productImgEntity.getImage();
+                    String base64 = Base64.getEncoder().encodeToString(image);
+                    productImgEntity.setImageBase64(base64);
+                });
+        // 將 List 轉換為 Set
+        Set<ProductImgEntity> productImgEntitySet = new HashSet<>(productImgEntityList);
+        //3-3.放入商品集合
+        productEntity.setProductImgs(productImgEntitySet);
+
+        return productEntity;
+    }
+
 
 
     @Override
@@ -220,11 +252,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /***/
-    @Override
-    public ProductEntity getOneProduct(Integer productId) {
-        Optional<ProductEntity> optional = productRepository.findById(productId);
-        return optional.orElse(null);
-    }
+//    @Override
+//    public ProductEntity getOneProduct(Integer productId) {
+//        Optional<ProductEntity> optional = productRepository.findById(productId);
+//        return optional.orElse(null);
+//    }
 
     @Override
     public ProductCategoryEntity getOneCategory(Integer productId) {

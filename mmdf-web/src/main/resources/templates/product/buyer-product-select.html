@@ -398,10 +398,10 @@
                             console.log(data);
                             // 清空表格数据
                             $('.single_product').empty();
-                            if (response.code === "0") {
+                            if (data.code === "0") {
                                 alert('搜索成功');
                                 // 遍历搜索结果并显示到页面上
-                                response.data.forEach(function (product) {
+                                data.forEach(function (product) {
                                     var imageSrc = product.productImgs && product.productImgs.length > 0 ? 'data:image/jpg;base64,' + product.productImgs[0].imageBase64 : '';
 
                                     // 构建产品HTML
@@ -443,7 +443,6 @@
                                         </article>
                                     </div>
                                 `;
-
                                     // 添加产品到搜索结果
                                     $('.product_grid').append(productHTML);
                                 });

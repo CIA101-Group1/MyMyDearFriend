@@ -57,7 +57,7 @@ public class ProductFrontendController {
             HashMap<Integer, String> productStatusList = productService.getProductStatusList();
             model.addAttribute("productStatusList", productStatusList);
 
-            return "/product/admin-product-review";
+            return "/product-admin/admin-product-review";
         }
     }
 

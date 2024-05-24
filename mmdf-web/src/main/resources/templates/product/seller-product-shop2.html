@@ -40,6 +40,8 @@
     <!-- add member css-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
+    <script th:src="@{/js/custom.js}"></script>
+
 </head>
 <body>
 <!--header-->
@@ -48,7 +50,6 @@
 <!--breadcrumb-->
 <th:block th:replace="~{/fragments/breadcrumb}"/>
 
-<script th:src="@{/js/custom.js}"></script>
 
 <!--shop  area start-->
 <div class="shop_area shop_reverse mt-100 mb-100">
@@ -204,10 +205,10 @@
                     <div class="col-lg-1 col-md-12">
 
                         <!--                    0515start-->
-                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                data-target="#searchModal" id="search">
-                            搜索清單
-                        </button>
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                    data-target="#searchModal" id="search">
+                                搜索清單
+                            </button>
 
                         <!-- 搜索模态框 -->
                         <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
@@ -225,7 +226,6 @@
                                     <div class="modal-body">
                                         <!-- 搜索表单 -->
                                         <form id="searchForm" th:action="@{/api/product/query}" method="get">
-                                            <label><input type="checkbox" name="reviewStatus" value="1" checked disabled>通過</label>
                                             <!-- 商品名称 -->
                                             <div class="form-group">
                                                 <label for="name">商品名稱:</label>
@@ -263,9 +263,18 @@
                                                 <label for="memberId">買家編號:</label>
                                                 <input type="text" class="form-control" id="memberId" name="memberId">
                                             </div>
+                                            <!-- 審核状态 -->
+                                            <div id="reviewStatus">
+                                                <label><input type="checkbox" name="reviewStatus" value="0">
+                                                    審核中</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="1">
+                                                    通過</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="2">
+                                                    未通過</label>
+                                            </div>
                                             <!-- 商品状态 -->
                                             <div id="productStatus">
-                                                <label><input type="radio" name="label" value="0" checked><span
+                                                <label><input type="radio" name="label" value="0"><span
                                                         class="round button">未上架</span></label>
                                                 <label><input type="radio" name="label" value="1"><span
                                                         class="round button">上架</span></label>
@@ -283,14 +292,9 @@
                             </div>
                         </div>
                     </div>
-                    <a th:href="@{/product/seller/select}">
-                        <button type="button" class="btn btn-success  ml-5" id="select">
-                            返回商品清單
-                        </button>
-                    </a>
                     <a th:href="@{/product/seller/status}">
-                        <button type="button" class="btn btn-danger  ml-4" id="status">
-                            上下架確認送出
+                        <button type="button" class="btn btn-success  ml-5" id="status">
+                            過審商品
                         </button>
                     </a>
                 </div>
@@ -340,10 +344,11 @@
                                     <th>圖片</th>
                                     <th>審核</th>
                                     <th>上下架</th>
+                                    <th>修改</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="product : ${productPage.content}" th:if="${product.reviewStatus == 1}">
+                                <tr th:each="product : ${productPage.content}" th:if="${product.sellerId}">
                                     <td th:text="${product.productId}">1</td>
 
                                     <td th:text="${product.productCategoryEntity.categoryName}"></td>
@@ -368,15 +373,14 @@
                                     <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}">
                                         0.00
                                     </td>
+                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '下架'}">
+                                        0.00
+                                    </td>
                                     <td>
-                                        <button th:if="${product.productStatus == 0}"
-                                                id="StatusUp" class="btn btn-primary"
-                                                th:attr="data-product-id=${product.productId}">我要上架
-                                        </button>
-                                        <button th:unless="${product.productStatus == 0}"
-                                                id="StatusDown" class="btn btn-secondary"
-                                                th:attr="data-product-id=${product.productId}">我要下架
-                                        </button>
+                                        <a th:if="${product.reviewStatus == 0}"
+                                           th:href="@{/seller/product/getOne/{productId}(productId=${product.productId})}"
+                                           class="btn btn-primary">修改</a>
+                                        <button th:if="${product.reviewStatus != 0}" class="btn btn-secondary" disabled>修改</button>
                                     </td>
 
                                 </tr>
@@ -426,23 +430,14 @@
 <!--shop  area end-->
 
 <script src="/js/api-response-utils.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <script>
     $(document).ready(function () {
 
-        //
         $('#searchForm').submit(function (e) {
             e.preventDefault(); // 阻止表单默认提交
             // 获取表单数据
             var formData = $(this).serialize();
-            // 當勾選框的狀態改變時
-            $("input[name='reviewStatus']").change(function() {
-                // 如果勾選框被選中
-                if ($(this).is(":checked")) {
-                }
-            });
 
             // 发送 Ajax 请求
             $.ajax({
@@ -470,8 +465,8 @@
                                         "2": "未通過"
                                     };
                                     var productStatusTexts = {
-                                        "0": "我要上架",
-                                        "1": "我要下架"
+                                        "0": "下架",
+                                        "1": "上架"
                                     }
 
                                     // 添加商品行到表格
@@ -486,11 +481,12 @@
                                             <td>
                                                 <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
                                             </td>
-                                            <td>${reviewStatusTexts[1]}</td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+
+                                            <td>${productStatusTexts[product.productStatus]}</td>
                                             <td>
-                                                <button ${product.productStatus === "0" ? 'id="StatusUp"' : 'id="StatusDown"'} class="btn ${product.productStatus === "0" ? 'btn-primary' : 'btn-secondary'}" data-product-id="${product.productId}">
-                                                    ${product.productStatus === "0" ? '我要上架' : '我要下架'}
-                                                </button>
+                                                <a href="/seller/product/getOne/${product.productId}"
+                                                   class="btn btn-primary">修改</a>
                                             </td>
                                         </tr>
                                     `);
@@ -508,45 +504,6 @@
                 }
             });
         });
-        //
-
-
-        // 當按鈕被點擊時
-        $("button").click(function () {
-            // 取得產品ID
-            var productId = $(this).data("product-id");
-            // 判斷是上架還是下架
-            var isUp = $(this).attr('id') === "StatusUp";
-            // 更新按鈕狀態
-            $("#StatusUp").prop("disabled", isUp);
-            $("#StatusDown").prop("disabled", !isUp);
-
-            console.log(isUp);
-            // 發送Ajax請求
-            $.ajax({
-                url: "/api/seller/product/updateProductStatus", // 更新產品狀態的API路徑
-                type: "PUT",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
-                data: {
-                    productId: productId,
-                    productStatus: isUp ? 1 : 0 // 如果是上架，設定狀態為1，否則為0
-                },
-                success(response) {
-                    apiResponseJSON(response, {
-                        onSuccess(data) {
-                            console.log(data);
-                            // window.location.href = '/product/seller/status';
-                        }
-                    });
-                },
-                error: function (xhr, status, error) {
-                    alert("伺服器連線失敗: " + error);
-                }
-            });
-        });
-
     });
 </script>
 
