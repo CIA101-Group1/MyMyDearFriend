@@ -44,48 +44,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // =====建立取得會員編號的方法====//
-        //        String memberId = session.getUri().toString().split("=")[1];
-        //        Integer memberIdInteger = Integer.parseInt(memberId);
-        //        if (!sessions.containsKey(memberId)) {
-        //            System.out.println(memberId + "State : 初始化...");
-        //            initData.redisGetSqlData(memberIdInteger);
-        //        }
-        //
-        //        // ============ 設定Session時效 ============//
-        //
-        //        if (sessions.get(memberId) == null && session != null) {
-        //            List<WebSocketSession> list = new ArrayList();
-        //            list.add(session);
-        //            sessions.put(memberId, list);
-        //        } else if (sessions.get(memberId).contains(session)) {
-        //            List<WebSocketSession> list = new ArrayList();
-        //            list = sessions.get(memberId);
-        //            list.add(session);
-        //            sessions.put(memberId, list);
-        //        }
-
-        //        sessions.computeIfAbsent(memberId, n -> new
-        // ArrayList<WebSocketSession>(session)).add();
-
-        //        List<Integer> userNames = new ArrayList<Integer>();
-        //        for (String userName : sessions.keySet()) {
-        //            Integer userNameInteger = Integer.parseInt(userName);
-        //            System.out.println(userNameInteger);
-        //            userNames.add(memberIdInteger);
-        //        }
-        //        ChatStateDTO stateMessage = new ChatStateDTO("open", memberIdInteger, userNames);
-        //        String stateMessageJson = gson.toJson(stateMessage);
-        //        Collection<List<WebSocketSession>> sess = sessions.values();
-        //        for (List<WebSocketSession> list : sess) {
-        //            for (WebSocketSession se : list) {
-        //                if (se.isOpen()) {
-        //                    se.sendMessage(new TextMessage(stateMessageJson));
-        //                }
-        //            }
-        //        }
-        //        System.out.println(sessions);
-    }
+        }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
@@ -115,6 +74,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
                 }
             }
             System.out.println("會員編號：" + memberId + " -> 訊息功能初始化完成...");
+
             return;
         }
 
@@ -233,7 +193,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
         Integer memberId = memberSession.get(session);
         System.out.println("會員編號：" + memberId + " -> 正在離開...");
         sessions.get(memberId).remove(session);
-        if (sessions.get(memberId) == null) {
+        if (sessions.get(memberId).isEmpty()) {
             System.out.println("會員編號：" + memberId + " -> 會員也沒有在其他地方了，真的離開了!");
             sessions.remove(memberId);
         }

@@ -19,30 +19,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const chat = "ws://" + window.location.host + "/message";
 
     const socketInit = new WebSocket(init);
-    const socketChat = new WebSocket(chat);
-    const memberId = 1001;
+
+    // const memberId = 1001;
     <!--============ 初始化、好友列表、提醒 ============ -->
     socketInit.onopen = (event) => {
         console.log('connected - init');
-        socketInit.send(JSON.stringify({"type": "init", "memberId": "1001", "name": 'tester'}));
+        const authorization = localStorage.getItem('authorization');
+        socketInit.send(JSON.stringify({"type": "init", "authorization": authorization}));
         socketInit.send(JSON.stringify({"type": "getFriends"}));
+        socketInit.send(JSON.stringify({"type": "sendChatWebsocket"}));
     }
 
     socketInit.onmessage = (event) => {
-        var jsonObj = JSON.parse(event.data);
+        const jsonObj = JSON.parse(event.data);
         if (jsonObj.type === "getFriends") {
             loadFriends(jsonObj.friends);
+        }
+        console.log(jsonObj.type
+        );
+        if(jsonObj.type === "sendChatOk") {
+            const socketChat = new WebSocket(chat);
+            socketChat.onopen = (event) => {
+                const memberId = jsonObj.memberId;
+                console.log(memberId);
+                console.log('connected - chat');
+                socketChat.send(JSON.stringify({"type": "init", "memberId": memberId}));
+
+            }
         }
     }
 
     <!--============ 傳送訊息、讀取歷史紀錄 ============-->
-    socketChat.onopen = (event) => {
-        console.log('connected - chat');
-        socketChat.send(JSON.stringify({"type": "init","memberId":memberId}));
 
-    }
     socketChat.onmessage = (event) => {
         const jsonObj = JSON.parse(event.data);
+
+
         if (jsonObj.type === "getHistory") {
             console.log('get history');
             loadChatHistory(jsonObj.message);
@@ -97,7 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
         //     { name: '好友B', avatar: 'https://example.com/avatarB.jpg', id: '002', latestMessage: '最新訊息B' },
         //     { name: '好友C', avatar: 'https://example.com/avatarC.jpg', id: '003', latestMessage: '最新訊息C' }
         // ];
-
+        if(friends === undefined || friends === null) {
+            return;
+        }
         friends.forEach(friend => {
             const li = document.createElement('li');
             li.dataset.friend = friend.name;
@@ -216,5 +230,5 @@ document.addEventListener('DOMContentLoaded', () => {
     //
 
     // 加載好友列表
-    // loadFriends();
+    loadFriends();
 });
