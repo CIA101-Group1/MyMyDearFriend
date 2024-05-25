@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (jsonObj.type === "getHistory") {
             console.log('get history');
-            loadChatHistory(jsonObj.message);
+            loadChatHistory(jsonObj.message,jsonObj.sender);
         }
         if (jsonObj.type === "chat") {
 
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 加載聊天歷史記錄
-    function loadChatHistory(friendMessages) {
+    function loadChatHistory(friendMessages,memberId) {
         // 這裡可以加入獲取聊天記錄的程式碼
         chatMessages.innerHTML = '';
         // const messages = [
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage(message, 'sent');
             socketChat.send(JSON.stringify({type: 'chat', message: message, receiver: currentChat, memberId: memberId}));
             var pid = document.getElementById(currentChat);
-            pid.remove();
+            pid.textContent = message;
             // socketInit.send(JSON.stringify({"type": "getFriends"}));
             messageInput.value = '';
 
@@ -248,6 +248,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //
 
     // 加載好友列表
+    messageInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendButton.click();
+        }
+    });
     loadFriends();
 });
 

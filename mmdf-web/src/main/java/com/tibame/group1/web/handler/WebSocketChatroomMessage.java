@@ -107,6 +107,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
             List<String> historyData = redisTemplate.opsForList().range(key, 0, -1);
             String historyMeg = gson.toJson(historyData);
             MessageDTO responseMessage = new MessageDTO();
+            responseMessage.setSender(memberId);
             responseMessage.setType("getHistory");
             //            responseMessage.setMemberId(memberId);
             responseMessage.setMessage(historyMeg);
@@ -133,7 +134,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
             messageDTO.setRoomId(chatroomRepository.findByRoom(receiver, sender));
             messageDTO.setType("newMessage");
             messageDTO.setMessage(jsonObj.get("message").getAsString());
-            messageSaveRedis(messageDTO);
+            messageSaveRedis(messageDTO,sender);
 
 //            isMemberOnline(sender, message, messageDTO);
             isMemberOnline(receiver, message, messageDTO);
@@ -228,7 +229,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
         return false;
     }
 
-    private void messageSaveRedis(MessageDTO message) {
+    private void messageSaveRedis(MessageDTO message,Integer memberId) {
         //        String messageString = message.getPayload().toString();
         System.out.println("會員編號：" + message.getSender() + " -> 正在儲存傳送訊息的快取 ");
         ChatroomRedisEntity redisMessage = new ChatroomRedisEntity();
@@ -243,12 +244,9 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
         //        redisMessage.setSender(sender);
         String redisMessageJson = gson.toJson(redisMessage);
         ListOperations ops = redisTemplate.opsForList();
-        String receiverKey =
-                "chatroom:" + redisMessage.getReceiver() + ":" + redisMessage.getRoomId();
-        String senderKey =
-                "chatroom:" + redisMessage.getReceiver() + ":" + redisMessage.getRoomId();
-//        ops.rightPush(receiverKey, redisMessageJson);
-        ops.rightPush(senderKey, redisMessageJson);
+        String memberIdKey =
+                "chatroom:" + memberId + ":" + redisMessage.getRoomId();
+        ops.rightPush(memberIdKey, redisMessageJson);
         System.out.println("會員編號：" + message.getSender() + " -> 完成儲存傳送訊息的快取!");
     }
 
@@ -262,14 +260,18 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
 
         }
         if (receiverSessionAll != null) {
-
+            Integer count = 0;
             for (WebSocketSession receiverSession : receiverSessionAll) {
                 if (receiverSession.isOpen()) {
                     receiverSession.sendMessage(new TextMessage(gson.toJson(messageDTO)));
+                    count++;
                     if (messageDTO.getSender() != memberId) {
                         System.out.println("會員編號：" + memberId + " -> 正在接收訊息");
                     }
                 }
+            }
+            if (count>0){
+                messageSaveRedis(messageDTO,memberId);
             }
             return;
         } else {
