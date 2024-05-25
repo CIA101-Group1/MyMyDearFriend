@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             li.id = friendId + "info";
             const img = document.createElement('img');
             img.src = friend.avatar;
+            img.classList.add('chatroomIMG');
             const div = document.createElement('div');
             div.classList.add('friend-info');
             const spanName = document.createElement('span');
