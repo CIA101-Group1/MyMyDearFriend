@@ -297,7 +297,7 @@
                         </tr>
                         </thead>
                         <tbody id="product-tbody">
-                        <tr th:each="product : ${productPage.content}">
+                        <tr th:each="product : ${productPage.content}" th:if="${product.reviewStatus == 0}">
                             <td th:text="${product.productId}" id="productId">1</td>
                             <td th:text="${product.productCategoryEntity.categoryName}">
                             </td>
@@ -326,12 +326,19 @@
                                 0.00
                             </td>
                             <td>
-                                <button id="test" class="btn btn-primary"
+                                <button id="yes" class="btn btn-primary"
                                         th:attr="data-product-id=${product.productId}">
                                     審核成功
                                 </button>
                                 <input type="hidden" th:value="${product.reviewStatus}"
                                        id="hiddentest">
+                                <label></label>
+                                <button id="miss" class="btn btn-danger"
+                                        th:attr="data-product-id=${product.productId}">
+                                    審核失敗
+                                </button>
+                                <input type="hidden" th:value="${product.reviewStatus}"
+                                       id="hiddenmiss">
                             </td>
 
                         </tr>
@@ -384,8 +391,8 @@
 <script>
     $(document).ready(function () {
         // 更新審核狀態
-        $("#product-tbody").on("click", ("#test"), function () {
-            var productId = $("#test").data("product-id");
+        $("#product-tbody").on("click", ("#yes"), function () {
+            var productId = $("#yes").data("product-id");
 
             // 使用 jQuery 的 val() 方法來獲取 input 元素的值
             var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
@@ -467,19 +474,27 @@
 
                                             <td>${productStatusTexts[product.productStatus]}</td>
                                             <td>
-                                                <button id="test" class="btn btn-primary"
+                                                <button id="yes" class="btn btn-primary"
                                                     th:attr="data-product-id=${product.productId}">
                                                     審核成功
                                                 </button>
                                                 <input type="hidden" th:value="${product.reviewStatus}"
                                                        id="hiddentest">
+                                                <label></label>
+                                                <button id="miss" class="btn btn-danger"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核失敗
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddentest">
+
                                             </td>
                                         </tr>
                                     `);
                                 });
 
-                                $("#product-tbody").on("click", ("#test"), function () {
-                                    var productId = $("#test").data("product-id");
+                                $("#product-tbody").on("click", ("#yes"), function () {
+                                    var productId = $("#yes").data("product-id");
 
                                     // 使用 jQuery 的 val() 方法來獲取 input 元素的值
                                     var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
@@ -499,7 +514,9 @@
                                         success(response) {
                                             apiResponseJSON(response, {
                                                 onSuccess(data) {
+                                                    button.removeClass("btn-primary").addClass("btn-success");
                                                     console.log(data);
+                                                    window.location.reload();
                                                 }
                                             });
                                         },
@@ -524,6 +541,162 @@
         });
 
     });
+
+
+    //miss
+
+    // 更新審核狀態
+    $("#product-tbody").on("click", ("#miss"), function () {
+        var productId = $("#miss").data("product-id");
+
+        // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+        var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
+
+        console.log(reviewStatusValue);
+
+        $.ajax({
+            url: "/api/seller/product/updateReviewStatus",
+            method: "PUT",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            data: {
+                productId: productId,
+                reviewStatus: 2
+            },
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        console.log(data);
+                    }
+                });
+            },
+            error: function (error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+    });
+
+    $('#searchForm').submit(function (e) {
+        e.preventDefault(); // 阻止表单默认提交
+        // 获取表单数据
+        var formData = $(this).serialize();
+
+        // 发送 Ajax 请求
+        $.ajax({
+            url: '/api/product/query',
+            type: 'GET',
+            data: formData,
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        console.log(data);
+                        // 清空表格数据
+                        $('#products tbody').empty();
+                        if (response.code === "0") {
+                            alert('搜索成功');
+                            $('#searchModal').modal('hide');
+                            // 遍历搜索结果并显示到页面上
+                            response.data.forEach(function (product) {
+                                var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                                var reviewStatusTexts = {
+                                    "0": "審核中",
+                                    "1": "通過",
+                                    "2": "未通過"
+                                };
+                                var productStatusTexts = {
+                                    "0": "下架",
+                                    "1": "上架"
+                                }
+
+                                // 添加商品行到表格
+                                $('#products tbody').append(`
+                                        <tr>
+                                            <td>${product.productId}</td>
+                                            <td>${product.productCategoryEntity.categoryName}</td>
+                                            <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
+                                            <td>${product.description}</td>
+                                            <td>${product.price}</td>
+                                            <td>${product.quantity}</td>
+                                            <td>
+                                                <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                            </td>
+                                            <td>${product.sellerId}</td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+
+                                            <td>${productStatusTexts[product.productStatus]}</td>
+                                            <td>
+                                                <button id="yes" class="btn btn-primary"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核成功
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddentest">
+                                                <label></label>
+                                                <button id="miss" class="btn btn-danger"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核失敗
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddenmiss">
+
+                                            </td>
+                                        </tr>
+                                    `);
+                            });
+
+                            $("#product-tbody").on("click", ("#miss"), function () {
+                                var productId = $("#miss").data("product-id");
+
+                                // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+                                var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
+
+                                console.log(reviewStatusValue);
+
+                                $.ajax({
+                                    url: "/api/seller/product/updateReviewStatus",
+                                    method: "PUT",
+                                    headers: {
+                                        "authorization": localStorage.getItem("authorization")
+                                    },
+                                    data: {
+                                        productId: productId,
+                                        reviewStatus: 2
+                                    },
+                                    success(response) {
+                                        apiResponseJSON(response, {
+                                            onSuccess(data) {
+                                                button.removeClass("btn-primary").addClass("btn-success");
+                                                console.log(data);
+                                                window.location.reload();
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        alert("伺服器連線失敗: " + error);
+                                    }
+                                });
+                            });
+
+                        } else {
+                            alert('搜索失败！' + response.message);
+                            console.log(response);
+                        }
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                alert('搜索失败');
+            }
+        });
+    });
+
+
+    //miss
 
     // 函數：顯示特定標籤的內容
     function showTabContent(tabName) {
@@ -596,28 +769,6 @@
         }
     });
 
-
-    // $.ajax({
-    //     type: "POST",
-    //     url: "/seller/product/updateReviewStatus",
-    //     data: postData,
-    //     success: function(response) {
-    //         apiResponseJSON(response, {
-    //             onSuccess: function(data) {
-    //                 // 成功回调函数
-    //                 console.log("Success:", data);
-    //             },
-    //             onError: function(error) {
-    //                 // 错误回调函数
-    //                 console.error("Error:", error);
-    //             }
-    //         });
-    //     },
-    //     error: function(xhr, status, error) {
-    //         // AJAX 请求失败时的处理
-    //         console.error("AJAX Error:", error);
-    //     }
-    // });
 
 </script>
 

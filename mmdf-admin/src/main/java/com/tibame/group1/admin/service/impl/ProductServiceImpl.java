@@ -12,7 +12,8 @@ import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,10 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
-@Transactional(rollbackOn = Exception.class)
+//@Service
+//@Transactional(rollbackFor = Exception.class)
 @Slf4j
+@Component
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -37,126 +39,17 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
-    /**
-     * productCategory
-     */
-
-    @Override
-    public ProductCategoryCreateResDTO productCategoryCreate(ProductCategoryCreateReqDTO req) {
-        ProductCategoryEntity product = new ProductCategoryEntity();
-        product.setCategoryName(req.getCategoryName());  //會員ID，從登入驗證碼取的會員ID
-        product = productCategoryRepository.save(product);
-        ProductCategoryCreateResDTO resDTO = new ProductCategoryCreateResDTO();
-        resDTO.setCategoryId(product.getCategoryId());
-        return resDTO;
-    }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductCategoryEntity> productCategoryGetAll() {
         return productCategoryRepository.findAll();
     }
 
-    @Override
-    public ProductCategoryUpdateResDTO productCategoryUpdate(ProductCategoryUpdateReqDTO req) {  //條件判斷
-        ProductCategoryEntity product = new ProductCategoryEntity();
-        product.setCategoryId(req.getCategoryId());
-        product.setCategoryName(req.getCategoryName());
-        product = productCategoryRepository.save(product);
-        ProductCategoryUpdateResDTO resDTO = new ProductCategoryUpdateResDTO();
-        resDTO.setCategoryId(product.getCategoryId());
-        return resDTO;
-    }
-
-    /**
-     * product
-     */
-
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductEntity> productGetAll() {
         List<ProductEntity> result = productRepository.findAll();
         return result;
-    }
-
-//    @Override
-//    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
-//        ProductEntity product = new ProductEntity();
-//        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
-//        product.setCategoryId(Integer.valueOf(req.getCategoryId()));
-//        product.setName(req.getName());
-//        product.setDescription(req.getDescription());
-//        product.setPrice(Integer.valueOf(req.getPrice()));
-//        product.setQuantity(Integer.valueOf(req.getQuantity()));
-//        product.setProductId(req.getProductId());
-//        product = productRepository.save(product);
-//        ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
-//        resDTO.setProductId(product.getProductId());
-//        return resDTO;
-//    }
-
-    //    0517
-    @Override
-    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, AdminLoginSourceDTO adminLoginSource) {  //條件判斷
-        ProductEntity product = new ProductEntity();
-        product.setProductId(req.getProductId());
-//        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
-        product.setCategoryId(Integer.valueOf(req.getCategoryId()));
-        product.setName(req.getName());
-        product.setDescription(req.getDescription());
-        product.setPrice(Integer.valueOf(req.getPrice()));
-        product.setQuantity(Integer.valueOf(req.getQuantity()));
-        product.setReviewStatus(0);
-        product.setProductStatus(0);
-        product = productRepository.save(product);
-
-        if (req.getUpdateImg()) {
-            List<ProductImgEntity> productImgEntityList = productImgRepository.findByProductEntity_ProductId(req.getProductId());
-            if (productImgEntityList != null && !productImgEntityList.isEmpty()) {
-                ProductImgEntity productImg = productImgEntityList.get(0);
-                productImg.setImage(StringUtils.isEmpty(req.getImage()) ? null : ConvertUtils.base64ToBytes(req.getImage()));
-                productImgRepository.save(productImg);
-            }
-        }
-        ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
-        resDTO.setProductId(product.getProductId());
-        return resDTO;
-    }
-
-    @Override
-    public ProductEntity getOneSellerProduct(Integer productId) {
-
-        //1.查所有商品
-        ProductEntity productEntity = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
-
-        //2.查商品分類
-        ProductCategoryEntity productCategoryEntity = productCategoryRepository.findById(productEntity.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("ProductCategory with id " + productEntity.getCategoryId() + " not found"));
-        //2-2.放入商品集合
-        productEntity.setProductCategoryEntity(productCategoryEntity);
-
-        //3.查商品照片
-        List<ProductImgEntity> productImgEntityList = getProductImgListByProductId(productId);
-        //3-1.如果照片不是空值,轉成base64
-        productImgEntityList.stream()
-                .filter(productImgEntity -> productImgEntity.getImage() != null)
-                .forEach(productImgEntity -> {
-                    byte[] image = productImgEntity.getImage();
-                    String base64 = Base64.getEncoder().encodeToString(image);
-                    productImgEntity.setImageBase64(base64);
-                });
-        // 將 List 轉換為 Set
-        Set<ProductImgEntity> productImgEntitySet = new HashSet<>(productImgEntityList);
-        //3-3.放入商品集合
-        productEntity.setProductImgs(productImgEntitySet);
-
-        return productEntity;
-    }
-
-
-    @Override
-    public List<ProductImgEntity> getProductImgListByProductId(Integer productId) {
-        return productImgRepository.findByProductEntity_ProductId(productId);
     }
 
 //    0517
@@ -166,31 +59,13 @@ public class ProductServiceImpl implements ProductService {
      * productImg
      */
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProductImgEntity> productImgGetAll() {
         return productImgRepository.findAll();
     }
 
-
-    /***/
-    @Override
-    public ProductEntity getOneProduct(Integer productId) {
-        Optional<ProductEntity> optional = productRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public ProductCategoryEntity getOneCategory(Integer productId) {
-        Optional<ProductCategoryEntity> optional = productCategoryRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public ProductImgEntity getOneProductImg(Integer productId) {
-        Optional<ProductImgEntity> optional = productImgRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductEntity> getAll() {
         List<ProductEntity> result = productRepository.findAll();
@@ -208,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductImgEntity> result = productImgRepository.findAll();
         return result;
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductEntity> queryGetAll(ProductQueryReqDTO productQueryReqDTO) {
         // Query 第一、三種寫法 ProductRepository.java
@@ -216,13 +91,10 @@ public class ProductServiceImpl implements ProductService {
                 productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
                 productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
         );
-        // Query 第二種寫法 ProductRepository.java
-//        return productRepository.findByNameLikeAndDescriptionLikeAndCategoryIdAndReviewStatusAndProductStatus(
-//                productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
-//                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
     }
 
-    //0515
+    //0515 //
+    @Transactional(readOnly = true)
     @Override
     public Page<ProductEntity> productGetAll(Pageable pageable) {
         //1.查所有商品

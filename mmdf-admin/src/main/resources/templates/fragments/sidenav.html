@@ -14,7 +14,20 @@
                 <!-- 優惠券 -->
                 <a class="nav-link" href="offline-market.html">優惠券管理</a>
                 <!-- 一般商品 -->
-                <a class="nav-link" href="general-product.html">一般商城管理</a>
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                   data-bs-target="#ProductCollapse" aria-expanded="false" aria-controls="collapseLayouts2">
+                    一般商城管理
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </a>
+                <div class="collapse" id="ProductCollapse" aria-labelledby="headingOne"
+                     data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" onclick="goToProductAll()">一般商品查詢</a>
+                        <a class="nav-link" onclick="goToOrderAll()">訂單管理</a>
+                    </nav>
+                </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                    data-bs-target="#bidProductCollapse" aria-expanded="false" aria-controls="collapseLayouts2">
                     競標商城管理
@@ -119,6 +132,16 @@
         window.location.href = url;
     }
 
+    function goToOrderAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/order/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToOrderAll href: ', url);
+        window.location.href = url;
+    }
+
     function goToMarketAll() {
         var authorization = localStorage.getItem("authorization");
         var url = '/market/all';
@@ -126,6 +149,16 @@
             url += '?authorization=' + encodeURIComponent(authorization);
         }
         console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToProductAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/product/review';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
         window.location.href = url;
     }
 </script>

@@ -19,28 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
 public class ProductFrontendController {
 
     @Autowired
     private ProductService productService;
 
-    /**
-     * 透過商品ID取得單一商品，進入修改畫面
-     */
-    @GetMapping("/seller/product/getOne/{productId}")
-    public String getOneProduct(@PathVariable("productId") Integer productId, Model model) {
-        ProductEntity productEntity = productService.getOneSellerProduct(productId);
-        model.addAttribute("productEntity", productEntity);
-
-        List<ProductCategoryEntity> productCategoryList = productService.getAllCategory();
-        model.addAttribute("productCategoryList", productCategoryList);
-
-        return "/product/seller-product-getOne-update";
-    }
-
-
-    @GetMapping("/admin/product/review")
+    @GetMapping("/product/review")
     public String adminReviewProduct(Model model,
                                      @RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "size", defaultValue = "10") int size) {

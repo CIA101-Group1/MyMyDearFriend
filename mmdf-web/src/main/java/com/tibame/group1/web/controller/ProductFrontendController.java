@@ -211,10 +211,5 @@ public class ProductFrontendController {
     }
 
 
-    @GetMapping("api/destination")
-    public ResponseEntity<String> redirect(HttpServletRequest request) {
-        System.out.println("收到redirect");
-        return null;
-    }
 
 }

@@ -10,37 +10,52 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
-    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+        <th:block th:replace="~{/fragments/css}"/>
     <!-- CSS
  ========================= -->
-    <!--bootstrap min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
-    <!--owl carousel min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
-    <!--slick min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
-    <!--magnific popup min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
-    <!--font awesome css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
-    <!--ionicons min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
-    <!--animate css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
-    <!--jquery ui min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
-    <!--slinky menu css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
-    <!--plugins css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+<!--    &lt;!&ndash;bootstrap min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">-->
+<!--    &lt;!&ndash;owl carousel min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">-->
+<!--    &lt;!&ndash;slick min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">-->
+<!--    &lt;!&ndash;magnific popup min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">-->
+<!--    &lt;!&ndash;font awesome css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">-->
+<!--    &lt;!&ndash;ionicons min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">-->
+<!--    &lt;!&ndash;animate css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">-->
+<!--    &lt;!&ndash;jquery ui min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+<!--    &lt;!&ndash;slinky menu css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">-->
+<!--    &lt;!&ndash;plugins css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">-->
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+<!--    &lt;!&ndash; Main Style CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">-->
 
-    <!-- add member css-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!--    &lt;!&ndash; add member css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">-->
 
     <script th:src="@{/js/custom.js}"></script>
+
+    <style>
+        .scrolling-text {
+            overflow: hidden; /* 隐藏溢出部分 */
+            position: relative; /* 相对定位，为内部 div 提供参照 */
+        }
+
+        .inner-div {
+            width: 100%; /* 宽度 100% */
+            overflow-y: auto; /* 垂直滚动条 */
+            max-height: 120px; /* 设置最大高度 */
+            display: inline-block; /* 允许宽度自动调整 */
+        }
+
+    </style>
 
 </head>
 <body>
@@ -357,7 +372,11 @@
                                         name
                                     </td>
 
-                                    <td th:text="${product.description}" class="text-truncate" style="max-width: 50px; overflow: auto; text-overflow: clip;">0.00</td>
+                                    <td class="scrolling-text">
+                                        <div class="inner-div">
+                                            <span th:text="${product.description}" style="white-space: pre-wrap;"></span>
+                                        </div>
+                                    </td>
 
                                     <td th:text="${product.price}" style=" vertical-align: middle;">0.00</td>
 
