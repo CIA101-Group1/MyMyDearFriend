@@ -117,10 +117,11 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
             List<ChatroomEntity> roomEnt = chatroomRepository.findMemberFriends(memberId);
             List<Integer> friendsId = new ArrayList<>();
             for (ChatroomEntity friend : roomEnt) {
-                if (friend.getUserA() == memberId) {
+
+                if (friend.getUserA().equals(memberId)) {
                     friendsId.add(friend.getUserB());
                 } else {
-                    friendsId.add(friend.getUserB());
+                    friendsId.add(friend.getUserA());
                 }
             }
             List<FriendInfoDTO> friendsInfo = new ArrayList<>();
@@ -129,6 +130,7 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
                 FriendInfoDTO dto = new FriendInfoDTO();
                 dto.setId(friendId);
                 dto.setName(memberRepository.findById(friendId).get().getName());
+                dto.setQuestionId(memberId);
                 byte[] avatarBytes = memberRepository.findById(friendId).get().getImage();
                 if (avatarBytes != null) {
                     String avatarBase64 = Base64.getEncoder().encodeToString(avatarBytes);
@@ -156,13 +158,13 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
             session.sendMessage(new TextMessage(gson.toJson(memberFriendsDTO)));
         }
 
-        if("sendChatWebsocket".equals(type)){
-            ChatroomInit initChat = new ChatroomInit();
-            initChat.setMemberId(memberId);
-//            initChat.setType("sendChatWebsocket");
-            session.sendMessage(new TextMessage(gson.toJson(initChat)));
-            return;
-        }
+//        if("sendChatWebsocket".equals(type)){
+//            ChatroomInit initChat = new ChatroomInit();
+//            initChat.setMemberId(memberId);
+////            initChat.setType("sendChatWebsocket");
+//            session.sendMessage(new TextMessage(gson.toJson(initChat)));
+//            return;
+//        }
     }
 
     @Override

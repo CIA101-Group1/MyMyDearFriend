@@ -19,5 +19,5 @@ public interface ChatroomRepository extends JpaRepository<ChatroomEntity,Integer
     @Query("SELECT cr.chatroomId FROM ChatroomEntity cr "
         + "WHERE (cr.userA = ?1 AND cr.userB = ?2)"
         + "OR (cr.userA = ?2 AND cr.userB = ?1) ")
-    int findByRoom(Integer userA, Integer userB);
+    Integer findByRoom(Integer userA, Integer userB);
 }
