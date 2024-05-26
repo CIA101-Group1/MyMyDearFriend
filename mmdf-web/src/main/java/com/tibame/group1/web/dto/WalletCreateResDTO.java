@@ -1,4 +1,4 @@
-package com.tibame.group1.common.dto.web;
+package com.tibame.group1.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,10 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberCreateResDTO {
-  private String memberId;
+public class WalletCreateResDTO {
 
-  private String authorization;
+  private Integer changeAmount;
+
+  private String changeTime;
+
+  private String changeType;
 
   private String status;
 
@@ -18,14 +21,13 @@ public class MemberCreateResDTO {
   public enum Status {
     CREATE_SUCCESS("1", "新增成功"),
 
-    IMAGE_FORMAT_ERROR("-1", "上傳檔案格式錯誤"),
+    // 是否扣款成功
 
-    EXIST_ACCOUNT("-2", "該帳號已存在"),
+    // 是否加值成功
 
-    EXIST_EMAIL("-3", "該信箱已存在");
+    DO_NOT_EXIST_ACCOUNT("-1", "該帳號不存在");
 
     private final String code;
-
     private final String message;
   }
 }
