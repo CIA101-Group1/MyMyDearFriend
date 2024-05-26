@@ -1,6 +1,5 @@
 package com.tibame.group1.web.dto;
 
-import com.tibame.group1.db.entity.OrderDetailEntity;
 import lombok.Getter;
 import lombok.Setter;
 

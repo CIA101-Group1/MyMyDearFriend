@@ -41,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
     @Autowired private NoticeService noticeService;
 
     /**
-     * 前台使用者註冊會員
+     * 前台使用者註冊會員x
      *
      * @param req 註冊時填入的資料
      * @return 已建立memberId的memberEntity

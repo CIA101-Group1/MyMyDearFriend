@@ -77,7 +77,6 @@ function addToCart(productId, quantity) {
     })
 }
 
-
 // 取得mini購物車資料
 function getMiniCart() {
     $.ajax({
