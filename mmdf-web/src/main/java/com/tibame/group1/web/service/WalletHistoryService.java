@@ -3,6 +3,7 @@ package com.tibame.group1.web.service;
 import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.web.dto.*;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,24 +11,9 @@ import java.util.List;
 @Service
 public interface WalletHistoryService {
 
-  WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId);
+    WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId);
 
-  WalletCreateResDTO walletHistoryCreate(WalletCreateReqDTO req, LoginSourceDTO loginSource);
+    WalletCreateResDTO walletHistoryCreate(WalletCreateReqDTO req, LoginSourceDTO loginSource);
 
-  List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
-
-  //    Integer createWalletHistory(WalletReqDTO walletReqDTO);
-
-  //    Integer topUp(TopUpAmountReqDTO topUpAmountReqDTO);
-  //
-  //    Integer payment(PaymentAmountReqDTO paymentAmountReqDTO);
-  //
-  //    Integer deposit(DepositAmountReqDTO depositAmountReqDTO);
-  //
-  //    Integer fee(FeeAmountReqDTO feeAmountReqDTO);
-  //
-  //    Integer withdraw(WithdrawAmountReqDTO withdrawAmountReqDTO);
-  //
-  //    Integer market(MarketAmountReqDTO marketAmountReqDTO);
-
+    List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
 }

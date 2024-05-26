@@ -10,6 +10,13 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .btn-primary {
+            color: #fff !important;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+    </style>
 </head>
 <body>
 <!--header-->
@@ -26,7 +33,26 @@
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="account-details">
-
+                            <h2 class="text-center">儲值錢包</h2>
+                            <form id="wallet-form">
+                                <div class="form-group">
+                                    <label for="amount">儲值金額</label>
+                                    <input type="number" class="form-control" id="amount" name="amount"
+                                           placeholder="輸入儲值金額" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bank-code">銀行代碼</label>
+                                    <select class="form-control" id="bank-code" name="bank-code" required>
+                                        <option value="">請選擇銀行</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bank-account">扣款銀行帳戶</label>
+                                    <input type="text" class="form-control" id="bank-account" name="bank-account"
+                                           placeholder="輸入銀行帳戶" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">確認儲值</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -36,29 +62,82 @@
 </section>
 <!-- main end -->
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 錯誤訊息將顯示在這裡 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <th:block th:replace="~{/fragments/js}"/>
-<script src="/js/api-response-utils.js"></script>
+<script src="/js/bank-list.js"></script>
+<script>
+    let userData = {};
+    let errorMessage = "";
+    let bankCodeSelect = $("#bank-code");
+    $(document).ready(function () {
+        $("#wallet-form").on("submit", function (e) {
+            e.preventDefault();
+            errorMessage = "";
+            let amount = $("#amount").val().trim();
+            if (!/^\d+$/.test(amount) || parseInt(amount) <= 0) {
+                errorMessage += "<li>金額必須是正整數</li>";
+            }
+
+            let bankAccount = $("#bank-account").val().trim();
+            if (!/^\d{10,16}$/.test(bankAccount)) {
+                errorMessage += "<li>銀行帳戶必須介於10~16碼的數字</li>";
+            }
+
+            // 如果有錯誤訊息，則顯示到 #errorMessage 中並回傳 false
+            if (errorMessage !== "") {
+                $("#modalBody").html("<ul>" + errorMessage + "</ul>");
+                $("#myModal").modal("show");
+                return false;
+            }
+
+            userData = {
+                changeAmount: amount,
+                walletCategory: "1"
+            }
+
+            $("#errorMessage").text("");
+
+            $.ajax({
+                url: "/api/wallets/create",
+                type: "post",
+                contentType: "application/json",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "1":
+                                    $("#modalBody").html("儲值成功");
+                                    $("#myModal").modal("show");
+                                    setTimeout(function () {
+                                        window.location.href = "/member/walletHistory";
+                                    }, 2000);
+                                    break;
+                                case "-1":
+                                    $("#modalBody").html("該帳號不存在");
+                                    $("#myModal").modal("show");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

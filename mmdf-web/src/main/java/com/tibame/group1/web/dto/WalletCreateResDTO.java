@@ -8,26 +8,24 @@ import lombok.Setter;
 @Setter
 public class WalletCreateResDTO {
 
-  private Integer changeAmount;
+    private Integer changeAmount;
 
-  private String changeTime;
+    private String changeTime;
 
-  private String changeType;
+    private String changeType;
 
-  private String status;
+    private String status;
 
-  @AllArgsConstructor
-  @Getter
-  public enum Status {
-    CREATE_SUCCESS("1", "新增成功"),
+    @AllArgsConstructor
+    @Getter
+    public enum Status {
+        CREATE_SUCCESS("1", "新增異動成功"),
 
-    // 是否扣款成功
+        DO_NOT_EXIST_ACCOUNT("-1", "該帳號不存在"),
 
-    // 是否加值成功
+        INSUFFICIENT_BALANCE("-2", "錢包餘額不足");
 
-    DO_NOT_EXIST_ACCOUNT("-1", "該帳號不存在");
-
-    private final String code;
-    private final String message;
-  }
+        private final String code;
+        private final String message;
+    }
 }
