@@ -106,7 +106,6 @@ public class WalletHistoryBackendController {
     //        return ResponseEntity.status(HttpStatus.CREATED).body(wallet);
     //    }
 
-    /** todo: 錢包分頁功能與每筆細項，用List */
     @CheckLogin
     @GetMapping("/wallets")
     public ResponseEntity<List<WalletHistoryEntity>> getAllWalletHistory(
