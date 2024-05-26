@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class WalletQueryParams {
 
-    private WalletCategory walletCategory;
+    private String walletCategory;
     private String search;
     private Integer memberId;
 }

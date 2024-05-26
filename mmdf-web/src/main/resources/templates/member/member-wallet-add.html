@@ -70,6 +70,7 @@
 <th:block th:replace="~{/fragments/js}"/>
 <script src="/js/bank-list.js"></script>
 <script>
+    let userData = {};
     let errorMessage = "";
     let bankCodeSelect = $("#bank-code");
     $(document).ready(function () {
@@ -92,19 +93,43 @@
                 $("#myModal").modal("show");
                 return false;
             }
+
+            userData = {
+                changeAmount: amount,
+                walletCategory: "1"
+            }
+
             $("#errorMessage").text("");
 
             $.ajax({
-                url: "/api/wallets/top-up",
+                url: "/api/wallets/create",
                 type: "post",
                 contentType: "application/json",
                 headers: {
                     "authorization": localStorage.getItem("authorization")
                 },
-                data: JSON.stringify(amount),
-                success() {
-                    $("#modalBody").html("儲值成功");
-                    $("#myModal").modal("show");
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            switch (data.status) {
+                                case "1":
+                                    $("#modalBody").html("儲值成功");
+                                    $("#myModal").modal("show");
+                                    setTimeout(function () {
+                                        window.location.href = "/member/walletHistory";
+                                    }, 2000);
+                                    break;
+                                case "-1":
+                                    $("#modalBody").html("該帳號不存在");
+                                    $("#myModal").modal("show");
+                                    break;
+                            }
+                        },
+                        onError(message) {
+                            console.log(message);
+                        }
+                    });
                 },
                 error(xhr, status, error) {
                     $("#modalBody").html("伺服器連線失敗: " + error);

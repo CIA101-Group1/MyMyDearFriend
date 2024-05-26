@@ -11,14 +11,16 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        .wallet-buttons .btn {
-            margin-right: 10px;
-        }
-
         .btn-primary {
             color: #fff !important;
             background-color: #007bff !important;
             border-color: #007bff !important;
+        }
+
+        .btn-secondary {
+            color: #fff !important;
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
         }
 
         .btn-warning {
@@ -76,20 +78,23 @@
                                                 <label for="transaction-type"></label><select class="form-control"
                                                                                               id="transaction-type">
                                                 <option value="">所有交易種類</option>
-                                                <option value="PAYMENT">付款</option>
-                                                <option value="TOP_UP">儲值</option>
-                                                <option value="WITHDRAW">提領</option>
-                                                <option value="REFUND">退款</option>
-                                                <option value="DEPOSIT">入帳</option>
-                                                <option value="FEE">手續費</option>
-                                                <option value="MARKET">市集</option>
-                                                <option value="TEST">其他</option>
+                                                <option value="0">付款</option>
+                                                <option value="1">儲值</option>
+                                                <option value="2">提領</option>
+                                                <option value="3">退款</option>
+                                                <option value="4">入帳</option>
+                                                <option value="5">手續費</option>
+                                                <option value="6">市集報名費</option>
                                             </select>
                                             </div>
                                             <div class="col-md-3 custom-select-wrapper-input">
                                                 <label for="historyTime"
                                                        style="margin-bottom: 5px;">交易時間(供查詢三個月內)</label>
                                                 <input type="date" id="historyTime" class="form-control">
+                                            </div>
+                                            <div class="col-md-3 align-self-end d-flex justify-content-between">
+                                                <button id="resetFilters" class="btn btn-secondary ml-2">重置篩選條件
+                                                </button>
                                             </div>
                                         </div>
                                         <table class="table table-bordered">
@@ -147,7 +152,6 @@
 <th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
 <script>
-    let userData = {};
     let errorMessage = "";
     $(document).ready(function () {
         const recordsPerPage = 5;
@@ -160,7 +164,7 @@
         function init() {
             currentPage = 1;
             getWalletBalance();
-            // getTransactionRecords();
+            getTransactionRecords();
         }
 
         // 設定日期選擇器
@@ -192,7 +196,12 @@
         function getTransactionRecords() {
             let type = $("#transaction-type").val();
             let historyTime = $("#historyTime").val();
-            let formattedTime = formatDate(new Date(historyTime));
+            let formattedTime;
+            if (historyTime === "") {
+                formattedTime = "";
+            } else {
+                formattedTime = formatDate(new Date(historyTime));
+            }
 
             $.ajax({
                 url: `/api/wallets?walletCategory=${type}&search=${formattedTime}`,
@@ -221,7 +230,7 @@
             pageRecords.forEach(record => {
                 let row = `<tr>
                         <td>${getTypeName(record.changeType)}</td>
-                        <td>${record.changeTime}</td>
+                        <td>${format(new Date(record.changeTime))}</td>
                         <td>${record.changeAmount}</td>
                     </tr>`;
                 tbody.append(row);
@@ -254,6 +263,13 @@
             getTransactionRecords();
         });
 
+        // 當點擊重置按鈕時，重置篩選條件並重新加載資料
+        $("#resetFilters").on("click", function () {
+            $("#transaction-type").val("");
+            $("#historyTime").val("");
+            getTransactionRecords();
+        });
+
         // 獲取交易種類名稱
         function getTypeName(changeType) {
             let types = {
@@ -263,8 +279,7 @@
                 "REFUND": "退款",
                 "DEPOSIT": "入帳",
                 "FEE": "手續費",
-                "TEST": "系統",
-                "MARKET": "市集"
+                "MARKET": "市集報名費"
             };
             return types[changeType];
         }
@@ -286,6 +301,18 @@
         $("#btn-withdraw-records").click(function () {
             window.location.href = "/member/walletWithdrawHistory";
         });
+
+        // 格式化日期時間的函數
+        function format(date) {
+            let year = date.getFullYear();
+            let month = ('0' + (date.getMonth() + 1)).slice(-2);
+            let day = ('0' + date.getDate()).slice(-2);
+            let hours = ('0' + date.getHours()).slice(-2);
+            let minutes = ('0' + date.getMinutes()).slice(-2);
+            let seconds = ('0' + date.getSeconds()).slice(-2);
+
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
     });
 </script>
 </body>
