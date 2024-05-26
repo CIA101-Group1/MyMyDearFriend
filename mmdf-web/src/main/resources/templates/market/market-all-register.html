@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的報名紀錄</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .record-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .record-table th, .record-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .record-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .record-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--報名紀錄區域開始-->
+<div class="registration_records">
+    <div class="container">
+        <h2>我的報名紀錄</h2>
+        <table class="record-table">
+            <thead>
+            <tr>
+                <th>活動名稱</th>
+                <th>活動開始日期</th>
+                <th>活動結束日期</th>
+                <th>地點</th>
+                <th>費用</th>
+                <th>報名日期</th>
+            </tr>
+            </thead>
+            <tbody id="recordsTableBody">
+            <!-- AJAX 获取的报名记录将在这里显示 -->
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--報名紀錄區域結束-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        if (!memberId || !authorization) {
+            window.location.href = '/member/login';
+            return;
+        }
+
+        // 使用 AJAX 获取报名记录
+        $.ajax({
+            url: `/api/market/allRegister`,
+            type: 'GET',
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.code === "0") {
+                    let records = response.data;
+                    let recordsTableBody = $('#recordsTableBody');
+
+                    // 清除之前的内容
+                    recordsTableBody.empty();
+
+                    // 创建报名记录的 HTML 并添加到页面中
+                    records.forEach(record => {
+                        let recordHtml = `
+                            <tr>
+                                <td>${record.marketName}</td>
+                                <td>${formatDate(record.marketStart)}</td>
+                                <td>${formatDate(record.marketEnd)}</td>
+                                <td>${record.marketLocation}</td>
+                                <td>${record.marketFee}</td>
+                                <td>${formatDate(record.registrationDate)}</td>
+                            </tr>
+                        `;
+                        recordsTableBody.append(recordHtml);
+                    });
+                } else {
+                    console.error('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+    });
+
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+</script>
+</body>
+</html>
