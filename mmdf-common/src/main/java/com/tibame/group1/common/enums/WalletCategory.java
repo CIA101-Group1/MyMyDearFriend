@@ -16,19 +16,19 @@ public enum WalletCategory {
 
     TOP_UP("1", "儲值成功"),
 
-    WITHDRAWAL("2", "提領成功"),
+    WITHDRAW("2", "提款成功"),
 
     REFUND("3", "退款完成"),
 
-    DEPOSIT("4", "入帳申請"),
+    DEPOSIT("4", "入帳成功"),
 
-    FEE("5", "手續費"),
+    FEE("5", "扣手續費"),
 
-    TEST("6", "測試用"),
+    TEST("6", "測試使用"),
 
-    WITHDRAW("7", "提款"),
+    MARKET("7", "市集報名費"),
 
-    MARKET("8", "市集報名費");
+    WITHDRAWAL("8", "XXX");
 
     private final String code;
     private final String message;

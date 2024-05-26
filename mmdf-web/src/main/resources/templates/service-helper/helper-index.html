@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服訊息</title>
+    <!-- 引入 Bootstrap CSS 文件 -->
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    <!-- 外部 CSS 文件 -->
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <link rel="stylesheet" type="text/css" href="/service-helper/css/service-helper.css">
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--&lt;!&ndash;breadcrumb&ndash;&gt;-->
+<!--<th:block th:replace="~{/fragments/breadcrumb}"/>-->
+<!-- 聊天界面 --><!--style="margin-left: 50vh; margin-right: 50vh "-->
+<div class="container_helper" >
+    <!-- 標題 -->
+    <div class="row mt-3">
+        <div class="col text-center">
+            <h1 class="text-primary" id="text-primarys">智能客服</h1>
+        </div>
+    </div>
+    <!-- 訊息顯示區域 --><!-- style="height: 60vh"-->
+    <div class="row mt-3">
+        <div id="chat-messages" class="col border p-3"></div>
+    </div>
+    <!-- 訊息輸入區域 -->
+    <div class="row mt-3">
+        <div class="col">
+            <input type="text" id="message-input" class="form-control" placeholder="輸入訊息...">
+        </div>
+        <div class="col-auto">
+            <button id="send-button" class="btn btn-primary">發送</button>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<!-- 引入 Bootstrap JS 文件 -->
+<script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+<!-- 外部 JavaScript 文件 -->
+<script src="/service-helper/js/service-helper.js"></script>
+</body>
+</html>
