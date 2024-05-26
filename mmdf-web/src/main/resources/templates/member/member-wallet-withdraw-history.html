@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>申請提領紀錄</title>
-  <!-- Favicon -->
-  <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-  <!--css-->
-  <th:block th:replace="~{/fragments/css}"/>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
 </head>
 <body>
 <!--header-->
@@ -17,41 +17,49 @@
 
 <!-- main start -->
 <section class="main_content_area">
-  <div class="container">
-    <div class="account_dashboard">
-      <div class="row">
-        <!-- Sidebar -->
-        <th:block th:replace="~{/fragments/sidebar-member-home}"/>
-        <div class="col-sm-12 col-md-9 col-lg-9">
-          <!-- Tab panes -->
-          <div class="tab-content dashboard_content">
-            <div class="tab-pane fade active" id="account-details">
-
+    <div class="container">
+        <div class="account_dashboard">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <div class="container mt-5">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>申請提領紀錄</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>申請時間</th>
+                                                <th>申請提領金額</th>
+                                                <th>狀態</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="transaction-records">
+                                            <!-- 申請紀錄將會被插入這裡 -->
+                                            </tbody>
+                                        </table>
+                                        <nav>
+                                            <ul class="pagination justify-content-center" id="pagination">
+                                                <!-- 分頁按鈕將會被插入這裡 -->
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 <!-- main end -->
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">提示</h5>
-      </div>
-      <div class="modal-body" id="modalBody">
-        <!-- 錯誤訊息將顯示在這裡 -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
@@ -60,5 +68,85 @@
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
+<script>
+    let userData = {};
+    let errorMessage = "";
+    $(document).ready(function () {
+        const recordsPerPage = 5;
+        let currentPage = 1;
+
+        // 初始化頁面
+        init();
+
+        // 初始化頁面
+        function init() {
+            currentPage = 1;
+            // getTransactionRecords();
+        }
+
+        // 獲取交易紀錄
+        function getTransactionRecords() {
+            $.ajax({
+                url: "/api/wallets",
+                method: "get",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    renderRecords(response);
+                    setupPagination(response);
+                },
+                error(xhr, status, error) {
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        }
+
+        // 渲染申請紀錄
+        function renderRecords(response) {
+            let tbody = $("#transaction-records");
+            tbody.empty();
+            let start = (currentPage - 1) * recordsPerPage;
+            let end = start + recordsPerPage;
+            let pageRecords = response.slice(start, end);
+            pageRecords.forEach(record => {
+                let row = `<tr>
+                        <td>${record.time}</td>
+                        <td>${record.changeAmount}</td>
+                        <td>${record.status}</td>
+                    </tr>`;
+                tbody.append(row);
+            });
+        }
+
+        // 設置分頁按鈕
+        function setupPagination(response) {
+            let totalPages = Math.ceil(response.length / recordsPerPage);
+            let pagination = $("#pagination");
+            pagination.empty();
+            for (let i = 1; i <= totalPages; i++) {
+                let pageItem = `<li class="page-item ${i === currentPage ? "active" : ""}">
+                        <a class="page-link" href="#">${i}</a>
+                    </li>`;
+                pagination.append(pageItem);
+            }
+        }
+
+        // 分頁按鈕綁定點擊事件
+        $(".page-link").on("click", function (e) {
+            e.preventDefault();
+            currentPage = parseInt($(this).text());
+            renderRecords(response);
+            setupPagination();
+        });
+
+        // 分頁按鈕點擊事件
+        $(document).on("click", ".page-link", function () {
+            let page = $(this).data("page");
+            getTransactionRecords(page);
+        });
+    });
+</script>
 </body>
 </html>
