@@ -293,6 +293,11 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
+                    <a th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE}">
+                        <button type="button" class="btn btn-danger  ml-2" id="status">
+                            送出審核結果&#x1F514;
+                        </button>
+                    </a>
                 </nav>
 
                 <div class="container">
@@ -339,7 +344,7 @@
                                 </tr>
                                 </thead>
                                 <tbody id="product-tbody">
-                                <tr th:each="product : ${productPage.content}"  th:if="${product.reviewStatus != 1}">
+                                <tr th:each="product : ${productPage.content}" th:if="${product.reviewStatus == 0}">
                                     <td th:text="${product.productId}" id="productId">1</td>
                                     <td th:text="${product.productCategoryEntity.categoryName}">
                                     </td>
@@ -387,28 +392,60 @@
                                         <input type="hidden" th:value="${product.reviewStatus}"
                                                id="hiddenmiss">
                                     </td>
-
                                 </tr>
                                 </tbody>
                             </table>
+
+
+                            <!-- 模态框 -->
+                            <div class="modal fade" id="failReasonModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="failReasonModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="failReasonModalLabel">填寫失敗原因</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="failReasonTextarea">失敗原因：</label>
+                                                <textarea class="form-control" id="failReasonTextarea"
+                                                          rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" id="closeBtn"
+                                                    data-dismiss="modal">取消
+                                            </button>
+                                            <button type="button" class="btn btn-danger" id="confirmFailReasonBtn">
+                                                確定
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <nav>
                                 <ul class="pagination">
                                     <li class="page-item"
                                         th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/admin/product/review(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                           th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
                                     </li>
                                     <li class="page-item"
                                         th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
                                         th:classappend="${productPage.number == i} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{/admin/product/review(page=${i}, size=${productPage.size})}"
+                                           th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE(page=${i}, size=${productPage.size})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
                                     <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/admin/product/review(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                           th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
                                     </li>
                                     <li class="page-item">
                                         <form th:action="@{/admin/product/review}" method="get">
@@ -450,17 +487,14 @@
             console.log(reviewStatusValue);
 
             $.ajax({
-                url: "/api/seller/product/updateReviewStatus",
+                url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
                 method: "PUT",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
                 data: {
                     productId: productId,
                     reviewStatus: 1
                 },
-                success(response) {
-                            console.log(response);
+                success: function (response) {
+                    console.log(response);
                 },
                 error: function (error) {
                     alert("伺服器連線失敗: " + error);
@@ -475,34 +509,31 @@
 
             // 发送 Ajax 请求
             $.ajax({
-                url: '/api/product/query',
+                url: '/api/product/query?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE',
                 type: 'GET',
                 data: formData,
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
-                success(response) {
-                            console.log(response);
-                            // 清空表格数据
-                            $('#products tbody').empty();
-                            if (response.code === "0") {
-                                alert('搜索成功');
-                                $('#searchModal').modal('hide');
-                                // 遍历搜索结果并显示到页面上
-                                response.data.forEach(function (product) {
-                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
-                                    var reviewStatusTexts = {
-                                        "0": "審核中",
-                                        "1": "通過",
-                                        "2": "未通過"
-                                    };
-                                    var productStatusTexts = {
-                                        "0": "下架",
-                                        "1": "上架"
-                                    }
+                success: function (response) {
+                    console.log(response);
+                    // 清空表格数据
+                    $('#products tbody').empty();
+                    if (response.code === "0") {
+                        alert('搜索成功');
+                        $('#searchModal').modal('hide');
+                        // 遍历搜索结果并显示到页面上
+                        response.data.forEach(function (product) {
+                            var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                            var reviewStatusTexts = {
+                                "0": "審核中",
+                                "1": "通過",
+                                "2": "未通過"
+                            };
+                            var productStatusTexts = {
+                                "0": "下架",
+                                "1": "上架"
+                            }
 
-                                    // 添加商品行到表格
-                                    $('#products tbody').append(`
+                            // 添加商品行到表格
+                            $('#products tbody').append(`
                                         <tr>
                                             <td>${product.productId}</td>
                                             <td>${product.productCategoryEntity.categoryName}</td>
@@ -535,45 +566,38 @@
                                             </td>
                                         </tr>
                                     `);
-                                });
+                        });
 
-                                $("#product-tbody").on("click", ("#yes"), function () {
-                                    var productId = $("#yes").data("product-id");
+                        $("#product-tbody").on("click", ("#yes"), function () {
+                            var productId = $("#yes").data("product-id");
 
-                                    // 使用 jQuery 的 val() 方法來獲取 input 元素的值
-                                    var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
+                            // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+                            var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
 
-                                    console.log(reviewStatusValue);
+                            console.log(reviewStatusValue);
 
-                                    $.ajax({
-                                        url: "/api/seller/product/updateReviewStatus",
-                                        method: "PUT",
-                                        headers: {
-                                            "authorization": localStorage.getItem("authorization")
-                                        },
-                                        data: {
-                                            productId: productId,
-                                            reviewStatus: 1
-                                        },
-                                        success(response) {
-                                            apiResponseJSON(response, {
-                                                onSuccess(data) {
-                                                    button.removeClass("btn-primary").addClass("btn-success");
-                                                    console.log(data);
-                                                    window.location.reload();
-                                                }
-                                            });
-                                        },
-                                        error: function (error) {
-                                            alert("伺服器連線失敗: " + error);
-                                        }
-                                    });
-                                });
+                            $.ajax({
+                                url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+                                method: "PUT",
+                                data: {
+                                    productId: productId,
+                                    reviewStatus: 1
+                                },
+                                success: function (response) {
+                                    button.removeClass("btn-primary").addClass("btn-success");
+                                    console.log(response);
+                                    // window.location.reload();
+                                },
+                                error: function (error) {
+                                    alert("伺服器連線失敗: " + error);
+                                }
+                            });
+                        });
 
-                            } else {
-                                alert('搜索失败！' + response.message);
-                                console.log(response);
-                            }
+                    } else {
+                        alert('搜索失败！' + response.message);
+                        console.log(response);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
@@ -584,6 +608,152 @@
 
     });
 
+
+    //miss
+
+    $("#miss").click(function () {
+        var memberId = $(this).data("member-id");
+        $('#failReasonModal').data('member-id', memberId).modal('show');
+    });
+
+    $('#confirmFailReasonBtn').click(function () {
+        var productId = $("#miss").data("product-id");
+        var memberId = $('#failReasonModal').data('member-id');
+        var failReason = $('#failReasonTextarea').val();
+
+        // 发送AJAX请求更新数据库和发送通知
+        $.ajax({
+            url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+            type: 'PUT', // 使用POST方法
+            data: {
+                productId: productId,
+                memberId: memberId,
+                failReason: failReason
+            },
+            success: function (response) {
+                // 在成功响应时执行的操作
+                console.log("更新審核成功:", response);
+                // 关闭模态框
+                $('#failReasonModal').modal('hide');
+                // 刷新页面或执行其他操作
+                // window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                $('#closeBtn').click(function () {
+                    $('#failReasonModal').modal('hide');
+                })
+                console.error("更新審核失败:", error);
+            }
+        });
+    });
+
+    // 更新審核狀態
+    $("#product-tbody").on("click", ("#miss"), function () {
+        var productId = $("#miss").data("product-id");
+        var failReason = $('#failReasonTextarea').val();
+
+        // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+        var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
+
+        console.log(reviewStatusValue);
+
+        $.ajax({
+            url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+            method: "PUT",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            data: {
+                productId: productId,
+                reviewStatus: 2
+            },
+            success: function (response) {
+                console.log(response);
+                console.log("Product ID:", productId);
+                console.log("Fail Reason:", failReason);
+                $('#failReasonModal').modal('hide');
+            },
+            error: function (error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+    });
+
+
+    //miss
+
+    //搜索
+
+    $('#searchForm').submit(function (e) {
+        e.preventDefault(); // 阻止表单默认提交
+        // 获取表单数据
+        var formData = $(this).serialize();
+
+        // 发送 Ajax 请求
+        $.ajax({
+            url: '/api/product/query?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE',
+            type: 'GET',
+            data: formData,
+            success: function (response) {
+                console.log(response);
+                // 清空表格数据
+                $('#products tbody').empty();
+                if (response.code === "0") {
+                    alert('搜索成功');
+                    $('#searchModal').modal('hide');
+                    // 遍历搜索结果并显示到页面上
+                    response.data.forEach(function (product) {
+                        var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                        var reviewStatusTexts = {
+                            "0": "審核中",
+                            "1": "通過",
+                            "2": "未通過"
+                        };
+                        var productStatusTexts = {
+                            "0": "下架",
+                            "1": "上架"
+                        }
+
+                        // 添加商品行到表格
+                        $('#products tbody').append(`
+                                        <tr>
+                                            <td>${product.productId}</td>
+                                            <td>${product.productCategoryEntity.categoryName}</td>
+                                            <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
+                                            <td>${product.description}</td>
+                                            <td>${product.price}</td>
+                                            <td>${product.quantity}</td>
+                                            <td>
+                                                <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                            </td>
+                                            <td>${product.sellerId}</td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+                                            <td>${productStatusTexts[product.productStatus]}</td>
+                                            <td>
+                                                <button id="yes" class="btn btn-primary"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核成功
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddentest">
+                                                <label></label>
+                                                <button id="miss" class="btn btn-danger"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核失敗
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddenmiss">
+
+                                            </td>
+                                        </tr>
+                                    `);
+                    });
+                }
+            }
+        });
+    });
+
+    //搜索
 
 
     // 函數：顯示特定標籤的內容

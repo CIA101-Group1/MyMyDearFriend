@@ -49,6 +49,11 @@
             border-color: #28004D; /* 使按鈕的邊框與背景色相同 */
             color: #fff; /* 文字顏色為白色 */
         }
+
+        .error-message {
+            color: red;
+        }
+
     </style>
 
 
@@ -109,7 +114,7 @@
                                         th:text="${category.categoryName}"></option>
                             </select>
                         </div>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -120,7 +125,7 @@
                                pattern=".{1,20}"
                                data-error="格式錯誤，且長度必需在1到20之間"
                                required="required">
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -131,7 +136,7 @@
                                min="0" max="9999999999" step="1"
                                data-error="請填入0-9數字，最多10個位數"
                                required="required">
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -142,7 +147,7 @@
                                min="0" max="9999999999" step="1"
                                data-error="請填入0-9數字，最多10個位數"
                                required="required">
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -153,7 +158,7 @@
                                   pattern=".{1,200}"
                                   data-error="格式錯誤，且長度必需在1到200之間"
                                   required="required"></textarea>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -168,7 +173,7 @@
                             required="required"
                             data-error="請上傳圖片"
                     />
-                    <div class="help-block with-errors"></div>
+                    <div class="help-block with-errors error-message"></div>
                 </div>
 
                 <input type="submit" value="新增" class="btn btn-block custom-orange-btn"/>

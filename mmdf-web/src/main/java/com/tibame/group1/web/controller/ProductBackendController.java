@@ -8,9 +8,11 @@ import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -163,5 +165,10 @@ public class ProductBackendController {
     }
 
 
+    @GetMapping("api/destination")
+    public ResponseEntity<String> redirect(HttpServletRequest request) {
+        System.out.println("收到redirect");
+        return null;
+    }
 
 }

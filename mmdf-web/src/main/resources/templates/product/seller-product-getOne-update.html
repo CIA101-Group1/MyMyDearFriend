@@ -53,6 +53,9 @@
             color: red;
             font-size: 14px;
         }
+        .error-message {
+            color: red;
+        }
     </style>
 
 </head>
@@ -102,7 +105,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -114,7 +117,7 @@
                                required="required"
                                th:value="${productEntity.name}"
                         >
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -126,7 +129,7 @@
                                required="required"
                                th:value="${productEntity.price}"
                         >
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -138,7 +141,7 @@
                                required="required"
                                th:value="${productEntity.quantity}"
                         >
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -151,7 +154,7 @@
                                   required="required"
                                   th:text="${productEntity.description}">
                         </textarea>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
 
@@ -181,7 +184,7 @@
                             required="required"
                             data-error="請上傳圖片"
                     />
-                    <div class="help-block with-errors"></div>
+                    <div class="help-block with-errors error-message"></div>
                 </div>
 
                 <input type="submit" value="修改" class="btn btn-danger btn-block"/>
@@ -307,6 +310,7 @@
                         onSuccess(data) {
                             console.log(data);
                             alert("商品修改成功");
+                            window.location.href = '/product/seller/select';
                         }
                     });
                 },

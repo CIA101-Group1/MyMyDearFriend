@@ -1,34 +1,29 @@
 package com.tibame.group1.admin.service.impl;
 
-import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
+import com.tibame.group1.admin.service.NoticeService;
 import com.tibame.group1.admin.service.ProductService;
-import com.tibame.group1.common.utils.ConvertUtils;
-import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.dto.*;
-import com.tibame.group1.db.entity.ProductCategoryEntity;
-import com.tibame.group1.db.entity.ProductEntity;
-import com.tibame.group1.db.entity.ProductImgEntity;
+import com.tibame.group1.db.entity.*;
 import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//@Service
-//@Transactional(rollbackFor = Exception.class)
 @Slf4j
 @Component
 public class ProductServiceImpl implements ProductService {
+
+//    @Autowired
+//    private NoticeService noticeService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -164,6 +159,9 @@ public class ProductServiceImpl implements ProductService {
         // 根据产品ID从数据库中获取产品对象
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+
+//        MemberEntity member = new MemberEntity();
+//        noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.SYSTEM, "註冊成功", "完成註冊會員", true);
 
         // 更新产品的审核状态 ，上架
         product.setReviewStatus(Integer.valueOf(reviewStatus));

@@ -225,7 +225,6 @@
                                     <div class="modal-body">
                                         <!-- 搜索表单 -->
                                         <form id="searchForm" th:action="@{/api/product/query}" method="get">
-                                            <label><input type="checkbox" name="reviewStatus" value="1" checked disabled>通過</label>
                                             <!-- 商品名称 -->
                                             <div class="form-group">
                                                 <label for="name">商品名稱:</label>
@@ -388,21 +387,21 @@
                                     <li class="page-item"
                                         th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/product/seller/select(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                           th:href="@{/product/seller/status(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
                                     </li>
                                     <li class="page-item"
                                         th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
                                         th:classappend="${productPage.number == i} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{/product/seller/select(page=${i}, size=${productPage.size})}"
+                                           th:href="@{/product/seller/status(page=${i}, size=${productPage.size})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
                                     <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/product/seller/select(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                           th:href="@{/product/seller/status(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
                                     </li>
                                     <li class="page-item">
-                                        <form th:action="@{/product/seller/select}" method="get">
+                                        <form th:action="@{/product/seller/status}" method="get">
                                             <input type="hidden" name="size" th:value="${productPage.size}">
                                             <label>
                                                 <input type="number" name="page" min="0"
