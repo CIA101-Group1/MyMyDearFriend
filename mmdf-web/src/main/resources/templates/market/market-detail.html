@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>活動資料詳情</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定义按钮样式 */
+        .custom-button {
+            background-color: #4CAF50; /* 绿色 */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .event_images img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .event_details .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .event_info p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--活動資料詳情區域開始-->
+<div class="event_details">
+    <div class="container">
+        <div class="row" id="eventDetailsRow">
+            <!-- AJAX 获取的活动详细信息将在这里显示 -->
+        </div>
+    </div>
+</div>
+<!--活動資料詳情區域結束-->
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const marketId = urlParams.get("marketId");
+        const memberId = localStorage.getItem("memberId");
+        // 使用 AJAX 获取活动信息
+        $.ajax({
+            url: `/api/market/detailById?marketId=${marketId}`, // 替换为您的实际 API 端点
+            type: 'GET',
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success: function (response) {
+                if (response.code === "0") {
+                    let market = response.data;
+                    let eventDetailsRow = $('#eventDetailsRow');
+
+                    // 清除之前的内容
+                    eventDetailsRow.empty();
+
+                    // 创建活动详细信息的 HTML 并添加到页面中
+                    let eventHtml = `
+                    <div class="col-lg-12">
+                        <h2>${market.marketName}</h2>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="event_images">
+                            <img src="${market.marketImage}" alt="Event Image">
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="event_info">
+                            <p><strong>活動開始日期:</strong> ${formatDate(market.marketStart)}</p>
+                            <p><strong>活動結束日期:</strong> ${formatDate(market.marketEnd)}</p>
+                            <p><strong>地點:</strong> ${market.marketLocation}</p>
+                            <p><strong>費用:</strong> ${market.marketFee}</p>
+                            <p><strong>開始報名日期:</strong> ${formatDate(market.startDate)}</p>
+                            <p><strong>結束報名日期:</strong> ${formatDate(market.endDate)}</p>
+                            <p><strong>人數上限:</strong> ${market.applicantLimit}</p>
+                            <div class="event_buttons">
+                                <button class="custom-button" id="signupButton" type="button">報名參加</button>
+                            </div>
+                            <div class="event_description">
+                                <p>${market.marketDescription}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    eventDetailsRow.append(eventHtml);
+
+                    // 绑定按钮点击事件
+                    // 監聽報名按鈕的點擊事件
+                    $("#signupButton").click(function () {
+                        // 檢查是否有驗證碼
+                        if (!localStorage.getItem("authorization")) {
+                            // 若無驗證碼，跳轉到登錄頁面
+                            window.location.href = "/member/login";
+                        } else {
+                            // 將會員ID和其他相關數據組合成一個JSON對象
+                            const userData = {
+                                memberId: memberId,
+                                marketId: marketId
+                            }
+                            // 若有驗證碼，將資料回傳到後台
+                            $.ajax({
+                                url: "/api/market/register",
+                                method: "post",
+                                headers: {
+                                    "authorization": localStorage.getItem("authorization")
+                                },
+                                contentType:"application/json",
+                                data: JSON.stringify(userData),
+                                success(response) {
+                                    apiResponseJSON(response,{
+                                        onSuccess(data){
+                                            switch (data.status){
+                                                case "1":
+                                                    // 根據後台返回的回應處理你的UI
+                                                    // 例如，若報名成功，顯示成功消息
+                                                    $("#modalBody").html("報名成功");
+                                                    $("#myModal").modal("show");
+                                                    break;
+                                                // 添加其他 case
+                                            }
+                                        },
+                                        onError(message) {
+                                            console.log(message);
+                                        }
+                                    });
+                                },
+                                error(xhr, status, error) {
+                                    $("#modalBody").html("報名失敗：" + error);
+                                    $("#myModal").modal("show");
+                                }
+                            });
+                        }
+                    });
+                }
+            },
+            error(xhr, status, error) {
+                $("#modalBody").html("伺服器連線失敗: " + error);
+                $("#myModal").modal("show");
+            }
+        });
+    });
+
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+
+
+</script>
+</body>
+</html>
