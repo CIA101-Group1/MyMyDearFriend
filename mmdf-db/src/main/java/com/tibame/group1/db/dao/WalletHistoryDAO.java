@@ -10,7 +10,5 @@ public interface WalletHistoryDAO {
 
   WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId);
 
-  //    Integer createWalletHistory(WalletReqDTO walletReqDTO);
-
   List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
 }

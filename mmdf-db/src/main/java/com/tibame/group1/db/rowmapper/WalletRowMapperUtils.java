@@ -23,7 +23,7 @@ public class WalletRowMapperUtils implements RowMapper<WalletHistoryEntity> {
         WalletCategory category = WalletCategory.valueOf(categoryStr);
         walletHistoryEntity.setChangeType(category);
 
-        walletHistoryEntity.setWalletAmount(resultSet.getInt("wallet_amount"));
+//        walletHistoryEntity.setWalletAmount(resultSet.getInt("wallet_amount"));
 //        walletHistoryEntity.setChangeType(WalletCategory.valueOf(resultSet.getString("change_type")));
 
         return walletHistoryEntity;

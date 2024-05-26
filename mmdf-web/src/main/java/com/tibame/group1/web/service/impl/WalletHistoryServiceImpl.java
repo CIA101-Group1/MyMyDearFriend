@@ -47,6 +47,7 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
 
     // 更新member的walletAmount
     member.setWalletAmount(newWalletAmount);
+    member.setWalletAmount(newWalletAmount);
     memberRepository.save(member);
 
     // 創建新的 WalletHistoryEntity 實體
@@ -55,7 +56,6 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     walletHistory.setChangeAmount(req.getChangeAmount());
     walletHistory.setChangeTime(new Date());
     walletHistory.setChangeType(req.getWalletCategory());
-    walletHistory.setWalletAmount(newWalletAmount);
 
     // 保存 WalletHistoryEntity 實體
     walletHistoryRepository.save(walletHistory);
