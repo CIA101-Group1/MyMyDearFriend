@@ -1,5 +1,4 @@
 package com.tibame.group1.db.entity;
-import com.tibame.group1.common.enums.WalletCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
