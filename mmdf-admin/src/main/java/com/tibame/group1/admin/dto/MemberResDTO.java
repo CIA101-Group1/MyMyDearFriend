@@ -33,7 +33,7 @@ public class MemberResDTO {
 
     private Integer walletAmount;
 
-    private Integer walletAvailableAmount;
+    private Integer walletWithdrawAmount;
 
     private Boolean sellerStatus;
 
