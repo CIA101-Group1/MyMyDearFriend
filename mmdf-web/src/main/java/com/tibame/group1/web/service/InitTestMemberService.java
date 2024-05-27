@@ -1,6 +1,5 @@
 package com.tibame.group1.web.service;
 
-
 import com.tibame.group1.common.utils.CommonUtils;
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.MemberRepository;
@@ -49,7 +48,7 @@ public class InitTestMemberService {
         member.setBirth(new Date());
         member.setTwPersonId(config.getTwPersonId());
         member.setCity("臺北市");
-        member.setAddress("臺北市_中山區_testAccount");
+        member.setAddress("臺北市_中山區_松江路367號");
         member.setIsVerified(true);
         member.setJoinTime(new Date());
         member.setVerifySendingTime(new Date());
@@ -69,11 +68,11 @@ public class InitTestMemberService {
         member.setCid(CommonUtils.encryptToMD5(config.getCid()));
         member.setName(config.getName());
         member.setPhone(config.getPhone());
-        member.setEmail(config.getEmail()  + '2');
+        member.setEmail(config.getEmail() + '2');
         member.setBirth(new Date());
         member.setTwPersonId(config.getTwPersonId());
         member.setCity("臺北市");
-        member.setAddress("臺北市_中山區_testAccount");
+        member.setAddress("臺北市_中正區_忠孝東路1段108號8樓");
         member.setIsVerified(true);
         member.setJoinTime(new Date());
         member.setVerifySendingTime(new Date());
@@ -81,23 +80,23 @@ public class InitTestMemberService {
         member.setWalletAmount(0);
         member.setWalletWithdrawAmount(0);
         member.setWalletCid(config.getWalletCid());
-        member.setWalletQuestion(config.getWalletQuestion());
-        member.setWalletAnswer(config.getWalletAnswer());
+        member.setWalletQuestion("區公所");
+        member.setWalletAnswer("中正區公所");
         member.setSellerStatus(false);
         memberRepository.save(member);
         log.info("完成初始化測試使用者2");
 
         // 建立測試使用者資料
         member = new MemberEntity();
-        member.setMemberAccount(config.getMemberAccount()  + '3');
+        member.setMemberAccount(config.getMemberAccount() + '3');
         member.setCid(CommonUtils.encryptToMD5(config.getCid()));
         member.setName(config.getName());
         member.setPhone(config.getPhone());
-        member.setEmail(config.getEmail()  + '3');
+        member.setEmail(config.getEmail() + '3');
         member.setBirth(new Date());
         member.setTwPersonId(config.getTwPersonId());
         member.setCity("臺北市");
-        member.setAddress("臺北市_中山區_testAccount");
+        member.setAddress("臺北市_信義區_信義路五段15號6樓");
         member.setIsVerified(true);
         member.setJoinTime(new Date());
         member.setVerifySendingTime(new Date());
@@ -105,8 +104,8 @@ public class InitTestMemberService {
         member.setWalletAmount(0);
         member.setWalletWithdrawAmount(0);
         member.setWalletCid(config.getWalletCid());
-        member.setWalletQuestion(config.getWalletQuestion());
-        member.setWalletAnswer(config.getWalletAnswer());
+        member.setWalletQuestion("區公所");
+        member.setWalletAnswer("信義區公所");
         member.setSellerStatus(false);
         memberRepository.save(member);
         log.info("完成初始化測試使用者3");
