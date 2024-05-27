@@ -60,9 +60,6 @@
                 <div id="productImages" class="d-flex flex-wrap"></div>
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-            </div>
         </div>
     </div>
 </div>
@@ -91,11 +88,14 @@
 
     function fetchBidProducts() {
         $.ajax({
-            url: API_URL,
+            url: "/api/bidproduct",
             type: "GET",
             headers: {
                 "authorization": localStorage.getItem("authorization")
             },
+            // data: {
+            //     "authorization": localStorage.getItem("authorization")
+            // },
             success: function (response) {
                 console.log(response);
                 $('#bidProductTable').dataTable({
@@ -168,8 +168,11 @@
 
     function viewProduct(productId) {
         $.ajax({
-            url: `${API_URL}/${productId}`,
+            url: `/api/bidproduct/${productId}`,
             type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
             success: function (response) {
                 const product = response.data;
                 $('#productId').text(product.productId);

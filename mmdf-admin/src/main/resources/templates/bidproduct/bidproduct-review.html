@@ -55,14 +55,11 @@
                 <p><strong>商品分類：</strong><span id="category"></span></p>
                 <p><strong>商品狀況：</strong><span id="condition"></span></p>
                 <p><strong>起標價：</strong><span id="startPrice"></span></p>
+                <p><strong>競標時間長度：</strong><span id="duration"></span><span>天</span></p>
                 <p><strong>商品狀態：</strong><span id="status"></span></p>
                 <p><strong>最近更新時間：</strong><span id="lastModified"></span></p>
                 <!-- <p><strong>商品圖片：</strong><span id="images"></span></p> -->
                 <div id="productImages" class="d-flex flex-wrap"></div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
             </div>
         </div>
     </div>
@@ -115,6 +112,8 @@
     const API_URL = "/api/bidproduct";
     let myDataTable;
     let PRODUCT_ID;
+    let AUTHORIZATION = localStorage.getItem("authorization")
+
 
     $(document).ready(function () {
         fetchBidProductsNeedReview();
@@ -204,8 +203,11 @@
 
     function viewProduct(productId) {
         $.ajax({
-            url: `${API_URL}/${productId}`,
+            url: `/api/bidproduct/${productId}`,
             type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
             success: function (response) {
                 const product = response.data;
                 $('#productId').text(product.productId);
@@ -214,6 +216,7 @@
                 $('#category').text(product.category.categoryName);
                 $('#condition').text(product.condition.conditionName);
                 $('#startPrice').text(product.startPrice);
+                $('#duration').text(product.duration);
                 $('#status').text(product.status);
                 $('#lastModified').text(product.lastModified);
                 // 商品圖片
@@ -235,6 +238,9 @@
         $.ajax({
             url: `/api/bidproduct/${PRODUCT_ID}`,
             type: "PUT",
+            headers: {
+                "authorization": localStorage.getItem("authorization"),
+            },
             data: {
                 status: -1
             },
@@ -258,6 +264,9 @@
             $.ajax({
                 url: `/api/bidproduct/${productId}`,
                 type: "PUT",
+                headers: {
+                    "authorization": localStorage.getItem("authorization"),
+                },
                 data: {
                     status: 1
                 },
