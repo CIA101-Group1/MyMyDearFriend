@@ -16,4 +16,6 @@ public interface WalletHistoryService {
     WalletCreateResDTO walletHistoryCreate(WalletCreateReqDTO req, LoginSourceDTO loginSource);
 
     List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
+
+    WalletWithdrawResDTO walletRequestCreate(WalletWithdrawReqDTO req, LoginSourceDTO loginSource);
 }

@@ -28,7 +28,4 @@ public class WalletHistoryEntity {
 
   @Column(name = "change_type", nullable = false)
   private WalletCategory changeType;
-
-  @Column(name = "wallet_amount", nullable = false)
-  private Integer walletAmount;
 }
