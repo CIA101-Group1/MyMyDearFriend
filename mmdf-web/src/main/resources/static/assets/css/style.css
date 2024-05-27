@@ -848,6 +848,8 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 /*header css heer*/
 .main_header {
   padding: 32px 60px;
+  /*border-bottom: 1px solid #e5e5e5;*/
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.11);
 }
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
   .main_header {
