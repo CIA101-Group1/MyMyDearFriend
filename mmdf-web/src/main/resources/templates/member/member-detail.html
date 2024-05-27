@@ -213,7 +213,11 @@
                                 $("#phone").val(data.phone);
                                 $("#email").val(data.email);
                                 $("#birth").text(data.birth);
-                                $("#twPersonId").text(data.twPersonId);
+                                // 設定顯示的後幾位字元數
+                                let visibleChars = 4;
+                                // 生成遮蔽後的身份證字號
+                                let maskedTwPersonId = "*".repeat(data.twPersonId.length - visibleChars) + data.twPersonId.slice(-visibleChars);
+                                $("#twPersonId").text(maskedTwPersonId);
                                 fillAddress(data.address);
 
                                 let base64Image = data.imageBase64 ? `data:image/jpeg;base64,${data.imageBase64}` : "/image/default-avatar.png";
