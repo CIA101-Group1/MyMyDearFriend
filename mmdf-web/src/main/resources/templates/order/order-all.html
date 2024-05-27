@@ -50,7 +50,7 @@
                                     <select id="orderCategory" class="form-control">
                                         <option value="BUYER">買家</option>
                                         <option value="SELLER">賣家</option>
-                                        <option value="BOTH">全部</option>
+                                        <option value="BOTH">所有</option>
                                     </select>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
         const recordsPerPage = 5;
 
         // 發送 AJAX 請求的函數
-        function fetchOrders(identity) {
+            function fetchOrders(identity) {
             // 切換類型時將頁碼重置為1
             currentPage = 1;
             $.ajax({
@@ -225,7 +225,7 @@
                                     <tr><th>電話</th><td>${order.phone}</td></tr>
                                     <tr><th>寄送地址</th><td>${order.address}</td></tr>
                                     <tr><th>優惠前價格</th><td>${order.priceBeforeDiscount}</td></tr>
-                                    <tr><th>優惠金額</th><td>${order.discount}</td></tr>
+                                    <tr><th>優惠金額</th><td>${order.discount? order.discount : 0}</td></tr>
                                     <tr><th>訂單實付金額</th><td>${order.priceAfterDiscount}</td></tr>
                                 </tbody>
                             </table>
