@@ -39,9 +39,6 @@
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
-<!--breadcrumb-->
-<th:block th:replace="~{/fragments/breadcrumb}"/>
-
 <!-- main start  -->
 <section class="main_content_area">
     <div class="container">
@@ -127,23 +124,6 @@
     </div>
 </section>
 <!-- main end   -->
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 錯誤訊息將顯示在這裡 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>

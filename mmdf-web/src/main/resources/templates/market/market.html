@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>線下市集活動列表</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .market {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .market:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .market img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            max-height: 200px; /* 限制图片高度 */
+            border: 2px solid #fff; /* 白色底框 */
+            display: block;
+            margin: 0 auto; /* 置中 */
+        }
+        .market h2 {
+            color: #333;
+            font-size: 18px; /* 调整活动标题大小 */
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            overflow: hidden; /* 超出部分隐藏 */
+            text-overflow: ellipsis; /* 超出部分用省略号表示 */
+            white-space: nowrap; /* 不换行 */
+        }
+        .market p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .market .icons {
+            margin-left: 10px;
+        }
+        .market .icons i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+<!--market area start-->
+<div class="market_area market_reverse mt-100 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-12">
+                <!--sidebar widget start-->
+                <aside class="sidebar_widget">
+                    <div class="widget_inner">
+                        <div class="widget_list widget_search">
+                            <div class="widget_title">
+                                <h3>市集搜尋</h3>
+                            </div>
+                            <form action="#">
+                                <input type="text">
+                                <button type="submit">搜尋</button>
+                            </form>
+                        </div>
+                    </div>
+                </aside>
+                <!--sidebar widget end-->
+            </div>
+            <div class="col-lg-9 col-md-12">
+                <!--market toolbar start-->
+                <div class="market_toolbar_wrapper">
+                    <div class="market_toolbar_btn">
+                        <h4>市集活動</h4>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="niceselect_option">
+                            <form class="select_option" action="#">
+                                <select name="orderby" id="short">
+                                    <option selected value="1">市集活動排序</option>
+                                    <option value="2">報名中</option>
+                                    <option value="3">即將開始報名</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--market toolbar end-->
+                <div class="row" id="marketList">
+                    <!-- 市集内容将通过 AJAX 动态生成并插入到这里 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<!-- Font Awesome Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Custom Script -->
+<script>
+    $(document).ready(function () {
+        // AJAX get all market events
+        $.ajax({
+            url: '/api/market',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.code === "0") {
+                    console.log(response)
+                    let market = response.data;
+                    let marketList = $('#marketList');
+
+                    // Clear any existing market events
+                    marketList.empty();
+
+                    // Append each market event to the market list
+                    $.each(market, function (index, market) {
+                        let marketHtml = `
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                                    <div class="market" onclick="location.href='/detail-page-url/${market.id}'">
+                                        <img src="${market.marketImage}" alt="市集活動圖片">
+                                        <h2>
+                                            <span>${market.marketName}</span>
+                                            <span class="icons">
+                                                <i class="fas fa-pencil-alt" title="我要報名"></i>
+                                                <i class="fas fa-info-circle" title="查看詳情"></i>
+                                            </span>
+                                        </h2>
+                                        <p>日期: ${formatDate(market.marketStart)}</p>
+                                    </div>
+                                </div>
+                            `;
+                        marketList.append(marketHtml);
+                    });
+                } else {
+                    console.error('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+
+        });
+
+
+    });
+    // 格式化日期
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+
+
+</script>
+</body>
+</html>

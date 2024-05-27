@@ -13,6 +13,7 @@ import java.util.Date;
 public class MarketEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "market_id")
     private Integer marketId;
 
     @Column(name = "market_name",nullable = false,length = 20)

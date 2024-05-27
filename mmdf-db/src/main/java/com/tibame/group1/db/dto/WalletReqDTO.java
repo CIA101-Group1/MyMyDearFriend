@@ -5,21 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 public class WalletReqDTO {
 
+  @NotNull private Integer changeAmount;
 
-  @NotNull
-  private Integer memberID;
+  @NotNull private WalletCategory changeType;
 
-  @NotNull
-  private Integer changeAmount;
-
-  @NotNull
-  private WalletCategory changeType;
-
-  @NotNull
-  private Integer totalAmount;
+  @NotNull private Integer memberID;
 }
