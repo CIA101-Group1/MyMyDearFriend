@@ -1,4 +1,5 @@
 package com.tibame.group1.db.entity;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,11 +27,11 @@ public class WalletRequestEntity {
   private String status;
 
   @Column(name = "account", nullable = false)
-  private Integer account;
+  private String account;
 
   @Column(name = "request_date", nullable = false)
   private Date requestDate;
 
-  @Column(name = "done_date", nullable = false)
+  @Column(name = "done_date")
   private Date doneDate;
 }
