@@ -12,32 +12,86 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        /* 自定义按钮样式 */
-        .custom-button {
-            background-color: #4CAF50; /* 绿色 */
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
 
-        .event_images img {
-            max-width: 100%;
-            height: auto;
+        .blog_wrapper {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        .event_details .row {
+        .single_blog {
+            margin-bottom: 20px;
+        }
+
+        .event-title {
+            font-size: 36px; /* 调大字体大小 */
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center; /* 标题居中 */
+            color: #333;
+            word-wrap: break-word; /* 允许长标题换行 */
+            overflow-wrap: break-word;
+            white-space: normal; /* 确保标题不会被截断 */
+            width: 100%; /* 确保标题容器宽度 */
+            padding: 10px 0; /* 增加上下内边距 */
+        }
+
+        .event-meta {
+            color: #888;
+            margin-bottom: 20px;
             display: flex;
+            justify-content: space-between;
             flex-wrap: wrap;
         }
 
-        .event_info p {
+        .event-meta span {
+            margin-right: 10px;
+        }
+
+        .event-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .event-details {
+            margin-bottom: 20px;
+        }
+
+        .event-details p {
             margin: 10px 0;
+        }
+
+        .event-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .custom-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .custom-button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-content {
+            text-align: center;
         }
     </style>
 </head>
@@ -46,17 +100,38 @@
 <th:block th:replace="~{/fragments/header}"/>
 
 <!--活動資料詳情區域開始-->
-<div class="event_details">
-    <div class="container">
-        <div class="row" id="eventDetailsRow">
-            <!-- AJAX 获取的活动详细信息将在这里显示 -->
+<div class="blog_wrapper blog_wrapper_details">
+    <article class="single_blog">
+        <div class="event-title" id="eventTitle"></div>
+        <div class="event-meta" id="eventMeta"></div>
+        <div class="event-image" id="eventImage"></div>
+        <div class="event-details" id="eventDetails"></div>
+        <div class="event-buttons">
+            <button class="custom-button" id="signupButton">報名參加</button>
         </div>
-    </div>
+    </article>
 </div>
 <!--活動資料詳情區域結束-->
 
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
@@ -67,6 +142,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const marketId = urlParams.get("marketId");
         const memberId = localStorage.getItem("memberId");
+
         // 使用 AJAX 获取活动信息
         $.ajax({
             url: `/api/market/detailById?marketId=${marketId}`, // 替换为您的实际 API 端点
@@ -77,55 +153,37 @@
             success: function (response) {
                 if (response.code === "0") {
                     let market = response.data;
-                    let eventDetailsRow = $('#eventDetailsRow');
 
-                    // 清除之前的内容
-                    eventDetailsRow.empty();
+                    // 设置活动标题和元数据
+                    $('#eventTitle').text(market.marketName);
+                    $('#eventMeta').html(`<span>活動開始日期: ${formatDate(market.marketStart)}</span> <span>活動結束日期: ${formatDate(market.marketEnd)}</span>`);
 
-                    // 创建活动详细信息的 HTML 并添加到页面中
-                    let eventHtml = `
-                    <div class="col-lg-12">
-                        <h2>${market.marketName}</h2>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="event_images">
-                            <img src="${market.marketImage}" alt="Event Image">
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="event_info">
-                            <p><strong>活動開始日期:</strong> ${formatDate(market.marketStart)}</p>
-                            <p><strong>活動結束日期:</strong> ${formatDate(market.marketEnd)}</p>
-                            <p><strong>地點:</strong> ${market.marketLocation}</p>
-                            <p><strong>費用:</strong> ${market.marketFee}</p>
-                            <p><strong>開始報名日期:</strong> ${formatDate(market.startDate)}</p>
-                            <p><strong>結束報名日期:</strong> ${formatDate(market.endDate)}</p>
-                            <p><strong>人數上限:</strong> ${market.applicantLimit}</p>
-                            <div class="event_buttons">
-                                <button class="custom-button" id="signupButton" type="button">報名參加</button>
-                            </div>
-                            <div class="event_description">
-                                <p>${market.marketDescription}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                    eventDetailsRow.append(eventHtml);
+                    // 设置活动图片
+                    $('#eventImage').html(`<img src="${market.marketImage}" alt="Event Image">`);
 
-                    // 绑定按钮点击事件
-                    // 監聽報名按鈕的點擊事件
+                    // 设置活动详细信息
+                    $('#eventDetails').html(`
+                        <p><strong>地點:</strong> ${market.marketLocation}</p>
+                        <p><strong>費用:</strong> ${market.marketFee}</p>
+                        <p><strong>開始報名日期:</strong> ${formatDate(market.startDate)}</p>
+                        <p><strong>結束報名日期:</strong> ${formatDate(market.endDate)}</p>
+                        <p><strong>人數上限:</strong> ${market.applicantLimit}</p>
+                        <p>${market.marketDescription}</p>
+                    `);
+
+                    // 绑定报名按钮点击事件
                     $("#signupButton").click(function () {
-                        // 檢查是否有驗證碼
+                        // 检查是否有验证码
                         if (!localStorage.getItem("authorization")) {
-                            // 若無驗證碼，跳轉到登錄頁面
+                            // 若无验证码，跳转到登录页面
                             window.location.href = "/member/login";
                         } else {
-                            // 將會員ID和其他相關數據組合成一個JSON對象
+                            // 将会员ID和其他相关数据组合成一个JSON对象
                             const userData = {
                                 memberId: memberId,
                                 marketId: marketId
                             }
-                            // 若有驗證碼，將資料回傳到後台
+                            // 若有验证码，将数据回传到后台
                             $.ajax({
                                 url: "/api/market/register",
                                 method: "post",
@@ -135,20 +193,17 @@
                                 contentType:"application/json",
                                 data: JSON.stringify(userData),
                                 success(response) {
-                                    apiResponseJSON(response,{
-                                        onSuccess(data){
-                                            switch (data.status){
-                                                case "1":
-                                                    // 根據後台返回的回應處理你的UI
-                                                    // 例如，若報名成功，顯示成功消息
-                                                    $("#modalBody").html("報名成功");
-                                                    $("#myModal").modal("show");
-                                                    break;
-                                                // 添加其他 case
-                                            }
+                                    apiResponseJSON(response, {
+                                        onSuccess(data) {
+                                            $("#modalBody").html("報名成功");
+                                            $("#myModal").modal("show");
+                                            setTimeout(function () {
+                                                window.location.href = `/market/all/register?memberId=${memberId}`;
+                                            }, 10000);
                                         },
                                         onError(message) {
-                                            console.log(message);
+                                            $("#modalBody").html(message);
+                                            $("#myModal").modal("show");
                                         }
                                     });
                                 },
@@ -166,6 +221,10 @@
                 $("#myModal").modal("show");
             }
         });
+
+        $("#closeModalBtn").click(function () {
+            $("#myModal").modal("hide");
+        });
     });
 
     function formatDate(dateString) {
@@ -174,8 +233,6 @@
         const day = dateString.substring(6, 8);
         return `${year}-${month}-${day}`;
     }
-
-
 </script>
 </body>
 </html>
