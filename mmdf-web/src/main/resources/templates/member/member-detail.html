@@ -126,10 +126,6 @@
                                                 <input type="text" id="address" name="name"
                                                        placeholder="請接續填寫剩餘地址資訊">
                                             </div>
-                                            <div>
-                                                <label for="score">我的評分：</label>
-                                                <div id="score"></div>
-                                            </div>
 
                                             <!-- 顯示大頭照和修改按鈕 -->
                                             <div id="profile-image-container">
@@ -219,19 +215,6 @@
                                 $("#birth").text(data.birth);
                                 $("#twPersonId").text(data.twPersonId);
                                 fillAddress(data.address);
-
-                                let scoreNumber = data.scoreNumber;
-                                let scoreSum = data.scoreSum;
-                                if (scoreNumber !== null) {
-                                    let number = parseInt(scoreNumber);
-                                    let sum = parseInt(scoreSum);
-                                    if (number !== 0) {
-                                        let score = sum / number;
-                                        $("#score").text(score);
-                                    }
-                                } else {
-                                    $("#score").text("無，尚未啟用賣家資格");
-                                }
 
                                 let base64Image = data.imageBase64 ? `data:image/jpeg;base64,${data.imageBase64}` : "/image/default-avatar.png";
                                 $("#profile-image").attr("src", base64Image);
