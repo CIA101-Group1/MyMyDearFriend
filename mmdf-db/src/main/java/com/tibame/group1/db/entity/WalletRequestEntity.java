@@ -22,8 +22,8 @@ public class WalletRequestEntity {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "account", nullable = false)
-    private Integer account;
+  @Column(name = "account", nullable = false)
+  private String account;
 
     @Column(name = "request_date", nullable = false)
     private Date requestDate;
