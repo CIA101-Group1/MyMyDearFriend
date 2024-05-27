@@ -71,6 +71,7 @@
 <script src="/js/api-response-utils.js"></script>
 <script src="/js/bank-list.js"></script>
 <script>
+    let userData = {};
     let errorMessage = "";
     let bankCodeSelect = $("#bank-code");
     $(document).ready(function () {
@@ -93,24 +94,32 @@
                 $("#myModal").modal("show");
                 return false;
             }
+            userData = {
+                changeAmount: amount,
+                account: bankAccount
+            }
             $("#errorMessage").text("");
-
             $.ajax({
-                url: "/api/wallets/top-up",
+                url: "/api/wallets/withdraw",
                 type: "post",
                 contentType: "application/json",
                 headers: {
                     "authorization": localStorage.getItem("authorization")
                 },
-                data: JSON.stringify(amount),
+                data: JSON.stringify(userData),
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
-                            // switch (data) {
-                            //
-                            // }
-                            $("#modalBody").html("儲值成功");
-                            $("#myModal").modal("show");
+                            switch (data.status) {
+                                case "1":
+                                    $("#modalBody").html("申請成功");
+                                    $("#myModal").modal("show");
+                                    break;
+                                case "-1":
+                                    $("#modalBody").html("該帳號不存在");
+                                    $("#myModal").modal("show");
+                                    break;
+                            }
                         },
                         onError(message) {
                             console.log(message);
