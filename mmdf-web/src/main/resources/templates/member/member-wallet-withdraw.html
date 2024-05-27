@@ -119,6 +119,10 @@
                                     $("#modalBody").html("該帳號不存在");
                                     $("#myModal").modal("show");
                                     break;
+                                case "-2":
+                                    $("#modalBody").html("錢包餘額不足，申請提領失敗");
+                                    $("#myModal").modal("show");
+                                    break;
                             }
                         },
                         onError(message) {
