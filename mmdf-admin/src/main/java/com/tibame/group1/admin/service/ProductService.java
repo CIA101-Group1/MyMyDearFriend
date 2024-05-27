@@ -41,7 +41,7 @@ public interface ProductService {
     HashMap<Integer, String> getProductStatusList();
 
 
-    void updateReviewStatus(int productId, String reviewStatus) throws Exception;
+    void updateReviewStatus(int productId, String reviewStatus, String failReason) throws Exception;
 
     void updateProductStatus(int productId, String reviewStatus) throws Exception;
 

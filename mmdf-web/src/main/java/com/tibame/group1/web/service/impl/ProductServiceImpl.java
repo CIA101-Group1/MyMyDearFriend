@@ -1,15 +1,16 @@
 package com.tibame.group1.web.service.impl;
 
+import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.dto.*;
+import com.tibame.group1.db.entity.*;
+import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
-import com.tibame.group1.db.entity.ProductCategoryEntity;
-import com.tibame.group1.db.entity.ProductEntity;
-import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
+import com.tibame.group1.web.service.NoticeService;
 import com.tibame.group1.web.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -30,6 +31,12 @@ import java.util.stream.Collectors;
 @Transactional(rollbackOn = Exception.class)
 @Slf4j
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private NoticeService noticeService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -214,7 +221,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
     @Override
     public List<ProductImgEntity> getProductImgListByProductId(Integer productId) {
         return productImgRepository.findByProductEntity_ProductId(productId);
@@ -260,8 +266,6 @@ public class ProductServiceImpl implements ProductService {
 //        Optional<ProductEntity> optional = productRepository.findById(productId);
 //        return optional.orElse(null);
 //    }
-
-
     @Override
     public ProductImgEntity getOneProductImg(Integer productId) {
         Optional<ProductImgEntity> optional = productImgRepository.findById(productId);
@@ -364,18 +368,29 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
-    @Override
-    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
-        // 根据产品ID从数据库中获取产品对象
-        ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
-
-        // 更新产品的审核状态 ，上架
-        product.setReviewStatus(Integer.valueOf(reviewStatus));
-
-        // 保存更新后的产品对象回数据库
-        productRepository.save(product);
-    }
+//    @Override
+//    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
+//        // 根据产品ID从数据库中获取产品对象
+//        ProductEntity product = productRepository.findById(productId)
+//                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+//        MemberEntity member = memberRepository.findById(product.getSellerId()).orElse(null);
+//
+//        // 更新产品的审核状态 ，上架
+//        product.setReviewStatus(Integer.valueOf(reviewStatus));
+//
+//        // 保存更新后的产品对象回数据库
+//        productRepository.save(product);
+//
+//        if (null == member) {
+//            throw new CheckRequestErrorException("查無此會員資料");
+//        }
+//        if(reviewStatus.equals("1")) {  //通過
+//            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", "審核成功，商品可進行上下架");
+//        }else if(reviewStatus.equals("0")){  //失敗
+//            var failReason = 0;
+//            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", String.valueOf(failReason));
+//        }
+//    }
 
     @Override
     public void updateProductStatus(int productId, String productStatus) throws Exception {

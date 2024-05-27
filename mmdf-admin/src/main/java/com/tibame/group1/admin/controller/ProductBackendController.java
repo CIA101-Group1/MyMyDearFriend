@@ -69,12 +69,12 @@ public class ProductBackendController {
     @PutMapping("/seller/product/updateReviewStatus")
     @ResponseBody
     public Map<String, String> updateReviewStatus(
-            @RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus) {
+            @RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus, @RequestParam (value = "failReason", required = false) String failReason) {
         Map<String, String> response = new HashMap<>();
         try {
-            productService.updateReviewStatus(productId, reviewStatus);
+            productService.updateReviewStatus(productId, reviewStatus, failReason);
             // 获取更新后的审核状态
-            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
+            String newReviewStatus = productService.getProductReviewStatusList().get(reviewStatus); // 1为审核通过状态
             response.put("reviewStatus", newReviewStatus);
             response.put("success", "審核狀態已成功更新");
         } catch (Exception e) {

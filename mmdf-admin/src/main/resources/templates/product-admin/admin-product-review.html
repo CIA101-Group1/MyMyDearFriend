@@ -7,7 +7,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>查詢會員資料</title>
+    <title>一般商品審核系統</title>
     <th:block th:replace="~{/fragments/css}"/>
     <style>
         /* 自定義表格樣式 */
@@ -124,77 +124,16 @@
 
     <div id="layoutSidenav_content">
 
-        <td width=548 align=center valign=top>
-            <!-- 导航 -->
-            <TABLE WIDTH=548 BORDER=0 CELLPADDING=0 CELLSPACING=0>
-                <!-- 標籤容器 -->
-                <div class="tab-container">
-                    <!-- 初始的標籤 -->
-                    <div class="tab" onclick="showTabContent('new')">內部公告</div>
-                    <div class="tab" onclick="showTabContent('star')">客戶評價</div>
-                    <div class="tab" onclick="showTabContent('assess')">業績</div>
-                    <div class="tab" onclick="showTabContent('supplier')">各部門分機</div>
-                </div>
-
-                <!-- 標籤內容 -->
-                <div id="new" class="tab-content">
-                    <h3><strong>公告:</strong></h3>
-                    <p>親愛的員工，<br>
-                        &nbsp &nbsp &nbsp &nbsp 我們很高興地宣布，我們的二手商城將推出一項新的政策，旨在提升我們的服務品質並保護我們的客戶和員工。<br>
-
-                        從即日起，所有上架的二手商品都必須通過我們的質量檢查。這意味著，每一項商品在上架前，都需要經過我們的專業團隊進行詳細的檢查，以確保商品的品質符合我們的標準。
-
-                        此外，我們也將實施新的退貨政策。如果客戶在購買商品後的30天內發現商品有任何問題，他們可以申請退貨或換貨。我們的客服團隊將會在收到申請後的48小時內回覆。
-
-                        &nbsp 我們相信，這些新政策將有助於提升我們的服務品質，並贏得客戶的信任。我們期待你們的支持和配合，一起為我們的客戶提供更好的服務。<br>
-
-                        感謝你們的理解和配合。<br><br>
-
-                        敬祝各位同仁 &nbsp MMDF商城</p>
-                </div>
-                <div id="star" class="tab-content">
-                    <h3>客戶評價</h3>
-                    <ul style=" padding: 0;">
-                        <li style="display: inline-block;, color: orange;"><i class="icon icon-Star"></i></li>
-
-                        <li style="display: inline-block;, color: orange;"><i class="icon icon-Star"></i></li>
-
-                        <li style="display: inline-block;, color: orange;"><i class="icon icon-Star"></i></li>
-
-                        <li style="display: inline-block;, color: orange;"><i class="icon icon-Star"></i></li>
-
-                        <li style="display: inline-block;"><i class="icon icon-Star"></i></li>
-                    </ul>
-                </div>
-                <div id="assess" class="tab-content">
-                    <h3>季度報表 (2020-2024)</h3>
-                    <canvas id="myChart"></canvas>
-                </div>
-                <div id="supplier" class="tab-content">
-                    <h4>各部門分機:</h4>
-                    <pre>
-                客服部門：            行銷部門：
-                張小姐：分機101       黃先生：分機401
-                李先生：分機102       高小姐：分機402
-                王小姐：分機103       吳小姐：分機403
-                採購部門：            陳小姐：分機404
-                陳先生：分機201       物流部門：
-                林小姐：分機202       鄭先生：分機301
-                                  &nbsp  蔡小姐：分機302
-            </pre>
-                </div>
-            </table>
-        </td>
-
-
         <!--shop  area start-->
         <div class="shop_area shop_reverse mt-100 mb-100">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-1 col-md-12">
+                        <br>
+                        <br>
                         <!--                    0515start-->
                         <button type="button" class="btn btn-success float-right" data-toggle="modal"
-                                data-target="#searchModal" id="search">
+                                data-target="#searchModal" id="search" style="white-space: nowrap;">
                             搜索清單
                         </button>
 
@@ -294,7 +233,7 @@
                         </button>
                     </div>
                     <a th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE}">
-                        <button type="button" class="btn btn-danger  ml-2" id="status">
+                        <button type="button" class="btn btn-danger  ml-2" id="status" style="white-space: nowrap;">
                             送出審核結果&#x1F514;
                         </button>
                     </a>
@@ -413,7 +352,7 @@
                                             <div class="form-group">
                                                 <label for="failReasonTextarea">失敗原因：</label>
                                                 <textarea class="form-control" id="failReasonTextarea"
-                                                          rows="3"></textarea>
+                                                          rows="3">審核失敗，請賣家重新確認商品資訊!!</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -473,6 +412,7 @@
 <th:block th:replace="~{/fragments/js}"/>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -484,10 +424,12 @@
             // 使用 jQuery 的 val() 方法來獲取 input 元素的值
             var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
 
+            const authorization = localStorage.getItem("authorization");
+
             console.log(reviewStatusValue);
 
             $.ajax({
-                url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+                url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
                 method: "PUT",
                 data: {
                     productId: productId,
@@ -507,9 +449,11 @@
             // 获取表单数据
             var formData = $(this).serialize();
 
+            const authorization = localStorage.getItem("authorization");
+
             // 发送 Ajax 请求
             $.ajax({
-                url: '/api/product/query?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE',
+                url: `/api/product/query?authorization=${authorization}`,
                 type: 'GET',
                 data: formData,
                 success: function (response) {
@@ -574,10 +518,12 @@
                             // 使用 jQuery 的 val() 方法來獲取 input 元素的值
                             var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
 
+                            const authorization = localStorage.getItem("authorization");
+
                             console.log(reviewStatusValue);
 
                             $.ajax({
-                                url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+                                url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
                                 method: "PUT",
                                 data: {
                                     productId: productId,
@@ -605,7 +551,6 @@
                 }
             });
         });
-
     });
 
 
@@ -621,13 +566,16 @@
         var memberId = $('#failReasonModal').data('member-id');
         var failReason = $('#failReasonTextarea').val();
 
+        const authorization = localStorage.getItem("authorization");
+
         // 发送AJAX请求更新数据库和发送通知
         $.ajax({
-            url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+            url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
             type: 'PUT', // 使用POST方法
             data: {
                 productId: productId,
-                memberId: memberId,
+                reviewStatus: 2,
+                // memberId: memberId,
                 failReason: failReason
             },
             success: function (response) {
@@ -655,17 +603,17 @@
         // 使用 jQuery 的 val() 方法來獲取 input 元素的值
         var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
 
+        const authorization = localStorage.getItem("authorization");
+
         console.log(reviewStatusValue);
 
         $.ajax({
-            url: "/api/seller/product/updateReviewStatus?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE",
+            url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
             method: "PUT",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
             data: {
                 productId: productId,
-                reviewStatus: 2
+                reviewStatus: 2,
+                failReason: failReason
             },
             success: function (response) {
                 console.log(response);
@@ -679,8 +627,8 @@
         });
     });
 
-
     //miss
+
 
     //搜索
 
@@ -688,6 +636,8 @@
         e.preventDefault(); // 阻止表单默认提交
         // 获取表单数据
         var formData = $(this).serialize();
+
+        const authorization = localStorage.getItem("authorization");
 
         // 发送 Ajax 请求
         $.ajax({
@@ -754,78 +704,6 @@
     });
 
     //搜索
-
-
-    // 函數：顯示特定標籤的內容
-    function showTabContent(tabName) {
-        // 隱藏所有標籤內容
-        var tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(function (content) {
-            content.classList.remove('active');
-        });
-
-        // 顯示選定標籤的內容
-        var selectedTabContent = document.getElementById(tabName);
-        selectedTabContent.classList.add('active');
-
-        // 取消選定所有標籤
-        var tabs = document.querySelectorAll('.tab');
-        tabs.forEach(function (tab) {
-            tab.classList.remove('active');
-        });
-
-        // 選定並突顯選定標籤
-        var selectedTab = document.querySelector('[onclick="showTabContent(\'' + tabName + '\')"]');
-        selectedTab.classList.add('active');
-    }
-
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['一月到三月', '四月到六月', '七月到九月', '十月到十二月'],
-            datasets: [
-                {
-                    label: '2020',
-                    data: [192, 330, 240, 108],
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    fill: false
-                },
-                {
-                    label: '2021',
-                    data: [260, 370, 284, 220],
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    fill: false
-                },
-                {
-                    label: '2022',
-                    data: [280, 306, 120, 230],
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    fill: false
-                },
-                {
-                    label: '2023',
-                    data: [240, 150, 328, 270],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    fill: false
-                },
-                {
-                    label: '2024',
-                    data: [284, 220, 192, 350],
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
 
 </script>
 </body>
