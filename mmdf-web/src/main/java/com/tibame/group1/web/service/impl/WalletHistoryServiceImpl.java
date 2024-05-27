@@ -91,4 +91,9 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
         return walletHistoryDAO.getWallets(walletQueryParams);
     }
+
+    @Override
+    public WalletWithdrawResDTO walletRequestCreate(WalletWithdrawReqDTO req, LoginSourceDTO loginSource) {
+        return null;
+    }
 }
