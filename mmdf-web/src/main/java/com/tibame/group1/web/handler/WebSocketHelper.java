@@ -6,14 +6,12 @@ import com.huaban.analysis.jieba.JiebaSegmenter;
 import com.huaban.analysis.jieba.SegToken;
 import com.tibame.group1.db.repository.AIMessageResponseRepository;
 import com.tibame.group1.web.dto.AiMessageDTO;
+import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -29,7 +27,7 @@ public class WebSocketHelper implements WebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         AiMessageDTO dto = new AiMessageDTO();
-        dto.setType("serviceLive");
+        dto.setType("welcome");
         dto.setAiMessage("歡迎使用客服聊天系統!\n請說明的問題，文字數盡量不要超過字");
         String openSerivce = gson.toJson(dto);
 //        String openSerivce = gson.toJson("{type:\"welcome\" ,aiMessage: \"歡迎使用客服聊天系統!\n請說明具體的問題\"}");
@@ -41,18 +39,27 @@ public class WebSocketHelper implements WebSocketHandler {
             throws Exception {
         JsonObject jsonObj = gson.fromJson(message.getPayload().toString(), JsonObject.class);
         String type = jsonObj.get("type").getAsString();
-//        if (!sessionMap.containsKey(session)) {
-//            Integer memberId = jsonObj.get("memberId").getAsInt();
-//            sessionMap.put(session, memberId);
-//            // ==================================正式的用法====================================//
-//            //            String authorization = jsonObj.get("authorization").getAsString(); //
-//            //            LoginSourceDTO loginSource = jwtService.decodeLogin(authorization);//
-//            //            sessionMap.put(session, Integer);                              //
-//            // ==============================================================================//
-//        }
+        if (!sessionMap.containsKey(session)) {
+            //            Integer memberId = jsonObj.get("memberId").getAsInt();
+            //            sessionMap.put(session, memberId);
+            // ==================================正式的用法====================================//
+            String authorization = jsonObj.get("authorization").getAsString(); //
+            LoginSourceDTO loginSource = jwtService.decodeLogin(authorization); //
+            sessionMap.put(session, loginSource.getMemberId()); //
+            // ==============================================================================//
+        }
         if("question".equals(type)){
+
             String question = jsonObj.get("message").getAsString();
             System.out.println(question);
+            if("專員客服".equals(question)){
+                Map<String,String> messageType = new HashMap<>();
+                messageType.put("type","serviceLive");
+                messageType.put("memberId",sessionMap.get(session).toString());
+                session.sendMessage(new TextMessage(gson.toJson(messageType)));
+
+                return;
+            }
             String answer = getAnswer(question);
             System.out.println(answer);
             AiMessageDTO aiMessageDTO = new AiMessageDTO();
@@ -106,7 +113,7 @@ public class WebSocketHelper implements WebSocketHandler {
         }
         Long endTime = System.nanoTime();
         System.out.println((endTime - starTime) / 1_000_000 + " 毫秒");
-        return "對不起，我不明白您的問題。請聯繫客服人員獲取幫助。";
+        return "對不起，我不明白您的問題，我還在學習中。若要聯繫客服人員，請輸入\"專員客服\"";
     }
 
     // ============ 分析有哪些分詞 ============//

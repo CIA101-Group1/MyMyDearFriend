@@ -61,7 +61,7 @@
                     </nav>
                 </div>
                 <!-- 客服訊息 -->
-                <a class="nav-link" href="customer-service.html">客服聊天室</a>
+                <a class="nav-link" onclick="goToChatroom()">客服聊天室</a>
                 <!-- 平台收益 -->
                 <a class="nav-link" href="customer-service.html">查看平台收益</a>
 
@@ -145,6 +145,15 @@
     function goToMarketAll() {
         var authorization = localStorage.getItem("authorization");
         var url = '/market/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+    function goToChatroom() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/chatroom/service';
         if(authorization) {
             url += '?authorization=' + encodeURIComponent(authorization);
         }

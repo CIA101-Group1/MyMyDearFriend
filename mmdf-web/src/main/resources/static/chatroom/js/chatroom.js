@@ -116,12 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 加載好友列表
     function loadFriends(friends) {
-        // 這裡可以加入獲取好友列表的程式碼
-        // const friends = [
-        //     { name: '好友A', avatar: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg', id: '001', latestMessage: '最新訊息A' },
-        //     { name: '好友B', avatar: 'https://example.com/avatarB.jpg', id: '002', latestMessage: '最新訊息B' },
-        //     { name: '好友C', avatar: 'https://example.com/avatarC.jpg', id: '003', latestMessage: '最新訊息C' }
-        // ];
         if(friends === undefined || friends === null) {
             return;
         }
@@ -172,10 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadChatHistory(friendMessages,memberId) {
         // 這裡可以加入獲取聊天記錄的程式碼
         chatMessages.innerHTML = '';
-        // const messages = [
-        //     { sender: '好友A', content: '嗨！' },
-        //     { sender: '我', content: '你好！' }
-        // ];
         var messages = JSON.parse(friendMessages);
         messages.forEach(message => {
             var messageJson = JSON.parse(message);
