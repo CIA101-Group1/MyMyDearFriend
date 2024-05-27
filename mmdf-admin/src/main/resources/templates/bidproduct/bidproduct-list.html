@@ -81,6 +81,7 @@
 
 <script>
     const API_URL = "/api/bidproduct";
+    let AUTHORIZATION = localStorage.getItem("authorization");
 
     $(document).ready(function () {
         fetchBidProducts();
@@ -88,14 +89,8 @@
 
     function fetchBidProducts() {
         $.ajax({
-            url: "/api/bidproduct",
+            url: `/api/bidproduct?authorization=${AUTHORIZATION}`,
             type: "GET",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            // data: {
-            //     "authorization": localStorage.getItem("authorization")
-            // },
             success: function (response) {
                 console.log(response);
                 $('#bidProductTable').dataTable({
@@ -168,11 +163,8 @@
 
     function viewProduct(productId) {
         $.ajax({
-            url: `/api/bidproduct/${productId}`,
+            url: `/api/bidproduct/${productId}?authorization=${AUTHORIZATION}`,
             type: "GET",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
             success: function (response) {
                 const product = response.data;
                 $('#productId').text(product.productId);

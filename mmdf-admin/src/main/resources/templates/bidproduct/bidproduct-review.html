@@ -121,11 +121,8 @@
 
     function fetchBidProductsNeedReview() {
         $.ajax({
-            url: "/api/bidproduct/query",
+            url: `/api/bidproduct/query?authorization=${AUTHORIZATION}`,
             type: "GET",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
             data: {
                 "status": [0, -1],
             },
@@ -236,11 +233,8 @@
     $("#rejectForm").submit(function (e) {
         e.preventDefault();
         $.ajax({
-            url: `/api/bidproduct/${PRODUCT_ID}`,
+            url: `/api/bidproduct/${PRODUCT_ID}?authorization=${AUTHORIZATION}`,
             type: "PUT",
-            headers: {
-                "authorization": localStorage.getItem("authorization"),
-            },
             data: {
                 status: -1
             },
@@ -262,11 +256,8 @@
     function approveProduct(productId) {
         if (confirm("確定要通過嗎？")) {
             $.ajax({
-                url: `/api/bidproduct/${productId}`,
+                url: `/api/bidproduct/${productId}?authorization=${AUTHORIZATION}`,
                 type: "PUT",
-                headers: {
-                    "authorization": localStorage.getItem("authorization"),
-                },
                 data: {
                     status: 1
                 },
