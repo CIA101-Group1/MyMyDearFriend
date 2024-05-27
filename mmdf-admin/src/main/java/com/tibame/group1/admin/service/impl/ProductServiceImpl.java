@@ -188,11 +188,6 @@ public class ProductServiceImpl implements ProductService {
         if (null == member) {
             throw new CheckRequestErrorException("查無此會員資料");
         }
-//        if(reviewStatus.equals("1")) {  //通過
-//            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", "審核成功，" + product.getName() +  "商品可進行上下架");
-//        }else if(reviewStatus.equals("0")){  //失敗
-//            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", product.getName() + failReason );
-//        }
         if(reviewStatus.equals("2")) {  //失敗
             noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", "審核失敗，" + product.getName() + "錯誤，請賣家重新確認商品資訊!!");
         }else if(reviewStatus.equals("1")){  //通過
