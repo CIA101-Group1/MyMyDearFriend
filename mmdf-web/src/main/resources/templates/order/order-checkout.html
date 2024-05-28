@@ -11,6 +11,14 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        a{
+            color: red;
+        }
+        a:hover{
+            color: blue;
+        }
+    </style>
 </head>
 <body>
 <!--header-->
@@ -25,7 +33,7 @@
         <div class="checkout_form">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-                    <form id="checkout_form">
+                    <form class="checkout_form">
                         <h3>訂單詳情</h3>
                         <div class="col-lg-12 mb-20">
                             <label for="name" class="form-label">姓名 : <span>*</span></label>
@@ -41,6 +49,25 @@
                         </div>
 
                         <div class="col-12 mb-20">
+                            <label for="shipping">物流方式 : <span>*</span></label>
+                            <select id="shipping" class="form-control" required>
+                                <option value="" disabled selected>選擇物流方式</option>
+                                <option value="home_delivery">宅配</option>
+                                <option value="store_pickup">超商取貨</option>
+                            </select>
+                        </div>
+
+                        <div id="store_pickup_info" class="col-12 mb-20" style="display:none;">
+                            <label for="store">超商選擇 : <span>*</span></label>
+                            <select id="store" class="form-control">
+                                <option value="" disabled selected>選擇超商</option>
+                                <option value="7eleven">7-11</option>
+                                <option value="familymart">全家</option>
+                                <option value="okmart">OK Mart</option>
+                                <option value="hilife">萊爾富</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mb-20">
                             <label for="address"> 寄送地址 : <span>*</span></label>
                             <div id="twzipcode"
                                  style="display: flex; justify-content: center ;align-items: center"></div>
@@ -50,10 +77,11 @@
                             <label> 優惠卷 : </label>
                             <input type="text" class="form-control">
                         </div>
+
                     </form>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <form action="#">
+                    <form class="checkout_form">
                         <h3>訂單商品</h3>
                         <div class="order_table table-responsive">
                             <table>
@@ -81,6 +109,10 @@
                                 </tfoot>
                             </table>
                         </div>
+                        <div class="col-8 mb-20">
+                            <strong>錢包餘額: <strong id="wallet"></strong></strong><br>
+                            <a href="/member/walletAdd">去儲值</a>
+                        </div>
                         <div class="payment_method">
                             <div class="order_button" style="position: relative;">
                                 <button id="sendOrder" type="button"
@@ -106,6 +138,18 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js"></script>
 <script>
     $(document).ready(function () {
+        // 當物流方式變化時
+        $("#shipping").on("change", function() {
+            let shippingMethod = $(this).val();
+            if (shippingMethod === "store_pickup") {
+                $("#store_pickup_info").show();
+                $("#store").attr("required", true);
+            } else {
+                $("#store_pickup_info").hide();
+                $("#store").attr("required", false);
+            }
+        });
+
         // 頁面加載時讀取LocalStorage中的數據
         let data = loadSelectedCartData();
         // 頁面加載時讀取member資料
@@ -161,72 +205,83 @@
                             buyProductList: data.items
                         };
 
-                        // 建立一個包含所有 remove 請求的 Promise 陣列
-                        let removePromises = data.items.map(function (item) {
-                            return new Promise(function (resolve, reject) {
-                                $.ajax({
-                                    url: "/api/cart/remove/" + item.productId,
-                                    method: "DELETE",
-                                    headers: {
-                                        "authorization": localStorage.getItem("authorization")
-                                    },
-                                    success(response) {
-                                        console.log(response.data);
-                                        resolve(response.data);
-                                    },
-                                    error(xhr, status, error) {
-                                        console.error("There was a problem :", error);
-                                        reject(error);
-                                    },
-                                });
-                            });
-                        });
+                        // 創建訂單請求
+                        $.ajax({
+                            url: "/api/order/create",
+                            method: "POST",
+                            headers: {
+                                "authorization": localStorage.getItem("authorization")
+                            },
+                            contentType: "application/json",
+                            data: JSON.stringify(orderData),
+                            success(response) {
+                                console.log(response);
+                                console.log(response.code);
+                                if (response.code == -9) {
+                                    console.log(response.code);
+                                    Swal.fire({
+                                        title: "失敗",
+                                        icon: "error",
+                                        text: response.message,
+                                        confirmButtonText: "確認"
+                                    });
+                                } else {
+                                    // 訂單成功創建後移除購物車內商品
+                                    let removePromises = data.items.map(function (item) {
+                                        return new Promise(function (resolve, reject) {
+                                            $.ajax({
+                                                url: "/api/cart/remove/" + item.productId,
+                                                method: "DELETE",
+                                                headers: {
+                                                    "authorization": localStorage.getItem("authorization")
+                                                },
+                                                success(response) {
+                                                    console.log(response.data);
+                                                    resolve(response.data);
+                                                },
+                                                error(xhr, status, error) {
+                                                    console.error("There was a problem :", error);
+                                                    reject(error);
+                                                },
+                                            });
+                                        });
+                                    });
 
-                        // 使用 Promise.all 等待所有 remove 請求完成
-                        Promise.all(removePromises)
-                            .then(function (results) {
-                                // 所有 remove 請求完成後執行創建訂單請求
-                                $.ajax({
-                                    url: "/api/order/create",
-                                    method: "POST",
-                                    headers: {
-                                        "authorization": localStorage.getItem("authorization")
-                                    },
-                                    contentType: "application/json",
-                                    data: JSON.stringify(orderData),
-                                    success(response) {
-                                        console.log(response.data);
-                                        Swal.fire({
-                                            title: "成功",
-                                            icon: "success",
-                                            text: "訂單已成功創建！",
-                                            confirmButtonText: "確認"
-                                        }).then(() => {
-                                            // 在成功創建訂單後，清空購物車localStorage
-                                            localStorage.removeItem("selectedCartData");
-                                            // 重導到訂單頁面
-                                            window.location.href = "/order/all";
+                                    // 使用 Promise.all 等待所有 remove 請求完成
+                                    Promise.all(removePromises)
+                                        .then(function (results) {
+                                            Swal.fire({
+                                                title: "成功",
+                                                icon: "success",
+                                                text: "訂單已成功創建！",
+                                                confirmButtonText: "確認"
+                                            }).then(() => {
+                                                // 在成功創建訂單後，清空購物車localStorage
+                                                localStorage.removeItem("selectedCartData");
+                                                // 重導到訂單頁面
+                                                window.location.href = "/order/all";
+                                            });
+                                        })
+                                        .catch(function (error) {
+                                            Swal.fire({
+                                                title: "錯誤",
+                                                icon: "error",
+                                                text: "移除商品失敗: " + error,
+                                                confirmButtonText: "確認"
+                                            });
                                         });
-                                    },
-                                    error(xhr, status, error) {
-                                        console.error("There was a problem :", error);
-                                        Swal.fire({
-                                            title: "錯誤",
-                                            icon: "error",
-                                            text: "創建訂單失敗: " + error,
-                                            confirmButtonText: "確認"
-                                        });
-                                    },
-                                });
-                            })
-                            .catch(function (error) {
+                                }
+                            },
+                            error(xhr, status, error) {
+                                console.error("There was a problem :", error);
                                 Swal.fire({
                                     title: "錯誤",
                                     icon: "error",
-                                    text: "移除商品失敗: " + error,
+                                    text: "創建訂單失敗: " + error,
                                     confirmButtonText: "確認"
                                 });
-                            });
+                            },
+                        });
                     }
                 });
             } else {
@@ -245,13 +300,13 @@
     function validateForm() {
         let isValid = true;
 
-        $("#checkout_form input[required]").each(function () {
+        $(".checkout_form input[required], .checkout_form select[required]").each(function () {
             $(this).removeClass("is-invalid");
             clearErrorMessage($(this));
         });
 
-        $("#checkout_form input[required]").each(function () {
-            if ($(this).val().trim() === "") {
+        $(".checkout_form input[required], .checkout_form select[required]").each(function () {
+            if ($(this).val() === null || $(this).val().trim() === "") {
                 isValid = false;
                 $(this).addClass("is-invalid");
                 showErrorMessage($(this), "此欄位為必填項目");
@@ -264,7 +319,7 @@
             isValid = false;
             $("#phone").addClass("is-invalid");
             showErrorMessage($("#phone"), "此欄位為必填項目");
-        }else if (!/^\d+$/.test(phone)) {
+        } else if (!/^\d+$/.test(phone)) {
             isValid = false;
             $("#phone").addClass("is-invalid");
             showErrorMessage($("#phone"), "電話號碼只能包含數字");
@@ -279,7 +334,7 @@
             isValid = false;
             $("#email").addClass("is-invalid");
             showErrorMessage($("#email"), "此欄位為必填項目");
-        }else if (email && !validateEmail(email)) {
+        } else if (email && !validateEmail(email)) {
             isValid = false;
             $("#email").addClass("is-invalid");
             showErrorMessage($("#email"), "請輸入有效的電子郵件地址");
@@ -309,7 +364,6 @@
         return re.test(email);
     }
 
-
     // 讀取LocalStorage中的數據
     function loadSelectedCartData() {
         let selectedCartData = localStorage.getItem("selectedCartData");
@@ -332,7 +386,9 @@
                 $("#name").val(member.name);
                 $("#phone").val(member.phone);
                 $("#email").val(member.email);
+                $("#wallet").val(member.email);
                 fillAddress(member.address);
+                $("#wallet").text(`$${member.walletAmount}`);
             },
             error(xhr, status, error) {
                 Swal.fire({
@@ -360,7 +416,7 @@
             css: ["city form-control", "district form-control"], // 自訂 "城市"、"地區" class 名稱
             countyName: "city", // 自訂城市 select 標籤的 name 值
             districtName: "district", // 自訂地區 select 標籤的 name 值
-            // 將縣市和鄉鎮市區選擇到下拉選單中
+            // 將縣市和鄉鎮市區填入到下拉選單中
             countySel: city,
             districtSel: district,
         });

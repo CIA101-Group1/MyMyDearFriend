@@ -11,19 +11,6 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        .wallet-section {
-            margin-bottom: 20px;
-        }
-
-        .wallet-balance {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-
-        .wallet-buttons .btn {
-            margin-right: 10px;
-        }
-
         .btn-primary {
             color: #fff !important;
             background-color: #007bff !important;
@@ -35,14 +22,23 @@
             background-color: #6c757d !important;
             border-color: #6c757d !important;
         }
+
+        .btn-warning {
+            color: #212529 !important;
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
+        }
+
+        .btn-info {
+            color: #fff !important;
+            background-color: #17a2b8 !important;
+            border-color: #17a2b8 !important;
+        }
     </style>
 </head>
 <body>
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
-
-<!--breadcrumb-->
-<th:block th:replace="~{/fragments/breadcrumb}"/>
 
 <!-- main start -->
 <section class="main_content_area">
@@ -55,24 +51,71 @@
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active" id="account-details">
-                            <div class="wallet-section card">
-                                <div class="card-body">
-                                    <div class="wallet-balance">
-                                        <p>錢包餘額：$1000</p>
+                            <div class="container mt-5">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>錢包管理</h3>
                                     </div>
-                                    <div class="wallet-history">
-                                        <p>交易紀錄：</p>
-                                        <ul class="list-group">
-                                            <li class="list-group-item">2024-05-01 - $100</li>
-                                            <li class="list-group-item">2024-04-15 - $200</li>
-                                            <!-- 其他紀錄 -->
-                                        </ul>
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <h4>錢包餘額：<span id="wallet-balance">0</span> 元</h4>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <button type="button" class="btn btn-primary" id="btn-recharge">
+                                                    儲值錢包
+                                                </button>
+                                                <button type="button" class="btn btn-warning" id="btn-withdraw">
+                                                    申請提領
+                                                </button>
+                                                <button type="button" class="btn btn-info" id="btn-withdraw-records">
+                                                    提領申請紀錄
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <label for="transaction-type"></label><select class="form-control"
+                                                                                              id="transaction-type">
+                                                <option value="">所有交易種類</option>
+                                                <option value="0">付款</option>
+                                                <option value="1">儲值</option>
+                                                <option value="2">提領</option>
+                                                <option value="3">退款</option>
+                                                <option value="4">入帳</option>
+                                                <option value="5">手續費</option>
+                                                <option value="6">市集報名費</option>
+                                            </select>
+                                            </div>
+                                            <div class="col-md-3 custom-select-wrapper-input">
+                                                <label for="historyTime"
+                                                       style="margin-bottom: 5px;">交易時間(供查詢三個月內)</label>
+                                                <input type="date" id="historyTime" class="form-control">
+                                            </div>
+                                            <div class="col-md-3 align-self-end d-flex justify-content-between">
+                                                <button id="resetFilters" class="btn btn-secondary ml-2">重置篩選條件
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>交易種類</th>
+                                                <th>交易時間</th>
+                                                <th>金額</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="transaction-records">
+                                            <!-- 交易紀錄將會被插入這裡 -->
+                                            </tbody>
+                                        </table>
+                                        <nav>
+                                            <ul class="pagination justify-content-center" id="pagination">
+                                                <!-- 分頁按鈕將會被插入這裡 -->
+                                            </ul>
+                                        </nav>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="wallet-buttons mt-3">
-                                <button type="button" class="btn btn-primary" id="walletAdd">儲值錢包</button>
-                                <button type="button" class="btn btn-secondary" id="walletWithdraw">申請提領</button>
                             </div>
                         </div>
                     </div>
@@ -105,20 +148,171 @@
 
 <!--js-->
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
 <script>
-    let userData = {};
     let errorMessage = "";
     $(document).ready(function () {
+        const recordsPerPage = 5;
+        let currentPage = 1;
 
-        $("#walletAdd").click(function () {
+        // 初始化頁面
+        init();
+
+        // 初始化頁面
+        function init() {
+            currentPage = 1;
+            getWalletBalance();
+            getTransactionRecords();
+        }
+
+        // 設定日期選擇器
+        function formatDate(date) {
+            let year = date.getFullYear();
+            let month = ("0" + (date.getMonth() + 1)).slice(-2);
+            let day = ("0" + date.getDate()).slice(-2);
+            let hours = ("0" + date.getHours()).slice(-2);
+            let minutes = ("0" + date.getMinutes()).slice(-2);
+            let seconds = ("0" + date.getSeconds()).slice(-2);
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // 獲取錢包餘額
+        function getWalletBalance() {
+            $.ajax({
+                url: "/api/member/detail",
+                method: "get",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    $("#wallet-balance").text(response.data.walletAmount);
+                }
+            });
+        }
+
+        // 獲取交易紀錄
+        function getTransactionRecords() {
+            let type = $("#transaction-type").val();
+            let historyTime = $("#historyTime").val();
+            let formattedTime;
+            if (historyTime === "") {
+                formattedTime = "";
+            } else {
+                formattedTime = formatDate(new Date(historyTime));
+            }
+
+            $.ajax({
+                url: `/api/wallets?walletCategory=${type}&search=${formattedTime}`,
+                method: "get",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    renderRecords(response);
+                    setupPagination(response);
+                },
+                error(xhr, status, error) {
+                    $("#modalBody").html("伺服器連線失敗: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        }
+
+        // 渲染交易紀錄
+        function renderRecords(response) {
+            let tbody = $("#transaction-records");
+            tbody.empty();
+            let start = (currentPage - 1) * recordsPerPage;
+            let end = start + recordsPerPage;
+            let pageRecords = response.slice(start, end);
+            pageRecords.forEach(record => {
+                let row = `<tr>
+                        <td>${getTypeName(record.changeType)}</td>
+                        <td>${format(new Date(record.changeTime))}</td>
+                        <td>${record.changeAmount}</td>
+                    </tr>`;
+                tbody.append(row);
+            });
+        }
+
+        // 設置分頁按鈕
+        function setupPagination(response) {
+            let totalPages = Math.ceil(response.length / recordsPerPage);
+            let pagination = $("#pagination");
+            pagination.empty();
+            for (let i = 1; i <= totalPages; i++) {
+                let pageItem = `<li class="page-item ${i === currentPage ? "active" : ""}">
+                        <a class="page-link" href="#">${i}</a>
+                    </li>`;
+                pagination.append(pageItem);
+            }
+        }
+
+        // 分頁按鈕綁定點擊事件
+        $(".page-link").on("click", function (e) {
+            e.preventDefault();
+            currentPage = parseInt($(this).text());
+            renderRecords(response);
+            setupPagination();
+        });
+
+        // 查詢條件改變事件
+        $("#transaction-type, #historyTime").change(function () {
+            getTransactionRecords();
+        });
+
+        // 當點擊重置按鈕時，重置篩選條件並重新加載資料
+        $("#resetFilters").on("click", function () {
+            $("#transaction-type").val("");
+            $("#historyTime").val("");
+            getTransactionRecords();
+        });
+
+        // 獲取交易種類名稱
+        function getTypeName(changeType) {
+            let types = {
+                "PAYMENT": "付款",
+                "TOP_UP": "儲值",
+                "WITHDRAW": "提款",
+                "REFUND": "退款",
+                "DEPOSIT": "入帳",
+                "FEE": "手續費",
+                "MARKET": "市集報名費"
+            };
+            return types[changeType];
+        }
+
+        // 分頁按鈕點擊事件
+        $(document).on("click", ".page-link", function () {
+            let page = $(this).data("page");
+            getTransactionRecords(page);
+        });
+
+        $("#btn-recharge").click(function () {
             window.location.href = "/member/walletAdd";
         });
 
-        $("#walletWithdraw").click(function () {
+        $("#btn-withdraw").click(function () {
             window.location.href = "/member/walletWithdraw";
         });
+
+        $("#btn-withdraw-records").click(function () {
+            window.location.href = "/member/walletWithdrawHistory";
+        });
+
+        // 格式化日期時間的函數
+        function format(date) {
+            let year = date.getFullYear();
+            let month = ('0' + (date.getMonth() + 1)).slice(-2);
+            let day = ('0' + date.getDate()).slice(-2);
+            let hours = ('0' + date.getHours()).slice(-2);
+            let minutes = ('0' + date.getMinutes()).slice(-2);
+            let seconds = ('0' + date.getSeconds()).slice(-2);
+
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
     });
 </script>
 </body>

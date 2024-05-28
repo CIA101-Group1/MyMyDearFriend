@@ -25,6 +25,8 @@ public class MemberDetailResDTO {
 
     private Boolean isVerified;
 
+    private Integer walletAmount;
+
     private Boolean sellerStatus;
 
     private Integer scoreNumber;
