@@ -92,6 +92,8 @@
                         <th>會員電話</th>
                         <th>會員信箱</th>
                         <th>會員居住地</th>
+                        <th>報名日期</th>
+                        <th>報名狀態</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -144,6 +146,8 @@
                                         <td>${member.phone}</td>
                                         <td>${member.email}</td>
                                         <td>${member.city}</td>
+                                        <td>${formatDate(member.participateDate)}</td>
+                                        <td>${convertStatusToChinese(member.status)}</td>
                                     </tr>
                                 `);
                             });
@@ -159,6 +163,26 @@
             }
         });
     });
+
+    // 格式化日期
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+
+    // 將活動狀態轉換為中文
+    function convertStatusToChinese(status) {
+        switch (parseInt(status)) { // 將 marketStatus 轉換為整數進行比對
+            case 1:
+                return "報名成功，已扣款";
+            case 2:
+                return "報名取消，已退費";
+            default:
+                return "未知狀態";
+        }
+    }
 </script>
 </body>
 </html>
