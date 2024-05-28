@@ -149,6 +149,7 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
 
         WalletRequestEntity filterEntity = new WalletRequestEntity();
         filterEntity.setStatus(req.getStatus());
+        filterEntity.setMember(member);
         ExampleMatcher filterMatcher = ExampleMatcher.matching();
         // 將範例對象和匹配規則組合成Example對象
         Example<WalletRequestEntity> filterExample = Example.of(filterEntity, filterMatcher);
