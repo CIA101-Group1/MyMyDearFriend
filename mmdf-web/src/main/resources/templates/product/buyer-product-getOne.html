@@ -115,7 +115,7 @@
                         </div>
                         <div class=" product_d_action">
                             <ul>
-                                <li><a href="#" title="Add to wishlist"><span>&#10084;&#65039;</span> + Add to Wishlist</a></li>
+                                <li><a th:onclick="|addToFavorite(${productEntity.productId});|"  title="Add to wishlist"><span>&#10084;&#65039;</span> + Add to Wishlist</a></li>
                             </ul>
                         </div>
 <!--                        <div class="product_meta">-->
