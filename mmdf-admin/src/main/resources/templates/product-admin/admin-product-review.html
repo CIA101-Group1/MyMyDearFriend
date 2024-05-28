@@ -232,11 +232,6 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
-                    <a th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE}">
-                        <button type="button" class="btn btn-danger  ml-2" id="status" style="white-space: nowrap;">
-                            送出審核結果&#x1F514;
-                        </button>
-                    </a>
                 </nav>
 
                 <div class="container">
@@ -437,6 +432,7 @@
                 },
                 success: function (response) {
                     console.log(response);
+                    location.reload();
                 },
                 error: function (error) {
                     alert("伺服器連線失敗: " + error);
@@ -532,7 +528,7 @@
                                 success: function (response) {
                                     button.removeClass("btn-primary").addClass("btn-success");
                                     console.log(response);
-                                    // window.location.reload();
+                                    location.reload();
                                 },
                                 error: function (error) {
                                     alert("伺服器連線失敗: " + error);
@@ -563,7 +559,7 @@
 
     $('#confirmFailReasonBtn').click(function () {
         var productId = $("#miss").data("product-id");
-        var memberId = $('#failReasonModal').data('member-id');
+        // var memberId = $('#failReasonModal').data('member-id');
         var failReason = $('#failReasonTextarea').val();
 
         const authorization = localStorage.getItem("authorization");
@@ -575,7 +571,6 @@
             data: {
                 productId: productId,
                 reviewStatus: 2,
-                // memberId: memberId,
                 failReason: failReason
             },
             success: function (response) {
@@ -584,7 +579,7 @@
                 // 关闭模态框
                 $('#failReasonModal').modal('hide');
                 // 刷新页面或执行其他操作
-                // window.location.reload();
+                location.reload();
             },
             error: function (xhr, status, error) {
                 $('#closeBtn').click(function () {
@@ -595,37 +590,37 @@
         });
     });
 
-    // 更新審核狀態
-    $("#product-tbody").on("click", ("#miss"), function () {
-        var productId = $("#miss").data("product-id");
-        var failReason = $('#failReasonTextarea').val();
-
-        // 使用 jQuery 的 val() 方法來獲取 input 元素的值
-        var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
-
-        const authorization = localStorage.getItem("authorization");
-
-        console.log(reviewStatusValue);
-
-        $.ajax({
-            url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
-            method: "PUT",
-            data: {
-                productId: productId,
-                reviewStatus: 2,
-                failReason: failReason
-            },
-            success: function (response) {
-                console.log(response);
-                console.log("Product ID:", productId);
-                console.log("Fail Reason:", failReason);
-                $('#failReasonModal').modal('hide');
-            },
-            error: function (error) {
-                alert("伺服器連線失敗: " + error);
-            }
-        });
-    });
+    // // 更新審核狀態
+    // $("#product-tbody").on("click", ("#miss"), function () {
+    //     var productId = $("#miss").data("product-id");
+    //     var failReason = $('#failReasonTextarea').val();
+    //
+    //     // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+    //     var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
+    //
+    //     const authorization = localStorage.getItem("authorization");
+    //
+    //     console.log(reviewStatusValue);
+    //
+    //     $.ajax({
+    //         url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
+    //         method: "PUT",
+    //         data: {
+    //             productId: productId,
+    //             reviewStatus: 2,
+    //             failReason: failReason
+    //         },
+    //         success: function (response) {
+    //             console.log(response);
+    //             console.log("Product ID:", productId);
+    //             console.log("Fail Reason:", failReason);
+    //             $('#failReasonModal').modal('hide');
+    //         },
+    //         error: function (error) {
+    //             alert("伺服器連線失敗: " + error);
+    //         }
+    //     });
+    // });
 
     //miss
 
