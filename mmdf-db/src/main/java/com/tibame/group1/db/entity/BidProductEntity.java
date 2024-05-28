@@ -102,6 +102,10 @@ public class BidProductEntity {
         this.status = status.getValue();
     }
 
+    public Integer getStatusCode() {
+        return BidProductStatus.fromValue(status).getValue();
+    }
+
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd HH:mm:ss",
