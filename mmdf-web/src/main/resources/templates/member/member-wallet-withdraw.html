@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label for="amount">提領金額</label>
                                     <input type="number" class="form-control" id="amount" name="amount"
-                                           placeholder="輸入儲值金額" required>
+                                           placeholder="輸入提領金額" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="bank-code">銀行代碼</label>
@@ -114,9 +114,16 @@
                                 case "1":
                                     $("#modalBody").html("申請成功");
                                     $("#myModal").modal("show");
+                                    setTimeout(function () {
+                                        window.location.href = "/member/walletWithdrawHistory";
+                                    }, 2000);
                                     break;
                                 case "-1":
                                     $("#modalBody").html("該帳號不存在");
+                                    $("#myModal").modal("show");
+                                    break;
+                                case "-2":
+                                    $("#modalBody").html("錢包餘額不足，申請提領失敗");
                                     $("#myModal").modal("show");
                                     break;
                             }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberRegistrationAllResDTO {
-    private Integer memberId;
+    //private Integer memberId;
 
     private String name;
 
@@ -17,17 +17,17 @@ public class MemberRegistrationAllResDTO {
 
     private String city;
 
-    private String status;
-
-    @AllArgsConstructor
-    @Getter
-    public enum Status {
-        PAY_SUCCESS("1", "已繳費"),
-
-        PAY_ERROR("-1", "尚未繳費");
-
-        private final String code;
-
-        private final String message;
-    }
+//    private String status;
+//
+//    @AllArgsConstructor
+//    @Getter
+//    public enum Status {
+//        PAY_SUCCESS("1", "已繳費"),
+//
+//        PAY_ERROR("-1", "尚未繳費");
+//
+//        private final String code;
+//
+//        private final String message;
+//    }
 }

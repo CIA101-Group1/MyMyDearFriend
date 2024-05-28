@@ -8,18 +8,20 @@ import lombok.Setter;
 @Setter
 public class WalletWithdrawResDTO {
 
-  private String status;
+    private String status;
 
-  @AllArgsConstructor
-  @Getter
-  public enum Status {
-    REQUEST_SUBMITTED("1", "新增異動成功"),
+    private String requestDate;
 
-    DO_NOT_EXIST_ACCOUNT("-1", "該帳號不存在"),
+    private String withdrawAmount;
 
-    INSUFFICIENT_BALANCE("-2", "錢包餘額不足");
+    @AllArgsConstructor
+    @Getter
+    public enum Status {
+        REQUEST_NONE("0", "未審核"),
 
-    private final String code;
-    private final String message;
-  }
+        REQUEST_ACCESS("1", "已審核");
+
+        private final String code;
+        private final String message;
+    }
 }

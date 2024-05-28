@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WalletWithdrawReqDTO {
+public class WalletWithdrawCreateReqDTO {
 
   private Integer changeAmount;
 

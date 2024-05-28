@@ -63,12 +63,12 @@ public class NewsApiController {
         return new ResDTO<>();
     }
 
-    // @PutMapping("/news/{newsId}")
-    // public @ResponseBody ResDTO<?> updateStatus(
-    //         @PathVariable("newsId") Integer newsId, @RequestParam("newStatus") Integer newStatus)
-    //         throws CheckRequestErrorException {
-    //
-    //     newsService.updateStatus(newsId, newStatus);
-    //     return new ResDTO<>();
-    // }
+    @PutMapping("/news/{newsId}/status")
+    public @ResponseBody ResDTO<?> updateStatus(
+            @PathVariable("newsId") Integer newsId, @RequestParam("status") Integer newStatus)
+            throws CheckRequestErrorException {
+
+        newsService.updateStatus(newsId, newStatus);
+        return new ResDTO<>();
+    }
 }

@@ -65,47 +65,47 @@
                         <div class="card-body">
                             <form id="marketForm">
                                 <div class="mb-3">
-                                    <label for="marketName" class="form-label">活動名稱：</label>
+                                    <label for="marketName" class="form-label"><span style="color: red;">*</span>活動名稱：</label>
                                     <input type="text" class="form-control" id="marketName" name="marketName">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="marketDescription" class="form-label">活動說明：</label>
-                                    <input type="text" class="form-control" id="marketDescription" name="marketDescription">
+                                    <label for="marketDescription" class="form-label"><span style="color: red;">*</span>活動說明：</label>
+                                    <textarea class="form-control" id="marketDescription" name="marketDescription"></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="marketLocation" class="form-label">活動地點：</label>
+                                    <label for="marketLocation" class="form-label"><span style="color: red;">*</span>活動地點：</label>
                                     <input type="text" class="form-control" id="marketLocation" name="marketLocation">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="marketStart" class="form-label">活動開始時間：</label>
+                                    <label for="marketStart" class="form-label"><span style="color: red;">*</span>活動開始時間：</label>
                                     <input type="date" class="form-control" id="marketStart" name="marketStart">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="marketEnd" class="form-label">活動結束時間：</label>
+                                    <label for="marketEnd" class="form-label"><span style="color: red;">*</span>活動結束時間：</label>
                                     <input type="date" class="form-control" id="marketEnd" name="marketEnd">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="marketFee" class="form-label">報名費用：</label>
+                                    <label for="marketFee" class="form-label"><span style="color: red;">*</span>報名費用：</label>
                                     <input type="text" class="form-control" id="marketFee" name="marketFee">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="applicantLimit" class="form-label">活動人數上限：</label>
+                                    <label for="applicantLimit" class="form-label"><span style="color: red;">*</span>活動人數上限：</label>
                                     <input type="text" class="form-control" id="applicantLimit" name="applicantLimit">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="startDate" class="form-label">開始報名時間：</label>
+                                    <label for="startDate" class="form-label"><span style="color: red;">*</span>開始報名時間：</label>
                                     <input type="date" class="form-control" id="startDate" name="startDate">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="endDate" class="form-label">結束報名時間：</label>
+                                    <label for="endDate" class="form-label"><span style="color: red;">*</span>結束報名時間：</label>
                                     <input type="date" class="form-control" id="endDate" name="endDate">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="marketStatus" class="form-label">狀態：</label>
+                                    <label for="marketStatus" class="form-label"><span style="color: red;">*</span>狀態：</label>
                                     <select class="form-select" id="marketStatus" name="marketStatus">
-                                        <option value="1" selected>尚未上架</option>
+                                        <option value="1">尚未上架</option>
                                         <option value="2">已上架</option>
-                                        <option value="3">活動結束</option>
+                                        <option value="3">報名已結束</option>
                                         <option value="0">活動取消</option>
                                     </select>
                                 </div>
@@ -213,6 +213,14 @@
                 errorMessage += "<li>報名結束日期不可空白</li>";
             }
 
+            if (marketStart < startDate) {
+                errorMessage += "<li>活動開始時間不可早於開始報名時間</li>";
+            }
+
+            if (marketEnd < endDate) {
+                errorMessage += "<li>活動結束時間不可早於結束報名時間</li>";
+            }
+
             // 如果有錯誤訊息，則顯示到 #modalBody 中並回傳 false
             if (errorMessage !== "") {
                 $("#modalBody").html("<ul>" + errorMessage + "</ul>");
@@ -274,7 +282,7 @@
         }
 
         $.ajax({
-            url: "/api/market/create?authorization=" + encodeURIComponent(authorization), // 在URL中添加authorization參數
+            url: `/api/market/create?authorization=${authorization}`, // 在URL中添加authorization參數
             method: "post",
             contentType: "application/json",
             data: JSON.stringify(userData),
