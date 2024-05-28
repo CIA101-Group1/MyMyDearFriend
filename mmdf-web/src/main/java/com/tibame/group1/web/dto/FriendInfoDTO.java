@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class FriendInfoDTO {
+    private Integer questionId;
     private Integer id;
     private String name;
     private String avatar;

@@ -132,7 +132,8 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 <script>
-    let userData = {};
+    let userData1 = {};
+    let userData2 = {};
     $(document).ready(function () {
         // 當篩選條件改變時，重新加載資料
         $("#isVerifiedFilter").on("change", function () {
@@ -148,8 +149,7 @@
         function fetchRequestData(pageNumber = 0, pageSize = 5) {
             const status = $("#isVerifiedFilter").val();
             const authorization = localStorage.getItem("authorization");
-            // 更新 userData
-            userData.status = status === "" ? null : status;
+            userData1.status = status === "" ? null : status;
             $.ajax({
                 url: `/api/wallets/getAll?authorization=${authorization}&page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",
@@ -157,7 +157,7 @@
                     "authorization": localStorage.getItem("authorization")
                 },
                 contentType: "application/json",
-                data: JSON.stringify(userData),
+                data: JSON.stringify(userData1),
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
@@ -174,20 +174,35 @@
                             } else {
                                 $("#alertMessage").hide();
                             }
-
+                            let amount;
                             // 插入申請資料
                             requestList.forEach(request => {
+                                amount = request.withdrawAmount;
                                 $("#requestTable tbody").append(`
                                     <tr>
                                         <td>${request.memberId}</td>
-                                        <td>未審核</td>
-                                        <td>${request.withdrawAmount}</td>
+                                        <td class="status-cell" data-status="${request.status}"></td>
+                                        <td>${amount}</td>
                                         <td>${formatDateTime(request.requestDate)}</td>
                                         <td>${request.account}</td>
-                                        <td>${request.doneDate ? "未審核" : formatDateTime(request.doneDate)}</td>
-                                        <td><button type="button" id="checkBtn" class="btn btn-primary" data-id="${request.walletRequestId}" ${request.doneDate ? "" : "disabled"}>${request.doneDate ? "確認審核" : "完成審核"}</button></td>
+                                        <td>${request.doneDate}</td>
+                                        <td><button class="checkBtn btn btn-primary" data-id="${request.walletRequestId}" ${request.doneDate ? "" : "disabled"}>${request.doneDate ? "確認審核" : "完成審核"}</button></td>
                                     </tr>
                                 `);
+                            });
+                            // 更新狀態欄位的文字
+                            $("#requestTable tbody .status-cell").each(function () {
+                                let status = $(this).data("status");
+                                let $row = $(this).closest("tr"); // 獲取當前狀態欄位所在的行
+                                let $button = $row.find(".checkBtn"); // 找到該行中的按鈕
+
+                                if (status === 1) {
+                                    $(this).text("審核通過");
+                                    $button.prop("disabled", true); // 禁用按鈕
+                                    $button.text("已審核"); // 更新按鈕文字
+                                } else if (status === 0) {
+                                    $(this).text("未審核");
+                                }
                             });
 
                             // 插入分頁按鈕
@@ -207,6 +222,30 @@
                                 // 滾動到頁面頂部
                                 $("html, body").animate({scrollTop: 0}, 50);
                             });
+
+                            // 綁定確認審核按鈕的點擊事件
+                            $("#requestTable").on("click", ".checkBtn", function () {
+                                const walletRequestId = $(this).data("id");
+                                const authorization = localStorage.getItem("authorization");
+                                userData2 = {
+                                    walletRequestId: walletRequestId
+                                }
+
+                                $.ajax({
+                                    url: `/api/wallets/withdrawUpdate?authorization=${authorization}`,
+                                    method: "post",
+                                    headers: {
+                                        "authorization": localStorage.getItem("authorization")
+                                    }, contentType: "application/json",
+                                    data: JSON.stringify(userData2),
+                                    success() {
+                                        location.reload();
+                                    },
+                                    error(xhr, status, error) {
+                                        alert("審核失敗: " + error);
+                                    }
+                                });
+                            });
                         },
                         onError(message) {
                             console.log(message);
@@ -218,33 +257,6 @@
                 }
             });
         }
-
-        // 綁定確認審核按鈕的點擊事件
-        $("#requestTable").on("click", "#checkBtn", function () {
-            const requestId = $(this).data("id");
-            const row = $(this).closest("tr");
-            const btn = $(this);
-
-            $.ajax({
-                url: "/api/wallets/withdrawUpdate",
-                method: "post",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                }, contentType: "application/json",
-                data: JSON.stringify(requestId),
-                success(response) {
-                    const doneDate = response.doneDate;
-                    row.find(".status").text("已審核");
-                    row.find(".doneDate").text(doneDate);
-                    btn.text("完成審核");
-                    btn.prop("disabled", true);
-                    btn.removeClass("btn-primary").addClass("btn-secondary");
-                },
-                error(xhr, status, error) {
-                    alert("審核失敗: " + error);
-                }
-            });
-        });
 
         function formatDateTime(dateTimeString) {
             return dateTimeString.split('.')[0];

@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二手交易平台聊天室</title>
-    <link rel="stylesheet" href="/chatroom/css/chatroom.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <link rel="stylesheet" href="/chatroom/css/chatroom.css">
+
     <style>
         /*div.footer_top{*/
         /*    padding-top: 80px;*/
@@ -20,6 +22,193 @@
         /*div.footer_bottom{*/
         /*    height: 5vw;*/
         /*}*/
+
+        .container_chatroom {
+            display: flex;
+            /*flex-direction: column;*/
+            height:50%;
+            /*width: 90vw;*/
+            /*Margin-top:10px;*/
+            /*padding-top:10px;*/
+            margin-left: 10vh;
+            margin-right: 10vh;
+        }
+        .sidebar {
+            width: 300px;
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .friends-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            background-color: #4CAF50;
+            color: white;
+            height: 60px; /* 與 chat-header 高度相同 */
+        }
+
+        .friend-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .friend-list li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .friend-list li:hover {
+            background-color: #f9f9f9;
+        }
+
+        /*.friend-list li img.chatroomIMG {*/
+        /*    width: 50px;*/
+        /*    height: 50px;*/
+        /*    border-radius: 50%;*/
+        /*    margin-right: 10px;*/
+        /*}*/
+        img.chatroomIMG {
+            width: 20%;
+            height: 20%;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .friend-list li .friend-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .friend-list li .friend-info .name {
+            font-weight: bold;
+        }
+
+        .friend-list li .friend-info .id {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .friend-list li.unread .name {
+            font-weight: bold;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            background-color: #4CAF50;
+            color: white;
+            height: 60px; /* 與 friends-list-header 高度相同 */
+        }
+
+        .chat-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        .chat-messages .message {
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 60%;
+            clear: both;
+        }
+
+        .chat-messages .sent {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            float: right;
+        }
+
+        .chat-messages .received {
+            background-color: #fff;
+            align-self: flex-start;
+            float: left;
+        }
+
+        .message-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        .message-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .message-input button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .message-input button:hover {
+            background-color: #45a049;
+        }
+
+        .message-input .file-label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .message-input .file-label:hover {
+            background-color: #45a049;
+        }
+
+        .message-input input[type="file"] {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 200px;
+                box-shadow: none;
+            }
+            .chat-container {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body>
