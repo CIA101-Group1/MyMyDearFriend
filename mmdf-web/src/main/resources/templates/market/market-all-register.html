@@ -14,32 +14,40 @@
         .registration_records {
             display: flex;
             justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
-
-        .registration_records .dashboard_content {
-            max-width: 900px; /* Adjust the max-width as needed */
+        .dashboard_content {
+            max-width: 900px;
             width: 100%;
         }
-
         .record-table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
         }
-
         .record-table th, .record-table td {
             border: 1px solid #ddd;
             padding: 8px;
-            white-space: nowrap; /* 防止內容換行 */
+            text-align: center; /* 确保表格内容居中 */
         }
-
         .record-table th {
             background-color: #f2f2f2;
-            text-align: left;
         }
-
         .record-table tr:nth-child(even) {
             background-color: #f9f9f9;
+        }
+        .cancel-button {
+            background-color: #ffcccc;
+            border: 1px solid red;
+            color: black;
+        }
+        .modal-body {
+            text-align: center; /* 确保模态框内容居中 */
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: center;
         }
     </style>
 </head>
@@ -57,18 +65,18 @@
                 <table class="record-table" id="recordsTable">
                     <thead>
                     <tr>
-                        <th id="marketName">活動名稱</th>
-                        <th id="marketLocation">地點</th>
-                        <th id="marketStart">活動開始日期</th>
-                        <th id="marketEnd">活動結束日期</th>
-                        <th id="marketFee">費用</th>
-                        <th id="applicantPopulation">目前報名人數</th>
-                        <th id="participateDate">報名日期</th>
-                        <th id="status">報名狀態</th>
+                        <th>活動名稱</th>
+                        <th>地點</th>
+                        <th>活動開始日期</th>
+                        <th>活動結束日期</th>
+                        <th>費用</th>
+                        <th>目前報名人數</th>
+                        <th>報名日期</th>
+                        <th>報名狀態</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody id="recordsTableBody">
-                    <!-- 报名记录将在这里显示 -->
                     </tbody>
                 </table>
                 <div id="alertMessage" style="display: none; text-align: center;">查無資料</div>
@@ -86,9 +94,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">提示</h5>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 錯誤訊息將顯示在這裡 -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
             </div>
@@ -102,8 +108,8 @@
 <script src="/js/api-response-utils.js"></script>
 <script>
     $(document).ready(function () {
+        var memberId = localStorage.getItem("memberId");
 
-        // 使用 AJAX 获取报名记录
         $.ajax({
             url: `/api/market/allRegister`,
             type: 'GET',
@@ -114,16 +120,12 @@
             success: function (response) {
                 apiResponseJSON(response, {
                     onSuccess(data) {
-                        // 清空表格
                         $("#recordsTableBody").empty();
-
-                        // 若查無資料
                         if (data.length === 0) {
                             $("#alertMessage").show();
                         } else {
                             $("#alertMessage").hide();
                             let recordsTableBody = $('#recordsTableBody');
-                            // 创建报名记录的 HTML 并添加到页面中
                             data.forEach(market => {
                                 recordsTableBody.append(`
                                 <tr>
@@ -135,13 +137,14 @@
                                     <td>${market.applicantPopulation}</td>
                                     <td>${formatDate(market.participateDate)}</td>
                                     <td>${convertStatusToChinese(market.status)}</td>
+                                    <td><button class="cancel-button" data-market-id="${market.marketId}">取消報名</button></td>
                                 </tr>
                             `);
                             });
                         }
                     },
                     onError(error) {
-                        console.log(error)
+                        console.log(error);
                         console.error('Error: ' + error);
                     }
                 });
@@ -149,6 +152,45 @@
             error: function (xhr, status, error) {
                 console.error('Error: ' + error);
             }
+        });
+
+        function cancelRegistration(marketId, memberId) {
+
+            var userData = {
+                "marketId": marketId,
+                "memberId": memberId
+            };
+
+            $.ajax({
+                url: "/api/market/cancel",
+                method: "POST",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            $("#modalBody").html("取消報名成功");
+                            $("#myModal").modal("show");
+                        },
+                        onError(message) {
+                            $("#modalBody").html(message);
+                            $("#myModal").modal("show");
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    $("#modalBody").html("報名失敗：" + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        }
+
+        $(document).on('click', '.cancel-button', function () {
+            var marketId = $(this).data('market-id');
+            cancelRegistration(marketId, memberId);
         });
 
         $("#closeModalBtn").click(function () {
@@ -164,7 +206,7 @@
     }
 
     function convertStatusToChinese(status) {
-        switch (parseInt(status)) { // 將 marketStatus 轉換為整數進行比對
+        switch (parseInt(status)) {
             case 1:
                 return "報名成功，已扣款";
             case 2:
@@ -173,6 +215,7 @@
                 return "未知狀態";
         }
     }
+
 
 </script>
 </body>
