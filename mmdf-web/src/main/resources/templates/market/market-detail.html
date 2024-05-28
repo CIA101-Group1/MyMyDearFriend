@@ -211,9 +211,6 @@
                                         onSuccess(data) {
                                             $("#modalBody").html("報名成功");
                                             $("#myModal").modal("show");
-                                            setTimeout(function () {
-                                                window.location.href = `/api/market/allRegister?authorization=${localStorage.getItem("authorization")}`;
-                                            }, 2000);
                                         },
                                         onError(message) {
                                             $("#modalBody").html(message);
