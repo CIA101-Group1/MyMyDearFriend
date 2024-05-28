@@ -6,7 +6,11 @@ import com.tibame.group1.common.dto.PagesResDTO;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.WalletRequestEntity;
+import com.tibame.group1.db.repository.WalletHistoryRepository;
 import com.tibame.group1.db.repository.WalletRequestRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -19,9 +23,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class WalletRequestServiceImpl implements WalletRequestService {
 
     @Autowired private WalletRequestRepository walletRequestRepository;
+    @Autowired private WalletHistoryRepository walletHistoryRepository;
 
     /**
      * 後台超級管理員查詢提領申請資料
@@ -83,9 +89,8 @@ public class WalletRequestServiceImpl implements WalletRequestService {
         walletRequestEntity.setStatus("1");
         walletRequestEntity.setDoneDate(new Date());
         walletRequestEntity = walletRequestRepository.save(walletRequestEntity);
-
         WalletWithdrawUpdateResDTO resDTO = new WalletWithdrawUpdateResDTO();
-        resDTO.setDoneDate(String.valueOf(walletRequestEntity));
+        resDTO.setDoneDate(String.valueOf(walletRequestEntity.getDoneDate()));
         return resDTO;
     }
 }
