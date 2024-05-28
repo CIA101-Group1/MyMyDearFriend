@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="marketDescription" class="form-label">活動說明：</label>
-                                    <input type="text" class="form-control" id="marketDescription" name="marketDescription">
+                                    <textarea class="form-control" id="marketDescription" name="marketDescription"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="marketLocation" class="form-label">活動地點：</label>
@@ -93,7 +93,7 @@
                                 <!-- 顯示活動照片和修改按鈕 -->
                                 <div id="profile-image-container">
                                     <label for="profile-image">活動照片：</label>
-                                    <img id="profile-image" src="" alt="活動照片">
+                                    <img id="profile-image" src="${market.marketImage}" alt="活動照片"  style="max-width: 100%; max-height: 200px;">
                                     <button type="button" id="modify-button" class="btn btn-secondary">修改</button>
                                     <button type="button" class="btn btn-warning" id="remove-button" style="display: none;">移除</button>
                                 </div>
@@ -185,7 +185,8 @@
                     $("#startDate").val(formatDate(data.startDate));
                     $("#endDate").val(formatDate(data.endDate));
                     $("#marketStatus").val(data.marketStatus);
-                    $("#profile-image").attr("src", "data:image/jpeg;base64," + data.marketImage);
+                    let marketImage = `${data.marketImage}`;
+                    $("#profile-image").attr("src", marketImage);
                 } else {
                     console.error("API returned an error: " + response.message);
                 }
@@ -291,19 +292,22 @@
                 return dateStr.replace(/-/g, '');
             }
 
-
-
             if (pond.getFile() !== null) {
                 let file = pond.getFile().file;
                 let reader = new FileReader();
                 reader.onload = function (e) {
-                    userData.marketImage = e.target.result;
+                    userData.marketImage = e.target.result.split(',')[1]; // 去除 data:image/jpeg;base64, 前缀
+                    userData.marketImage = userData.marketImage.replace(/\s/g, ''); // 移除所有空白字符
                     saveUserData();
                 };
                 reader.readAsDataURL(file);
             } else {
+                // 如果没有上传新文件，保持原有的图片URL
+                userData.marketImage = $("#profile-image").attr("src").split(',')[1]; // 去除 data:image/jpeg;base64, 前缀
+                userData.marketImage = userData.marketImage.replace(/\s/g, ''); // 移除所有空白字符
                 saveUserData();
             }
+
 
 
             function saveUserData() {

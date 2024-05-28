@@ -42,5 +42,5 @@ public interface EmployeeService {
     EmployeeRoleResDTO assignRoleToEmployee(EmployeeRoleReqDTO employeeRoleReq, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException;
 
     //根據員工id查詢員工權限
-    EmployeeRoleDetailResDTO employeeRole(AdminLoginSourceDTO adminLoginSource);
+    EmployeeRoleDetailResDTO employeeRole(AdminLoginSourceDTO adminLoginSource, Integer employeeId);
 }

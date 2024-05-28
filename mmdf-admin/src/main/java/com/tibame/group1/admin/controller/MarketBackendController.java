@@ -59,10 +59,10 @@ public class MarketBackendController {
         return res;
     }
 
-    @GetMapping("/{marketId}/registrations")
-    public ResDTO<List<MemberRegistrationAllResDTO>> findAllByMarketId(
+    @GetMapping("/market/registration")
+    public @ResponseBody ResDTO<List<MemberRegistrationAllResDTO>> findAllByMarketId(
             @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
-            @PathVariable Integer marketId) throws CheckRequestErrorException{
+            @RequestParam(value = "marketId")Integer marketId){
         ResDTO<List<MemberRegistrationAllResDTO>> res = new ResDTO<>();
         res.setData(marketService.findAllByMarketId(adminLoginSource,marketId));
         return res;
