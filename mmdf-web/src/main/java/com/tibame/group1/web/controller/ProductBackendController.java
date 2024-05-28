@@ -8,9 +8,11 @@ import com.tibame.group1.db.entity.ProductEntity;
 import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -130,21 +132,21 @@ public class ProductBackendController {
         return res;
     }
 
-    @PutMapping("/seller/product/updateReviewStatus")
-    @ResponseBody
-    public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            productService.updateReviewStatus(productId, reviewStatus);
-            // 获取更新后的审核状态
-            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
-            response.put("reviewStatus", newReviewStatus);
-            response.put("success", "審核狀態已成功更新");
-        } catch (Exception e) {
-            response.put("error", "無法更新審核狀態");
-        }
-        return response;
-    }
+//    @PutMapping("/seller/product/updateReviewStatus")
+//    @ResponseBody
+//    public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus) {
+//        Map<String, String> response = new HashMap<>();
+//        try {
+//            productService.updateReviewStatus(productId, reviewStatus);
+//            // 获取更新后的审核状态
+//            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
+//            response.put("reviewStatus", newReviewStatus);
+//            response.put("success", "審核狀態已成功更新");
+//        } catch (Exception e) {
+//            response.put("error", "無法更新審核狀態");
+//        }
+//        return response;
+//    }
 
     @PutMapping("/seller/product/updateProductStatus")
     @ResponseBody
@@ -162,5 +164,11 @@ public class ProductBackendController {
         return response;
     }
 
+
+    @GetMapping("api/destination")
+    public ResponseEntity<String> redirect(HttpServletRequest request) {
+        System.out.println("收到redirect");
+        return null;
+    }
 
 }

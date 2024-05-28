@@ -60,7 +60,6 @@ public class OrderServiceImpl implements OrderService {
         order.setBuyerId(buyer.getMemberId());
         order.setSellerId(req.getSellerId());
         order.setMemberCouponId1(req.getMemberCouponId1());
-        order.setMemberCouponId2(req.getMemberCouponId2());
         order.setPriceBeforeDiscount(req.getPriceBeforeDiscount());
         order.setDiscount(req.getDiscount());
         order.setPriceAfterDiscount(req.getPriceAfterDiscount());

@@ -45,6 +45,49 @@ $(document).ready(function () {
 
 })
 
+// 新增商品至收藏
+function addToFavorite(productId) {
+    // 取得商品資料
+    let data ={
+        productId: productId,
+    }
+
+    $.ajax({
+        url: "/api/favorite/add",
+        method: "POST",
+        headers: {
+            "authorization": localStorage.getItem("authorization")
+        },
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success(response){
+            if(response.code == 0){
+                Swal.fire({
+                    title: '加入成功!',
+                    icon: 'success',
+                    confirmButtonText: '確認'
+                });
+            }else{
+                Swal.fire({
+                    title: '加入失敗',
+                    icon: 'error',
+                    text: response.message,
+                    confirmButtonText: '確認'
+                });
+            }
+        },
+        error(xhr, status, error){
+            console.error("There was a problem :", error);
+            Swal.fire({
+                title: "Oops...!",
+                icon: "error",
+                text: "伺服器連線失敗: " + error,
+                confirmButtonText: "確認"
+            });
+        }
+    })
+}
+
 // 新增商品至購物車
 function addToCart(productId, quantity) {
     // 取得商品資料
@@ -62,17 +105,32 @@ function addToCart(productId, quantity) {
         contentType: "application/json",
         data: JSON.stringify(data),
         success(response){
-            Swal.fire({
-                title: '加入成功!',
-                icon: 'success',
-                confirmButtonText: '確認'
-            });
-            // 清空mini購物車資料重新取得mini購物車資料
-            $("div.cart_gallery").empty();
-            getMiniCart();
+            if(response.code == 0){
+                Swal.fire({
+                    title: '加入成功!',
+                    icon: 'success',
+                    confirmButtonText: '確認'
+                });
+                // 清空mini購物車資料重新取得mini購物車資料
+                $("div.cart_gallery").empty();
+                getMiniCart();
+            }else{
+                Swal.fire({
+                    title: '加入失敗',
+                    icon: 'error',
+                    text: response.message,
+                    confirmButtonText: '確認'
+                });
+            }
         },
         error(xhr, status, error){
             console.error("There was a problem :", error);
+            Swal.fire({
+                title: "Oops...!",
+                icon: "error",
+                text: "伺服器連線失敗: " + error,
+                confirmButtonText: "確認"
+            });
         }
     })
 }
@@ -120,6 +178,12 @@ function getMiniCart() {
         },
         error(xhr, status, error) {
             console.error("There was a problem :", error);
+            Swal.fire({
+                title: "Oops...!",
+                icon: "error",
+                text: "伺服器連線失敗: " + error,
+                confirmButtonText: "確認"
+            });
         },
     });
 
@@ -198,6 +262,12 @@ function getCart() {
         },
         error(xhr, status, error) {
             console.error("There was a problem :", error);
+            Swal.fire({
+                title: "Oops...!",
+                icon: "error",
+                text: "伺服器連線失敗: " + error,
+                confirmButtonText: "確認"
+            });
         },
     });
 }

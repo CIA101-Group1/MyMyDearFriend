@@ -6,15 +6,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WalletResDTO {
-  private Integer walletRequestId;
+    private Integer walletRequestId;
 
-  private String memberId;
+    private String memberId;
 
-  private String status;
+    private String status;
 
-  private String account;
+    private String account;
 
-  private String requestDate;
+    private String requestDate;
 
-  private String doneDate;
+    private String doneDate;
+
+    private String withdrawAmount;
 }

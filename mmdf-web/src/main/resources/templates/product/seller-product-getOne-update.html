@@ -10,35 +10,35 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!--css-->
-    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+        <th:block th:replace="~{/fragments/css}"/>
     <!-- CSS
  ========================= -->
-    <!--bootstrap min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
-    <!--owl carousel min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
-    <!--slick min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
-    <!--magnific popup min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
-    <!--font awesome css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
-    <!--ionicons min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
-    <!--animate css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
-    <!--jquery ui min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
-    <!--slinky menu css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
-    <!--plugins css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+<!--    &lt;!&ndash;bootstrap min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">-->
+<!--    &lt;!&ndash;owl carousel min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">-->
+<!--    &lt;!&ndash;slick min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">-->
+<!--    &lt;!&ndash;magnific popup min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">-->
+<!--    &lt;!&ndash;font awesome css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">-->
+<!--    &lt;!&ndash;ionicons min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">-->
+<!--    &lt;!&ndash;animate css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">-->
+<!--    &lt;!&ndash;jquery ui min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+<!--    &lt;!&ndash;slinky menu css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">-->
+<!--    &lt;!&ndash;plugins css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">-->
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+<!--    &lt;!&ndash; Main Style CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">-->
 
-    <!-- add member css-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!--    &lt;!&ndash; add member css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">-->
 
     <script th:src="@{/js/custom.js}"></script>
 
@@ -52,6 +52,9 @@
         .has-error .help-block.with-errors {
             color: red;
             font-size: 14px;
+        }
+        .error-message {
+            color: red;
         }
     </style>
 
@@ -69,6 +72,11 @@
     <div class="container d-flex justify-content-center">
         <a class="navbar-brand" href="/">資料修改</a>
     </div>
+    <a th:href="@{/product/seller/select}">
+        <button type="button" class="btn btn-success  ml-5" id="status">
+            返回商品查詢
+        </button>
+    </a>
 </nav>
 
 <div class="container">
@@ -77,14 +85,12 @@
             <form id="product_form" role="form" data-toggle="validator">
                 <div class="form-group">
                     <input type="submit" id="fast" value="快速修改" class="btn btn-danger btn-block"/>
-<!--                    <div class="help-block with-errors font-weight-bold" style="font-size: larger;"></div>-->
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-md-1 col-form-label">商品編號</label>
                     <div class="col-md-2">
                         <input id="productId" name="productId" type="text" class="form-control" readonly="readonly"
-                               th:value="${productEntity.productId}"
-                        >
+                               th:value="${productEntity.productId}">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -99,7 +105,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -111,7 +117,7 @@
                                required="required"
                                th:value="${productEntity.name}"
                         >
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -123,7 +129,7 @@
                                required="required"
                                th:value="${productEntity.price}"
                         >
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -135,7 +141,7 @@
                                required="required"
                                th:value="${productEntity.quantity}"
                         >
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -148,7 +154,7 @@
                                   required="required"
                                   th:text="${productEntity.description}">
                         </textarea>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
 
@@ -178,7 +184,7 @@
                             required="required"
                             data-error="請上傳圖片"
                     />
-                    <div class="help-block with-errors"></div>
+                    <div class="help-block with-errors error-message"></div>
                 </div>
 
                 <input type="submit" value="修改" class="btn btn-danger btn-block"/>
@@ -304,6 +310,7 @@
                         onSuccess(data) {
                             console.log(data);
                             alert("商品修改成功");
+                            window.location.href = '/product/seller/select';
                         }
                     });
                 },
