@@ -15,5 +15,5 @@ public interface BidProductService {
 
     void updateBidProductReviewStatus(Integer productId, Integer newStatus) throws CheckRequestErrorException;
 
-    List<BidProductEntity> findByCompositeQuery(Integer categoryId, String name, List<Integer> status);
+    List<BidProductEntity> findByCompositeQuery(Integer categoryId, Integer conditionId, String name, List<Integer> status);
 }

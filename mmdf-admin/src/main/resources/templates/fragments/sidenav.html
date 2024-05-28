@@ -12,7 +12,7 @@
                 <!-- 錢包 -->
                 <a class="nav-link" href="offline-market.html">錢包管理</a>
                 <!-- 優惠券 -->
-                <a class="nav-link" href="offline-market.html">優惠券管理</a>
+                <a onclick="goToCouponAll()" class="nav-link">優惠券管理</a>
                 <!-- 一般商品 -->
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                    data-bs-target="#ProductCollapse" aria-expanded="false" aria-controls="collapseLayouts2">
@@ -217,6 +217,16 @@
     function goToAddNews() {
         var authorization = localStorage.getItem("authorization");
         var url = '/news/add';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToCouponAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/coupon/all';
         if(authorization) {
             url += '?authorization=' + encodeURIComponent(authorization);
         }

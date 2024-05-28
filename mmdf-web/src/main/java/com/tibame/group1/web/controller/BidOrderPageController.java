@@ -4,6 +4,7 @@ import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.BidOrderEntity;
 import com.tibame.group1.db.entity.BidProductEntity;
 import com.tibame.group1.web.service.BidOrderService;
+import com.tibame.group1.web.service.BidProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class BidOrderPageController {
     @Autowired
     BidOrderService bidOrderService;
+    @Autowired
+    BidProductService bidProductService;
 
     @GetMapping("/seller/bidorder")
     public String getSellerBidOrderPage() {
@@ -29,6 +32,8 @@ public class BidOrderPageController {
     public String getBidOrderCheckoutPage(@PathVariable("orderId") Integer orderId, Model model) throws CheckRequestErrorException {
         BidOrderEntity bidOrder = bidOrderService.findById(orderId);
         model.addAttribute("BidOrder", bidOrder);
+        BidProductEntity bidProduct = bidProductService.findById(bidOrder.getProductId());
+        model.addAttribute("BidProduct", bidProduct);
         return "/bidorder/bidorder-checkout";
     }
 }

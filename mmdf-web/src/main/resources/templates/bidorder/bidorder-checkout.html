@@ -52,8 +52,8 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td> Handbag fringilla <strong> × 1</strong></td>
-                                    <td> $165.00</td>
+                                    <td id="productName"><span th:text="${BidProduct.getName()}"></span><strong> × 1</strong></td>
+                                    <td id="productPrice"><span>$</span><span th:text="${BidOrder.getSubtotal()}"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -188,15 +188,31 @@
                 contentType: 'application/json',
                 data: JSON.stringify(checkoutData),
                 success: function (response) {
-                    // alert('結帳成功');
                     console.log(response);
+                    if (response.code === "0") {
+                        alert("操作成功");
+                        location.href = "/buyer/bidorder";
+                    } else if (response.code === "-1") {
+                        // 收集所有錯誤訊息
+                        var errorMessages = response.data.map(function(error) {
+                            return error.errorMessage;
+                        });
+                        // 顯示所有錯誤訊息
+                        alert(errorMessages.join("\n"));
+                    } else {
+                        alert(response.message);
+                    }
                 },
                 error: function (xhr, status, error) {
-                    alert('結帳失敗: ' + error);
+                    alert("伺服器連線失敗: " + error);
                 }
             });
         });
     })
+
+    function fetchProductDetail() {
+
+    }
 
     function fetchMemberDetail() {
         $.ajax({
