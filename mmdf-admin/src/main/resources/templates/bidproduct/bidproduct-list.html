@@ -8,10 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <title>競標商品查詢</title>
     <th:block th:replace="~{/fragments/css}"/>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.7/r-3.0.2/datatables.min.css" rel="stylesheet">
 </head>
 
 <body class="sb-nav-fixed">
@@ -28,7 +25,7 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="mt-4">競標商品查詢</h1>
+                <h2 class="mt-4">競標商品查詢</h2>
                 <table id="bidProductTable" class="table table-bordered dt-responsive nowrap"
                        style="width: 100%;">
                 </table>
@@ -66,18 +63,7 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
-
-<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
-<!-- <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script> -->
-<!-- <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script> -->
-<!-- <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script> -->
-<!-- <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script> -->
-
+<script src="https://cdn.datatables.net/v/bs5/dt-2.0.7/r-3.0.2/datatables.min.js"></script>
 
 <script>
     const API_URL = "/api/bidproduct";
@@ -153,6 +139,13 @@
                             responsivePriority: 1,
                         }
                     ],
+                    "lengthMenu": [5, 10, 20, 50, 100],
+                    "searching": true,
+                    "paging": true,
+                    "ordering": true,
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/2.0.7/i18n/zh-HANT.json",
+                    }
                 });
             },
             error: function (err) {
