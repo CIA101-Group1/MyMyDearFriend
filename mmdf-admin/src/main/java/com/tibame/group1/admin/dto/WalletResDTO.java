@@ -1,6 +1,5 @@
 package com.tibame.group1.admin.dto;
 
-import com.tibame.group1.db.entity.MemberEntity;
 import lombok.Getter;
 import lombok.Setter;
 
