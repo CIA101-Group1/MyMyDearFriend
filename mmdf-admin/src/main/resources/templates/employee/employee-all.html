@@ -92,10 +92,10 @@
                         <button id="resetButton" class="btn btn-secondary">重置</button>
                     </div>
                 </div>
-                <!-- 新增創建新員工按鈕 -->
+                <!-- 創建新員工按鈕 -->
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <button id="createEmployeeButton" class="btn btn-success">創建新員工資料</button>
+                        <button id="createEmployeeButton" class="btn btn-success">創建新員工</button>
                     </div>
                 </div>
                 <!-- 主要表格 -->
@@ -107,14 +107,15 @@
                         <th>姓名</th>
                         <th>建立時間</th>
                         <th>狀態</th>
-                        <th>操作</th> <!-- 新增一個欄位用於顯示操作按鈕 -->
+                        <th>操作</th> <!-- 用於顯示操作按鈕 -->
                     </tr>
                     </thead>
                     <tbody>
                     <!-- 這裡將員工資料動態插入 -->
                     </tbody>
                 </table>
-                <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">查無資料</div>
+                <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">查無資料
+                </div>
             </div>
         </main>
     </div>
@@ -133,6 +134,7 @@
             $("#searchInput").val("");
             fetchEmployeeData();
         });
+
         function fetchEmployeeData() {
             const searchName = $("#searchInput").val().trim();
             const authorization = localStorage.getItem("authorization");
@@ -161,12 +163,16 @@
                                                 <td>${employee.employeeName}</td>
                                                 <td>${formatDate(employee.employeeCreateTime)}</td>
                                                 <td>${employee.employeeStatus}</td>
-                                                <td><button class="btn btn-primary detail-button" data-employee-id="${employee.employeeId}">詳細資料</button></td>
+                                                <td>
+                                                <button class="btn btn-primary detail-button" data-employee-id="${employee.employeeId}">詳細資料</button>
+                                                <button class="btn btn-secondary set-permissions-button" data-employee-id="${employee.employeeId}">設置權限</button>
+                                                <button class="btn btn-info check-permissions-button" data-employee-id="${employee.employeeId}">權限查詢</button>
+                                                </td>
                                             </tr>
                                         `);
                                 });
 
-                                /// 在fetchEmployeeData函數中的相應位置修改，當點擊修改按鈕時將token作為URL參數傳遞到edit.html頁面中
+                                /// 當點擊修改按鈕時將token作為URL參數傳遞到edit.html頁面中
                                 $(".detail-button").on("click", function () {
                                     // 取得被點擊員工的 ID
                                     const employeeId = $(this).data("employee-id");
@@ -176,12 +182,39 @@
                                     window.location.href = `/employee/detail?id=${employeeId}&authorization=${authorization}`;
                                 });
 
-                                // 監聽創建新員工按鈕的點擊事件
-                                $("#createEmployeeButton").on("click", function (){
+                                // 添加設置權限按鈕的事件
+                                $(".set-permissions-button").on("click", function () {
+                                    // 取得被點擊員工的 ID
+                                    const employeeId = $(this).data("employee-id");
+                                    // 獲取token
+                                    var authorization = localStorage.getItem("authorization");
+                                    // 導航到修改資料畫面，將token作為URL參數傳遞
+                                    window.location.href = `/employee/role?id=${employeeId}&authorization=${authorization}`;
+                                });
+
+                                // 添加權限查詢按鈕的事件
+                                $(".check-permissions-button").on("click", function () {
+                                    // 取得被點擊員工的 ID
+                                    const employeeId = $(this).data("employee-id");
+                                    // 獲取token
+                                    var authorization = localStorage.getItem("authorization");
+                                    // 導航到修改資料畫面，將token作為URL參數傳遞
+                                    window.location.href = `/employee/allRole?id=${employeeId}&authorization=${authorization}`;
+                                });
+
+                                // 創建新員工按鈕的點擊事件
+                                $("#createEmployeeButton").on("click", function () {
                                     // 取得token
                                     var authorization = localStorage.getItem("authorization");
                                     // 將token作為URL參數傳遞
                                     window.location.href = "/employee/create?authorization=" + authorization;
+                                });
+
+                                // 添加按下 Enter 键触发搜索功能的事件
+                                $("#searchInput").on("keydown", function (event) {
+                                    if (event.keyCode === 13) { // 13 表示 Enter 键的键码
+                                        fetchEmployeeData();
+                                    }
                                 });
 
                             }
@@ -197,9 +230,12 @@
             });
         }
 
+
+
         // 初始加載資料
         fetchEmployeeData();
     });
+
     // 格式化日期
     function formatDate(dateString) {
         const year = dateString.substring(0, 4);
