@@ -61,7 +61,21 @@
                     </nav>
                 </div>
                 <!-- 客服訊息 -->
-                <a class="nav-link" onclick="goToChatroom()">客服聊天室</a>
+
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                   data-bs-target="#collapseLayouts2" aria-expanded="false" aria-controls="collapseLayouts2">
+                    客服訊息
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </a>
+                <div class="collapse" id="collapseLayouts2" aria-labelledby="headingOne"
+                     data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" onclick="goToChatroom()" >客服聊天室</a>
+                        <a class="nav-link" onclick="goToChatroomHistory()">聊天室紀錄</a>
+                    </nav>
+                </div>
                 <!-- 平台收益 -->
                 <a class="nav-link" href="customer-service.html">查看平台收益</a>
 
@@ -154,6 +168,15 @@
     function goToChatroom() {
         var authorization = localStorage.getItem("authorization");
         var url = '/chatroom/service';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+    function goToChatroomHistory() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/chatroom/history';
         if(authorization) {
             url += '?authorization=' + encodeURIComponent(authorization);
         }

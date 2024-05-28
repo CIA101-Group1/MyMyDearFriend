@@ -124,7 +124,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function addMessage(text, type) {
         const chatMessages = document.getElementById('chat-messages');
         const messageDiv = document.createElement('div');
+        console.log(type);
         messageDiv.classList.add('message', type);
+        // if(type != 'helper'){
+        //     messageDiv.classList.add('float-right');
+        // }else {
+        //     messageDiv.classList.add('float-left');
+        // }
 
         if (type === 'helper') {
             const avatarImg = document.createElement('img');
@@ -138,18 +144,26 @@ document.addEventListener('DOMContentLoaded', function () {
             avatarImg.alt = '客服頭貼';
             avatarImg.classList.add('avatar');
             messageDiv.appendChild(avatarImg);
+
         }
         const messageText = document.createElement('div');
+        // const helloworld = document.createElement('div');
         messageText.textContent = text;
         messageDiv.appendChild(messageText);
 
-        chatMessages.appendChild(messageDiv)
+        chatMessages.appendChild(messageDiv);
+        // chatMessages.appendChild(helloworld);
+        scrollToBottom();
     }
     function switchWebSocket(){
         websocketService.send(JSON.stringify({type: 'member', 'memberId': sendServiceMemberId}));
         currentSocekt = websocketService;
         currentMessageType = serviceInitType;
 
+    }
+    function scrollToBottom() {
+        const container = document.getElementById("chat-messages");
+        container.scrollTop = container.scrollHeight;
     }
 
 });

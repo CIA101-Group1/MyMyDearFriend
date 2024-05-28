@@ -9,14 +9,18 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/chatroom")
 public class ServiceChatroomController {
-    public ServiceChatroomController(){
-        System.out.println("AAAAAA");
-    }
+
     @GetMapping(value = "/service")
     public ModelAndView serviceChatroom(Model model) {
-        System.out.println("OOOOO");
         ModelAndView view = new ModelAndView();
         view.setViewName("/chatroom/servicechatroom-index");
+        return view ;
+    }
+
+    @GetMapping(value = "/history")
+    public ModelAndView serviceHistory(Model model) {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/chatroom/servicechatroom-history");
         return view ;
     }
 }

@@ -28,7 +28,7 @@ public class WebSocketHelper implements WebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         AiMessageDTO dto = new AiMessageDTO();
         dto.setType("welcome");
-        dto.setAiMessage("歡迎使用客服聊天系統!\n請說明的問題，文字數盡量不要超過字");
+        dto.setAiMessage("歡迎使用客服聊天系統!\n請簡單說明的問題。");
         String openSerivce = gson.toJson(dto);
 //        String openSerivce = gson.toJson("{type:\"welcome\" ,aiMessage: \"歡迎使用客服聊天系統!\n請說明具體的問題\"}");
         session.sendMessage(new TextMessage(openSerivce));
@@ -113,7 +113,18 @@ public class WebSocketHelper implements WebSocketHandler {
         }
         Long endTime = System.nanoTime();
         System.out.println((endTime - starTime) / 1_000_000 + " 毫秒");
-        return "對不起，我不明白您的問題，我還在學習中。若要聯繫客服人員，請輸入\"專員客服\"";
+        List<String> sendMessage = new ArrayList<>();
+        String m1 = "小麥不知道你在說甚麼，可以簡單形容給小麥聽嗎?";
+        String m2 = "小麥聽不懂你在說甚麼，你可已傳送客服專員，會有比小麥厲害的人跟你回答。";
+        String m3 = "小麥放棄了，你可以傳送\"客服專員\"會有真人客服與你聯繫。";
+        String m4 = "這是甚麼東西阿~可以講清楚一點給想賣知道嗎?";
+        sendMessage.add(m1);
+        sendMessage.add(m2);
+        sendMessage.add(m3);
+        sendMessage.add(m4);
+
+        String sendA =sendMessage.get((int)(Math.random()*4));
+        return sendA;
     }
 
     // ============ 分析有哪些分詞 ============//
@@ -124,7 +135,7 @@ public class WebSocketHelper implements WebSocketHandler {
             words.add(token.word);
         }
 
-        // 生成所有可能的詞組合
+        // ----------生成所有可能的詞組合-----------//
         List<String> combinations = generateCombinations(words);
         return combinations;
     }

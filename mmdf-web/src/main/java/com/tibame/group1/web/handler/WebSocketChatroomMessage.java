@@ -125,13 +125,15 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
             //            Integer roomId = chatroomRepository.findByRoom(receiver, sender);
 
             // ---------------------------------------//
+            Integer roomId = chatroomRepository.findByRoom(receiver,sender);
             Date date = new Date();
             Timestamp time = new Timestamp(date.getTime());
+            chatroomRepository.updateNewMessageDate(roomId);
             MessageDTO messageDTO =
                     gson.fromJson(message.getPayload().toString(), MessageDTO.class);
             messageDTO.setSender(sender);
             messageDTO.setDate(time);
-            messageDTO.setRoomId(chatroomRepository.findByRoom(receiver, sender));
+            messageDTO.setRoomId(roomId);
             messageDTO.setType("newMessage");
             messageDTO.setMessage(jsonObj.get("message").getAsString());
             messageSaveRedis(messageDTO,sender);

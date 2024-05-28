@@ -11,11 +11,11 @@
             display: flex;
             height: 80vh;
             border: 1px solid black;
-            padding-left: ;
+            /*padding-left: ;*/
         }
 
         #waiting-customers {
-            width: 20vh;
+            width: 30vh;
 
             border-right: 1px solid #ccc;
             padding: 10px;
@@ -60,8 +60,8 @@
 
         #chat-window {
             flex: 1;
-            width: 60vh;
-            height: 50vh;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             padding: 10px;
@@ -120,6 +120,10 @@
         }
         div.sb-sidenav-menu{
             height: 100vh;
+        }
+        #layoutSidenav{
+            height: auto;
+            width: auto;
         }
     </style>
 </head>
@@ -289,7 +293,6 @@
             console.log(currentId.innerText.split(" ")[1]);
             console.log(currentCustomerId);
             if (currentId.innerText.split(" ")[1] == currentCustomerId) {
-
                 messageElement.classList.add('message', type);
                 messageElement.textContent = message;
                 if (message.image) {
