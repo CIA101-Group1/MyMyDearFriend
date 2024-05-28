@@ -12,64 +12,85 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding-top: 50px;
+        /* Blog page section styling */
+        .blog_page_section {
+            margin-top: 100px;
+            margin-bottom: 100px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .market {
+        .single_blog {
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
             transition: box-shadow 0.3s ease;
-            cursor: pointer;
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            align-items: center; /* 居中對齊 */
+            text-align: center;
         }
 
-        .market:hover {
+        .single_blog:hover {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .market img {
+        .img-container {
             width: 100%;
-            height: auto;
+            height: 200px; /* 固定容器高度 */
             border-radius: 5px;
             margin-bottom: 10px;
-            max-height: 200px; /* 限制图片高度 */
             border: 2px solid #fff; /* 白色底框 */
-            display: block;
-            margin: 0 auto; /* 置中 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* 確保超出部分隱藏 */
         }
 
-        .market h2 {
+        .img-container img {
+            width: auto;
+            height: 100%; /* 確保圖片高度填滿容器 */
+            display: block;
+            max-height: 100%; /* 確保圖片不會超過容器高度 */
+        }
+
+        .single_blog h2 {
             color: #333;
-            font-size: 24px; /* 變更活動標題字體大小 */
+            font-size: 28px; /* 變更活動標題字體大小 */
             margin-top: 0;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            overflow: hidden; /* 超出部分隐藏 */
+            justify-content: center;
+            overflow: hidden; /* 超出部分隱藏 */
             text-overflow: ellipsis; /* 超出部分用省略号表示 */
             white-space: nowrap; /* 不换行 */
         }
 
-        .market p {
+        .single_blog p {
             color: #666;
             margin-bottom: 5px;
         }
 
-        .market .icons {
+        .post-meta {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .post-meta a {
+            color: #ff4757;
+            text-decoration: none;
+        }
+
+        .post-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .single_blog .icons {
             margin-left: 10px;
         }
 
-        .market .icons i {
+        .single_blog .icons i {
             margin-right: 5px;
         }
 
@@ -84,13 +105,27 @@
         .widget_search button {
             margin-left: 10px;
         }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .read-more:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 <!--market area start-->
-<div class="market_area market_reverse mt-100 mb-100">
+<div class="blog_page_section">
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-12">
@@ -112,15 +147,17 @@
                 <!--sidebar widget end-->
             </div>
             <div class="col-lg-9 col-md-12">
-                <!--market toolbar start-->
-                <div class="market_toolbar_wrapper">
-                    <div class="market_toolbar_btn">
-                        <h4>市集活動</h4>
+                <div class="blog_wrapper">
+                    <!--market toolbar start-->
+                    <div class="market_toolbar_wrapper">
+                        <div class="market_toolbar_btn">
+                            <h4>市集活動</h4>
+                        </div>
                     </div>
-                </div>
-                <!--market toolbar end-->
-                <div class="row" id="marketList">
-                    <!-- 市集内容将通过 AJAX 动态生成并插入到这里 -->
+                    <!--market toolbar end-->
+                    <div id="marketList">
+                        <!-- 市集内容将通过 AJAX 动态生成并插入到这里 -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,25 +192,22 @@
                     // Append each market event to the market list
                     $.each(market, function (index, market) {
                         let marketHtml = `
-                                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
-                                    <div class="market" data-marketid="${market.marketId}">
-                                        <img src="${market.marketImage}" alt="市集活動圖片">
-
-                                        <h2>
-                                            <span>${market.marketName}</span>
-                                            <span class="icons">
-                                                <i class="fas fa-info-circle" title="查看詳情"></i>
-                                            </span>
-                                        </h2>
-                                        <p>日期: ${formatDate(market.marketStart)}</p>
-                                    </div>
+                            <div class="single_blog" data-marketid="${market.marketId}">
+                                <div class="img-container">
+                                    <img src="${market.marketImage}" alt="市集活動圖片">
                                 </div>
-                            `;
+                                <h2>
+                                    <span>${market.marketName}</span>
+                                </h2>
+                                <p class="post-meta">日期: ${formatDate(market.marketStart)}</p>
+                                <a href="#" class="read-more">Read More</a>
+                            </div>
+                        `;
                         marketList.append(marketHtml);
                     });
 
                     // Click event handling
-                    $('.market').click(function () {
+                    $('.single_blog').click(function () {
                         let marketId = $(this).data('marketid');
                         redirectToMarketDetail(marketId);
                     });
@@ -194,7 +228,7 @@
             // If search date is not empty
             if (searchDate !== '') {
                 // Iterate through all market events
-                $('.market').each(function () {
+                $('.single_blog').each(function () {
                     let marketDate = $(this).find('p').text().split(':')[1].trim(); // Get the date of the market event
 
                     // If market event date matches the search date, show the event; otherwise, hide it
@@ -206,7 +240,7 @@
                 });
             } else {
                 // If search date is empty, show all market events
-                $('.market').show();
+                $('.single_blog').show();
             }
 
             // Rearrange market events
@@ -216,7 +250,7 @@
         // Reset button click event
         $('#resetButton').click(function () {
             $('#searchDate').val(''); // Clear the search date
-            $('.market').show(); // Show all market events
+            $('.single_blog').show(); // Show all market events
             rearrangeMarketEvents(); // Rearrange market events
 
             // Reset market events to initial state
@@ -236,25 +270,22 @@
                         // Append each market event to the market list
                         $.each(market, function (index, market) {
                             let marketHtml = `
-                                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
-                                    <div class="market" data-marketid="${market.marketId}">
+                                <div class="single_blog" data-marketid="${market.marketId}">
+                                    <div class="img-container">
                                         <img src="${market.marketImage}" alt="市集活動圖片">
-
-                                        <h2>
-                                            <span>${market.marketName}</span>
-                                            <span class="icons">
-                                                <i class="fas fa-info-circle" title="查看詳情"></i>
-                                            </span>
-                                        </h2>
-                                        <p>日期: ${formatDate(market.marketStart)}</p>
                                     </div>
+                                    <h2>
+                                        <span>${market.marketName}</span>
+                                    </h2>
+                                    <p class="post-meta">日期: ${formatDate(market.marketStart)}</p>
+                                    <a href="#" class="read-more">Read More</a>
                                 </div>
                             `;
                             marketList.append(marketHtml);
                         });
 
                         // Click event handling
-                        $('.market').click(function () {
+                        $('.single_blog').click(function () {
                             let marketId = $(this).data('marketid');
                             redirectToMarketDetail(marketId);
                         });
@@ -272,7 +303,7 @@
     // Rearrange market events
     function rearrangeMarketEvents() {
         let marketContainer = $('#marketList');
-        let visibleMarketEvents = marketContainer.find('.market:visible');
+        let visibleMarketEvents = marketContainer.find('.single_blog:visible');
         marketContainer.empty(); // Clear the market events container
 
         // Reinsert visible market events into the container to maintain their order in the DOM
@@ -297,4 +328,3 @@
 </script>
 </body>
 </html>
-
