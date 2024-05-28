@@ -27,13 +27,15 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/image/**",
                         "/js/**",
                         "/employee/login",
-                        "/api/employee/login");
+                        "/api/employee/login",
+                        "/permission");
           registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns( "/home",
                   "/static/**",
                   "/assets/**",
                   "/image/**",
                   "/js/**",
                   "/employee/login",
-                  "/api/employee/login");
+                  "/api/employee/login",
+                  "/permission");
     }
 }
