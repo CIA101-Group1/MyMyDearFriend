@@ -297,7 +297,7 @@
                                             <li class="quick_button"><a href="#" data-toggle="modal"
                                                                         data-target="#modal_box" title="quick view"> <i
                                                     class="icon icon-Eye"></i></a></li>
-                                            <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i
+                                            <li class="wishlist"><a th:onclick="|addToFavorite(${product.productId});|" title="Add to Wishlist"><i
                                                     class="icon icon-Heart"></i></a></li>
                                             <li class="compare"><a href="#" title="Add to Compare"><i
                                                     class="icon icon-MusicMixer"></i></a></li>
