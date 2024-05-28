@@ -71,18 +71,17 @@
                         <input type="text" class="form-control" id="buyerNameFilter" placeholder="輸入買家名稱">
                     </div>
                     <!-- 查詢賣家ID -->
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label for="sellerNameFilter">查詢賣家名稱</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="sellerNameFilter" placeholder="輸入賣家名稱">
-                            <div class="input-group-append" style="margin-left: 30px">
-                                <button class="btn btn-primary" type="button" id="searchOrderBtn">搜尋</button>
-                            </div>
-                        </div>
+                        <input type="text" class="form-control" id="sellerNameFilter" placeholder="輸入賣家名稱">
+                    </div>
+                    <div class="form-group col-md-3 align-self-end">
+                        <button id="searchOrderBtn" class="btn btn-primary" type="button" >搜尋</button>
+                        <button id="resetFilters" class="btn btn-secondary mr-2">重置篩選條件</button>
                     </div>
                 </div>
                 <!-- 主要表格 -->
-                <table id="memberTable" class="table table-hover" >
+                <table id="memberTable" class="table table-hover">
                     <thead>
                     <tr>
                         <th>訂單編號</th>
@@ -160,6 +159,18 @@
             fetchOrders(selectedStatus);
         });
 
+        // 當點擊重置按鈕時，重置篩選條件並重新加載資料
+        $("#resetFilters").on("click", function () {
+            $("#orderStatusFilter").val("ALL");
+            $("#buyerNameFilter").val("");
+            $("#sellerNameFilter").val("");
+            $("#orderIdFilter").val("");
+            buyerName = null;
+            sellerName = null;
+            orderId = null;
+            fetchOrders("ALL");
+        });
+
         // 初始加載全部訂單
         fetchOrders(selectedStatus);
 
@@ -172,7 +183,7 @@
                 url: `/api/order/getAll?authorization=${authorization}&orderStatus=${orderStatus}&orderId=${orderId}&buyerName=${buyerName}&sellerName=${sellerName}`,
                 method: "GET",
                 success(response) {
-                    if(response.code == 0){
+                    if (response.code == 0) {
                         let tbody = $("#orderTbody");
                         tbody.empty(); // 清空現有的表格內容
                         orders = response.data;
@@ -185,7 +196,7 @@
                         }
                         renderTable();
                         renderPagination();
-                    }else{
+                    } else {
                         Swal.fire({
                             title: "錯誤",
                             icon: "error",
