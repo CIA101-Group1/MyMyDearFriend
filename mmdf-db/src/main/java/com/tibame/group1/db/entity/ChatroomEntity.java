@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "member_chatroom")
 @Getter
@@ -27,4 +29,7 @@ public class ChatroomEntity {
 	
 	@Column(name="member_b_id")
 	private Integer userB;
+
+	@Column(name="date")
+	private Timestamp date;
 }
