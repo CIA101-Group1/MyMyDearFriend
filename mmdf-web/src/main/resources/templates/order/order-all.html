@@ -44,6 +44,7 @@
                                 <h3>訂單</h3>
                             </div>
                             <div class="row mb-3">
+                                <!-- 查詢訂單類型 -->
                                 <div class="form-group col-md-2">
                                     <label for="orderCategory">訂單類型</label>
                                     <select id="orderCategory" class="form-control">
@@ -52,6 +53,7 @@
                                         <option value="BOTH">所有</option>
                                     </select>
                                 </div>
+                                <!-- 查詢訂單狀態 -->
                                 <div class="form-group col-md-2">
                                     <label for="orderStatusFilter">查詢訂單狀態</label>
                                     <select class="form-control" id="orderStatusFilter">
@@ -125,16 +127,17 @@
         const recordsPerPage = 5;
 
         // 發送 AJAX 請求的函數
-            function fetchOrders(identity) {
+            function fetchOrders(identity, orderStatus) {
             // 切換類型時將頁碼重置為1
             currentPage = 1;
             $.ajax({
-                url: `/api/order/getAll?identity=${identity}`,
+                url: `/api/order/getAll?identity=${identity}&orderStatus=${orderStatus}`,
                 method: "GET",
                 headers: {
                     "authorization": localStorage.getItem("authorization")
                 },
                 success(response) {
+                    // console.log(response.data);
                     let orders = response.data;
                     let tbody = $("#orderTbody");
                     tbody.empty(); // 清空現有的表格內容
@@ -272,14 +275,27 @@
             });
         }
 
-        // 初始化時加載所有訂單
-        fetchOrders("BUYER");
+        // 初始化時加載買家所有訂單
+        let identity = "BUYER"
+        let orderStatus = "ALL";
+        fetchOrders(identity, orderStatus);
 
         // 監聽 select 的變化事件
         $("#orderCategory").change(function () {
-            let selectedValue = $(this).val();
-            fetchOrders(selectedValue);
+            identity = $(this).val();
+            orderStatus = $("#orderStatusFilter").val();
+            fetchOrders(identity, orderStatus);
         });
+
+        // 查詢狀態變更事件
+        $("#orderStatusFilter").change(function () {
+            identity = $("#orderCategory").val();
+            orderStatus = $(this).val();
+            // console.log(identity)
+            // console.log(orderStatus);
+            fetchOrders(identity, orderStatus); // 重新獲取訂單資料
+        });
+
     });
 </script>
 </body>
