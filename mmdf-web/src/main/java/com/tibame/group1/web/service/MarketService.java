@@ -18,4 +18,8 @@ public interface MarketService {
     //會員報名
     MemberRegistrationResDTO registerMemberToMarket(MarketRegistrationReqDTO marketRegistrationResDTO, LoginSourceDTO loginSource)
             throws CheckRequestErrorException;
+
+    //取消報名
+    MarketCancelResDTO cancelRegistration(MarketRegistrationReqDTO marketRegistrationReq, LoginSourceDTO loginSource) throws CheckRequestErrorException;
 }
+
