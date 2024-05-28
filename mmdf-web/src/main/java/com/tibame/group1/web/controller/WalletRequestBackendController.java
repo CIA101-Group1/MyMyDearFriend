@@ -18,30 +18,31 @@ import org.springframework.web.bind.annotation.*;
 @CacheConfig(cacheNames = "member", keyGenerator = "mmdfKeyGenerator")
 public class WalletRequestBackendController {
 
-  @Autowired private WalletHistoryService walletHistoryService;
+    @Autowired private WalletHistoryService walletHistoryService;
 
-  @PostMapping("wallets/withdraw")
-  @CacheEvict(allEntries = true)
-  @CheckLogin
-  public @ResponseBody ResDTO<WalletWithdrawCreateResDTO> walletWithdraw(
-      @Valid @RequestBody WalletWithdrawCreateReqDTO req,
-      @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
-    ResDTO<WalletWithdrawCreateResDTO> res = new ResDTO<>();
-    res.setData(walletHistoryService.walletWithdrawCreate(req, loginSource));
-    return res;
-  }
+    @PostMapping("wallets/withdraw")
+    @CacheEvict(allEntries = true)
+    @CheckLogin
+    public @ResponseBody ResDTO<WalletWithdrawCreateResDTO> walletWithdraw(
+            @Valid @RequestBody WalletWithdrawCreateReqDTO req,
+            @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
+        ResDTO<WalletWithdrawCreateResDTO> res = new ResDTO<>();
+        res.setData(walletHistoryService.walletWithdrawCreate(req, loginSource));
+        return res;
+    }
 
-  @GetMapping("Wallets/detail")
-  @CacheEvict(allEntries = true)
-  @CheckLogin
-  public @ResponseBody ResDTO<WalletWithdrawAllResDTO> walletWithdrawAll(
-      @RequestBody WalletWithdrawAllReqDTO req,
-      @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource,
-      @RequestParam(value = "page", defaultValue = "0") String pageNum,
-      @RequestParam(value = "sizePerPage", defaultValue = "10") String sizePerPage) {
-    Pageable pageable = PageRequest.of(NumberUtils.toInt(pageNum), NumberUtils.toInt(sizePerPage));
-    ResDTO<WalletWithdrawAllResDTO> res = new ResDTO<>();
-    res.setData(walletHistoryService.walletWithdrawAll(req, loginSource, pageable));
-    return res;
-  }
+    @GetMapping("Wallets/detail")
+    @CacheEvict(allEntries = true)
+    @CheckLogin
+    public @ResponseBody ResDTO<WalletWithdrawAllResDTO> walletWithdrawAll(
+            @RequestBody WalletWithdrawAllReqDTO req,
+            @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource,
+            @RequestParam(value = "page", defaultValue = "0") String pageNum,
+            @RequestParam(value = "sizePerPage", defaultValue = "10") String sizePerPage) {
+        Pageable pageable =
+                PageRequest.of(NumberUtils.toInt(pageNum), NumberUtils.toInt(sizePerPage));
+        ResDTO<WalletWithdrawAllResDTO> res = new ResDTO<>();
+        res.setData(walletHistoryService.walletWithdrawAll(req, loginSource, pageable));
+        return res;
+    }
 }

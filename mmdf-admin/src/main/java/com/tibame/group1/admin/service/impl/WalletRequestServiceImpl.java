@@ -61,7 +61,7 @@ public class WalletRequestServiceImpl implements WalletRequestService {
     PagesResDTO pagesResDTO = new PagesResDTO();
     pagesResDTO.setTotalPages(pageResult.getTotalPages());
     pagesResDTO.setTotalCount((int) pageResult.getTotalElements());
-    walletAllResDTO.setWalletRequestList(walletRequestList);
+        walletAllResDTO.setWalletRequestList(walletRequestList);
     walletAllResDTO.setPages(pagesResDTO);
     walletAllResDTO.setStatus(WalletAllResDTO.Status.REQUEST_SUCCESS.getCode());
 

@@ -11,21 +11,21 @@ import java.util.List;
 @Setter
 public class WalletWithdrawAllResDTO {
 
-  private PagesResDTO pages;
+    private PagesResDTO pages;
 
-  private List<WalletWithdrawCreateResDTO> walletWithdrawList;
+    private List<WalletWithdrawCreateResDTO> walletWithdrawList;
 
-  private String status;
+    private String status;
 
-  @AllArgsConstructor
-  @Getter
-  public enum Status {
-    QUERY_SUCCESS("1", "查詢成功"),
+    @AllArgsConstructor
+    @Getter
+    public enum Status {
+        QUERY_SUCCESS("1", "查詢成功"),
 
-    WALLET_WITHDRAW_NOTFOUND("-1", "查無任何資料");
+        WALLET_WITHDRAW_NOTFOUND("-1", "查無任何資料");
 
-    private final String code;
+        private final String code;
 
-    private final String message;
-  }
+        private final String message;
+    }
 }
