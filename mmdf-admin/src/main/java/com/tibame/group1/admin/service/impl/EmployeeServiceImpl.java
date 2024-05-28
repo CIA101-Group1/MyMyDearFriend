@@ -8,7 +8,11 @@ import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.common.utils.CommonUtils;
 import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.db.entity.EmployeeEntity;
+import com.tibame.group1.db.entity.EmployeeRoleEntity;
+import com.tibame.group1.db.entity.RoleEntity;
 import com.tibame.group1.db.repository.EmployeeRepository;
+import com.tibame.group1.db.repository.EmployeeRoleRepository;
+import com.tibame.group1.db.repository.RoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -28,6 +32,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired private EmployeeRepository employeeRepository;
 
     @Autowired private JwtService jwtService;
+
+    @Autowired private EmployeeRoleRepository employeeRoleRepository;
+
+    @Autowired private RoleRepository roleRepository;
 
     /** 後台新增員工 */
     @Override
@@ -80,10 +88,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDetailResDTO employeeDetailById(AdminLoginSourceDTO adminLoginSource, Integer employeeId)
-        throws CheckRequestErrorException{
+    public EmployeeDetailResDTO employeeDetailById(
+            AdminLoginSourceDTO adminLoginSource, Integer employeeId)
+            throws CheckRequestErrorException {
         EmployeeEntity employee = employeeRepository.findById(employeeId).orElse(null);
-        if (null == employee){
+        if (null == employee) {
             throw new CheckRequestErrorException("查無此員工資料");
         }
         EmployeeDetailResDTO resDTO = new EmployeeDetailResDTO();
@@ -96,20 +105,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         resDTO.setEmployeeGender(employee.getEmployeeGender());
         resDTO.setEmployeeCreateTime(
                 null == employee.getEmployeeCreateTime()
-                ? ""
-                        :DateUtils.dateToSting(employee.getEmployeeCreateTime())
-        );
+                        ? ""
+                        : DateUtils.dateToSting(employee.getEmployeeCreateTime()));
         resDTO.setEmployeeStatus(employee.getEmployeeStatus());
         return resDTO;
     }
 
     /**
      * 用name查詢員工
+     *
      * @param adminLoginSourceDTO
      * @param employeeName
      * @return
      */
-
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeAllResDTO> employeeAll(
@@ -126,8 +134,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             exampleEntity.setEmployeeName(employeeName);
 
             // 使用包含匹配器
-            ExampleMatcher matcher = ExampleMatcher.matching()
-                    .withMatcher("employeeName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+            ExampleMatcher matcher =
+                    ExampleMatcher.matching()
+                            .withMatcher(
+                                    "employeeName",
+                                    ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
             // 将示例对象和匹配器组合成 Example 对象
             Example<EmployeeEntity> example = Example.of(exampleEntity, matcher);
@@ -153,14 +164,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeList;
     }
 
-
     @Override
     public EmployeeEditResDTO employeeEdit(
             EmployeeEditReqDTO req, AdminLoginSourceDTO adminLoginSource)
             throws CheckRequestErrorException, IOException {
         EmployeeEditResDTO resDTO = new EmployeeEditResDTO();
-        EmployeeEntity employee =
-                employeeRepository.findById(req.getEmployeeId()).orElse(null);
+        EmployeeEntity employee = employeeRepository.findById(req.getEmployeeId()).orElse(null);
         if (null == employee) {
             resDTO.setStatus(EmployeeEditResDTO.Status.EMPLOYEE_NOTFOUND.getCode());
             return resDTO;
@@ -229,6 +238,65 @@ public class EmployeeServiceImpl implements EmployeeService {
         adminLoginSource.setEmployeeName(employee.getEmployeeName());
         // 用jwt產生驗證碼，塞進去response
         resDTO.setAuthorization(jwtService.encodeLogin(adminLoginSource));
+        return resDTO;
+    }
+
+    // 設定員工權限
+    @Override
+    @Transactional
+    public EmployeeRoleResDTO assignRoleToEmployee(
+            EmployeeRoleReqDTO employeeRoleReq, AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException {
+
+        // 查找員工是否已註冊
+        EmployeeEntity employee =
+                employeeRepository.findById(employeeRoleReq.getEmployeeId()).orElse(null);
+        if (employee == null) {
+            throw new CheckRequestErrorException("查無員工資料");
+        }
+
+        // 檢查roleId是否為空
+        if (employeeRoleReq.getRoleId() == null) {
+            throw new CheckRequestErrorException("查無角色資料");
+        }
+
+        // 檢查角色是否存在
+        RoleEntity role =
+                roleRepository
+                        .findById(employeeRoleReq.getRoleId())
+                        .orElseThrow(() -> new CheckRequestErrorException("查不到對應角色"));
+
+        // 創建複合主鍵
+        EmployeeRoleEntity.EmployeeRoleId employeeRoleId = new EmployeeRoleEntity.EmployeeRoleId();
+        employeeRoleId.setEmployeeId(employeeRoleReq.getEmployeeId());
+        employeeRoleId.setRoleId(employeeRoleReq.getRoleId());
+
+        // 創建並保存紀錄
+        EmployeeRoleEntity employeeRole = new EmployeeRoleEntity();
+        employeeRole.setId(employeeRoleId);
+        employeeRole.setEmployeeId(employee);
+        employeeRole.setRoleId(role);
+        employeeRoleRepository.save(employeeRole);
+
+        // 創建並返回
+        EmployeeRoleResDTO employeeRoleResDTO = new EmployeeRoleResDTO();
+        employeeRoleResDTO.setEmployeeId(employeeRoleReq.getEmployeeId());
+        employeeRoleResDTO.setRoleId(employeeRoleReq.getRoleId());
+
+        return employeeRoleResDTO;
+    }
+
+    // 查詢員工權限
+    @Override
+    public EmployeeRoleDetailResDTO employeeRole(AdminLoginSourceDTO adminLoginSource) {
+        Integer employeeId = adminLoginSource.getEmployeeId();
+        EmployeeRoleEntity employeeRoleEntities =
+                employeeRoleRepository.findRoleIdByEmployeeId(employeeId);
+
+     EmployeeRoleDetailResDTO resDTO = new EmployeeRoleDetailResDTO();
+        resDTO.setEmployeeName(employeeRoleEntities.getEmployeeId().getEmployeeName());
+        resDTO.setRoleName(employeeRoleEntities.getRoleId().getRoleName());
+        resDTO.setRoleDescription(employeeRoleEntities.getRoleId().getRoleDescription());
         return resDTO;
     }
 }
