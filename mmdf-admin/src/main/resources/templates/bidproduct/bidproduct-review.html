@@ -8,10 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico"/>
     <title>競標商品審核</title>
     <th:block th:replace="~{/fragments/css}"/>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.7/r-3.0.2/datatables.min.css" rel="stylesheet"></head>
 </head>
 
 <body class="sb-nav-fixed">
@@ -28,8 +25,8 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="mt-4">競標商品審核</h1>
-                <table id="bidProductTable" class="table  table-bordered dt-responsive nowrap"
+                <h2 class="mt-4">競標商品審核</h2>
+                <table id="bidProductTable" class="table table-bordered dt-responsive nowrap"
                        style="width: 100%;">
                 </table>
             </div>
@@ -55,14 +52,11 @@
                 <p><strong>商品分類：</strong><span id="category"></span></p>
                 <p><strong>商品狀況：</strong><span id="condition"></span></p>
                 <p><strong>起標價：</strong><span id="startPrice"></span></p>
+                <p><strong>競標時間長度：</strong><span id="duration"></span><span>天</span></p>
                 <p><strong>商品狀態：</strong><span id="status"></span></p>
                 <p><strong>最近更新時間：</strong><span id="lastModified"></span></p>
                 <!-- <p><strong>商品圖片：</strong><span id="images"></span></p> -->
                 <div id="productImages" class="d-flex flex-wrap"></div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
             </div>
         </div>
     </div>
@@ -105,16 +99,13 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
-
+<script src="https://cdn.datatables.net/v/bs5/dt-2.0.7/r-3.0.2/datatables.min.js"></script>
 <script>
     const API_URL = "/api/bidproduct";
     let myDataTable;
     let PRODUCT_ID;
+    let AUTHORIZATION = localStorage.getItem("authorization")
+
 
     $(document).ready(function () {
         fetchBidProductsNeedReview();
@@ -122,11 +113,8 @@
 
     function fetchBidProductsNeedReview() {
         $.ajax({
-            url: "/api/bidproduct/query",
+            url: `/api/bidproduct/query?authorization=${AUTHORIZATION}`,
             type: "GET",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
             data: {
                 "status": [0, -1],
             },
@@ -194,6 +182,13 @@
                             responsivePriority: 1,
                         }
                     ],
+                    "lengthMenu": [5, 10, 20, 50, 100],
+                    "searching": true,
+                    "paging": true,
+                    "ordering": true,
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/2.0.7/i18n/zh-HANT.json",
+                    }
                 });
             },
             error: function (err) {
@@ -204,8 +199,11 @@
 
     function viewProduct(productId) {
         $.ajax({
-            url: `${API_URL}/${productId}`,
+            url: `/api/bidproduct/${productId}`,
             type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
             success: function (response) {
                 const product = response.data;
                 $('#productId').text(product.productId);
@@ -214,6 +212,7 @@
                 $('#category').text(product.category.categoryName);
                 $('#condition').text(product.condition.conditionName);
                 $('#startPrice').text(product.startPrice);
+                $('#duration').text(product.duration);
                 $('#status').text(product.status);
                 $('#lastModified').text(product.lastModified);
                 // 商品圖片
@@ -233,7 +232,7 @@
     $("#rejectForm").submit(function (e) {
         e.preventDefault();
         $.ajax({
-            url: `/api/bidproduct/${PRODUCT_ID}`,
+            url: `/api/bidproduct/${PRODUCT_ID}?authorization=${AUTHORIZATION}`,
             type: "PUT",
             data: {
                 status: -1
@@ -256,7 +255,7 @@
     function approveProduct(productId) {
         if (confirm("確定要通過嗎？")) {
             $.ajax({
-                url: `/api/bidproduct/${productId}`,
+                url: `/api/bidproduct/${productId}?authorization=${AUTHORIZATION}`,
                 type: "PUT",
                 data: {
                     status: 1

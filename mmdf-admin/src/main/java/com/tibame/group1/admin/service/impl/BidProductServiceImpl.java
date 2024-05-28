@@ -47,9 +47,6 @@ public class BidProductServiceImpl implements BidProductService {
     @Override
     public void updateBidProductReviewStatus(Integer productId, Integer newStatus)
             throws CheckRequestErrorException {
-        // find existing product
-        // update it status
-        // save updated product entity
         BidProductEntity product =
                 bidProductRepository
                         .findById(productId)
@@ -61,7 +58,7 @@ public class BidProductServiceImpl implements BidProductService {
             product.setStatus(BidProductStatus.START);
             Instant now = Instant.now();
             product.setStartTime(Timestamp.from(now));
-            ChronoUnit chronoUnit = ChronoUnit.HOURS;
+            ChronoUnit chronoUnit = ChronoUnit.DAYS;
             product.setEndTime(Timestamp.from(now.plus(product.getDuration(), chronoUnit)));
             product.setLastModified(Timestamp.from(now));
         } else if (newStatus == -1) {

@@ -34,7 +34,7 @@ public class BidProductApiController {
     }
 
     @PutMapping("/bidproduct/{productId}")
-    public @ResponseBody ResDTO<?> updateReviewStatus(
+    public @ResponseBody ResDTO<?> updateBidProductReviewStatus(
             @PathVariable("productId") Integer productId,
             @RequestParam("status") Integer newReviewStatus)
             throws DateException, IOException, CheckRequestErrorException {

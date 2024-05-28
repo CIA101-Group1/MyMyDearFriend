@@ -24,7 +24,7 @@
                 <div class="collapse" id="ProductCollapse" aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" >一般商品查詢</a>
+                        <a class="nav-link" onclick="goToProductAll()">一般商品查詢</a>
                         <a class="nav-link" onclick="goToOrderAll()">訂單管理</a>
                     </nav>
                 </div>
@@ -56,8 +56,8 @@
                 <div class="collapse" id="newsCollapse" aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/news/create">新增最新消息</a>
-                        <a class="nav-link" href="/news/review">最新消息列表</a>
+                        <a class="nav-link" onclick="goToNewsAll()">最新消息管理</a>
+                        <a class="nav-link" onclick="goToAddNews()">新增最新消息</a>
                     </nav>
                 </div>
                 <!-- 客服訊息 -->
@@ -159,6 +159,36 @@
             url += '?authorization=' + encodeURIComponent(authorization);
         }
         console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToProductAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/product/review';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToNewsAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/news/list';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToAddNews() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/news/add';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
         window.location.href = url;
     }
 </script>
