@@ -6,12 +6,14 @@ import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.db.entity.MarketEntity;
 import com.tibame.group1.db.entity.MarketRegistrationEntity;
 import com.tibame.group1.db.entity.MemberEntity;
+import com.tibame.group1.db.entity.MemberNoticeEntity;
 import com.tibame.group1.db.repository.MarketRegistrationRepository;
 import com.tibame.group1.db.repository.MarketRepository;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.dto.*;
 import com.tibame.group1.web.service.MarketService;
 
+import com.tibame.group1.web.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,10 @@ public class MarketServiceImpl implements MarketService {
 
     @Autowired private MemberRepository memberRepository;
 
+    @Autowired private NoticeService noticeService;
+
+
+    //狀態為2的市集顯示在前台畫面
     @Override
     public List<MarketResDTO> getMarketByStatus() {
         List<MarketEntity> markets = marketRepository.findByMarketStatus(2);
@@ -169,6 +175,10 @@ public class MarketServiceImpl implements MarketService {
         // 增加市集的报名人数
         int applicationPopulation =
                 market.getApplicantPopulation() != null ? market.getApplicantPopulation() : 0;
+        int applicantLimit = market.getApplicantLimit();
+        if (applicationPopulation >= applicantLimit){
+            throw new CheckRequestErrorException("報名人數已達上限，無法報名成功");
+        }
         market.setApplicantPopulation(applicationPopulation + 1);
         marketRepository.save(market);
 
@@ -176,7 +186,7 @@ public class MarketServiceImpl implements MarketService {
         MemberRegistrationResDTO registrationResDTO = new MemberRegistrationResDTO();
         registrationResDTO.setMarketId(marketRegistrationReq.getMarketId());
         registrationResDTO.setMemberId(loginSource.getMemberId());
-
+        noticeService.memberNoticeCreate(marketRegistrationEntity.getMemberId(), MemberNoticeEntity.NoticeCategory.MARKET, "市集報名","恭喜市集報名成功");
         return registrationResDTO;
     }
 
@@ -215,6 +225,7 @@ public class MarketServiceImpl implements MarketService {
 
         MarketCancelResDTO dto = new MarketCancelResDTO();
         dto.setStatus(registration.getStatus());
+        noticeService.memberNoticeCreate(registration.getMemberId(), MemberNoticeEntity.NoticeCategory.MARKET, "市集取消報名","市集報名已取消完成");
         return dto;
 
     }
