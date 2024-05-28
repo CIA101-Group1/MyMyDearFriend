@@ -1,0 +1,57 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Opps!</title>
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .error_section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .error_form h1 {
+            font-size: 6rem; /* 增加字体大小 */
+            margin-bottom: 1rem;
+            color: red;
+        }
+        .error_form h2 {
+            font-size: 3rem; /* 增加字体大小 */
+        }
+    </style>
+</head>
+
+<body class="sb-nav-fixed">
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+
+    <!--error section area start-->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="error_section">
+                <div class="error_form">
+                    <h1>Opps!</h1>
+                    <h2>權限不足，請洽管理員...</h2>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<!--error section area end-->
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+</body>
+</html>
