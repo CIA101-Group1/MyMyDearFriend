@@ -7,4 +7,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface WalletRequestRepository extends JpaRepository<WalletRequestEntity, Integer> {
     @Query("select w from WalletRequestEntity w where w.member.memberId = :memberId")
-    WalletRequestEntity findByMember_MemberId(@Param("memberId") Integer memberId); }
+    WalletRequestEntity findByMember_MemberId(@Param("memberId") Integer memberId);
+}
