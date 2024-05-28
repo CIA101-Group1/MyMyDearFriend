@@ -57,6 +57,9 @@ public class BidServiceImpl implements BidService {
         if (highestBid.isEmpty() && req.getAmount() <= product.getStartPrice()) {
             throw new CheckRequestErrorException("出價金額須高於起標價");
         }
+        if (highestBid.isPresent() && highestBid.get().getMemberId().equals(loginSource.getMemberId())) {
+            throw new CheckRequestErrorException("您已經是最高出價者");
+        }
         // 創建新的出價記錄
         BidEntity bid = new BidEntity();
         bid.setProductId(req.getProductId());
