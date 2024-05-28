@@ -12,7 +12,9 @@ public enum OrderStatus {
 
     COMPLETED((byte) 2, "完成"),
 
-    RETURN((byte) 3, "退貨");
+    RETURN((byte) 3, "退貨"),
+
+    ALL((byte) 4, "全部"),;
 
     private final Byte code;
 

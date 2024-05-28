@@ -9,6 +9,8 @@ import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.common.utils.FileUtils;
 import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.entity.MarketEntity;
+import com.tibame.group1.db.entity.MarketRegistrationEntity;
+import com.tibame.group1.db.repository.MarketRegistrationRepository;
 import com.tibame.group1.db.repository.MarketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -28,6 +31,9 @@ public class MarketServiceImpl implements MarketService {
 
     @Autowired
     MarketRepository marketRepository;
+
+    @Autowired
+    MarketRegistrationRepository marketRegistrationRepository;
 
     /**
      * 後台新增活動
@@ -208,4 +214,30 @@ public class MarketServiceImpl implements MarketService {
         }
         return marketList;
     }
+
+    @Override
+    public List<MemberRegistrationAllResDTO> findAllByMarketId(AdminLoginSourceDTO adminLoginSource, Integer marketId) throws CheckRequestErrorException{
+        List<MarketRegistrationEntity> registrations = marketRegistrationRepository.findAllByMarketId(marketId);
+        if (registrations.isEmpty()) {
+            throw new CheckRequestErrorException("No registrations found for market with id: " + marketId);
+        }
+        // 转换成DTO对象并返回
+        return registrations.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 辅助方法：将实体类转换为DTO对象
+    private MemberRegistrationAllResDTO mapToDTO(MarketRegistrationEntity entity) {
+        MemberRegistrationAllResDTO dto = new MemberRegistrationAllResDTO();
+        dto.setMemberId(entity.getMemberId().getMemberId());
+        dto.setName(entity.getMemberId().getName());
+        dto.setPhone(entity.getMemberId().getPhone());
+        dto.setEmail(entity.getMemberId().getEmail());
+        dto.setCity(entity.getMemberId().getCity());
+        dto.setStatus(entity.getStatus() == 1 ? MemberRegistrationAllResDTO.Status.PAY_SUCCESS.getMessage() : MemberRegistrationAllResDTO.Status.PAY_ERROR.getMessage());
+        return dto;
+    }
 }
+
+

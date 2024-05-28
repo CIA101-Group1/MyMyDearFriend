@@ -174,7 +174,7 @@ function getCart() {
                             </td>
                             <td class="product_name">
                                 <input id="productId" value="${cartItem.productId}" type="hidden" />
-                                <a href="#">${cartItem.productName}</a>
+                                <a href="/buyer/product/getOne/${cartItem.productId}">${cartItem.productName}</a>
                             </td>
                             <td class="product_price">${cartItem.price}</td>
                             <td class="product_quantity">
