@@ -6,12 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <title>最新消息編輯</title>
+    <title>編輯最新消息</title>
     <th:block th:replace="~{/fragments/css}"/>
+    <!-- Filepond CSS -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet"/>
+    <style>
+        .filepond--item {
+            width: 20%;
+            height: 100%;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
-
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
 
@@ -23,7 +31,31 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h2 class="mt-4">最新消息編輯</h2>
+                <h2 class="mt-4">編輯最新消息</h2>
+                <form id="editForm" class="contact_message" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="newsId" name="newsId" th:value="${newsId}">
+                    <div class="form-group row mb-3">
+                        <label for="title" class="col-md-1 col-form-label">標題</label>
+                        <div class="col-md-11">
+                            <input type="text" class="form-control" id="title" name="title" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label for="content" class="col-md-1 col-form-label">內容</label>
+                        <div class="col-md-11">
+                            <textarea class="form-control" id="content" name="content" rows="14" required></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label for="filepond" class="col-md-1">圖片</label>
+                        <div class="col-md-11">
+                            <input id="filepond" type="file" class="filepond" name="image" data-max-file-size="5MB" required/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">送出</button>
+                </form>
             </div>
         </main>
     </div>
@@ -31,7 +63,97 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
+<!--Filepond JS-->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script>
+    let AUTHORIZATION = localStorage.getItem("authorization");
 
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    const inputElement = document.querySelector("#filepond");
+    const pond = FilePond.create(inputElement);
+
+    pond.setOptions({
+        required: true,
+        storeAsFile: true,
+        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br> ',
+        itemInsertLocation: "after",
+        imagePreviewHeight: "150px",
+        imagePreviewTransparencyIndicator: "grid",
+    });
+
+    $(document).ready(function () {
+        let newsId = $('#newsId').val();
+
+        // AJAX Get Old news data
+        $.ajax({
+            url: `/api/news/${newsId}?authorization=${AUTHORIZATION}`,
+            type: 'GET',
+            success: function (res) {
+                let data = res.data;
+                $('#title').val(data.title);
+                $('#content').val(data.content);
+
+                if (data.image) {
+                    const binaryData = atob(data.image);
+                    const byteArray = new Uint8Array(binaryData.length);
+                    for (let i = 0; i < binaryData.length; i++) {
+                        byteArray[i] = binaryData.charCodeAt(i);
+                    }
+                    const file = new File([byteArray], 'image.jpg', {type: 'image/jpeg'});
+                    pond.setOptions({
+                        files: [{source: file}]
+                    });
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        // AJAX Update news
+        $('#editForm').submit(function (e) {
+            e.preventDefault();
+
+            let form = $(this);
+            let formData = new FormData(form[0]);
+
+            $.ajax({
+                url: `/api/news/${newsId}`,
+                method: "PUT",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.code === "0") {
+                        alert("編輯成功");
+                        window.location.href = `/news/list?authorization=${AUTHORIZATION}`;
+                    } else if (res.code === "-1") {
+                        res.data.forEach(function (error) {
+                            let fieldName = error.key;
+                            let errorMessage = error.errorMessage;
+                            let field = form.find('#' + fieldName);
+                            field.addClass('is-invalid');
+                            field.siblings('.invalid-feedback').text(errorMessage);
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+    function fetchOldNews() {
+
+    }
+
+</script>
 </body>
 
 </html>

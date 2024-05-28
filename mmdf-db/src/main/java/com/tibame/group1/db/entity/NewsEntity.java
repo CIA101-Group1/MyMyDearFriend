@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -30,16 +30,25 @@ public class NewsEntity {
     private String content;
 
     @NotNull
-    @Column(name = "image", nullable = false)
+    @Lob
+    @Column(name = "image", nullable = false, columnDefinition = "MEDIUMBLOB")
     private byte[] image;
 
-    private String imageBase64;
+    @Transient private String imageBase64;
 
     @NotNull
     @Column(name = "last_modified", nullable = false)
-    private Timestamp lastModified;
+    private Date lastModified;
 
     @NotNull
     @Column(name = "status", nullable = false)
     private Integer status;
+
+    public String getStatusMessage() {
+        if (this.status == 0) {
+            return "下架中";
+        } else {
+            return "上架中";
+        }
+    }
 }
