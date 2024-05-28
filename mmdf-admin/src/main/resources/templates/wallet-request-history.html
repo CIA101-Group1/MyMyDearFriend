@@ -1,88 +1,134 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>申請提領紀錄</title>
-    <!-- Favicon -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <!--css-->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>申請提領紀錄</title>
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定義表格樣式 */
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            white-space: nowrap; /* 不換行 */
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding-right: 2rem; /* 預留空間給倒三角形 */
+        }
+
+        .custom-select-wrapper::after {
+            content: "\f0d7"; /* Font Awesome Unicode for caret down */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(0);
+            pointer-events: none;
+        }
+    </style>
 </head>
-<body>
+<body class="sb-nav-fixed">
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
-
-<!-- main start -->
-<section class="main_content_area">
-    <div class="container">
-        <div class="account_dashboard">
-            <div class="row">
-                <!-- Sidebar -->
-                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
-                <div class="col-sm-12 col-md-9 col-lg-9">
-                    <!-- Tab panes -->
-                    <div class="tab-content dashboard_content">
-                        <div class="tab-pane fade active" id="account-details">
-                            <div class="container mt-5">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3>申請提領紀錄</h3>
-                                    </div>
-                                    <!-- 篩選條件 -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 custom-select-wrapper">
-                                            <label for="isVerifiedFilter"
-                                                   style="margin-bottom: 5px;">審核狀態</label>
-                                            <select id="isVerifiedFilter" class="form-control">
-                                                <option value="">所有</option>
-                                                <option value="true">已審核</option>
-                                                <option value="false">未審核</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3 align-self-end">
-                                            <button id="resetFilters" class="btn btn-secondary mr-2">重置篩選條件
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <table id="requestTable" class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th>申請時間</th>
-                                                <th>申請提領金額</th>
-                                                <th>狀態</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="request-records">
-                                            <!-- 申請紀錄將會被插入這裡 -->
-                                            </tbody>
-                                        </table>
-                                        <nav>
-                                            <ul class="pagination justify-content-center" id="pagination">
-                                                <!-- 分頁按鈕將會被插入這裡 -->
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                </div>
-                            </div>
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <!-- main start -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="card-header">
+                    <h2 class="mt-4">申請提領紀錄</h2>
+                    <!-- 篩選條件 -->
+                    <div class="row mb-3">
+                        <div class="col-md-3 custom-select-wrapper">
+                            <label for="isVerifiedFilter"
+                                   style="margin-bottom: 5px;">審核狀態</label>
+                            <select id="isVerifiedFilter" class="form-control">
+                                <option value="">所有</option>
+                                <option value="1">已審核</option>
+                                <option value="0">未審核</option>
+                            </select>
                         </div>
+                        <div class="col-md-3 align-self-end">
+                            <button id="resetFilters" class="btn btn-secondary mr-2">重置篩選條件
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="requestTable" class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>會員編號</th>
+                                <th>審核狀態</th>
+                                <th>申請時間</th>
+                                <th>存入帳戶</th>
+                                <th>審核時間</th>
+                                <th>審核</th>
+                            </tr>
+                            </thead>
+                            <tbody id="request-records">
+                            <!-- 申請紀錄將會被插入這裡 -->
+                            </tbody>
+                        </table>
+                        <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">
+                            查無資料
+                        </div>
+                        <nav>
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- 分頁按鈕將會被插入這裡 -->
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-</section>
-<!-- main end -->
-
-<!--footer-->
-<th:block th:replace="~{/fragments/footer}"/>
+</div>
 
 <!--js-->
-<script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
 <script>
     let userData = {};
@@ -99,11 +145,12 @@
         });
 
         function fetchRequestData(pageNumber = 0, pageSize = 5) {
-            const isVerified = $("#isVerifiedFilter").val();
+            const status = $("#isVerifiedFilter").val();
+            const authorization = localStorage.getItem("authorization");
             // 更新 userData
-            userData.isVerified = isVerified === "" ? null : isVerified === "true";
+            userData.status = status === "" ? null : status;
             $.ajax({
-                url: `/api/wallet/withdraw?page=${pageNumber}&sizePerPage=${pageSize}`,
+                url: `/api/wallets/getAll?authorization=${authorization}&page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",
                 headers: {
                     "authorization": localStorage.getItem("authorization")
@@ -113,7 +160,7 @@
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
-                            const requestList = data.requestList;
+                            const requestList = data.walletRequestList;
                             const totalPages = data.pages.totalPages;
 
                             // 清空表格和分頁
@@ -127,13 +174,16 @@
                                 $("#alertMessage").hide();
                             }
 
-                            // 插入會員資料
+                            // 插入申請資料
                             requestList.forEach(request => {
                                 $("#requestTable tbody").append(`
                                     <tr>
-                                        <td>${request.isVerified ? "已審核" : "未審核"}</td>
-                                        <td>${request.verifySendingTime}</td>
-                                        <td>${request.walletWithdrawAmount}</td>
+                                        <td>${request.memberId}</td>
+                                        <td>未審核</td>
+                                        <td>${request.requestDate}</td>
+                                        <td>${request.account}</td>
+                                        <td>${request.doneDate ? "未審核" : request.doneDate}</td>
+                                        <td><button type="button" id="checkBtn" class="btn btn-primary" data-id="${request.walletRequestId}" ${request.doneDate ? "" : "disabled"}>${request.doneDate ? "確認審核" : "完成審核"}</button></td>
                                     </tr>
                                 `);
                             });
@@ -167,8 +217,35 @@
             });
         }
 
+        // 綁定確認審核按鈕的點擊事件
+        $("#requestTable").on("click", "#checkBtn", function () {
+            const requestId = $(this).data("id");
+            const row = $(this).closest("tr");
+            const btn = $(this);
+
+            $.ajax({
+                url: "/api/wallets/verify",
+                method: "post",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                }, contentType: "application/json",
+                data: JSON.stringify(requestId),
+                success(response) {
+                    const doneDate = response.doneDate;
+                    row.find(".status").text("已審核");
+                    row.find(".doneDate").text(doneDate);
+                    btn.text("完成審核");
+                    btn.prop("disabled", true);
+                    btn.removeClass("btn-primary").addClass("btn-secondary");
+                },
+                error(xhr, status, error) {
+                    alert("審核失敗: " + error);
+                }
+            });
+        });
+
         // 初始加載第一頁
-        fetchMemberData();
+        fetchRequestData();
     });
 </script>
 </body>

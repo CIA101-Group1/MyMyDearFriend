@@ -10,7 +10,7 @@
                 <!-- 會員 -->
                 <a onclick="goToMemberAll()" class="nav-link">會員資料查詢</a>
                 <!-- 錢包 -->
-                <a class="nav-link" href="offline-market.html">錢包管理</a>
+                <a onclick="goToWalletRequest()" class="nav-link">錢包管理</a>
                 <!-- 優惠券 -->
                 <a class="nav-link" href="offline-market.html">優惠券管理</a>
                 <!-- 一般商品 -->
@@ -105,6 +105,16 @@
     function goToMemberAll() {
         var authorization = localStorage.getItem("authorization");
         var url = '/member/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToWalletRequest() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/wallets/getAll';
         if(authorization) {
             url += '?authorization=' + encodeURIComponent(authorization);
         }
