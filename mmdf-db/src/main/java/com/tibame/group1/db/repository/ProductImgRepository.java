@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ProductImgRepository extends JpaRepository<ProductImgEntity, Integer> {
 
-//    0517
+    //    0517
     List<ProductImgEntity> findByProductEntity_ProductId(Integer productId);
 }

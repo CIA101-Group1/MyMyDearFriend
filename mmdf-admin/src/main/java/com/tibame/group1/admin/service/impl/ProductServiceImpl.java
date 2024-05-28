@@ -1,32 +1,34 @@
 package com.tibame.group1.admin.service.impl;
 
-import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
+import com.tibame.group1.admin.service.NoticeService;
 import com.tibame.group1.admin.service.ProductService;
-import com.tibame.group1.common.utils.ConvertUtils;
-import com.tibame.group1.common.utils.StringUtils;
+import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.dto.*;
-import com.tibame.group1.db.entity.ProductCategoryEntity;
-import com.tibame.group1.db.entity.ProductEntity;
-import com.tibame.group1.db.entity.ProductImgEntity;
+import com.tibame.group1.db.entity.*;
+import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
-@Transactional(rollbackOn = Exception.class)
 @Slf4j
+@Component
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private NoticeService noticeService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -37,126 +39,17 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
-    /**
-     * productCategory
-     */
-
-    @Override
-    public ProductCategoryCreateResDTO productCategoryCreate(ProductCategoryCreateReqDTO req) {
-        ProductCategoryEntity product = new ProductCategoryEntity();
-        product.setCategoryName(req.getCategoryName());  //會員ID，從登入驗證碼取的會員ID
-        product = productCategoryRepository.save(product);
-        ProductCategoryCreateResDTO resDTO = new ProductCategoryCreateResDTO();
-        resDTO.setCategoryId(product.getCategoryId());
-        return resDTO;
-    }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductCategoryEntity> productCategoryGetAll() {
         return productCategoryRepository.findAll();
     }
 
-    @Override
-    public ProductCategoryUpdateResDTO productCategoryUpdate(ProductCategoryUpdateReqDTO req) {  //條件判斷
-        ProductCategoryEntity product = new ProductCategoryEntity();
-        product.setCategoryId(req.getCategoryId());
-        product.setCategoryName(req.getCategoryName());
-        product = productCategoryRepository.save(product);
-        ProductCategoryUpdateResDTO resDTO = new ProductCategoryUpdateResDTO();
-        resDTO.setCategoryId(product.getCategoryId());
-        return resDTO;
-    }
-
-    /**
-     * product
-     */
-
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductEntity> productGetAll() {
         List<ProductEntity> result = productRepository.findAll();
         return result;
-    }
-
-//    @Override
-//    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, LoginSourceDTO loginSource) {  //條件判斷
-//        ProductEntity product = new ProductEntity();
-//        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
-//        product.setCategoryId(Integer.valueOf(req.getCategoryId()));
-//        product.setName(req.getName());
-//        product.setDescription(req.getDescription());
-//        product.setPrice(Integer.valueOf(req.getPrice()));
-//        product.setQuantity(Integer.valueOf(req.getQuantity()));
-//        product.setProductId(req.getProductId());
-//        product = productRepository.save(product);
-//        ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
-//        resDTO.setProductId(product.getProductId());
-//        return resDTO;
-//    }
-
-    //    0517
-    @Override
-    public ProductUpdateResDTO productUpdate(ProductUpdateReqDTO req, AdminLoginSourceDTO adminLoginSource) {  //條件判斷
-        ProductEntity product = new ProductEntity();
-        product.setProductId(req.getProductId());
-//        product.setSellerId(loginSource.getMemberId());  //會員ID，從登入驗證碼取的會員ID
-        product.setCategoryId(Integer.valueOf(req.getCategoryId()));
-        product.setName(req.getName());
-        product.setDescription(req.getDescription());
-        product.setPrice(Integer.valueOf(req.getPrice()));
-        product.setQuantity(Integer.valueOf(req.getQuantity()));
-        product.setReviewStatus(0);
-        product.setProductStatus(0);
-        product = productRepository.save(product);
-
-        if (req.getUpdateImg()) {
-            List<ProductImgEntity> productImgEntityList = productImgRepository.findByProductEntity_ProductId(req.getProductId());
-            if (productImgEntityList != null && !productImgEntityList.isEmpty()) {
-                ProductImgEntity productImg = productImgEntityList.get(0);
-                productImg.setImage(StringUtils.isEmpty(req.getImage()) ? null : ConvertUtils.base64ToBytes(req.getImage()));
-                productImgRepository.save(productImg);
-            }
-        }
-        ProductUpdateResDTO resDTO = new ProductUpdateResDTO();
-        resDTO.setProductId(product.getProductId());
-        return resDTO;
-    }
-
-    @Override
-    public ProductEntity getOneSellerProduct(Integer productId) {
-
-        //1.查所有商品
-        ProductEntity productEntity = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
-
-        //2.查商品分類
-        ProductCategoryEntity productCategoryEntity = productCategoryRepository.findById(productEntity.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("ProductCategory with id " + productEntity.getCategoryId() + " not found"));
-        //2-2.放入商品集合
-        productEntity.setProductCategoryEntity(productCategoryEntity);
-
-        //3.查商品照片
-        List<ProductImgEntity> productImgEntityList = getProductImgListByProductId(productId);
-        //3-1.如果照片不是空值,轉成base64
-        productImgEntityList.stream()
-                .filter(productImgEntity -> productImgEntity.getImage() != null)
-                .forEach(productImgEntity -> {
-                    byte[] image = productImgEntity.getImage();
-                    String base64 = Base64.getEncoder().encodeToString(image);
-                    productImgEntity.setImageBase64(base64);
-                });
-        // 將 List 轉換為 Set
-        Set<ProductImgEntity> productImgEntitySet = new HashSet<>(productImgEntityList);
-        //3-3.放入商品集合
-        productEntity.setProductImgs(productImgEntitySet);
-
-        return productEntity;
-    }
-
-
-    @Override
-    public List<ProductImgEntity> getProductImgListByProductId(Integer productId) {
-        return productImgRepository.findByProductEntity_ProductId(productId);
     }
 
 //    0517
@@ -166,31 +59,13 @@ public class ProductServiceImpl implements ProductService {
      * productImg
      */
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProductImgEntity> productImgGetAll() {
         return productImgRepository.findAll();
     }
 
-
-    /***/
-    @Override
-    public ProductEntity getOneProduct(Integer productId) {
-        Optional<ProductEntity> optional = productRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public ProductCategoryEntity getOneCategory(Integer productId) {
-        Optional<ProductCategoryEntity> optional = productCategoryRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public ProductImgEntity getOneProductImg(Integer productId) {
-        Optional<ProductImgEntity> optional = productImgRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductEntity> getAll() {
         List<ProductEntity> result = productRepository.findAll();
@@ -208,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductImgEntity> result = productImgRepository.findAll();
         return result;
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductEntity> queryGetAll(ProductQueryReqDTO productQueryReqDTO) {
         // Query 第一、三種寫法 ProductRepository.java
@@ -216,13 +91,10 @@ public class ProductServiceImpl implements ProductService {
                 productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
                 productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
         );
-        // Query 第二種寫法 ProductRepository.java
-//        return productRepository.findByNameLikeAndDescriptionLikeAndCategoryIdAndReviewStatusAndProductStatus(
-//                productQueryReqDTO.getName(), productQueryReqDTO.getDescription(), productQueryReqDTO.getCategoryId(),
-//                productQueryReqDTO.getReviewStatus(), productQueryReqDTO.getProductStatus()
     }
 
-    //0515
+    //0515 //
+    @Transactional(readOnly = true)
     @Override
     public Page<ProductEntity> productGetAll(Pageable pageable) {
         //1.查所有商品
@@ -287,14 +159,40 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+//    @Override
+//    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
+//        // 根据产品ID从数据库中获取产品对象
+//        ProductEntity product = productRepository.findById(productId)
+//                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+//
+////        MemberEntity member = new MemberEntity();
+////        noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.SYSTEM, "註冊成功", "完成註冊會員", true);
+//
+//        // 更新产品的审核状态 ，上架
+//        product.setReviewStatus(Integer.valueOf(reviewStatus));
+//
+//        // 保存更新后的产品对象回数据库
+//        productRepository.save(product);
+//    }
+
     @Override
-    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
+    public void updateReviewStatus(int productId, String reviewStatus, String failReason) throws Exception {
         // 根据产品ID从数据库中获取产品对象
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+        MemberEntity member = memberRepository.findById(product.getSellerId()).orElse(null);
 
         // 更新产品的审核状态 ，上架
         product.setReviewStatus(Integer.valueOf(reviewStatus));
+
+        if (null == member) {
+            throw new CheckRequestErrorException("查無此會員資料");
+        }
+        if(reviewStatus.equals("2")) {  //失敗
+            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", "審核失敗，" + product.getName() + "錯誤，請賣家重新確認商品資訊!!");
+        }else if(reviewStatus.equals("1")){  //通過
+            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", "審核成功，" + product.getName() +  "商品可進行上下架");
+        }
 
         // 保存更新后的产品对象回数据库
         productRepository.save(product);

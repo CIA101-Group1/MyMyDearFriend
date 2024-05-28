@@ -1,5 +1,6 @@
 package com.tibame.group1.admin.controller;
 
+import com.tibame.group1.admin.annotation.CheckLogin;
 import com.tibame.group1.admin.dto.AdminLoginSourceDTO;
 import com.tibame.group1.admin.service.ProductService;
 import com.tibame.group1.common.dto.ResDTO;
@@ -25,24 +26,10 @@ public class ProductBackendController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("productCategory/create")
-    public @ResponseBody ResDTO<ProductCategoryCreateResDTO> productCategoryCreate(
-            @Valid @RequestBody ProductCategoryCreateReqDTO req) throws IOException {
-        ResDTO<ProductCategoryCreateResDTO> res = new ResDTO<>();
-        res.setData(productService.productCategoryCreate(req));
-        return res;
-    }
     @GetMapping("productCategory/getAll")
     public @ResponseBody ResDTO<List<ProductCategoryEntity>> productCategoryGetAll() throws IOException {
         ResDTO<List<ProductCategoryEntity>> res = new ResDTO<>();
         res.setData(productService.productCategoryGetAll());
-        return res;
-    }
-    @PostMapping("productCategory/update")
-    public @ResponseBody ResDTO<ProductCategoryUpdateResDTO> productCategoryUpdate(
-            @Valid @RequestBody ProductCategoryUpdateReqDTO req) throws IOException {
-        ResDTO<ProductCategoryUpdateResDTO> res = new ResDTO<>();
-        res.setData(productService.productCategoryUpdate(req));
         return res;
     }
 
@@ -50,25 +37,6 @@ public class ProductBackendController {
     public @ResponseBody ResDTO<List<ProductEntity>> productGetAll() throws IOException {
         ResDTO<List<ProductEntity>> res = new ResDTO<>();
         res.setData(productService.productGetAll());
-        return res;
-    }
-
-//    @PostMapping("product/update")
-//    @CheckLogin
-//    public @ResponseBody ResDTO<ProductUpdateResDTO> productUpdate(
-//            @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) throws IOException {
-//        ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
-//        log.info("productId:{}", req.getProductId());
-//        res.setData(productService.productUpdate(req, loginSource));
-//        return res;
-//    }
-
-//    0517
-    @PostMapping("product/update")
-    public ResDTO<ProductUpdateResDTO> productGetOne(
-            @Valid @RequestBody ProductUpdateReqDTO req, @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) throws IOException {
-        ResDTO<ProductUpdateResDTO> res = new ResDTO<>();
-        res.setData(productService.productUpdate(req, adminLoginSource));
         return res;
     }
 
@@ -81,10 +49,10 @@ public class ProductBackendController {
         return res;
     }
 
-
+    @CheckLogin
     @GetMapping("product/query")
         public ResDTO<List<ProductEntity>> queryGetAll(
-                @RequestParam(name = "name", required = false) String name, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "name", required = false) String name, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "categoryId", required = false) Integer categoryId,
                 @RequestParam(name = "reviewStatus", required = false) Integer reviewStatus, @RequestParam(name = "productStatus", required = false) Integer productStatus){
         ResDTO<List<ProductEntity>> res = new ResDTO<>();
         var reqDTO = ProductQueryReqDTO.
@@ -97,15 +65,16 @@ public class ProductBackendController {
         res.setData(productService.queryGetAll(reqDTO));
         return res;
     }
-
+    @CheckLogin
     @PutMapping("/seller/product/updateReviewStatus")
     @ResponseBody
-    public Map<String, String> updateReviewStatus(@RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus) {
+    public Map<String, String> updateReviewStatus(
+            @RequestParam("productId") int productId, @RequestParam("reviewStatus") String reviewStatus, @RequestParam (value = "failReason", required = false) String failReason) {
         Map<String, String> response = new HashMap<>();
         try {
-            productService.updateReviewStatus(productId, reviewStatus);
+            productService.updateReviewStatus(productId, reviewStatus, failReason);
             // 获取更新后的审核状态
-            String newReviewStatus = productService.getProductReviewStatusList().get(1); // 1为审核通过状态
+            String newReviewStatus = productService.getProductReviewStatusList().get(reviewStatus); // 1为审核通过状态
             response.put("reviewStatus", newReviewStatus);
             response.put("success", "審核狀態已成功更新");
         } catch (Exception e) {
@@ -113,10 +82,11 @@ public class ProductBackendController {
         }
         return response;
     }
-
+    @CheckLogin
     @PutMapping("/seller/product/updateProductStatus")
     @ResponseBody
-    public Map<String, String> updateProductStatus(@RequestParam("productId") int productId, @RequestParam("productStatus") String productStatus) {
+    public Map<String, String> updateProductStatus(
+            @RequestParam("productId") int productId, @RequestParam("productStatus") String productStatus) {
         Map<String, String> response = new HashMap<>();
         try {
             productService.updateProductStatus(productId, productStatus);

@@ -11,21 +11,21 @@ import java.util.List;
 @Setter
 public class WalletAllResDTO {
 
-    private PagesResDTO pages;
+  private PagesResDTO pages;
 
-    private List<WalletResDTO> walletRequestList;
+  private List<WalletResDTO> walletRequestList;
 
-    private String status;
+  private String status;
 
-    @AllArgsConstructor
-    @Getter
-    public enum Status {
-        REQUEST_SUCCESS("1", "審核通過"),
+  @AllArgsConstructor
+  @Getter
+  public enum Status {
+    REQUEST_SUCCESS("1", "申請通過"),
 
-        EMPLOYEE_NOTFOUND("-1", "查無此筆");
+    EMPLOYEE_NOTFOUND("-1", "查無此筆");
 
-        private final String code;
+    private final String code;
 
-        private final String message;
-    }
+    private final String message;
+  }
 }
