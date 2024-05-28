@@ -99,7 +99,7 @@ public class BidOrderEntity {
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", length = 50)
     private String email;
 
     @Size(max = 40)
