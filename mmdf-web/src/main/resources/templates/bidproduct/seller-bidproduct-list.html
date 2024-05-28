@@ -13,6 +13,7 @@
     <th:block th:replace="~{/fragments/css}"/>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.jqueryui.min.css"/>
 </head>
 <body>
 <!--header-->
@@ -44,7 +45,6 @@
                                     <th>起標價</th>
                                     <th>商品狀態</th>
                                     <th>最近更新時間</th>
-                                    <th>查看</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -65,6 +65,7 @@
 <th:block th:replace="~{/fragments/js}"/>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 
 <script src="/js/api-response-utils.js"></script>
 <script>
@@ -111,20 +112,18 @@
                 {
                     "data": "images",
                     "render": function (data, type, full, meta) {
-                        return `<img src="data:image/jpeg;base64, ${data[0].image}" width="100px" alt="商品縮圖"/>`;
+                        return `<img src="data:image/jpeg;base64, ${data[0].image}" width="80px" alt="商品縮圖"/>`;
                     }
                 },
                 {
                     "data": "category",
                     "render": function (data, type, full, meta) {
-                        // return data.categoryId + '-[' + data.categoryName + ']';
                         return `[${data.categoryName}]`;
                     }
                 },
                 {
                     "data": "condition",
                     "render": function (data, type, full, meta) {
-                        // return data.categoryId + '-[' + data.categoryName + ']';
                         return `[${data.conditionName}]`;
                     }
                 },
@@ -139,29 +138,79 @@
                 },
                 {
                     "data": "productId",
-                    "render": function (data, type, full, meta) {
-                        return `<a href="/bidproduct-detail/${data}">
+                    "render": function (data, row, full, meta) {
+                        if (full.statusCode === -1 || full.statusCode === 0) {
+                            return `
+                                <a href="/bidproduct-detail/${data}">
                                 <input type="button" value="詳情">
-                                </a>`;
+                                </a>
+                                <br/>
+                                <a href="/seller/bidproduct-edit/${data}">
+                                <input type="button" value="編輯">
+                                </a>
+                                `;
+                        } else if (full.statusCode === 2) {
+                            return `
+                                <a href="/bidproduct-detail/${data}">
+                                <input type="button" value="詳情">
+                                </a>
+                                <br/>
+                                <input type="button" value="提前結束" onclick="closeBidEarly(${data})">
+                                `;
+                        } else {
+                            return `
+                                <a href="/bidproduct-detail/${data}">
+                                <input type="button" value="詳情">
+                                </a>
+                                `;
+                        }
                     }
+                }
+            ],
+            "columnDefs": [
+                {
+                    targets: 0,
+                    width: "45px",
                 },
                 {
-                    "data": "productId",
-                    "render": function (data, type, full, meta) {
-                        return `<a href="/seller/bidproduct-edit/${data}">
-                                <input type="button" value="編輯商品">
-                                </a>
-                                <form method="get" action="/emp/update" style="margin-bottom: 0px;">
-                                <input type="submit" value="提前結束競標">
-                                <input type="hidden" name="empno" value="${data}">
-                                </form>`;
-                    }
+                    targets: 4,
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        $(td).css({
+                            "white-space": "nowrap",
+                            "overflow": "hidden",
+                            "text-overflow": "ellipsis",
+                            "max-width": "150px"
+                        });
+                    },
+                    width: "10%",
                 }
             ]
         });
 
     });
 
+    function closeBidEarly(productId) {
+        if (confirm("確定要提前結束競標嗎？")) {
+            $.ajax({
+                url: `/api/bidproduct/closeBidEarly/${productId}`,
+                type: "PUT",
+                "headers": {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success: function (response) {
+                    if (response.code === "0") {
+                        alert("操作成功");
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+    }
 
 </script>
 </body>
