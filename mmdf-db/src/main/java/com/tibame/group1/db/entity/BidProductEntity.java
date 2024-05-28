@@ -112,7 +112,7 @@ public class BidProductEntity {
     // @OneToMany(mappedBy = "product")
     // private Set<com.tibame.group1.db.entity.BidEntity> bids = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "product")
     @OrderBy("imageId asc")
     private Set<com.tibame.group1.db.entity.BidProductImageEntity> images =
             new LinkedHashSet<>();
