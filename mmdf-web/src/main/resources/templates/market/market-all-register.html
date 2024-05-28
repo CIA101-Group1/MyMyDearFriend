@@ -11,6 +11,16 @@
     <!-- CSS -->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
+        .registration_records {
+            display: flex;
+            justify-content: center;
+        }
+
+        .registration_records .dashboard_content {
+            max-width: 900px; /* Adjust the max-width as needed */
+            width: 100%;
+        }
+
         .record-table {
             width: 100%;
             border-collapse: collapse;
@@ -20,6 +30,7 @@
         .record-table th, .record-table td {
             border: 1px solid #ddd;
             padding: 8px;
+            white-space: nowrap; /* 防止內容換行 */
         }
 
         .record-table th {
@@ -41,33 +52,26 @@
 <section class="main_content_area">
     <div class="container">
         <div class="registration_records">
-            <div class="row">
-                <!-- Sidebar -->
-                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
-                <div class="col-sm-12 col-md-9 col-lg-9">
-                    <!-- Tab panes -->
-                    <div class="tab-content dashboard_content">
-                        <div class="tab-pane fade active" id="account-details">
-                            <h3 style="text-align: center;">報名紀錄</h3>
-                            <table class="record-table" id="recordsTable">
-                                <thead>
-                                <tr>
-                                    <th id="marketName">活動名稱</th>
-                                    <th id="marketLocation">地點</th>
-                                    <th id="marketStart">活動開始日期</th>
-                                    <th id="marketEnd">活動結束日期</th>
-                                    <th id="marketFee">費用</th>
-                                    <th id="applicantPopulation">目前報名人數</th>
-                                </tr>
-                                </thead>
-                                <tbody id="recordsTableBody">
-                                <!-- 报名记录将在这里显示 -->
-                                </tbody>
-                            </table>
-                            <div id="alertMessage" style="display: none; text-align: center;">查無資料</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="dashboard_content">
+                <h3 style="text-align: center;">報名紀錄</h3>
+                <table class="record-table" id="recordsTable">
+                    <thead>
+                    <tr>
+                        <th id="marketName">活動名稱</th>
+                        <th id="marketLocation">地點</th>
+                        <th id="marketStart">活動開始日期</th>
+                        <th id="marketEnd">活動結束日期</th>
+                        <th id="marketFee">費用</th>
+                        <th id="applicantPopulation">目前報名人數</th>
+                        <th id="participateDate">報名日期</th>
+                        <th id="status">報名狀態</th>
+                    </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                    <!-- 报名记录将在这里显示 -->
+                    </tbody>
+                </table>
+                <div id="alertMessage" style="display: none; text-align: center;">查無資料</div>
             </div>
         </div>
     </div>
@@ -129,6 +133,8 @@
                                     <td>${formatDate(market.marketEnd)}</td>
                                     <td>${market.marketFee}</td>
                                     <td>${market.applicantPopulation}</td>
+                                    <td>${formatDate(market.participateDate)}</td>
+                                    <td>${convertStatusToChinese(market.status)}</td>
                                 </tr>
                             `);
                             });
@@ -155,6 +161,17 @@
         const month = dateString.substring(4, 6);
         const day = dateString.substring(6, 8);
         return `${year}-${month}-${day}`;
+    }
+
+    function convertStatusToChinese(status) {
+        switch (parseInt(status)) { // 將 marketStatus 轉換為整數進行比對
+            case 1:
+                return "報名成功，已扣款";
+            case 2:
+                return "報名取消，已退費";
+            default:
+                return "未知狀態";
+        }
     }
 
 </script>
