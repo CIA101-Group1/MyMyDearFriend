@@ -44,13 +44,22 @@
                                 <h3>訂單</h3>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-2 custom-select-wrapper">
-                                    <label for="orderCategory"
-                                           style="margin-bottom: 5px;">訂單類型</label>
+                                <div class="form-group col-md-2">
+                                    <label for="orderCategory">訂單類型</label>
                                     <select id="orderCategory" class="form-control">
                                         <option value="BUYER">買家</option>
                                         <option value="SELLER">賣家</option>
                                         <option value="BOTH">所有</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="orderStatusFilter">查詢訂單狀態</label>
+                                    <select class="form-control" id="orderStatusFilter">
+                                        <option value="ALL">全部</option>
+                                        <option value="TO_SHIP">待出貨</option>
+                                        <option value="SHIPPED">已出貨</option>
+                                        <option value="COMPLETED">完成</option>
+                                        <option value="RETURN">退貨</option>
                                     </select>
                                 </div>
                             </div>

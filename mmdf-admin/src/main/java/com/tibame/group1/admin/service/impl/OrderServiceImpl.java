@@ -44,8 +44,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderResDTO> resList = new ArrayList<>();
         Byte orderstatus = null;
         Integer orderId = null;
-        Integer buyerId = null;
-        Integer sellerId = null;
+        String buyerName = null;
+        String sellerName = null;
 
         if (req.getOrderStatus() != OrderStatus.ALL) {
             orderstatus = req.getOrderStatus().getCode();
@@ -55,39 +55,24 @@ public class OrderServiceImpl implements OrderService {
             orderId = Integer.parseInt(req.getOrderId());
         }
 
-        String buyerName = req.getBuyerName();
-        String sellerName = req.getSellerName();
-
-        if(!(buyerName.isEmpty() || buyerName.equals("null"))){
-            MemberEntity queryBuyer = memberRepository.findByName(req.getBuyerName());
-            if(queryBuyer != null){
-                buyerId = queryBuyer.getMemberId();
-            }else{
-                log.warn("請輸入正確買家名稱");
-                throw new CheckRequestErrorException("請輸入正確買家名稱");
-            }
+        if(!(req.getBuyerName().isEmpty() || req.getBuyerName().equals("null"))){
+            buyerName = req.getBuyerName();
         }
 
-        if(!(sellerName.isEmpty() || sellerName.equals("null"))){
-            MemberEntity querySeller = memberRepository.findByName(req.getSellerName());
-            if(querySeller != null){
-                sellerId = querySeller.getMemberId();
-            }else{
-                log.warn("請輸入正確賣家名稱");
-                throw new CheckRequestErrorException("請輸入正確賣家名稱");
-            }
+        if(!(req.getSellerName().isEmpty() || req.getSellerName().equals("null"))){
+            sellerName = req.getSellerName();
         }
 
-        List<OrderEntity> orderList = orderRepository.findAllByOrderByCreateTimeDesc(orderstatus, orderId, buyerId, sellerId);
+        List<OrderEntity> orderList = orderRepository.findOrders(orderstatus, buyerName, sellerName, orderId);
 
         for (OrderEntity order : orderList) {
             OrderResDTO res = new OrderResDTO();
             MemberEntity buyer = memberRepository.findById(order.getBuyerId()).orElse(null);
             MemberEntity seller = memberRepository.findById(order.getSellerId()).orElse(null);
             // 查詢訂單詳情
-            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getId());
+            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getOrderId());
             // 將查詢資料轉換至 List<OrderResDTO>
-            res.setOrderId(order.getId());
+            res.setOrderId(order.getOrderId());
             res.setBuyerId(order.getBuyerId());
             res.setSellerId(order.getSellerId());
             res.setBuyerName(buyer.getName());
@@ -166,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus((byte) statusCode);
         orderRepository.save(order);
 
-        String message = "您的訂單編號: " + order.getId() + " ，訂單狀態: " + orderStatus.getMessage();
+        String message = "您的訂單編號: " + order.getOrderId() + " ，訂單狀態: " + orderStatus.getMessage();
         MemberEntity buyer = memberRepository.findById(order.getBuyerId()).orElse(null);
         noticeService.memberNoticeCreate(
                 buyer, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "訂單狀態更新", message, true);

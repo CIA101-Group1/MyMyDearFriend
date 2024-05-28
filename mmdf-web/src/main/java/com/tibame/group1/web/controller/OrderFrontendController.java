@@ -13,11 +13,6 @@ public class OrderFrontendController {
         return "/order/order-all";
     }
 
-    @GetMapping("order/detail")
-    public String orderDetail() {
-        return "/order/order-detail";
-    }
-
     @GetMapping("order/checkout")
     public String checkout() {
         return "/order/order-checkout";
