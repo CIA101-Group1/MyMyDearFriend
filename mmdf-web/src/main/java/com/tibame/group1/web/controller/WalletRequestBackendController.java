@@ -31,7 +31,7 @@ public class WalletRequestBackendController {
         return res;
     }
 
-    @GetMapping("Wallets/detail")
+    @PostMapping("wallets/detail")
     @CacheEvict(allEntries = true)
     @CheckLogin
     public @ResponseBody ResDTO<WalletWithdrawAllResDTO> walletWithdrawAll(

@@ -115,7 +115,7 @@
             // 更新 userData
             userData.status = status === "" ? null : status;
             $.ajax({
-                url: `/api/wallet/withdraw?page=${pageNumber}&sizePerPage=${pageSize}`,
+                url: `/api/wallets/detail?page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",
                 headers: {
                     "authorization": localStorage.getItem("authorization")
@@ -123,55 +123,50 @@
                 contentType: "application/json",
                 data: JSON.stringify(userData),
                 success(response) {
-                    apiResponseJSON(response, {
-                        onSuccess(data) {
-                            const requestList = data.requestList;
-                            const totalPages = data.pages.totalPages;
+                    const walletWithdrawList = response.data.walletWithdrawList;
+                    const totalPages = response.data.pages.totalPages;
 
-                            // 清空表格和分頁
-                            $("#requestTable tbody").empty();
-                            $(".pagination").empty();
+                    // 清空表格和分頁
+                    $("#requestTable tbody").empty();
+                    $(".pagination").empty();
 
-                            // 若查無資料
-                            if (data.pages.totalCount === 0) {
-                                $("#alertMessage").show();
-                            } else {
-                                $("#alertMessage").hide();
-                            }
+                    // 若查無資料
+                    if (response.data.pages.totalCount === 0) {
+                        $("#alertMessage").show();
+                    } else {
+                        $("#alertMessage").hide();
+                    }
 
-                            // 插入會員資料
-                            requestList.forEach(request => {
-                                $("#requestTable tbody").append(`
+                    // 插入會員資料
+                    walletWithdrawList.forEach(request => {
+                        const statusText = request.status === "1" ? "已審核通過" : "未審核";
+                        $("#requestTable tbody").append(`
                                     <tr>
-                                        <td>${request.requestDate}</td>
+                                        <td>${formatDateTime(request.requestDate)}</td>
                                         <td>${request.withdrawAmount}</td>
-                                        <td>${request.status}</td>
+                                        <td>${statusText}</td>
                                     </tr>
                                 `);
-                            });
+                    });
 
-                            // 插入分頁按鈕
-                            for (let i = 0; i < totalPages; i++) {
-                                $(".pagination").append(`
+                    // 插入分頁按鈕
+                    for (let i = 0; i < totalPages; i++) {
+                        $(".pagination").append(`
                                     <li class="page-item ${i === pageNumber ? "active" : ""}">
                                         <a class="page-link" href="#">${i + 1}</a>
                                     </li>
                                 `);
-                            }
+                    }
 
-                            // 分頁按鈕點擊事件
-                            $(".pagination .page-link").on("click", function (e) {
-                                e.preventDefault();
-                                const pageIndex = parseInt($(this).text()) - 1;
-                                fetchRequestData(pageIndex);
-                                // 滾動到頁面頂部
-                                $("html, body").animate({scrollTop: 0}, 50);
-                            });
-                        },
-                        onError(message) {
-                            console.log(message);
-                        }
+                    // 分頁按鈕點擊事件
+                    $(".pagination .page-link").on("click", function (e) {
+                        e.preventDefault();
+                        const pageIndex = parseInt($(this).text()) - 1;
+                        fetchRequestData(pageIndex);
+                        // 滾動到頁面頂部
+                        $("html, body").animate({scrollTop: 0}, 50);
                     });
+
                 },
                 error(xhr, status, error) {
                     alert("伺服器連線失敗: " + error);
@@ -179,8 +174,12 @@
             });
         }
 
+        function formatDateTime(dateTimeString) {
+            return dateTimeString.split('.')[0];
+        }
+
         // 初始加載第一頁
-        fetchMemberData();
+        fetchRequestData();
     });
 </script>
 </body>
