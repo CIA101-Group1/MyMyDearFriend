@@ -288,8 +288,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 查詢員工權限
     @Override
-    public EmployeeRoleDetailResDTO employeeRole(AdminLoginSourceDTO adminLoginSource) {
-        Integer employeeId = adminLoginSource.getEmployeeId();
+    public EmployeeRoleDetailResDTO employeeRole(AdminLoginSourceDTO adminLoginSource, Integer employeeId) {
         EmployeeRoleEntity employeeRoleEntities =
                 employeeRoleRepository.findRoleIdByEmployeeId(employeeId);
 

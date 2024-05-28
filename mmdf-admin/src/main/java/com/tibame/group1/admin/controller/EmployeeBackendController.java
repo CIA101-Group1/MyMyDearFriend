@@ -82,12 +82,12 @@ public class EmployeeBackendController {
 
     // 設定權限
     @PostMapping("employee/role")
-    public @ResponseBody ResDTO<EmployeeRoleResDTO>assignRoleToEmployee(
+    public @ResponseBody ResDTO<EmployeeRoleResDTO> assignRoleToEmployee(
             @Valid @RequestBody EmployeeRoleReqDTO employeeRoleReqDTO,
-            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE)
-                    AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException{
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource)
+            throws CheckRequestErrorException {
         ResDTO<EmployeeRoleResDTO> res = new ResDTO<>();
-        res.setData(employeeService.assignRoleToEmployee(employeeRoleReqDTO,adminLoginSource));
+        res.setData(employeeService.assignRoleToEmployee(employeeRoleReqDTO, adminLoginSource));
         return res;
     }
 
@@ -95,9 +95,10 @@ public class EmployeeBackendController {
     @GetMapping("employee/allRole")
     public @ResponseBody ResDTO<EmployeeRoleDetailResDTO> employeeRole(
             @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE)
-                    AdminLoginSourceDTO adminLoginSourceDTO){
+                    AdminLoginSourceDTO adminLoginSourceDTO,
+            @RequestParam(value = "employeeId") Integer employeeId) {
         ResDTO<EmployeeRoleDetailResDTO> res = new ResDTO<>();
-        res.setData(employeeService.employeeRole(adminLoginSourceDTO));
+        res.setData(employeeService.employeeRole(adminLoginSourceDTO, employeeId));
         return res;
     }
 }
