@@ -10,6 +10,13 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .btn-secondary {
+            color: #fff !important;
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+        }
+    </style>
 </head>
 <body>
 <!--header-->
@@ -31,40 +38,45 @@
                                     <div class="card-header">
                                         <h3>申請提領紀錄</h3>
                                     </div>
-                                    <!-- 篩選條件 -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-3 custom-select-wrapper">
-                                            <label for="isVerifiedFilter"
-                                                   style="margin-bottom: 5px;">審核狀態</label>
-                                            <select id="isVerifiedFilter" class="form-control">
-                                                <option value="">所有</option>
-                                                <option value="true">已審核</option>
-                                                <option value="false">未審核</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3 align-self-end">
-                                            <button id="resetFilters" class="btn btn-secondary mr-2">重置篩選條件
-                                            </button>
-                                        </div>
-                                    </div>
                                     <div class="card-body">
-                                        <table id="requestTable" class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th>申請時間</th>
-                                                <th>申請提領金額</th>
-                                                <th>狀態</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="request-records">
-                                            <!-- 申請紀錄將會被插入這裡 -->
-                                            </tbody>
-                                        </table>
-                                        <nav>
-                                            <ul class="pagination justify-content-center" id="pagination">
-                                                <!-- 分頁按鈕將會被插入這裡 -->
-                                            </ul>
-                                        </nav>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3 custom-select-wrapper">
+                                                <label for="isVerifiedFilter"
+                                                       style="margin-bottom: 5px;">審核狀態</label>
+                                                <select id="isVerifiedFilter" class="form-control">
+                                                    <option value="">所有</option>
+                                                    <option value="1">已審核</option>
+                                                    <option value="0">未審核</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 align-self-end">
+                                                <button id="resetFilters" class="btn btn-secondary mr-2">重置篩選條件
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <table id="requestTable" class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>申請時間</th>
+                                                    <th>申請提領金額</th>
+                                                    <th>審核狀態</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="request-records">
+                                                <!-- 申請紀錄將會被插入這裡 -->
+                                                </tbody>
+                                            </table>
+                                            <div id="alertMessage" class="alert alert-warning"
+                                                 style="display: none; text-align: center;">
+                                                查無資料
+                                            </div>
+                                            <nav>
+                                                <ul class="pagination justify-content-center" id="pagination">
+                                                    <!-- 分頁按鈕將會被插入這裡 -->
+                                                </ul>
+                                            </nav>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -99,9 +111,9 @@
         });
 
         function fetchRequestData(pageNumber = 0, pageSize = 5) {
-            const isVerified = $("#isVerifiedFilter").val();
+            const status = $("#isVerifiedFilter").val();
             // 更新 userData
-            userData.isVerified = isVerified === "" ? null : isVerified === "true";
+            userData.status = status === "" ? null : status;
             $.ajax({
                 url: `/api/wallet/withdraw?page=${pageNumber}&sizePerPage=${pageSize}`,
                 method: "post",
@@ -131,9 +143,9 @@
                             requestList.forEach(request => {
                                 $("#requestTable tbody").append(`
                                     <tr>
-                                        <td>${request.isVerified ? "已審核" : "未審核"}</td>
-                                        <td>${request.verifySendingTime}</td>
-                                        <td>${request.walletWithdrawAmount}</td>
+                                        <td>${request.requestDate}</td>
+                                        <td>${request.withdrawAmount}</td>
+                                        <td>${request.status}</td>
                                     </tr>
                                 `);
                             });

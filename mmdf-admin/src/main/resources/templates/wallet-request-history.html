@@ -101,6 +101,7 @@
                             <tr>
                                 <th>會員編號</th>
                                 <th>審核狀態</th>
+                                <th>提領金額</th>
                                 <th>申請時間</th>
                                 <th>存入帳戶</th>
                                 <th>審核時間</th>
@@ -180,6 +181,7 @@
                                     <tr>
                                         <td>${request.memberId}</td>
                                         <td>未審核</td>
+                                        <td>${request.changeAmount}</td>
                                         <td>${request.requestDate}</td>
                                         <td>${request.account}</td>
                                         <td>${request.doneDate ? "未審核" : request.doneDate}</td>
