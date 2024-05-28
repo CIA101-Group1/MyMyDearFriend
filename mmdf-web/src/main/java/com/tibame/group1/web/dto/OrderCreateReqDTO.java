@@ -18,8 +18,6 @@ public class OrderCreateReqDTO {
 
     private Integer memberCouponId1;
 
-    private Integer memberCouponId2;
-
     @NotNull
     private Integer priceBeforeDiscount;
 
