@@ -61,92 +61,225 @@
                     </form>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <form action="#">
-                        <h3>收貨資訊</h3>
-                        <div class="row">
-                            <div class="col-12 mb-20">
-                                <label>姓名 <span>*</span></label>
-                                <input type="text">
-                            </div>
-                            <div class="col-lg-6 mb-20">
-                                <label>Phone<span>*</span></label>
-                                <input type="text">
-                            </div>
-                            <div class="col-lg-6 mb-20">
-                                <label> Email <span>*</span></label>
-                                <input type="text">
-                            </div>
-                            <div class="col-12">
-                                <label>地址<span>*</span></label>
-                            </div>
-                            <div class="col-lg-6 mb-20">
-                                <select class="form-control" name="cuntry" id="county_box">
-                                </select>
-                            </div>
-
-                            <div class="col-lg-6 mb-20">
-                                <select class="form-control" name="cuntry" id="district_box">
-                                </select>
-                            </div>
-                            <div class="col-12 mb-20">
-                                <input class="form-control" type="text" th:placeholder="地址">
-                            </div>
-
-                            <div class="col-12">
-                                <div class="order-notes">
-                                    <label for="order_note">訂單備註</label>
-                                    <textarea id="order_note" rows="5">
-                                    </textarea>
-                                </div>
-                            </div>
+                    <h3>收貨資訊</h3>
+                    <div class="row">
+                        <div class="col-12 mb-20">
+                            <label>姓名 <span>*</span></label>
+                            <input type="text" id="name">
                         </div>
-                    </form>
+                        <div class="col-lg-6 mb-20">
+                            <label>手機號碼<span>*</span></label>
+                            <input type="text" id="phone">
+                        </div>
+                        <div class="col-lg-6 mb-20">
+                            <label>電子信箱<span>*</span></label>
+                            <input type="text" id="email">
+                        </div>
+                        <div class="col-12">
+                            <label>地址<span>*</span></label>
+                        </div>
+                        <div class="col-lg-6 mb-20">
+                            <select class="form-control" name="cuntry" id="county_box">
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 mb-20">
+                            <select class="form-control" name="district" id="district_box">
+                            </select>
+                        </div>
+                        <div class="col-12 mb-20">
+                            <input class="form-control" type="text" id="address" th:placeholder="地址">
+                        </div>
+                        <!-- <div class="col-12"> -->
+                        <!--     <div class="order-notes"> -->
+                        <!--         <label for="order_note">訂單備註</label> -->
+                        <!--         <textarea id="order_note" rows="5"> -->
+                        <!--         </textarea> -->
+                        <!--     </div> -->
+                        <!-- </div> -->
+                    </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <form action="#">
-                        <h3>付款資訊</h3>
-                        <div class="row">
-
-                            <div class="col-12 mb-20">
-                                <label>錢包餘額</label>
-                                <input type="text" value="999">
-                                <label>錢包密碼 <span>*</span></label>
-                                <input type="text">
+                    <h3>付款資訊</h3>
+                    <div class="row">
+                        <div class="col-12 mb-20">
+                            <span>錢包餘額：</span><span id="walletAmount"></span>
+                            <br/>
+                            <label>錢包密碼 <span>*</span></label>
+                            <input type="text" name="walletCid" id="walletCid">
+                        </div>
+                        <div class="col-lg-12 mb-20">
+                            <label>優惠券</label>
+                            <select class="form-control" name="memberCoupon" id="memberCoupon">
+                            </select>
+                        </div>
+                        <div class="col-12 mb-20">
+                            <div>
+                                <span>小計：</span>
+                                <span><strong>$</strong><strong id="subtotal" th:text="${BidOrder.subtotal}"></strong></span>
                             </div>
-                            <div class="col-12 mb-20">
-                                <div>
-                                    <span>小計：</span>
-                                    <span><strong th:text="'$'+ ${BidOrder.subtotal}"></strong></span>
-                                </div>
-                                <div>
-                                    <span>折扣：</span>
-                                    <span><strong>-$0</strong></span>
-                                </div>
-                                <div>
-                                    <span>運費：</span>
-                                    <span><strong>$30</strong></span>
-                                </div>
-                                <div>
-                                    <span>合計：</span>
-                                    <span><strong>$220</strong></span>
-                                </div>
-                                <div class="mt-20">
-                                    <button type="submit" class="btn btn-success w-100">去結帳</button>
-                                </div>
+                            <div>
+                                <span>折扣：</span>
+                                <span><strong>-$</strong><strong>0</strong></span>
+                            </div>
+                            <!-- <div> -->
+                            <!--     <span>運費：</span> -->
+                            <!--     <span><strong>$30</strong></span> -->
+                            <!-- </div> -->
+                            <div>
+                                <span>合計：</span>
+                                <span><strong>$</strong><strong id="total"></strong></span>
+                            </div>
+                            <div class="mt-20">
+                                <button type="submit" id="submitBtn" class="btn btn-success w-100">送出</button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--Checkout page section end-->
+</div>
+<!--Checkout page section end-->
 
-    <!--footer-->
-    <th:block th:replace="~{/fragments/footer}"/>
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
 
-    <!--js-->
-    <th:block th:replace="~{/fragments/js}"/>
-    <script src="/js/address-of-tw.js"></script>
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="/js/address-of-tw.js"></script>
+<script>
+    $(document).ready(function () {
+        loginGuard();
+        fetchMemberDetail();
+        fillMemberCoupon();
+        updateTotal();
+
+        $('#submitBtn').click(function () {
+            let name = $('#name').val();
+            let phone = $('#phone').val();
+            let email = $('#email').val();
+            let county = $('#county_box').val();
+            let district = $('#district_box').val();
+            let address = $('#address').val();
+            let fullAddress = county + "_" + district + "_" + address;
+            let walletCid = $('#walletCid').val();
+            let discount = 0;
+            let total = $('#total').text();
+
+            let checkoutData = {
+                name: name,
+                phone: phone,
+                email: email,
+                address: fullAddress,
+                walletCid: walletCid,
+                discount: discount,
+                total: total
+            };
+
+            let orderId = getOrderIdFromUrl();
+
+            $.ajax({
+                url: `/api/bidorder/pay/${orderId}`,
+                method: 'PUT',
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                contentType: 'application/json',
+                data: JSON.stringify(checkoutData),
+                success: function (response) {
+                    // alert('結帳成功');
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    alert('結帳失敗: ' + error);
+                }
+            });
+        });
+    })
+
+    function fetchMemberDetail() {
+        $.ajax({
+            url: "/api/member/detail",
+            method: "get",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        switch (data.status) {
+                            case "-1":
+                                $("#modalBody").html("查無此會員資料");
+                                $("#myModal").modal("show");
+                                break;
+                            case "1":
+                                $("#memberAccount").val(data.memberAccount);
+                                $("#name").val(data.name);
+                                $("#phone").val(data.phone);
+                                $("#email").val(data.email);
+                                fillAddress(data.address);
+                                $("#walletAmount").text(data.walletAmount);
+                                break;
+                        }
+                    },
+                    onError(message) {
+                        console.log(message);
+                    }
+                });
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+    }
+
+    function fillAddress(addressString) {
+        // 解析完整地址字串
+        let splitAddress = addressString.split("_");
+        // 獲取縣市、鄉鎮市區和地址
+        let county = splitAddress[0];
+        let district = splitAddress[1];
+        let address = splitAddress[2];
+
+        // 將縣市和鄉鎮市區選擇到下拉選單中
+        $("#county_box").val(county);
+        populateDistricts(county);
+        $("#district_box").val(district);
+
+        // 將地址填入後面的輸入框中
+        $("#address").val(address);
+    }
+
+    function fillMemberCoupon() {
+        // /api/users/coupons
+        $.ajax({
+            url: "/api/users/coupons",
+            method: "get",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success(response) {
+                console.log(response);
+            },
+            error(xhr, status, error) {
+                alert("伺服器連線失敗: " + error);
+            }
+        });
+
+    }
+
+    function getOrderIdFromUrl() {
+        const url = window.location.href;
+        const urlSegments = url.split('/');
+        const orderId = urlSegments[urlSegments.length - 1];
+        return orderId;
+    }
+
+    function updateTotal() {
+        let subtotal = $('#subtotal').text();
+        $("#total").text(subtotal);
+    }
+</script>
 </body>
 </html>
