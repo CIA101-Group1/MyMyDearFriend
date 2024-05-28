@@ -114,10 +114,13 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
 
     WalletRequestEntity walletRequest = new WalletRequestEntity();
     walletRequest.setMember(member);
-    walletRequest.setStatus("PENDING");
+    walletRequest.setStatus("0");
     walletRequest.setAccount(req.getAccount());
     walletRequest.setRequestDate(new Date());
     walletRequestRepository.save(walletRequest);
+    member.setWalletWithdrawAmount(req.getChangeAmount());
+    member.setWalletAmount(member.getWalletAmount() - req.getChangeAmount());
+    memberRepository.save(member);
 
     res.setStatus(WalletWithdrawResDTO.Status.REQUEST_SUBMITTED.getCode());
     return res;

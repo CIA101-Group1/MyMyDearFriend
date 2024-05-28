@@ -20,7 +20,7 @@ public class WalletAllResDTO {
   @AllArgsConstructor
   @Getter
   public enum Status {
-    REQUEST_SUCCESS("1", "審核通過"),
+    REQUEST_SUCCESS("1", "申請通過"),
 
     EMPLOYEE_NOTFOUND("-1", "查無此筆");
 
