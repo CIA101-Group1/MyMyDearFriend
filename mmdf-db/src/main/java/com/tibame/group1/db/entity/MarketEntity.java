@@ -23,13 +23,13 @@ public class MarketEntity {
     @Column(name = "market_name",nullable = false,length = 20)
     private String marketName;
 
-    @Column(name = "market_description", nullable = false, length = 1000)
+    @Column(name = "market_description", nullable = false, length = 10000)
     private String marketDescription;
 
     @Column(name = "image", columnDefinition = "mediumblob")
     private byte[] marketImage;
 
-    @Column(name = "market_location", nullable = false, length = 20)
+    @Column(name = "market_location", nullable = false, length = 1000)
     private String marketLocation;
 
     //活動開始時間
