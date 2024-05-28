@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,6 +114,8 @@ public class MarketServiceImpl implements MarketService {
         dto.setMarketEnd(DateUtils.dateToSting(entity.getMarketId().getMarketEnd()));
         dto.setMarketFee(entity.getMarketId().getMarketFee());
         dto.setApplicantPopulation(entity.getMarketId().getApplicantPopulation());
+        dto.setParticipateDate(DateUtils.dateToSting(entity.getParticipateDate()));
+        dto.setStatus(entity.getStatus());
         return dto;
     }
 
@@ -154,6 +157,8 @@ public class MarketServiceImpl implements MarketService {
         MarketRegistrationEntity marketRegistrationEntity = new MarketRegistrationEntity();
         marketRegistrationEntity.setId(registrationId);
         marketRegistrationEntity.setMemberId(memberEntity); // 將會員實體設置到報名記錄中
+        marketRegistrationEntity.setParticipateDate(new Date());
+        marketRegistrationEntity.setStatus(1);
 
         // 设置市集属性
         marketRegistrationEntity.setMarketId(market); // 这里设置了市集属性
