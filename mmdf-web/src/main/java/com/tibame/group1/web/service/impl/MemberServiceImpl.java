@@ -41,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
     @Autowired private NoticeService noticeService;
 
     /**
-     * 前台使用者註冊會員
+     * 前台使用者註冊會員x
      *
      * @param req 註冊時填入的資料
      * @return 已建立memberId的memberEntity
@@ -93,7 +93,11 @@ public class MemberServiceImpl implements MemberService {
         loginSource.setIsVerified(member.getIsVerified());
         sendVerifyEmail(loginSource);
         noticeService.memberNoticeCreate(
-                member, MemberNoticeEntity.NoticeCategory.SYSTEM, "註冊成功", "完成註冊會員", true);
+                member,
+                MemberNoticeEntity.NoticeCategory.SYSTEM,
+                "My my dear friend 會員註冊成功",
+                "恭喜您完成會員註冊，祝您購物愉快！",
+                true);
         resDTO.setAuthorization(jwtService.encodeLogin(loginSource));
         resDTO.setStatus(MemberCreateResDTO.Status.CREATE_SUCCESS.getCode());
         return resDTO;
@@ -395,7 +399,8 @@ public class MemberServiceImpl implements MemberService {
         EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
                 .setTitle("My my dear friend 會員驗證信")
                 .addContent(
-                        config.getWebURL()
+                        "請點擊連結完成信箱驗證："
+                                + config.getWebURL()
                                 + "/member/verify?verifyCode="
                                 + jwtService.encodeEmailVerify(emailVerifySource))
                 .setIsHtml(false)
@@ -428,7 +433,8 @@ public class MemberServiceImpl implements MemberService {
         EmailUtils.init(config.getTestSendEmail(), config.getTestEmailCid())
                 .setTitle("My my dear friend 重設密碼驗證信")
                 .addContent(
-                        config.getWebURL()
+                        "請點擊連結前往重設密碼："
+                                + config.getWebURL()
                                 + "/member/cidReset?verifyCode="
                                 + jwtService.encodeCidResetVerify(cidResetVerifySource))
                 .setIsHtml(false)

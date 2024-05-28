@@ -15,19 +15,19 @@ import java.util.Objects;
 public class MarketRegistrationEntity {
     //使用複合主鍵
     @EmbeddedId
-    private MarketRegistrationId Id;
+    private MarketRegistrationId id;
 
     @ManyToOne
     //指定marketId是複合主鍵的一部份，將其映射到market實體類的id
     @MapsId("marketId")
     //指定外鍵
     @JoinColumn(name = "market_id")
-    private MarketEntity market;
+    private MarketEntity marketId;
 
     @ManyToOne
     @MapsId("memberId")
     @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private MemberEntity memberId;
 
     @Column(name = "status")
     private Integer status;

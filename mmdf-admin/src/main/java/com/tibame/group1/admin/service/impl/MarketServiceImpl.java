@@ -9,6 +9,8 @@ import com.tibame.group1.common.utils.DateUtils;
 import com.tibame.group1.common.utils.FileUtils;
 import com.tibame.group1.common.utils.StringUtils;
 import com.tibame.group1.db.entity.MarketEntity;
+import com.tibame.group1.db.entity.MarketRegistrationEntity;
+import com.tibame.group1.db.repository.MarketRegistrationRepository;
 import com.tibame.group1.db.repository.MarketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -28,6 +31,9 @@ public class MarketServiceImpl implements MarketService {
 
     @Autowired
     MarketRepository marketRepository;
+
+    @Autowired
+    MarketRegistrationRepository marketRegistrationRepository;
 
     /**
      * 後台新增活動
@@ -50,7 +56,7 @@ public class MarketServiceImpl implements MarketService {
         market.setApplicantLimit(req.getApplicantLimit());
         market.setStartDate(DateUtils.stringToDate(req.getStartDate(), DateUtils.DEFAULT_DATE_FORMAT));
         market.setEndDate(DateUtils.stringToDate(req.getEndDate(), DateUtils.DEFAULT_DATE_FORMAT));
-        market.setMarketStatus(1);
+        market.setMarketStatus(req.getMarketStatus());
         if (!StringUtils.isEmpty(req.getMarketImage())) {
             if (!FileUtils.ImageFormatChecker(req.getMarketImage().split(",")[1])) {
                 resDTO.setStatus(MarketCreateResDTO.Status.IMAGE_FORMAT_ERROR.getCode());
@@ -149,9 +155,7 @@ public class MarketServiceImpl implements MarketService {
         }
         if (null != req.getMarketImage()) {
             market.setMarketImage(
-                    StringUtils.isEmpty(req.getMarketImage())
-                            ? null
-                            : ConvertUtils.base64ToBytes(req.getMarketImage().split(",")[1]));
+                    null == market.getMarketImage() ? null : (req.getMarketImage()));
         } else {
             market.setMarketImage(null);
         }
@@ -208,4 +212,28 @@ public class MarketServiceImpl implements MarketService {
         }
         return marketList;
     }
+
+    //根據市集id查詢所有會員報名資料
+    @Override
+    public List<MemberRegistrationAllResDTO> findAllByMarketId(AdminLoginSourceDTO adminLoginSource, Integer marketId){
+        MarketEntity market = marketRepository.findById(marketId).orElse(null);
+        List<MarketRegistrationEntity> registrations = marketRegistrationRepository.findAllByMarketId(market);
+
+        // 转换成DTO对象并返回
+        return registrations.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 辅助方法：将实体类转换为DTO对象
+    private MemberRegistrationAllResDTO mapToDTO(MarketRegistrationEntity entity) {
+        MemberRegistrationAllResDTO dto = new MemberRegistrationAllResDTO();
+        dto.setName(entity.getMemberId().getName());
+        dto.setPhone(entity.getMemberId().getPhone());
+        dto.setEmail(entity.getMemberId().getEmail());
+        dto.setCity(entity.getMemberId().getCity());
+        return dto;
+    }
 }
+
+

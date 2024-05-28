@@ -1,33 +1,28 @@
 package com.tibame.group1.web.service;
 
+import com.tibame.group1.db.dto.WalletCreateReqDTO;
+import com.tibame.group1.db.dto.WalletCreateResDTO;
 import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
-import com.tibame.group1.db.dto.WalletReqDTO;
 import com.tibame.group1.web.dto.*;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
-public interface WalletHistoryService{
+public interface WalletHistoryService {
 
     WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId);
 
-    Integer createWalletHistory(WalletReqDTO walletReqDTO);
+    WalletCreateResDTO walletHistoryCreate(WalletCreateReqDTO req, LoginSourceDTO loginSource);
 
     List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
 
-    Integer topUp(TopUpAmountReqDTO topUpAmountReqDTO);
+    WalletWithdrawCreateResDTO walletWithdrawCreate(
+            WalletWithdrawCreateReqDTO req, LoginSourceDTO loginSource);
 
-    Integer payment(PaymentAmountReqDTO paymentAmountReqDTO);
-
-    Integer deposit(DepositAmountReqDTO depositAmountReqDTO);
-
-    Integer fee(FeeAmountReqDTO feeAmountReqDTO);
-
-    Integer withdraw(WithdrawAmountReqDTO withdrawAmountReqDTO);
-
-    Integer market(MarketAmountReqDTO marketAmountReqDTO);
-
+    WalletWithdrawAllResDTO walletWithdrawAll(
+            WalletWithdrawAllReqDTO req, LoginSourceDTO loginSource, Pageable pageable);
 }

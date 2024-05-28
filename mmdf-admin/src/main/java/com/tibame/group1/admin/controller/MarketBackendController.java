@@ -58,4 +58,13 @@ public class MarketBackendController {
         res.setData(marketService.marketAll(adminLoginSource,marketName));
         return res;
     }
+
+    @GetMapping("/market/registration")
+    public @ResponseBody ResDTO<List<MemberRegistrationAllResDTO>> findAllByMarketId(
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
+            @RequestParam(value = "marketId")Integer marketId){
+        ResDTO<List<MemberRegistrationAllResDTO>> res = new ResDTO<>();
+        res.setData(marketService.findAllByMarketId(adminLoginSource,marketId));
+        return res;
+    }
 }

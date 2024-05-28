@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <title>新增最新消息</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <!--    Filepond CSS    -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet"/>
+    <style>
+        .filepond--item {
+            width: 20%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h2 class="mt-4">新增最新消息</h2>
+                <form id="addForm" class="contact_message" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="newsId" name="newsId">
+                    <div class="form-group row mb-3">
+                        <label for="title" class="col-md-1 col-form-label">標題</label>
+                        <div class="col-md-11">
+                            <input type="text" class="form-control" id="title" name="title" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label for="content" class="col-md-1 col-form-label">內容</label>
+                        <div class="col-md-11">
+                            <textarea class="form-control" id="content" name="content" rows="14"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label for="filepond" class="col-md-1">圖片</label>
+                        <div class="col-md-11">
+                            <input
+                                    id="filepond"
+                                    type="file"
+                                    class="filepond"
+                                    name="image"
+                                    data-max-file-size="5MB"
+                                    required
+                            />
+                        </div>
+                    </div>
+                    <!-- <button class="btn btn-light" type="submit">送出</button> -->
+                    <!-- <input class="btn btn-dark float-right w-25" type="submit" value="送出"> -->
+                    <button type="submit" class="btn btn-primary">送出</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<!--Filepond JS-->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script>
+    let AUTHORIZATION = localStorage.getItem("authorization");
+
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    const inputElement = document.querySelector("#filepond");
+    const pond = FilePond.create(inputElement);
+
+    pond.setOptions({
+        required: true,
+        storeAsFile: true,
+        labelIdle: '<span class="filepond--label-action">選擇或拖放圖片到這裡</span></br> ',
+        itemInsertLocation: "after",
+        imagePreviewHeight: "150px",
+        imagePreviewTransparencyIndicator: "grid",
+    });
+
+    $(document).ready(function () {
+        $('#addForm').submit(function (e) {
+            e.preventDefault();
+
+            let form = $(this);
+
+            let formData = new FormData($('#addForm')[0]);
+
+            $.ajax({
+                url: "/api/news",
+                method: "POST",
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    console.log(res);
+                    // Clear previous validation feedback
+                    $('.is-invalid').removeClass('is-invalid');
+                    form.find('.invalid-feedback').text('');
+                    // form.removeClass('was-validated');
+                    if (res.code === "0") {
+                        alert("新增成功");
+                        window.location.href = `/news/list?authorization=${AUTHORIZATION}`;
+                    } else if (res.code === "-1") {
+                        // Form submission failed due to validation errors
+                        res.data.forEach(function (error) {
+                            let fieldName = error.key; // Assuming your server response includes field names
+                            let errorMessage = error.errorMessage;
+                            let field = form.find('#' + fieldName);
+                            field.addClass('is-invalid');
+                            field.siblings('.invalid-feedback').text(errorMessage);
+                        });
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    })
+
+
+</script>
+</body>
+
+</html>

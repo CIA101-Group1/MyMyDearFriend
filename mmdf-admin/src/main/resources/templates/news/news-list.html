@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <title>最新消息管理</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.7/r-3.0.2/datatables.min.css" rel="stylesheet"></head>
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <!-- 主要內容 -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h2 class="mt-4">最新消息管理</h2>
+                <!-- <table id="newsTable" class="table table-striped " -->
+                <!--        style="width: 100%;"> -->
+                <!-- </table> -->
+                <table id="newsTable" class="table table-bordered dt-responsive nowrap"
+                       style="width: 100%;">
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<!-- Modal for News Detail -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsDetailModalLabel">最新消息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>編號：</strong><span id="newsId"></span></p>
+                <!-- <p><strong>圖片：</strong><span id="image"></span></p> -->
+                <div id="image" class="d-flex flex-wrap"></div>
+                <p><strong>標題：</strong><span id="title"></span></p>
+                <p><strong>內容：</strong><span id="content"></span></p>
+                <p><strong>狀態：</strong><span id="status"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.0.7/r-3.0.2/datatables.min.js"></script>
+<script>
+    let AUTHORIZATION = localStorage.getItem("authorization")
+
+    $(document).ready(function () {
+        fetchNews();
+    })
+
+    function fetchNews() {
+        $.ajax({
+            url: "/api/news",
+            type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success: function (response) {
+                console.log(response);
+                $('#newsTable').dataTable({
+                    "data": response.data,
+                    "columns": [
+                        {data: "newsId", title: "編號"},
+                        {data: "title", title: "標題"},
+                        {data: "content", title: "內容"},
+                        {data: "lastModified", title: "最近更新時間"},
+                        {data: "statusMessage", title: "狀態"},
+                        {
+                            data: "newsId", title: "操作",
+                            render: function (data, type, row) {
+                                let viewButton = `<button type="button" class="btn btn-primary btn-sm mb-2 d-block" onclick="viewNews(${data})">查看</button>`;
+                                let editButton = `<button type="button" class="btn btn-warning btn-sm mb-2 d-block" onclick="editNews(${data})">編輯</button>`;
+                                let listButton = `<button type="button" class="btn btn-success btn-sm mb-2 d-block" onclick="listNews(${data})">上架</button>`;
+                                let delistButton = `<button type="button" class="btn btn-danger btn-sm mb-2 d-block" onclick="delistNews(${data})">下架</button>`;
+
+                                if (row.status === 1) {
+                                    return `
+                                    ${viewButton}
+                                    ${editButton}
+                                    ${delistButton}
+                                    `;
+                                } else if (row.status === 0) {
+                                    return `
+                                    ${viewButton}
+                                    ${editButton}
+                                    ${listButton}
+                                    `;
+                                }
+                            }
+                        }
+                    ],
+                    "columnDefs": [
+                        // {
+                        //     targets: 0,
+                        //     width: "10px",
+                        // },
+                        {
+                            targets: 1,
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css({
+                                    "white-space": "nowrap",
+                                    "overflow": "hidden",
+                                    "text-overflow": "ellipsis",
+                                    "max-width": "150px"
+                                });
+                            },
+                            width: "10%",
+                        },
+                        {
+                            targets: 2,
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css({
+                                    "white-space": "nowrap",
+                                    "overflow": "hidden",
+                                    "text-overflow": "ellipsis",
+                                    "max-width": "350px"
+                                });
+                            },
+                            width: "20%",
+                        },
+                        {
+                            targets: 5,
+                            width: "10px",
+                            responsivePriority: 1,
+                        }
+                    ],
+                    "lengthMenu": [5, 10, 20, 50, 100],
+                    "searching": true,
+                    "paging": true,
+                    "ordering": true,
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/2.0.7/i18n/zh-HANT.json",
+                    }
+                });
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    function viewNews(newsId) {
+        $.ajax({
+            url: `/api/news/${newsId}`,
+            type: "GET",
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            success: function (response) {
+                console.log(response);
+                const news = response.data;
+                $('#newsId').text(news.newsId);
+                $('#title').text(news.title);
+                $('#content').text(news.content);
+                $('#status').text(news.status);
+                $('#image').empty();
+                const imgElement = `<img src="data:image/jpeg;base64,${news.image}" class="img-thumbnail m-1" style="max-width: 250px; max-height: 250px;" alt="商品圖片"/>`;
+                $('#image').append(imgElement);
+
+                $('#newsDetailModal').modal('show');
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    function editNews(newsId) {
+        window.location.href = `/news/edit/${newsId}?authorization=${AUTHORIZATION}`;
+    }
+
+    function listNews(newId) {
+        if (confirm("確定要上架嗎？")) {
+            $.ajax({
+                url: `/api/news/${newId}/status?authorization=${AUTHORIZATION}`,
+                type: "PUT",
+                data: {
+                    status: 1
+                },
+                success: function (response) {
+                    if (response.code === "0") {
+                        alert("操作成功");
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+    }
+
+    function delistNews(newId) {
+        if (confirm("確定要下架嗎？")) {
+            $.ajax({
+                url: `/api/news/${newId}/status?authorization=${AUTHORIZATION}`,
+                type: "PUT",
+                data: {
+                    status: 0
+                },
+                success: function (response) {
+                    console.log(response)
+
+                    if (response.code === "0") {
+                        alert("操作成功");
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+
+</html>

@@ -69,6 +69,11 @@ public class InitTestEmployeeService {
         role3.setRoleDescription("管理活動");
         roleRepository.save(role3);
 
+        RoleEntity role4 = new RoleEntity();
+        role4.setRoleName("一般員工");
+        role4.setRoleDescription("一般員工");
+        roleRepository.save(role4);
+
         // 创建一个新的EmployeeRoleEntity对象
         EmployeeRoleEntity employeeRole = new EmployeeRoleEntity();
 
@@ -80,9 +85,9 @@ public class InitTestEmployeeService {
         // 设置EmployeeEntity和RoleEntity关联
         employeeRole.setId(id);
 
-        employeeRole.setEmployee(e1);
+        employeeRole.setEmployeeId(e1);
 
-        employeeRole.setRole(r1);
+        employeeRole.setRoleId(r1);
 
         // 将新的EmployeeRoleEntity对象保存到数据库
         employeeRoleRepository.save(employeeRole);

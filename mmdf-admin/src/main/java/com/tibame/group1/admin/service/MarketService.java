@@ -20,5 +20,7 @@ public interface MarketService {
     List<MarketAllResDTO> marketAll(AdminLoginSourceDTO adminLoginSource, String marketName)
         throws CheckRequestErrorException, IOException, DateException;
 
+    //根據市集id查詢所有會員的報名資料
+    List<MemberRegistrationAllResDTO> findAllByMarketId(AdminLoginSourceDTO adminLoginSource, Integer marketId);
 
 }

@@ -1,0 +1,484 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>賣家商品瀏覽</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+        <th:block th:replace="~{/fragments/css}"/>
+    <!-- CSS
+ ========================= -->
+<!--    &lt;!&ndash;bootstrap min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">-->
+<!--    &lt;!&ndash;owl carousel min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">-->
+<!--    &lt;!&ndash;slick min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">-->
+<!--    &lt;!&ndash;magnific popup min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">-->
+<!--    &lt;!&ndash;font awesome css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">-->
+<!--    &lt;!&ndash;ionicons min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">-->
+<!--    &lt;!&ndash;animate css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">-->
+<!--    &lt;!&ndash;jquery ui min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+<!--    &lt;!&ndash;slinky menu css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">-->
+<!--    &lt;!&ndash;plugins css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">-->
+
+<!--    &lt;!&ndash; Main Style CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">-->
+
+<!--    &lt;!&ndash; add member css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">-->
+
+    <script th:src="@{/js/custom.js}"></script>
+
+    <style>
+        .shop_wrapper .product_thumb a img {
+            margin: 0 auto;
+            width: inherit;
+        }
+    </style>
+
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--breadcrumb-->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+
+
+<!--shop  area start-->
+<div class="shop_area shop_reverse mt-100 mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-12">
+                <!--sidebar widget start-->
+                <aside class="sidebar_widget">
+                    <div class="widget_inner">
+
+                        <div class="widget_list widget_color" style="text-align: center; font-size: large">
+                            <strong> &#x1F498; 熱門商品推薦 &#x1F498; </strong>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="widget_list widget_compare">
+                            <div class="shop_sidebar_product">
+                                <article class="single_product">
+                                    <figure>
+                                        <div class="product_thumb">
+                                            <a class="primary_img" href="/buyer/product/getOne/45"><img
+                                                    src="/assets/FrontEnd0516/img/product/healthycup.jpg" alt=""></a>
+                                            <a class="secondary_img"
+                                               href="/buyer/product/getOne/45"><img
+                                                    src="/assets/FrontEnd0516/img/product/guocup.jpg" alt=""></a>
+                                        </div>
+                                        <figcaption class="product_content">
+                                            <h4 class="product_name"><a
+                                                    href="/buyer/product/getOne/45">SQL營養液套組</a>
+                                            </h4>
+                                            <div class="product_rating">賣家評價
+                                                <ul>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="price_box">
+                                                <span class="current_price">$888,888,888</span>
+                                                <span class="old_price">$1,111,111,110</span>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                                <article class="single_product">
+                                    <figure>
+                                        <div class="product_thumb">
+                                            <a class="primary_img" href="/buyer/product/getOne/44"><img
+                                                    src="/assets/FrontEnd0516/img/product/javamic.jpg" alt=""></a>
+                                            <a class="secondary_img"
+                                               href="/buyer/product/getOne/44"><img
+                                                    src="/assets/FrontEnd0516/img/product/mi.jpg" alt=""></a>
+                                        </div>
+                                        <figcaption class="product_content">
+                                            <h4 class="product_name"><a
+                                                    href="/buyer/product/getOne/44">JAVA麥克風</a>
+                                            </h4>
+                                            <div class="product_rating">賣家評價
+                                                <ul>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="price_box">
+                                                <span class="current_price">$1,000,000</span>
+                                                <span class="old_price">$10,000,000</span>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                                <article class="single_product">
+                                    <figure>
+                                        <div class="product_thumb">
+                                            <a class="primary_img" href="/buyer/product/getOne/46"><img
+                                                    src="/assets/FrontEnd0516/img/product/meetingbag.jpg" alt=""></a>
+                                            <a class="secondary_img"
+                                               href="/buyer/product/getOne/46"><img
+                                                    src="/assets/FrontEnd0516/img/product/wubag1.jpg" alt=""></a>
+                                        </div>
+                                        <figcaption class="product_content">
+                                            <h4 class="product_name"><a
+                                                    href="/buyer/product/getOne/46"> 面試順利包</a>
+                                            </h4>
+                                            <div class="product_rating">賣家評價
+                                                <ul>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="price_box">
+                                                <span class="current_price">$888,888,888</span>
+                                                <!-- <span class="old_price">$20.00</span>  -->
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                                <article class="single_product">
+                                    <figure>
+                                        <div class="product_thumb">
+                                            <a class="primary_img" href="/buyer/product/getOne/42"><img
+                                                    src="/assets/FrontEnd0516/img/product/supermouse.jpg" alt=""></a>
+                                            <a class="secondary_img"
+                                               href="/buyer/product/getOne/42"><img
+                                                    src="/assets/FrontEnd0516/img/product/bigwumouse.jpg" alt=""></a>
+                                        </div>
+                                        <figcaption class="product_content">
+                                            <h4 class="product_name"><a
+                                                    href="/buyer/product/getOne/42"> 吳神滑鼠</a>
+                                            </h4>
+                                            <div class="product_rating">賣家評價
+                                                <ul>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="price_box">
+                                                <span class="current_price">$999,999,999</span>
+                                                <!-- <span class="old_price">$20.00</span>  -->
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="widget_list shopside_banner">
+                            <div class="banner_thumb">
+                                <a href="#"><img src="/assets/FrontEnd0516/img/bg/banner12.jpg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <!--sidebar widget end-->
+            </div>
+            <div class="col-lg-9 col-md-12">
+                <div class="row">
+                    <div class="col-lg-1 col-md-12">
+
+                        <!--                    0515start-->
+                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#searchModal" id="search">
+                            搜索清單
+                        </button>
+
+                        <!-- 搜索模态框 -->
+                        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
+                             aria-labelledby="searchModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <!-- 模态框头部 -->
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="searchModalLabel">搜索商品</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <!-- 模态框内容 -->
+                                    <div class="modal-body">
+                                        <!-- 搜索表单 -->
+                                        <form id="searchForm" th:action="@{/api/product/query}" method="get">
+                                            <!-- 商品名称 -->
+                                            <div class="form-group">
+                                                <label for="name">商品名稱:</label>
+                                                <input type="text" class="form-control" id="name" name="name">
+                                            </div>
+                                            <!-- 商品描述 -->
+                                            <div class="form-group">
+                                                <label for="description">商品描述:</label>
+                                                <input type="text" class="form-control" id="description"
+                                                       name="description">
+                                            </div>
+                                            <!-- 分类 -->
+                                            <div class="form-group">
+                                                <label for="categoryId">分類:</label>
+                                                <select id="categoryId" name="categoryId" class="form-control">
+                                                    <option value="">請選擇分類</option>
+                                                    <!-- 使用Thymeleaf渲染选项 -->
+                                                    <option th:each="category : ${productCategoryList}"
+                                                            th:value="${category.categoryId}"
+                                                            th:text="${category.categoryName}"></option>
+                                                </select>
+                                            </div>
+                                            <!-- 最低价格 -->
+                                            <div class="form-group">
+                                                <label for="minPrice">最低價格：</label>
+                                                <input type="number" id="minPrice" name="minPrice" min="0">
+                                            </div>
+                                            <!-- 最高价格 -->
+                                            <div class="form-group">
+                                                <label for="maxPrice">最高價格：</label>
+                                                <input type="number" id="maxPrice" name="maxPrice" min="0">
+                                            </div>
+                                            <!-- 買家編號 -->
+                                            <div class="form-group">
+                                                <label for="memberId">買家編號:</label>
+                                                <input type="text" class="form-control" id="memberId" name="memberId">
+                                            </div>
+                                            <!-- 審核状态 -->
+                                            <div id="reviewStatus">
+                                                <label><input type="checkbox" name="reviewStatus" value="0">
+                                                    審核中</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="1">
+                                                    通過</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="2">
+                                                    未通過</label>
+                                            </div>
+                                            <!-- 商品状态 -->
+                                            <div id="productStatus">
+                                                <label><input type="radio" name="label" value="0"><span
+                                                        class="round button">未上架</span></label>
+                                                <label><input type="radio" name="label" value="1"><span
+                                                        class="round button">上架</span></label>
+                                            </div>
+                                            <!-- 模态框底部 -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">搜索</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <!-- Navigation -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+                    <div class="container">
+                        <label class="navbar-brand">賣家商城</label>
+                    </div>
+                </nav>
+
+                <div class="widget_list widget_compare">
+                    <div class="shop_sidebar_product" th:each="product : ${productPage.content}">
+                        <article class="single_product">
+                            <figure>
+                                <div class="product_thumb">
+                                    <a class="primary_img"
+                                       th:if="${product.productImgs != null and product.productImgs.size() > 0}"
+                                       th:id="'productImgTd_' + ${product.productImgs[0].imageId}"
+                                       th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
+                                        <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
+                                             style="height: 150px;width: 150px" alt=""/>
+                                    </a>
+                                </div>
+                                <figcaption class="product_content">
+                                    <div class="product_rating">
+                                        <ul>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="product_name" th:text="${product.name}"><a
+                                            th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
+                                        <span style="font-size: large;" ></span></a></h3>
+                                    <div class="product_desc"  th:text="${product.description}">
+                                        <p>商品描述</p>
+                                    </div>
+                                    <div class="price_box">
+                                        <span style="color: red">$</span><span class="current_price" th:text="${product.price}"></span>
+                                        <div class="action_links list_action_right">
+                                            <ul>
+                                                <li class="add_to_cart"><a href="orderlist.html"
+                                                                           title="Add to cart">加入購物車</a></li>
+                                                <li class="quick_button"><a href="#" data-toggle="modal"
+                                                                            data-target="#modal_box" title="quick view"> <i
+                                                        class="icon icon-Eye"></i></a></li>
+                                                <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i
+                                                        class="icon icon-Heart"></i></a></li>
+                                                <li class="compare"><a href="#" title="Add to Compare"><i
+                                                        class="icon icon-MusicMixer"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </div>
+                    <div class="shop_toolbar t_bottom">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item"
+                                    th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/shop/${sellerId}(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                                    th:classappend="${productPage.number == i} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/shop/${sellerId}(page=${i}, size=${productPage.size})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/product/seller/shop/${sellerId}(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <form th:action="@{/product/seller/shop/${sellerId}}" method="get">
+                                        <input type="hidden" name="size" th:value="${productPage.size}">
+                                        <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
+                                               step="1" value="${productPage.number}" style="width: 50px;">
+                                        <button type="submit" class="btn btn-primary">Go</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--                    0515end-->
+</div>
+</div>
+</div>
+</div>
+<!--shop  area end-->
+
+<script src="/js/api-response-utils.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#searchForm').submit(function (e) {
+            e.preventDefault(); // 阻止表单默认提交
+            // 获取表单数据
+            var formData = $(this).serialize();
+
+            // 发送 Ajax 请求
+            $.ajax({
+                url: '/api/product/query',
+                type: 'GET',
+                data: formData,
+                headers: {
+                    "authorization": localStorage.getItem("authorization")
+                },
+                success(response) {
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log(data);
+                            // 清空表格数据
+                            $('#products tbody').empty();
+                            if (response.code === "0") {
+                                alert('搜索成功');
+                                $('#searchModal').modal('hide');
+                                // 遍历搜索结果并显示到页面上
+                                response.data.forEach(function (product) {
+                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                                    var reviewStatusTexts = {
+                                        "0": "審核中",
+                                        "1": "通過",
+                                        "2": "未通過"
+                                    };
+                                    var productStatusTexts = {
+                                        "0": "下架",
+                                        "1": "上架"
+                                    }
+
+                                    // 添加商品行到表格
+                                    $('#products tbody').append(`
+                                        <tr>
+                                            <td>${product.productId}</td>
+                                            <td>${product.productCategoryEntity.categoryName}</td>
+                                            <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
+                                            <td>${product.description}</td>
+                                            <td>${product.price}</td>
+                                            <td>${product.quantity}</td>
+                                            <td>
+                                                <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                            </td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+
+                                            <td>${productStatusTexts[product.productStatus]}</td>
+                                            <td>
+                                                <a href="/seller/product/getOne/${product.productId}"
+                                                   class="btn btn-primary">修改</a>
+                                            </td>
+                                        </tr>
+                                    `);
+                                });
+                            } else {
+                                alert('搜索失败！' + response.message);
+                                console.log(response);
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert('搜索失败');
+                }
+            });
+        });
+    });
+</script>
+
+
+<!--footer-->
+<th:block th:replace="~{/fragments/footer}"/>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+
+</body>
+</html>

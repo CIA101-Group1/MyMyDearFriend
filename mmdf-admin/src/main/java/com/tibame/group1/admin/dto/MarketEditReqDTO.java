@@ -17,7 +17,7 @@ public class MarketEditReqDTO {
     @NotEmpty(message = "活動說明請勿空白")
     private String marketDescription;
 
-    private String marketImage;
+    private byte[] marketImage;
 
     @NotEmpty(message = "活動地點請勿空白")
     private String marketLocation;

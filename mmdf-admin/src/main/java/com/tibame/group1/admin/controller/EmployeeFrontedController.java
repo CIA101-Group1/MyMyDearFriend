@@ -32,6 +32,14 @@ public class EmployeeFrontedController {
     public String employeeDetailOne() {
         return "employee/employee-detail-one";
     }
+
+    @GetMapping("/employee/role")
+    public String employeeRole(){return "employee/employee-role";}
+
+    @GetMapping("employee/allRole")
+    public String employeeAllRole(){
+        return"employee/employee-all-role";
+    }
 }
 
 

@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>競標訂單管理</title>
+    <title>賣家競標訂單管理</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
@@ -33,7 +33,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active">
-                            <h3>競標訂單管理</h3>
+                            <h3>賣家競標訂單管理</h3>
                             <table id="bidOrderTable" class="table table-bordered dt-responsive nowrap"
                                    style="width: 100%;">
                             </table>
@@ -86,6 +86,9 @@
 <script src="/js/api-response-utils.js"></script>
 <script>
     $(document).ready(function () {
+        fetchBidOrdersForSeller();
+    })
+    function fetchBidOrdersForSeller() {
         $.ajax({
             url: "/api/seller/bidorder",
             type: "GET",
@@ -105,9 +108,15 @@
                         {
                             data: "orderId", title: "操作",
                             render: function (data, type, row) {
-                                return `
-                                    <button><i class="fa fa-eye" aria-hidden="true" onclick="viewOrder(${data})"></i></button>
+                                let viewButton = `<button><i class="fa fa-eye" aria-hidden="true" onclick="viewOrder(${data})"></i></button>`;
+                                if (row.statusCode === 2) {
+                                    return `
+                                    ${viewButton}
+                                    <button onclick="shipOrder(${data})">出貨</button>
                                     `
+                                } else {
+                                    return viewButton;
+                                }
                             }
                         },
                     ],
@@ -152,9 +161,7 @@
                 console.error(err);
             }
         });
-
-    })
-
+    }
     function viewOrder(orderId) {
         $.ajax({
             url: `/api/bidorder/${orderId}`,
@@ -181,6 +188,30 @@
         });
     }
 
+    function shipOrder(orderId) {
+        $.ajax({
+            url: `/api/bidorder/${orderId}`,
+            type: "PUT",
+            headers: {
+                "authorization": localStorage.getItem("authorization"),
+            },
+            data: {
+                status: "DELIVERED"
+            },
+            success: function (response) {
+                console.log(response)
+                if (response.code === "0") {
+                    alert("操作成功");
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    }
 
 </script>
 </body>

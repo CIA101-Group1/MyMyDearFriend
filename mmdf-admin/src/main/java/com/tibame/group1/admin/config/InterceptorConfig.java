@@ -2,6 +2,7 @@ package com.tibame.group1.admin.config;
 
 import com.tibame.group1.admin.interceptor.AdminCheckLoginInterceptor;
 import com.tibame.group1.admin.interceptor.PermissionInterceptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,7 +13,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Autowired private AdminCheckLoginInterceptor adminCheckLoginInterceptor;
 
-    @Autowired private PermissionInterceptor permissionInterceptor;
+    @Autowired
+    private PermissionInterceptor permissionInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -25,7 +27,15 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/image/**",
                         "/js/**",
                         "/employee/login",
-                        "/api/employee/login");
-         // registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns("/home","/static/**");
+                        "/api/employee/login",
+                        "/permission");
+          registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns( "/home",
+                  "/static/**",
+                  "/assets/**",
+                  "/image/**",
+                  "/js/**",
+                  "/employee/login",
+                  "/api/employee/login",
+                  "/permission");
     }
 }

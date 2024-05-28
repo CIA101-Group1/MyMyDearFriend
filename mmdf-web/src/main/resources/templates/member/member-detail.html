@@ -18,7 +18,7 @@
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
     <style>
-        #birth, #twPersonId, #score {
+        #birth, #twPersonId {
             display: inline-block;
         }
 
@@ -126,10 +126,6 @@
                                                 <input type="text" id="address" name="name"
                                                        placeholder="請接續填寫剩餘地址資訊">
                                             </div>
-                                            <div>
-                                                <label for="score">我的評分：</label>
-                                                <div id="score"></div>
-                                            </div>
 
                                             <!-- 顯示大頭照和修改按鈕 -->
                                             <div id="profile-image-container">
@@ -174,23 +170,6 @@
 </section>
 <!-- main end   -->
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 錯誤訊息將顯示在這裡 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!--footer-->
 <th:block th:replace="~{/fragments/footer}"/>
 
@@ -234,21 +213,12 @@
                                 $("#phone").val(data.phone);
                                 $("#email").val(data.email);
                                 $("#birth").text(data.birth);
-                                $("#twPersonId").text(data.twPersonId);
+                                // 設定顯示的後幾位字元數
+                                let visibleChars = 4;
+                                // 生成遮蔽後的身份證字號
+                                let maskedTwPersonId = "*".repeat(data.twPersonId.length - visibleChars) + data.twPersonId.slice(-visibleChars);
+                                $("#twPersonId").text(maskedTwPersonId);
                                 fillAddress(data.address);
-
-                                let scoreNumber = data.scoreNumber;
-                                let scoreSum = data.scoreSum;
-                                if (scoreNumber !== null) {
-                                    let number = parseInt(scoreNumber);
-                                    let sum = parseInt(scoreSum);
-                                    if (number !== 0) {
-                                        let score = sum / number;
-                                        $("#score").text(score);
-                                    }
-                                } else {
-                                    $("#score").text("無，尚未啟用賣家資格");
-                                }
 
                                 let base64Image = data.imageBase64 ? `data:image/jpeg;base64,${data.imageBase64}` : "/image/default-avatar.png";
                                 $("#profile-image").attr("src", base64Image);

@@ -1,45 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>員工商品管理系統</title>
-    <!-- Favicon -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <!--css-->
-    <!--    <th:block th:replace="~{/fragments/css}"/>-->
-    <!-- CSS
- ========================= -->
-    <!--bootstrap min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
-    <!--owl carousel min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
-    <!--slick min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
-    <!--magnific popup min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
-    <!--font awesome css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
-    <!--ionicons min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
-    <!--animate css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
-    <!--jquery ui min css-->
-    <!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
-    <!--slinky menu css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
-    <!--plugins css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>一般商品審核系統</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定義表格樣式 */
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            color: #212529;
+            border-collapse: collapse;
+        }
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            white-space: nowrap; /* 不換行 */
+        }
 
-    <!-- add member css-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
 
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding-right: 2rem; /* 預留空間給倒三角形 */
+        }
+
+        .custom-select-wrapper::after {
+            content: "\f0d7"; /* Font Awesome Unicode for caret down */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(0);
+            pointer-events: none;
+        }
+    </style>
 
     <style>
         /* 樣式設置 */
@@ -73,341 +98,341 @@
         }
     </style>
 
+    <style>
+        .scrolling-text {
+            overflow: hidden; /* 隐藏溢出部分 */
+            position: relative; /* 相对定位，为内部 div 提供参照 */
+        }
+
+        .inner-div {
+            width: 120%; /* 宽度 100% */
+            overflow-y: auto; /* 垂直滚动条 */
+            max-height: 120px; /* 设置最大高度 */
+            display: inline-block; /* 允许宽度自动调整 */
+        }
+
+    </style>
+
 </head>
-<body>
+<body class="sb-nav-fixed">
 <!--header-->
 <th:block th:replace="~{/fragments/header}"/>
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
 
-<!--breadcrumb-->
-<!--<th:block th:replace="~{/fragments/breadcrumb}"/>-->
+    <div id="layoutSidenav_content">
 
+        <!--shop  area start-->
+        <div class="shop_area shop_reverse mt-100 mb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-1 col-md-12">
+                        <br>
+                        <br>
+                        <!--                    0515start-->
+                        <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                                data-target="#searchModal" id="search" style="white-space: nowrap;">
+                            搜索清單
+                        </button>
 
-<td width=548 align=center valign=top>
-    <!-- 导航 -->
-    <TABLE WIDTH=548 BORDER=0 CELLPADDING=0 CELLSPACING=0>
-        <!-- 標籤容器 -->
-        <div class="tab-container">
-            <!-- 初始的標籤 -->
-            <div class="tab" onclick="showTabContent('new')">內部公告</div>
-            <div class="tab" onclick="showTabContent('star')">客戶評價</div>
-            <div class="tab" onclick="showTabContent('assess')">業績</div>
-            <div class="tab" onclick="showTabContent('supplier')">各部門分機</div>
-        </div>
-
-        <!-- 標籤內容 -->
-        <div id="new" class="tab-content">
-            <h3><strong>公告:</strong></h3>
-            <p>親愛的員工，<br>
-                &nbsp &nbsp &nbsp &nbsp 我們很高興地宣布，我們的二手商城將推出一項新的政策，旨在提升我們的服務品質並保護我們的客戶和員工。<br>
-
-                從即日起，所有上架的二手商品都必須通過我們的質量檢查。這意味著，每一項商品在上架前，都需要經過我們的專業團隊進行詳細的檢查，以確保商品的品質符合我們的標準。
-
-                此外，我們也將實施新的退貨政策。如果客戶在購買商品後的30天內發現商品有任何問題，他們可以申請退貨或換貨。我們的客服團隊將會在收到申請後的48小時內回覆。
-
-                &nbsp 我們相信，這些新政策將有助於提升我們的服務品質，並贏得客戶的信任。我們期待你們的支持和配合，一起為我們的客戶提供更好的服務。<br>
-
-                感謝你們的理解和配合。<br><br>
-
-                敬祝各位同仁 &nbsp MMDF商城</p>
-        </div>
-        <div id="star" class="tab-content">
-            <h3>客戶評價</h3>
-            <ul style="list-style-type: none; padding: 0;">
-                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
-                </li>
-                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
-                </li>
-                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
-                </li>
-                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star" style="color: orange;"></i></a>
-                </li>
-                <li style="display: inline-block;"><a href="#"><i class="icon icon-Star"></i></a></li>
-            </ul>
-        </div>
-        <div id="assess" class="tab-content">
-            <h3>季度報表 (2020-2024)</h3>
-            <canvas id="myChart"></canvas>
-        </div>
-        <div id="supplier" class="tab-content">
-            <h4>各部門分機:</h4>
-            <pre>
-                客服部門：            行銷部門：
-                張小姐：分機101       黃先生：分機401
-                李先生：分機102       高小姐：分機402
-                王小姐：分機103       吳小姐：分機403
-                採購部門：            陳小姐：分機404
-                陳先生：分機201       物流部門：
-                林小姐：分機202       鄭先生：分機301
-                                  &nbsp  蔡小姐：分機302
-            </pre>
-        </div>
-    </table>
-</td>
-
-
-<!--shop  area start-->
-<div class="shop_area shop_reverse mt-100 mb-100">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-1 col-md-12">
-                <!--                    0515start-->
-                <button type="button" class="btn btn-success float-right" data-toggle="modal"
-                        data-target="#searchModal" id="search">
-                    搜索清單
-                </button>
-
-                <!-- 搜索模态框 -->
-                <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
-                     aria-labelledby="searchModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <!-- 模态框头部 -->
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="searchModalLabel">搜索商品</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <!-- 模态框内容 -->
-                            <div class="modal-body">
-                                <!-- 搜索表单 -->
-                                <form id="searchForm" th:action="@{/api/product/query}" method="get">
-                                    <!-- 商品名称 -->
-                                    <div class="form-group">
-                                        <label for="name">商品名稱:</label>
-                                        <input type="text" class="form-control" id="name" name="name">
-                                    </div>
-                                    <!-- 商品描述 -->
-                                    <div class="form-group">
-                                        <label for="description">商品描述:</label>
-                                        <input type="text" class="form-control" id="description"
-                                               name="description">
-                                    </div>
-                                    <!-- 分类 -->
-                                    <div class="form-group">
-                                        <label for="categoryId">分類:</label>
-                                        <select id="categoryId" name="categoryId" class="form-control">
-                                            <option value="">請選擇分類</option>
-                                            <!-- 使用Thymeleaf渲染选项 -->
-                                            <option th:each="category : ${productCategoryList}"
-                                                    th:value="${category.categoryId}"
-                                                    th:text="${category.categoryName}"></option>
-                                        </select>
-                                    </div>
-                                    <!-- 最低价格 -->
-                                    <div class="form-group">
-                                        <label for="minPrice">最低價格：</label>
-                                        <input type="number" id="minPrice" name="minPrice" min="0">
-                                    </div>
-                                    <!-- 最高价格 -->
-                                    <div class="form-group">
-                                        <label for="maxPrice">最高價格：</label>
-                                        <input type="number" id="maxPrice" name="maxPrice" min="0">
-                                    </div>
-                                    <!-- 買家編號 -->
-                                    <div class="form-group">
-                                        <label for="memberId">買家編號:</label>
-                                        <input type="text" class="form-control" id="memberId" name="memberId">
-                                    </div>
-                                    <!-- 審核状态 -->
-                                    <div id="reviewStatusDiv">
-                                        <label><input type="checkbox" name="reviewStatus" value="0">
-                                            審核中</label>
-                                        <label><input type="checkbox" name="reviewStatus" value="1">
-                                            通過</label>
-                                        <label><input type="checkbox" name="reviewStatus" value="2">
-                                            未通過</label>
-                                    </div>
-                                    <!-- 商品状态 -->
-                                    <div id="productStatus">
-                                        <label><input type="radio" name="label" value="0"><span
-                                                class="round button">未上架</span></label>
-                                        <label><input type="radio" name="label" value="1"><span
-                                                class="round button">上架</span></label>
-                                    </div>
-                                    <!-- 模态框底部 -->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                            Close
+                        <!-- 搜索模态框 -->
+                        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog"
+                             aria-labelledby="searchModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <!-- 模态框头部 -->
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="searchModalLabel">搜索商品</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <button type="submit" class="btn btn-primary">搜索</button>
                                     </div>
-                                </form>
+                                    <!-- 模态框内容 -->
+                                    <div class="modal-body">
+                                        <!-- 搜索表单 -->
+                                        <form id="searchForm" th:action="@{/api/product/query}" method="get">
+                                            <!-- 商品名称 -->
+                                            <div class="form-group">
+                                                <label for="name">商品名稱:</label>
+                                                <input type="text" class="form-control" id="name" name="name">
+                                            </div>
+                                            <!-- 商品描述 -->
+                                            <div class="form-group">
+                                                <label for="description">商品描述:</label>
+                                                <input type="text" class="form-control" id="description"
+                                                       name="description">
+                                            </div>
+                                            <!-- 分类 -->
+                                            <div class="form-group">
+                                                <label for="categoryId">分類:</label>
+                                                <select id="categoryId" name="categoryId" class="form-control">
+                                                    <option value="">請選擇分類</option>
+                                                    <!-- 使用Thymeleaf渲染选项 -->
+                                                    <option th:each="category : ${productCategoryList}"
+                                                            th:value="${category.categoryId}"
+                                                            th:text="${category.categoryName}"></option>
+                                                </select>
+                                            </div>
+                                            <!-- 最低价格 -->
+                                            <div class="form-group">
+                                                <label for="minPrice">最低價格：</label>
+                                                <input type="number" id="minPrice" name="minPrice" min="0">
+                                            </div>
+                                            <!-- 最高价格 -->
+                                            <div class="form-group">
+                                                <label for="maxPrice">最高價格：</label>
+                                                <input type="number" id="maxPrice" name="maxPrice" min="0">
+                                            </div>
+                                            <!-- 買家編號 -->
+                                            <div class="form-group">
+                                                <label for="memberId">買家編號:</label>
+                                                <input type="text" class="form-control" id="memberId" name="memberId">
+                                            </div>
+                                            <!-- 審核状态 -->
+                                            <div id="reviewStatusDiv">
+                                                <label><input type="checkbox" name="reviewStatus" value="0">
+                                                    審核中</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="1">
+                                                    通過</label>
+                                                <label><input type="checkbox" name="reviewStatus" value="2">
+                                                    未通過</label>
+                                            </div>
+                                            <!-- 商品状态 -->
+                                            <div id="productStatus">
+                                                <label><input type="radio" name="label" value="0"><span
+                                                        class="round button">未上架</span></label>
+                                                <label><input type="radio" name="label" value="1"><span
+                                                        class="round button">上架</span></label>
+                                            </div>
+                                            <!-- 模态框底部 -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">搜索</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+                    <div class="container">
+                        <a class="navbar-brand" href="/">商品資料</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarResponsive"
+                                aria-controls="navbarResponsive"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 mt-5 mb-5">
+                            <table id="products" class="table table-bordered table-responsive-sm">
+                                <colgroup>
+                                    <!-- 第一欄寬度 -->
+                                    <col style="width: 3%;">
+                                    <!-- 第二欄寬度 -->
+                                    <col style="width: 1%;">
+                                    <!-- 第三欄寬度 -->
+                                    <col style="width: 20%;">
+                                    <!-- 第四欄寬度 -->
+                                    <col style="width: 30%;">
+                                    <!-- 第五欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第六欄寬度 -->
+                                    <col style="width: 2%;">
+                                    <!-- 第七欄寬度 -->
+                                    <col style="width: 35%;">
+                                    <!-- 第八欄寬度 -->
+                                    <col style="width: 3%;">
+                                    <!-- 第九欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第十欄寬度 -->
+                                    <col style="width: 5%;">
+                                    <!-- 第十一欄寬度 -->
+                                    <col style="width: 10%;">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>編號</th>
+                                    <th>分類</th>
+                                    <th>品<br>名</th>
+                                    <th>內<br>容</th>
+                                    <th>價<br>格</th>
+                                    <th>數<br>量</th>
+                                    <th>圖<br>片</th>
+                                    <th>賣家編號</th>
+                                    <th>審核狀態</th>
+                                    <th>上下架</th>
+                                    <th>審<br>核</th>
+                                </tr>
+                                </thead>
+                                <tbody id="product-tbody">
+                                <tr th:each="product : ${productPage.content}" th:if="${product.reviewStatus == 0}">
+                                    <td th:text="${product.productId}" id="productId">1</td>
+                                    <td th:text="${product.productCategoryEntity.categoryName}">
+                                    </td>
+                                    <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
+                                        name
+                                    </td>
+                                    <td class="scrolling-text">
+                                        <div class="inner-div">
+                                            <span th:text="${product.description}"
+                                                  style="white-space: pre-wrap;"></span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${product.price}">0.00</td>
+                                    <td th:text="${product.quantity}">0.00</td>
+
+                                    <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
+                                        th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
+                                        <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
+                                             style="height: 120px;width: 120px" alt=""/>
+                                    </td>
+                                    <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
+
+                                    <td th:text="${product.sellerId}">1</td>
+
+                                    <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}"
+                                        id="reviewStatus">
+
+                                        0.00
+                                    </td>
+                                    <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
+                                        0.00
+                                    </td>
+                                    <td class="d-flex flex-column align-items-center">
+                                        <button id="yes" class="btn btn-primary mb-2"
+                                                th:attr="data-product-id=${product.productId}">
+                                            審核成功
+                                        </button>
+                                        <input type="hidden" th:value="${product.reviewStatus}"
+                                               id="hiddentest">
+
+                                        <button id="miss" class="btn btn-danger"
+                                                th:attr="data-product-id=${product.productId}">
+                                            審核失敗
+                                        </button>
+                                        <input type="hidden" th:value="${product.reviewStatus}"
+                                               id="hiddenmiss">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <!-- 模态框 -->
+                            <div class="modal fade" id="failReasonModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="failReasonModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="failReasonModalLabel">填寫失敗原因</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="failReasonTextarea">失敗原因：</label>
+                                                <textarea class="form-control" id="failReasonTextarea"
+                                                          rows="3">審核失敗，請賣家重新確認商品資訊!!</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" id="closeBtn"
+                                                    data-dismiss="modal">取消
+                                            </button>
+                                            <button type="button" class="btn btn-danger" id="confirmFailReasonBtn">
+                                                確定
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item"
+                                        th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                                        th:classappend="${productPage.number == i} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE(page=${i}, size=${productPage.size})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/product/review?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <form th:action="@{/admin/product/review}" method="get">
+                                            <input type="hidden" name="size" th:value="${productPage.size}">
+                                            <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
+                                                   step="1" value="${productPage.number}" style="width: 50px;">
+                                            <button type="submit" class="btn btn-primary">Go</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </nav>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-            <div class="container">
-                <a class="navbar-brand" href="/">商品資料</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarResponsive"
-                        aria-controls="navbarResponsive"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 mt-5 mb-5">
-                    <table id="products" class="table table-bordered table-responsive-sm">
-                        <colgroup>
-                            <!-- 第一欄寬度 -->
-                            <col style="width: 3%;">
-                            <!-- 第二欄寬度 -->
-                            <col style="width: 5%;">
-                            <!-- 第三欄寬度 -->
-                            <col style="width: 20%;">
-                            <!-- 第四欄寬度 -->
-                            <col style="width: 30%;">
-                            <!-- 第五欄寬度 -->
-                            <col style="width: 5%;">
-                            <!-- 第六欄寬度 -->
-                            <col style="width: 2%;">
-                            <!-- 第七欄寬度 -->
-                            <col style="width: 35%;">
-                            <!-- 第八欄寬度 -->
-                            <col style="width: 3%;">
-                            <!-- 第九欄寬度 -->
-                            <col style="width: 5%;">
-                            <!-- 第十欄寬度 -->
-                            <col style="width: 5%;">
-                            <!-- 第十一欄寬度 -->
-                            <col style="width: 10%;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>編號</th>
-                            <th>分類</th>
-                            <th>品<br>名</th>
-                            <th>內<br>容</th>
-                            <th>價<br>格</th>
-                            <th>數<br>量</th>
-                            <th>圖<br>片</th>
-                            <th>賣家編號</th>
-                            <th>審核狀態</th>
-                            <th>上下架</th>
-                            <th>審<br>核</th>
-                        </tr>
-                        </thead>
-                        <tbody id="product-tbody">
-                        <tr th:each="product : ${productPage.content}">
-                            <td th:text="${product.productId}" id="productId">1</td>
-                            <td th:text="${product.productCategoryEntity.categoryName}">
-                            </td>
-                            <td th:text="${product.name.length() > 5 ? #strings.substring(product.name, 0, 5) + '...' : product.name}">
-                                name
-                            </td>
-                            <td th:text="${product.description}">0.00</td>
-                            <td th:text="${product.price}">0.00</td>
-                            <td th:text="${product.quantity}">0.00</td>
-
-                            <td th:if="${product.productImgs != null and product.productImgs.size() > 0}"
-                                th:id="'productImgTd_' + ${product.productImgs[0].imageId}">
-                                <img th:src="'data:image/jpg;base64,'+${product.productImgs[0].imageBase64}"
-                                     style="height: 120px;width: 120px" alt=""/>
-                            </td>
-                            <td th:if="${product.productImgs == null or product.productImgs.size() == 0}"></td>
-
-                            <td th:text="${product.sellerId}">1</td>
-
-                            <td th:utext="${reviewStatusList.containsKey(product.reviewStatus) ? reviewStatusList[product.reviewStatus] : '審核中'}"
-                                id="reviewStatus">
-
-                                0.00
-                            </td>
-                            <td th:utext="${productStatusList.containsKey(product.productStatus) ? productStatusList[product.productStatus] : '默認'}">
-                                0.00
-                            </td>
-                            <td>
-                                <button id="test" class="btn btn-primary"
-                                        th:attr="data-product-id=${product.productId}">
-                                    審核成功
-                                </button>
-                                <input type="hidden" th:value="${product.reviewStatus}"
-                                       id="hiddentest">
-                            </td>
-
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item"
-                                th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/admin/product/review(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
-                            </li>
-                            <li class="page-item"
-                                th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
-                                th:classappend="${productPage.number == i} ? 'active'">
-                                <a class="page-link"
-                                   th:href="@{/admin/product/review(page=${i}, size=${productPage.size})}"
-                                   th:text="${i + 1}">1</a>
-                            </li>
-                            <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/admin/product/review(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
-                            </li>
-                            <li class="page-item">
-                                <form th:action="@{/admin/product/review}" method="get">
-                                    <input type="hidden" name="size" th:value="${productPage.size}">
-                                    <input type="number" name="page" min="0" max="${productPage.totalPages - 1}"
-                                           step="1" value="${productPage.number}" style="width: 50px;">
-                                    <button type="submit" class="btn btn-primary">Go</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </nav>
-
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-<!--                    0515end-->
 <!--shop  area end-->
+
 <!--js-->
-<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+
+<!--js-->
 <th:block th:replace="~{/fragments/js}"/>
-<script th:src="@{/js/custom.js}"></script>
-<script src="/js/api-response-utils.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     $(document).ready(function () {
         // 更新審核狀態
-        $("#product-tbody").on("click", ("#test"), function () {
-            var productId = $("#test").data("product-id");
+        $("#product-tbody").on("click", ("#yes"), function () {
+            var productId = $("#yes").data("product-id");
 
             // 使用 jQuery 的 val() 方法來獲取 input 元素的值
             var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
 
+            const authorization = localStorage.getItem("authorization");
+
             console.log(reviewStatusValue);
 
             $.ajax({
-                url: "/api/seller/product/updateReviewStatus",
+                url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
                 method: "PUT",
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
                 data: {
                     productId: productId,
                     reviewStatus: 1
                 },
-                success(response) {
-                    apiResponseJSON(response, {
-                        onSuccess(data) {
-                            console.log(data);
-                        }
-                    });
+                success: function (response) {
+                    console.log(response);
+                    location.reload();
                 },
                 error: function (error) {
                     alert("伺服器連線失敗: " + error);
@@ -420,38 +445,35 @@
             // 获取表单数据
             var formData = $(this).serialize();
 
+            const authorization = localStorage.getItem("authorization");
+
             // 发送 Ajax 请求
             $.ajax({
-                url: '/api/product/query',
+                url: `/api/product/query?authorization=${authorization}`,
                 type: 'GET',
                 data: formData,
-                headers: {
-                    "authorization": localStorage.getItem("authorization")
-                },
-                success(response) {
-                    apiResponseJSON(response, {
-                        onSuccess(data) {
-                            console.log(data);
-                            // 清空表格数据
-                            $('#products tbody').empty();
-                            if (response.code === "0") {
-                                alert('搜索成功');
-                                $('#searchModal').modal('hide');
-                                // 遍历搜索结果并显示到页面上
-                                response.data.forEach(function (product) {
-                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
-                                    var reviewStatusTexts = {
-                                        "0": "審核中",
-                                        "1": "通過",
-                                        "2": "未通過"
-                                    };
-                                    var productStatusTexts = {
-                                        "0": "下架",
-                                        "1": "上架"
-                                    }
+                success: function (response) {
+                    console.log(response);
+                    // 清空表格数据
+                    $('#products tbody').empty();
+                    if (response.code === "0") {
+                        alert('搜索成功');
+                        $('#searchModal').modal('hide');
+                        // 遍历搜索结果并显示到页面上
+                        response.data.forEach(function (product) {
+                            var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                            var reviewStatusTexts = {
+                                "0": "審核中",
+                                "1": "通過",
+                                "2": "未通過"
+                            };
+                            var productStatusTexts = {
+                                "0": "下架",
+                                "1": "上架"
+                            }
 
-                                    // 添加商品行到表格
-                                    $('#products tbody').append(`
+                            // 添加商品行到表格
+                            $('#products tbody').append(`
                                         <tr>
                                             <td>${product.productId}</td>
                                             <td>${product.productCategoryEntity.categoryName}</td>
@@ -466,55 +488,58 @@
                                             <td>${reviewStatusTexts[product.reviewStatus]}</td>
 
                                             <td>${productStatusTexts[product.productStatus]}</td>
-                                            <td>
-                                                <button id="test" class="btn btn-primary"
+                                            <td class="d-flex flex-column align-items-center">
+                                                <button id="yes" class="btn btn-primary mb-2"
                                                     th:attr="data-product-id=${product.productId}">
                                                     審核成功
                                                 </button>
                                                 <input type="hidden" th:value="${product.reviewStatus}"
                                                        id="hiddentest">
+                                                <label></label>
+                                                <button id="miss" class="btn btn-danger"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核失敗
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddentest">
+
                                             </td>
                                         </tr>
                                     `);
-                                });
+                        });
 
-                                $("#product-tbody").on("click", ("#test"), function () {
-                                    var productId = $("#test").data("product-id");
+                        $("#product-tbody").on("click", ("#yes"), function () {
+                            var productId = $("#yes").data("product-id");
 
-                                    // 使用 jQuery 的 val() 方法來獲取 input 元素的值
-                                    var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
+                            // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+                            var reviewStatusValue = $(this).closest("td").find("input#hiddentest").val();
 
-                                    console.log(reviewStatusValue);
+                            const authorization = localStorage.getItem("authorization");
 
-                                    $.ajax({
-                                        url: "/api/seller/product/updateReviewStatus",
-                                        method: "PUT",
-                                        headers: {
-                                            "authorization": localStorage.getItem("authorization")
-                                        },
-                                        data: {
-                                            productId: productId,
-                                            reviewStatus: 1
-                                        },
-                                        success(response) {
-                                            apiResponseJSON(response, {
-                                                onSuccess(data) {
-                                                    console.log(data);
-                                                }
-                                            });
-                                        },
-                                        error: function (error) {
-                                            alert("伺服器連線失敗: " + error);
-                                        }
-                                    });
-                                });
+                            console.log(reviewStatusValue);
 
-                            } else {
-                                alert('搜索失败！' + response.message);
-                                console.log(response);
-                            }
-                        }
-                    });
+                            $.ajax({
+                                url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
+                                method: "PUT",
+                                data: {
+                                    productId: productId,
+                                    reviewStatus: 1
+                                },
+                                success: function (response) {
+                                    button.removeClass("btn-primary").addClass("btn-success");
+                                    console.log(response);
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    alert("伺服器連線失敗: " + error);
+                                }
+                            });
+                        });
+
+                    } else {
+                        alert('搜索失败！' + response.message);
+                        console.log(response);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
@@ -522,107 +547,159 @@
                 }
             });
         });
-
     });
 
-    // 函數：顯示特定標籤的內容
-    function showTabContent(tabName) {
-        // 隱藏所有標籤內容
-        var tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(function (content) {
-            content.classList.remove('active');
-        });
 
-        // 顯示選定標籤的內容
-        var selectedTabContent = document.getElementById(tabName);
-        selectedTabContent.classList.add('active');
+    //miss
 
-        // 取消選定所有標籤
-        var tabs = document.querySelectorAll('.tab');
-        tabs.forEach(function (tab) {
-            tab.classList.remove('active');
-        });
+    $("#miss").click(function () {
+        var memberId = $(this).data("member-id");
+        $('#failReasonModal').data('member-id', memberId).modal('show');
+    });
 
-        // 選定並突顯選定標籤
-        var selectedTab = document.querySelector('[onclick="showTabContent(\'' + tabName + '\')"]');
-        selectedTab.classList.add('active');
-    }
+    $('#confirmFailReasonBtn').click(function () {
+        var productId = $("#miss").data("product-id");
+        // var memberId = $('#failReasonModal').data('member-id');
+        var failReason = $('#failReasonTextarea').val();
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['一月到三月', '四月到六月', '七月到九月', '十月到十二月'],
-            datasets: [
-                {
-                    label: '2020',
-                    data: [192, 330, 240, 108],
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    fill: false
-                },
-                {
-                    label: '2021',
-                    data: [260, 370, 284, 220],
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    fill: false
-                },
-                {
-                    label: '2022',
-                    data: [280, 306, 120, 230],
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    fill: false
-                },
-                {
-                    label: '2023',
-                    data: [240, 150, 328, 270],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    fill: false
-                },
-                {
-                    label: '2024',
-                    data: [284, 220, 192, 350],
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+        const authorization = localStorage.getItem("authorization");
+
+        // 发送AJAX请求更新数据库和发送通知
+        $.ajax({
+            url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
+            type: 'PUT', // 使用POST方法
+            data: {
+                productId: productId,
+                reviewStatus: 2,
+                failReason: failReason
+            },
+            success: function (response) {
+                // 在成功响应时执行的操作
+                console.log("更新審核成功:", response);
+                // 关闭模态框
+                $('#failReasonModal').modal('hide');
+                // 刷新页面或执行其他操作
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                $('#closeBtn').click(function () {
+                    $('#failReasonModal').modal('hide');
+                })
+                console.error("更新審核失败:", error);
             }
-        }
+        });
     });
 
-
-    // $.ajax({
-    //     type: "POST",
-    //     url: "/seller/product/updateReviewStatus",
-    //     data: postData,
-    //     success: function(response) {
-    //         apiResponseJSON(response, {
-    //             onSuccess: function(data) {
-    //                 // 成功回调函数
-    //                 console.log("Success:", data);
-    //             },
-    //             onError: function(error) {
-    //                 // 错误回调函数
-    //                 console.error("Error:", error);
-    //             }
-    //         });
-    //     },
-    //     error: function(xhr, status, error) {
-    //         // AJAX 请求失败时的处理
-    //         console.error("AJAX Error:", error);
-    //     }
+    // // 更新審核狀態
+    // $("#product-tbody").on("click", ("#miss"), function () {
+    //     var productId = $("#miss").data("product-id");
+    //     var failReason = $('#failReasonTextarea').val();
+    //
+    //     // 使用 jQuery 的 val() 方法來獲取 input 元素的值
+    //     var reviewStatusValue = $(this).closest("td").find("input#hiddenmiss").val();
+    //
+    //     const authorization = localStorage.getItem("authorization");
+    //
+    //     console.log(reviewStatusValue);
+    //
+    //     $.ajax({
+    //         url: `/api/seller/product/updateReviewStatus?authorization=${authorization}`,
+    //         method: "PUT",
+    //         data: {
+    //             productId: productId,
+    //             reviewStatus: 2,
+    //             failReason: failReason
+    //         },
+    //         success: function (response) {
+    //             console.log(response);
+    //             console.log("Product ID:", productId);
+    //             console.log("Fail Reason:", failReason);
+    //             $('#failReasonModal').modal('hide');
+    //         },
+    //         error: function (error) {
+    //             alert("伺服器連線失敗: " + error);
+    //         }
+    //     });
     // });
 
+    //miss
+
+
+    //搜索
+
+    $('#searchForm').submit(function (e) {
+        e.preventDefault(); // 阻止表单默认提交
+        // 获取表单数据
+        var formData = $(this).serialize();
+
+        const authorization = localStorage.getItem("authorization");
+
+        // 发送 Ajax 请求
+        $.ajax({
+            url: '/api/product/query?authorization=eyJhbGciOiJIUzI1NiJ9.eyJlbXBsb3llZUlkIjoxLCJlbXBsb3llZU5hbWUiOiJ0ZXN0QWRtaW4iLCJzdWIiOiLnmbvlhaXmhpHorYkiLCJpYXQiOjE3MTY1MzY4MzR9.-liznIULETWxoaZ9fkZ6or1q72Pt-dtsDYqV2R9ZrhE',
+            type: 'GET',
+            data: formData,
+            success: function (response) {
+                console.log(response);
+                // 清空表格数据
+                $('#products tbody').empty();
+                if (response.code === "0") {
+                    alert('搜索成功');
+                    $('#searchModal').modal('hide');
+                    // 遍历搜索结果并显示到页面上
+                    response.data.forEach(function (product) {
+                        var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
+                        var reviewStatusTexts = {
+                            "0": "審核中",
+                            "1": "通過",
+                            "2": "未通過"
+                        };
+                        var productStatusTexts = {
+                            "0": "下架",
+                            "1": "上架"
+                        }
+
+                        // 添加商品行到表格
+                        $('#products tbody').append(`
+                                        <tr>
+                                            <td>${product.productId}</td>
+                                            <td>${product.productCategoryEntity.categoryName}</td>
+                                            <td class="text-truncate" style="max-width: 80px;">${product.name}</td>
+                                            <td>${product.description}</td>
+                                            <td>${product.price}</td>
+                                            <td>${product.quantity}</td>
+                                            <td>
+                                                <img src="data:image/jpg;base64,${imageSrc}" style="height: 120px;width: 120px" alt="">
+                                            </td>
+                                            <td>${product.sellerId}</td>
+                                            <td>${reviewStatusTexts[product.reviewStatus]}</td>
+                                            <td>${productStatusTexts[product.productStatus]}</td>
+                                            <td>
+                                                <button id="yes" class="btn btn-primary"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核成功
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddentest">
+                                                <label></label>
+                                                <button id="miss" class="btn btn-danger"
+                                                    th:attr="data-product-id=${product.productId}">
+                                                    審核失敗
+                                                </button>
+                                                <input type="hidden" th:value="${product.reviewStatus}"
+                                                       id="hiddenmiss">
+
+                                            </td>
+                                        </tr>
+                                    `);
+                    });
+                }
+            }
+        });
+    });
+
+    //搜索
+
 </script>
-
-<!--footer-->
-<th:block th:replace="~{/fragments/footer}"/>
-
 </body>
 </html>

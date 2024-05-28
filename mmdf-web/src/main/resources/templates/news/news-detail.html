@@ -1,0 +1,60 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>最新消息詳情</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!--css-->
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!--blog body area start-->
+<div class="blog_details">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!--blog grid area start-->
+                <div class="blog_wrapper blog_wrapper_details">
+                    <article class="single_blog">
+                        <figure>
+                            <div class="post_header">
+                                <h3 class="post_title" th:text="${news.getTitle()}"></h3>
+                                <div class="blog_meta">
+                                    <p>發佈於 : <a href="#"
+                                                   th:text="${#dates.format(news.getLastModified(), 'yyyy-MM-dd')}"></a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="blog_thumb">
+                                <img th:src="${news.getImageBase64()}" alt="">
+                            </div>
+                            <figcaption class="blog_content">
+                                <div class="post_content">
+                                    <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(news.getContent()),'\n','&lt;br/&gt;'))}"></p>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    </article>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--blog section area end-->
+
+    <!--footer-->
+    <th:block th:replace="~{/fragments/footer}"/>
+
+    <!--js-->
+    <th:block th:replace="~{/fragments/js}"/>
+</div>
+</body>
+</html>

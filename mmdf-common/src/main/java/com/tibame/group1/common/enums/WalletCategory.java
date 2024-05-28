@@ -3,50 +3,34 @@ package com.tibame.group1.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * todo 是否要加上金錢顯示
- */
-
-
 @AllArgsConstructor
 @Getter
 public enum WalletCategory {
+  PAYMENT(0, "付款"),
 
-    PAYMENT("0", "付款完成"),
+  TOP_UP(1, "儲值"),
 
-    TOP_UP("1", "儲值成功"),
+  WITHDRAW(2, "提款"),
 
-    WITHDRAW("2", "提款成功"),
+  REFUND(3, "退款"),
 
-    REFUND("3", "退款完成"),
+  DEPOSIT(4, "入帳"),
 
-    DEPOSIT("4", "入帳成功"),
+  FEE(5, "手續費"),
 
-    FEE("5", "扣手續費"),
+  MARKET(6, "市集報名費");
 
-    TEST("6", "測試使用"),
+  private final int code;
 
-    MARKET("7", "市集報名費"),
+  private final String message;
 
-    WITHDRAWAL("8", "XXX");
-
-    private final String code;
-    private final String message;
-
-    public String getCode() {
-        return code;
+  // 根據代碼查找對應的enum值
+  public static WalletCategory fromCode(int code) {
+    for (WalletCategory category : WalletCategory.values()) {
+      if (category.getCode() == code) {
+        return category;
+      }
     }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public static WalletCategory fromCode(String code) {
-        for (WalletCategory category : WalletCategory.values()) {
-            if (category.getCode().equals(code)) {
-                return category;
-            }
-        }
-        throw new IllegalArgumentException("無效的代碼: " + code);
-    }
+    throw new IllegalArgumentException("無效的代碼: " + code);
+  }
 }

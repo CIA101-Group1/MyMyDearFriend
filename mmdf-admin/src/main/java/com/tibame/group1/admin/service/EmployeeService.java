@@ -37,4 +37,10 @@ public interface EmployeeService {
 
     List<EmployeeAllResDTO> employeeAll(AdminLoginSourceDTO adminLoginSource, String employeeName)
             throws CheckRequestErrorException, IOException, DateException;
+
+    //設定員工權限
+    EmployeeRoleResDTO assignRoleToEmployee(EmployeeRoleReqDTO employeeRoleReq, AdminLoginSourceDTO adminLoginSource) throws CheckRequestErrorException;
+
+    //根據員工id查詢員工權限
+    EmployeeRoleDetailResDTO employeeRole(AdminLoginSourceDTO adminLoginSource, Integer employeeId);
 }
