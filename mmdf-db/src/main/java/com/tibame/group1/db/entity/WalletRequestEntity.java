@@ -17,7 +17,7 @@ public class WalletRequestEntity {
     @Column(name = "wallet_request_id", nullable = false)
     private Integer walletRequestId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "member_id", nullable = false)
     private MemberEntity member;
 

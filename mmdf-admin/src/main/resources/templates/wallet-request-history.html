@@ -181,10 +181,10 @@
                                     <tr>
                                         <td>${request.memberId}</td>
                                         <td>未審核</td>
-                                        <td>${request.changeAmount}</td>
-                                        <td>${request.requestDate}</td>
+                                        <td>${request.withdrawAmount}</td>
+                                        <td>${formatDateTime(request.requestDate)}</td>
                                         <td>${request.account}</td>
-                                        <td>${request.doneDate ? "未審核" : request.doneDate}</td>
+                                        <td>${request.doneDate ? "未審核" : formatDateTime(request.doneDate)}</td>
                                         <td><button type="button" id="checkBtn" class="btn btn-primary" data-id="${request.walletRequestId}" ${request.doneDate ? "" : "disabled"}>${request.doneDate ? "確認審核" : "完成審核"}</button></td>
                                     </tr>
                                 `);
@@ -245,6 +245,10 @@
                 }
             });
         });
+
+        function formatDateTime(dateTimeString) {
+            return dateTimeString.split('.')[0];
+        }
 
         // 初始加載第一頁
         fetchRequestData();
