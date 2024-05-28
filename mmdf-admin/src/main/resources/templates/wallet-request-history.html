@@ -226,7 +226,7 @@
             const btn = $(this);
 
             $.ajax({
-                url: "/api/wallets/verify",
+                url: "/api/wallets/withdrawUpdate",
                 method: "post",
                 headers: {
                     "authorization": localStorage.getItem("authorization")
