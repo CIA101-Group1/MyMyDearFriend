@@ -9,7 +9,27 @@
     <title>查詢訂單資料</title>
     <th:block th:replace="~{/fragments/css}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        table {
+            min-width: 1200px;
+            border-collapse: collapse;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap; /* 禁止換行 */
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -26,26 +46,65 @@
         <main>
             <div class="container-fluid px-4">
                 <h2 class="mt-4">訂單資料列表</h2>
+                <div class="row">
+                    <!-- 查詢訂單狀態 -->
+                    <div class="form-group col-md-2">
+                        <label for="orderStatusFilter">查詢訂單狀態</label>
+                        <select class="form-control" id="orderStatusFilter">
+                            <option value="ALL">全部</option>
+                            <option value="TO_SHIP">待出貨</option>
+                            <option value="SHIPPED">已出貨</option>
+                            <option value="COMPLETED">完成</option>
+                            <option value="RETURN">退貨</option>
+                        </select>
+                    </div>
+                    <!-- 查詢訂單編號 -->
+                    <div class="form-group col-md-2">
+                        <label for="orderIdFilter">查詢訂單編號</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="orderIdFilter" placeholder="輸入訂單編號">
+                        </div>
+                    </div>
+                    <!-- 查詢買家ID -->
+                    <div class="form-group col-md-2">
+                        <label for="buyerNameFilter">查詢買家名稱</label>
+                        <input type="text" class="form-control" id="buyerNameFilter" placeholder="輸入買家名稱">
+                    </div>
+                    <!-- 查詢賣家ID -->
+                    <div class="form-group col-md-3">
+                        <label for="sellerNameFilter">查詢賣家名稱</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="sellerNameFilter" placeholder="輸入賣家名稱">
+                            <div class="input-group-append" style="margin-left: 30px">
+                                <button class="btn btn-primary" type="button" id="searchOrderBtn">搜尋</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- 主要表格 -->
-                <table id="memberTable" class="table table-striped">
+                <table id="memberTable" class="table table-hover" >
                     <thead>
                     <tr>
                         <th>訂單編號</th>
                         <th>成立時間</th>
                         <th>訂單狀態</th>
-                        <th>訂單金額</th>
                         <th>買家會員</th>
                         <th>賣家會員</th>
-                        <th>收件人姓名</th>
+                        <th>收件人</th>
                         <th>電話</th>
                         <th>寄送地址</th>
                         <th>優惠前價格</th>
                         <th>優惠金額</th>
+                        <th>訂單總金額</th>
                         <th>商品詳情</th>
+                        <th>更新訂單</th>
                     </tr>
                     </thead>
                     <tbody id="orderTbody"></tbody>
                 </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination" id="pagination"></ul>
+                </nav>
             </div>
         </main>
     </div>
@@ -55,53 +114,243 @@
 <th:block th:replace="~{/fragments/js}"/>
 
 <script>
-    $(document).ready(function (){
+    $(document).ready(function () {
         const authorization = localStorage.getItem("authorization");
+        const itemsPerPage = 5; // 每頁顯示的資料筆數
+        let currentPage = 1; // 當前頁碼
+        let orders = [];
+        let filteredOrders = [];
 
-        $.ajax({
-            url: `/api/order/getAll?authorization=${authorization}`,
-            method: "GET",
-            success(response) {
-                let orders = response.data;
-                let tbody = $("#orderTbody");
-                tbody.empty(); // 清空現有的表格內容
+        // 格式化日期函數
+        function formatDate(dateString) {
+            let date = new Date(dateString);
+            let year = date.getFullYear();
+            let month = String(date.getMonth() + 1).padStart(2, '0');
+            let day = String(date.getDate()).padStart(2, '0');
+            let hours = String(date.getHours()).padStart(2, '0');
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
 
-                if (orders === null || orders.length === 0) {
-                    // 如果訂單為空，顯示提示消息
-                    tbody.append(`<tr><td colspan="12">查無訂單資料</td></tr>`);
-                } else {
-                    orders.forEach(order => {
-                        let orderRow = `
-                            <tr>
-                                <td>${order.orderId}</td>
-                                <td>${new Date(order.createdTime).toLocaleString()}</td>
-                                <td>${order.orderStatus}</td>
-                                <td>${order.priceAfterDiscount}</td>
-                                <td>${order.buyerName}</td>
-                                <td>${order.sellerName}</td>
-                                <td>${order.name}</td>
-                                <td>${order.phone}</td>
-                                <td>${order.address}</td>
-                                <td>${order.priceBeforeDiscount}</td>
-                                <td>${order.discount}</td>
-                                <td></td>
-                            </tr>
-                        `;
-                        tbody.append(orderRow);
-                    });
-                }
-            },
-            error(xhr, status, error) {
-                console.error("There was a problem :", error);
-                Swal.fire({
-                    title: "錯誤",
-                    icon: "error",
-                    text: "無法取得訂單資料: " + error,
-                    confirmButtonText: "確認"
-                });
-            },
+        // 訂單狀態選項
+        const orderStatuses = [
+            {value: 0, text: "待出貨"},
+            {value: 1, text: "已出貨"},
+            {value: 2, text: "完成"},
+            {value: 3, text: "退貨"}
+        ];
+
+        let buyerName = null;
+        let sellerName = null;
+        let orderId = null;
+        let selectedStatus = "ALL";
+
+        // 查詢狀態變更事件
+        $("#orderStatusFilter").change(function () {
+            selectedStatus = $(this).val();
+            // console.log(selectedStatus);
+            fetchOrders(selectedStatus); // 重新獲取訂單資料
         });
+
+        // 監聽訂單編號搜索按鈕的點擊事件
+        $("#searchOrderBtn").click(function () {
+            buyerName = $("#buyerNameFilter").val().trim();
+            sellerName = $("#sellerNameFilter").val().trim();
+            orderId = $("#orderIdFilter").val();
+            fetchOrders(selectedStatus);
+        });
+
+        // 初始加載全部訂單
+        fetchOrders(selectedStatus);
+
+        // 獲取訂單資料
+        function fetchOrders(orderStatus) {
+            // console.log(orderId);
+            // 切換類型時將頁碼重置為1
+            currentPage = 1;
+            $.ajax({
+                url: `/api/order/getAll?authorization=${authorization}&orderStatus=${orderStatus}&orderId=${orderId}&buyerName=${buyerName}&sellerName=${sellerName}`,
+                method: "GET",
+                success(response) {
+                    if(response.code == 0){
+                        let tbody = $("#orderTbody");
+                        tbody.empty(); // 清空現有的表格內容
+                        orders = response.data;
+                        // console.log(orders);
+                        filteredOrders = orders; // 初始化時設置過濾後的訂單為全部訂單
+                        if (orders === null || orders.length === 0) {
+                            $("#orderTbody").append(`<tr><td colspan="13">查無訂單資料</td></tr>`);
+                            renderPagination();
+                            return;
+                        }
+                        renderTable();
+                        renderPagination();
+                    }else{
+                        Swal.fire({
+                            title: "錯誤",
+                            icon: "error",
+                            text: response.message,
+                            confirmButtonText: "確認"
+                        });
+                    }
+                },
+                error(xhr, status, error) {
+                    console.error("There was a problem :", error);
+                    Swal.fire({
+                        title: "錯誤",
+                        icon: "error",
+                        text: "無法取得訂單資料: " + error,
+                        confirmButtonText: "確認"
+                    });
+                },
+            });
+        }
+
+
+        // 渲染表格
+        function renderTable() {
+            let tbody = $("#orderTbody");
+            tbody.empty(); // 清空現有的表格內容
+
+            let start = (currentPage - 1) * itemsPerPage;
+            let end = Math.min(start + itemsPerPage, filteredOrders.length);
+
+            for (let i = start; i < end; i++) {
+                let order = filteredOrders[i];
+                let formattedDate = formatDate(order.createTime);
+                let orderRow = `
+            <tr>
+                <td>${order.orderId}</td>
+                <td>${formattedDate}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton${order.orderId}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ${orderStatuses.find(status => status.value === order.orderStatus).text}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton${order.orderId}">
+                            ${orderStatuses.map(status => `
+                                <a class="dropdown-item order-status-option" data-order-id="${order.orderId}" data-status-value="${status.value}" href="#">${status.text}</a>
+                            `).join('')}
+                        </div>
+                    </div>
+                </td>
+                <td>${order.buyerName}</td>
+                <td>${order.sellerName}</td>
+                <td>${order.name}</td>
+                <td>${order.phone}</td>
+                <td>${order.address}</td>
+                <td>${order.priceBeforeDiscount}</td>
+                <td>${order.discount ? order.discount : 0}</td>
+                <td>${order.priceAfterDiscount}</td>
+                <td><a href="#collapse${order.orderId}" class="view" data-toggle="collapse" style="color: red">查看詳情</a></td>
+                <td><button class="btn btn-primary update-order" data-order-id="${order.orderId}" type="button">更新</button></td>
+            </tr>
+            <tr class="collapse" id="collapse${order.orderId}">
+                <td colspan="13">
+                    <div class="card card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th>商品圖片</th>
+                                    <th>商品名稱</th>
+                                    <th>商品數量</th>
+                                    <th>購買價格</th>
+                                    <th>小計</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.orderDetailList.map(product => {
+                    const subtotal = product.quantity * product.price;
+                    return `
+                                    <tr>
+                                        <td><img src="data:image/jpeg;base64,${product.imageBase64}" alt="商品圖片" style="height: 80px;width: 80px"/></td>
+                                        <td>${product.name}</td>
+                                        <td>${product.quantity}</td>
+                                        <td>${product.price}</td>
+                                        <td>${subtotal}</td>
+                                    </tr>
+                                    `;
+                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        `;
+                tbody.append(orderRow);
+            }
+
+            // 綁定更新按鈕的點擊事件
+            $(".update-order").click(function () {
+                let orderId = $(this).data("order-id");
+                let selectedOption = $(`a.order-status-option[data-order-id="${orderId}"].active`);
+                let newStatus = selectedOption.data("status-value");
+
+                // 發送 AJAX 請求更新訂單狀態
+                $.ajax({
+                    url: `/api/order/update?authorization=${authorization}`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        orderId: orderId,
+                        orderStatus: newStatus,
+                    }),
+                    success(response) {
+                        Swal.fire({
+                            title: "成功",
+                            icon: "success",
+                            text: "訂單狀態更新成功",
+                            confirmButtonText: "確認"
+                        });
+                    },
+                    error(xhr, status, error) {
+                        Swal.fire({
+                            title: "錯誤",
+                            icon: "error",
+                            text: "無法更新訂單狀態: " + error,
+                            confirmButtonText: "確認"
+                        });
+                    }
+                });
+            });
+
+            // 綁定下拉選單選項的點擊事件
+            $(".order-status-option").click(function (e) {
+                e.preventDefault();
+                let orderId = $(this).data("order-id");
+                let statusText = $(this).text();
+                $(`#dropdownMenuButton${orderId}`).text(statusText);
+                $(`a.order-status-option[data-order-id="${orderId}"]`).removeClass('active');
+                $(this).addClass('active');
+            });
+        }
+
+        // 渲染分頁導航
+        function renderPagination() {
+            let pagination = $("#pagination");
+            pagination.empty();
+
+            let totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                let pageItem = `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#">${i}</a>
+                        </li>`;
+                pagination.append(pageItem);
+            }
+
+            // 綁定分頁按鈕的點擊事件
+            $(".page-link").click(function (e) {
+                e.preventDefault();
+                currentPage = parseInt($(this).text());
+                renderTable();
+                renderPagination();
+            });
+        }
+
+
     });
+
 </script>
 </body>
 
