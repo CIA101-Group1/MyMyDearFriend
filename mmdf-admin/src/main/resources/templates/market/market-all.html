@@ -68,12 +68,63 @@
 
         .input-group button {
             margin-left: 10px;
-        }
-        /* 渐变背景颜色 */
-        .table tbody tr:nth-last-child(1) {
-            background: linear-gradient(to right, #f8f9fa, #ffffff); /* 设置渐变背景颜色 */
+            position: relative;
+            z-index: 0; /* 將按鈕的堆疊順序設為較低 */
         }
 
+        .table tbody td img {
+            max-width: 50px;
+            max-height: 50px;
+            cursor: pointer; /* 添加游標樣式，表明可以點擊預覽 */
+            position: relative;
+            z-index: 1; /* 確保圖片在按鈕之上 */
+        }
+
+        /* 預覽模態框 */
+        .modal {
+            display: none; /* 初始隱藏 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9); /* 半透明黑色背景 */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            max-height: 80%;
+            position: relative; /* 相对定位 */
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ccc;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 使图片遮挡按钮 */
+        .modal-content img {
+            position: relative;
+            z-index: 1; /* 确保图片在按钮之上 */
+        }
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -116,22 +167,30 @@
                         <th>目前報名人數</th>
                         <th>活動狀態</th>
                         <th>活動照片</th>
-                        <th>操作</th> <!-- 新增一個欄位用於顯示操作按鈕 -->
+                        <th>操作</th> <!-- 顯示操作按鈕 -->
                     </tr>
                     </thead>
                     <tbody>
                     <!-- 這裡將市集資料動態插入 -->
                     </tbody>
                 </table>
-                <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">查無資料</div>
+                <div id="alertMessage" class="alert alert-warning" style="display: none; text-align: center;">查無資料
+                </div>
             </div>
         </main>
     </div>
 </div>
+
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="/js/api-response-utils.js"></script>
+<!-- 預覽模態框 -->
+<div id="imagePreviewModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="previewImage">
+</div>
+
 <script>
     $(document).ready(function () {
         $("#searchButton").on("click", function () {
@@ -142,6 +201,7 @@
             $("#searchInput").val("");
             fetchMarketData();
         });
+
         function fetchMarketData() {
             const searchName = $("#searchInput").val().trim();
             const authorization = localStorage.getItem("authorization");
@@ -176,14 +236,15 @@
                                         <td>${formatDate(market.startDate)}</td>
                                         <td>${formatDate(market.endDate)}</td>
                                         <td>${market.applicantPopulation}</td>
-                                        <td>${market.marketStatus}</td>
-                                        <td><img src="${market.marketImage}" alt="Market Image"></td>
-                                        <td><button class="btn btn-primary detail-button" data-market-id="${market.marketId}">詳細資料</button></td>
+                                        <td>${convertStatusToChinese(market.marketStatus)}</td>
+                                        <td><img class="preview-image" src="${market.marketImage}" alt="Market Image"></td>
+                                        <td><button class="btn btn-primary detail-button" data-market-id="${market.marketId}">詳細資料</button>
+                                        <button class="btn btn-primary registration-button" data-market-id="${market.marketId}">報名資料</button></td>
                                      </tr>
                                    `);
                                 });
 
-                                /// 在fetchMarketData函數中的相應位置修改，當點擊修改按鈕時將token作為URL參數傳遞到detail.html頁面中
+                                // 在fetchMarketData函數中的相應位置修改，當點擊詳細按鈕時將token作為URL參數傳遞到detail.html頁面中
                                 $(".detail-button").on("click", function () {
                                     // 取得被點擊市集的 ID
                                     const marketId = $(this).data("market-id");
@@ -193,12 +254,40 @@
                                     window.location.href = `/market/detail?id=${marketId}&authorization=${authorization}`;
                                 });
 
-                                // 監聽創建新員工按鈕的點擊事件
-                                $("#createMarketButton").on("click", function (){
-                                    // 取得token
+                                // 在fetchMarketData函數中的相應位置修改，當點擊報名紀錄按鈕時將token作為URL參數傳遞到registration.html頁面中
+                                $(".registration-button").on("click", function () {
+                                    // 取得被點擊市集的 ID
+                                    const marketId = $(this).data("market-id");
+                                    // 獲取token
                                     var authorization = localStorage.getItem("authorization");
-                                    // 將token作為URL參數傳遞
-                                    window.location.href = "/market/create?authorization=" + authorization;
+                                    // 導航到修改資料畫面，將token作為URL參數傳遞
+                                    window.location.href = `/market/registration?id=${marketId}&authorization=${authorization}`;
+                                });
+
+                                // 添加按下 Enter 键触发搜索功能的事件
+                                $("#searchInput").on("keydown", function (event) {
+                                    if (event.keyCode === 13) { // 13 表示 Enter 键的键码
+                                        fetchMarketData();
+                                    }
+                                });
+
+                                // 照片預覽功能
+                                $(".preview-image").on("click", function () {
+                                    const imageUrl = $(this).attr("src");
+                                    $("#previewImage").attr("src", imageUrl);
+                                    $("#imagePreviewModal").css("display", "block");
+                                });
+
+                                // 關閉預覽模態框
+                                $(".close").on("click", function () {
+                                    $("#imagePreviewModal").css("display", "none");
+                                });
+
+                                // 當用戶點擊模態框之外的地方，關閉模態框
+                                $(window).on("click", function (event) {
+                                    if (event.target === $("#imagePreviewModal")[0]) {
+                                        $("#imagePreviewModal").css("display", "none");
+                                    }
                                 });
 
                             }
@@ -217,12 +306,36 @@
         // 初始加載資料
         fetchMarketData();
     });
+
+    // 創建新員工按鈕的點擊事件
+    $("#createMarketButton").on("click", function () {
+        console.log("Button clicked!"); // 確認按鈕是否被點擊
+        var authorization = localStorage.getItem("authorization");
+        window.location.href = "/market/create?authorization=" + authorization;
+    });
+
     // 格式化日期
     function formatDate(dateString) {
         const year = dateString.substring(0, 4);
         const month = dateString.substring(4, 6);
         const day = dateString.substring(6, 8);
         return `${year}-${month}-${day}`;
+    }
+
+    // 將活動狀態轉換為中文
+    function convertStatusToChinese(marketStatus) {
+        switch (parseInt(marketStatus)) { // 將 marketStatus 轉換為整數進行比對
+            case 0:
+                return "活動取消";
+            case 1:
+                return "尚未上架";
+            case 2:
+                return "以上架";
+            case 3:
+                return "報名已結束";
+            default:
+                return "未知狀態";
+        }
     }
 </script>
 </body>

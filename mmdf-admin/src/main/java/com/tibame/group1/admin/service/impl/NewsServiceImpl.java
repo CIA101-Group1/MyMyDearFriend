@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +44,7 @@ public class NewsServiceImpl implements NewsService {
         news.setContent(req.getContent());
         news.setImage(req.getImage().getBytes());
         news.setStatus(1);
-        news.setLastModified(Timestamp.from(Instant.now()));
+        news.setLastModified(Date.valueOf(LocalDate.now()));
         newsRepository.save(news);
     }
 
@@ -59,7 +59,7 @@ public class NewsServiceImpl implements NewsService {
         news.setContent(req.getContent());
         news.setImage(req.getImage().getBytes());
         // news.setStatus(req.getStatus());
-        news.setLastModified(Timestamp.from(Instant.now()));
+        news.setLastModified(Date.valueOf(LocalDate.now()));
         newsRepository.save(news);
     }
 
@@ -70,7 +70,7 @@ public class NewsServiceImpl implements NewsService {
                         .findById(newsId)
                         .orElseThrow(() -> new CheckRequestErrorException("查無此最新消息"));
         news.setStatus(newStatus);
-        news.setLastModified(Timestamp.from(Instant.now()));
+        news.setLastModified(Date.valueOf(LocalDate.now()));
         newsRepository.save(news);
     }
 }

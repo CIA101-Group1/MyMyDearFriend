@@ -56,7 +56,7 @@ public class MarketServiceImpl implements MarketService {
         market.setApplicantLimit(req.getApplicantLimit());
         market.setStartDate(DateUtils.stringToDate(req.getStartDate(), DateUtils.DEFAULT_DATE_FORMAT));
         market.setEndDate(DateUtils.stringToDate(req.getEndDate(), DateUtils.DEFAULT_DATE_FORMAT));
-        market.setMarketStatus(1);
+        market.setMarketStatus(req.getMarketStatus());
         if (!StringUtils.isEmpty(req.getMarketImage())) {
             if (!FileUtils.ImageFormatChecker(req.getMarketImage().split(",")[1])) {
                 resDTO.setStatus(MarketCreateResDTO.Status.IMAGE_FORMAT_ERROR.getCode());
@@ -155,9 +155,7 @@ public class MarketServiceImpl implements MarketService {
         }
         if (null != req.getMarketImage()) {
             market.setMarketImage(
-                    StringUtils.isEmpty(req.getMarketImage())
-                            ? null
-                            : ConvertUtils.base64ToBytes(req.getMarketImage().split(",")[1]));
+                    null == market.getMarketImage() ? null : (req.getMarketImage()));
         } else {
             market.setMarketImage(null);
         }
@@ -215,12 +213,12 @@ public class MarketServiceImpl implements MarketService {
         return marketList;
     }
 
+    //根據市集id查詢所有會員報名資料
     @Override
-    public List<MemberRegistrationAllResDTO> findAllByMarketId(AdminLoginSourceDTO adminLoginSource, Integer marketId) throws CheckRequestErrorException{
-        List<MarketRegistrationEntity> registrations = marketRegistrationRepository.findAllByMarketId(marketId);
-        if (registrations.isEmpty()) {
-            throw new CheckRequestErrorException("No registrations found for market with id: " + marketId);
-        }
+    public List<MemberRegistrationAllResDTO> findAllByMarketId(AdminLoginSourceDTO adminLoginSource, Integer marketId){
+        MarketEntity market = marketRepository.findById(marketId).orElse(null);
+        List<MarketRegistrationEntity> registrations = marketRegistrationRepository.findAllByMarketId(market);
+
         // 转换成DTO对象并返回
         return registrations.stream()
                 .map(this::mapToDTO)
@@ -230,12 +228,10 @@ public class MarketServiceImpl implements MarketService {
     // 辅助方法：将实体类转换为DTO对象
     private MemberRegistrationAllResDTO mapToDTO(MarketRegistrationEntity entity) {
         MemberRegistrationAllResDTO dto = new MemberRegistrationAllResDTO();
-        dto.setMemberId(entity.getMemberId().getMemberId());
         dto.setName(entity.getMemberId().getName());
         dto.setPhone(entity.getMemberId().getPhone());
         dto.setEmail(entity.getMemberId().getEmail());
         dto.setCity(entity.getMemberId().getCity());
-        dto.setStatus(entity.getStatus() == 1 ? MemberRegistrationAllResDTO.Status.PAY_SUCCESS.getMessage() : MemberRegistrationAllResDTO.Status.PAY_ERROR.getMessage());
         return dto;
     }
 }

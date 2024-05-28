@@ -1,5 +1,6 @@
 package com.tibame.group1.db.repository;
 
+import com.tibame.group1.db.entity.MarketEntity;
 import com.tibame.group1.db.entity.MarketRegistrationEntity;
 import com.tibame.group1.db.entity.MemberEntity;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,6 @@ public interface MarketRegistrationRepository extends JpaRepository <MarketRegis
 
     // 根據市集ID查詢所有報名紀錄
     @Query("SELECT m FROM MarketRegistrationEntity m WHERE m.marketId = :marketId")
-    List<MarketRegistrationEntity> findAllByMarketId(@Param("marketId") Integer marketId);
+    List<MarketRegistrationEntity> findAllByMarketId(@Param("marketId") MarketEntity marketId);
     
 }

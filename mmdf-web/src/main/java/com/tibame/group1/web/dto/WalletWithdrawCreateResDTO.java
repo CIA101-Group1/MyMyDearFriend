@@ -6,20 +6,20 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WalletCreateResDTO {
-
-    private Integer changeAmount;
-
-    private String changeTime;
-
-    private String changeType;
+public class WalletWithdrawCreateResDTO {
 
     private String status;
+
+    private String requestDate;
+
+    private String doneDate;
+
+    private String withdrawAmount;
 
     @AllArgsConstructor
     @Getter
     public enum Status {
-        CREATE_SUCCESS("1", "新增異動成功"),
+        REQUEST_SUBMITTED("1", "新增異動成功"),
 
         DO_NOT_EXIST_ACCOUNT("-1", "該帳號不存在"),
 

@@ -10,8 +10,8 @@ import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.repository.BidOrderRepository;
 import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.dto.LoginSourceDTO;
-import com.tibame.group1.web.dto.WalletCreateReqDTO;
-import com.tibame.group1.web.dto.WalletCreateResDTO;
+import com.tibame.group1.db.dto.WalletCreateReqDTO;
+import com.tibame.group1.db.dto.WalletCreateResDTO;
 import com.tibame.group1.web.service.BidOrderService;
 import com.tibame.group1.web.service.WalletHistoryService;
 
