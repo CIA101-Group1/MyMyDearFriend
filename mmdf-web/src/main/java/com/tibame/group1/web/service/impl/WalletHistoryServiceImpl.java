@@ -118,6 +118,9 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     walletRequest.setAccount(req.getAccount());
     walletRequest.setRequestDate(new Date());
     walletRequestRepository.save(walletRequest);
+    member.setWalletWithdrawAmount(req.getChangeAmount());
+    member.setWalletAmount(member.getWalletAmount() - req.getChangeAmount());
+    memberRepository.save(member);
 
     res.setStatus(WalletWithdrawResDTO.Status.REQUEST_SUBMITTED.getCode());
     return res;
