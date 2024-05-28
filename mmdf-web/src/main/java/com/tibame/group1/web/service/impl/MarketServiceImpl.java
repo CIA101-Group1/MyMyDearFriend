@@ -108,6 +108,7 @@ public class MarketServiceImpl implements MarketService {
     // 將實體類轉換為DTO對象
     private MarketRegistrationResDTO mapToDTO(MarketRegistrationEntity entity) {
         MarketRegistrationResDTO dto = new MarketRegistrationResDTO();
+        dto.setMarketId(entity.getMarketId().getMarketId());
         dto.setMarketName(entity.getMarketId().getMarketName());
         dto.setMarketLocation(entity.getMarketId().getMarketLocation());
         dto.setMarketStart(DateUtils.dateToSting(entity.getMarketId().getMarketStart()));
@@ -178,4 +179,44 @@ public class MarketServiceImpl implements MarketService {
 
         return registrationResDTO;
     }
+
+    //取消報名
+    @Transactional
+    @Override
+    public MarketCancelResDTO cancelRegistration(MarketRegistrationReqDTO marketRegistrationReq, LoginSourceDTO loginSource)throws CheckRequestErrorException{
+        // 查找会员是否已经注册
+        MemberEntity memberEntity = memberRepository.findById(loginSource.getMemberId()).orElse(null);
+
+        // 检查市集是否存在
+        MarketEntity marketEntity =
+                marketRepository
+                        .findById(marketRegistrationReq.getMarketId())
+                        .orElseThrow(() -> new CheckRequestErrorException("找不到对应该市集"));
+
+        //查找報名紀錄
+        MarketRegistrationEntity registration = marketRegistrationRepository.findByMarketIdAndMemberId(marketEntity, memberEntity);
+        // 檢查報名記錄是否存在
+        if (registration == null) {
+            throw new CheckRequestErrorException("找不到對應的報名記錄");
+        }
+
+        // 更新報名記錄的狀態為取消（狀態碼2代表取消）
+        registration.setStatus(2);
+        marketRegistrationRepository.save(registration);
+
+        // 市集報名人數減1
+        if (marketEntity.getApplicantPopulation() != null) {
+            int applicantPopulation = marketEntity.getApplicantPopulation();
+            if (applicantPopulation > 0) {
+                marketEntity.setApplicantPopulation(applicantPopulation - 1);
+            }
+        }
+        marketRepository.save(marketEntity);
+
+        MarketCancelResDTO dto = new MarketCancelResDTO();
+        dto.setStatus(registration.getStatus());
+        return dto;
+
+    }
+
 }
