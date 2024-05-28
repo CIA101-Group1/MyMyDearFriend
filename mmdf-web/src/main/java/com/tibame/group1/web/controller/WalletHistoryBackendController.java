@@ -1,6 +1,8 @@
 package com.tibame.group1.web.controller;
 
 import com.tibame.group1.common.dto.ResDTO;
+import com.tibame.group1.db.dto.WalletCreateReqDTO;
+import com.tibame.group1.db.dto.WalletCreateResDTO;
 import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
 import com.tibame.group1.web.annotation.CheckLogin;

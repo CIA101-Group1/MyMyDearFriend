@@ -1,4 +1,4 @@
-package com.tibame.group1.web.dto;
+package com.tibame.group1.db.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -4,6 +4,8 @@ import com.tibame.group1.common.dto.PagesResDTO;
 import com.tibame.group1.common.dto.web.MemberNoticeAllResDTO;
 import com.tibame.group1.common.enums.WalletCategory;
 import com.tibame.group1.db.dao.WalletHistoryDAO;
+import com.tibame.group1.db.dto.WalletCreateReqDTO;
+import com.tibame.group1.db.dto.WalletCreateResDTO;
 import com.tibame.group1.db.dto.WalletQueryParams;
 import com.tibame.group1.db.entity.MemberEntity;
 import com.tibame.group1.db.entity.WalletHistoryEntity;
