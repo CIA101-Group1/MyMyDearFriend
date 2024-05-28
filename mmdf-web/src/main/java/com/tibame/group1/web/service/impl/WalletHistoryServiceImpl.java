@@ -96,7 +96,7 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
 
   @Override
   public WalletWithdrawResDTO walletWithdrawCreate(
-      WalletWithdrawReqDTO req, LoginSourceDTO loginSource) {
+          WalletWithdrawReqDTO req, LoginSourceDTO loginSource) {
     WalletWithdrawResDTO res = new WalletWithdrawResDTO();
 
     Integer memberId = loginSource.getMemberId();
@@ -113,7 +113,7 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     }
 
     WalletRequestEntity walletRequest = new WalletRequestEntity();
-    walletRequest.setMemberId(member);
+    walletRequest.setMember(member);
     walletRequest.setStatus("PENDING");
     walletRequest.setAccount(req.getAccount());
     walletRequest.setRequestDate(new Date());
