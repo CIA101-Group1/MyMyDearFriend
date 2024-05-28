@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MarketRegistrationResDTO {
+    private Integer marketId;
 
     private String marketName;
 
