@@ -20,109 +20,110 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class CouponBackendController {
 
-  @Autowired private CouponService couponService;
+    @Autowired private CouponService couponService;
 
-  @CheckLogin
-  @GetMapping("/coupons")
-  public ResponseEntity<Page<CouponEntity>> getCoupons(
+    @CheckLogin
+    @GetMapping("/coupons/couponsAll")
+    public ResponseEntity<Page<CouponEntity>> getCoupons(
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
 
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource,
+            // 查詢 Filtering
+            @RequestParam(value = "couponStackCategory", required = false)
+                    CouponStackCategory couponStackCategory,
+            @RequestParam(value = "couponEffectCategory", required = false)
+                    CouponEffectCategory couponEffectCategory,
+            @RequestParam(value = "search", required = false) String search,
 
-          // 查詢 Filtering
-          @RequestParam(value = "couponStackCategory", required = false) CouponStackCategory couponStackCategory,
-          @RequestParam(value = "couponEffectCategory", required = false) CouponEffectCategory couponEffectCategory,
-          @RequestParam(value = "search", required = false) String search,
+            // 排序 Sorting
+            @RequestParam(value = "orderBy", defaultValue = "date_start") String orderBy,
+            @RequestParam(value = "sort", defaultValue = "desc") String sort,
 
-          // 排序 Sorting
-          @RequestParam(value = "orderBy", defaultValue = "date_start") String orderBy,
-          @RequestParam(value = "sort", defaultValue = "desc") String sort,
+            // 分頁 Pagination
+            @RequestParam(value = "limit", defaultValue = "10") @Max(1000) @Min(0) Integer limit,
+            @RequestParam(value = "offset", defaultValue = "0") @Max(0) @Min(0) Integer offset) {
+        CouponQueryParams couponQueryParams = new CouponQueryParams();
+        couponQueryParams.setCouponStackCategory(couponStackCategory);
+        couponQueryParams.setCouponEffectCategory(couponEffectCategory);
+        couponQueryParams.setSearch(search);
+        couponQueryParams.setOrderBy(orderBy);
+        couponQueryParams.setSort(sort);
+        couponQueryParams.setLimit(limit);
+        couponQueryParams.setOffset(offset);
 
-          // 分頁 Pagination
-          @RequestParam(value = "limit", defaultValue = "10") @Max(1000) @Min(0) Integer limit,
-          @RequestParam(value = "offset", defaultValue = "0") @Max(0) @Min(0) Integer offset
-  ) {
-    CouponQueryParams couponQueryParams = new CouponQueryParams();
-    couponQueryParams.setCouponStackCategory(couponStackCategory);
-    couponQueryParams.setCouponEffectCategory(couponEffectCategory);
-    couponQueryParams.setSearch(search);
-    couponQueryParams.setOrderBy(orderBy);
-    couponQueryParams.setSort(sort);
-    couponQueryParams.setLimit(limit);
-    couponQueryParams.setOffset(offset);
+        List<CouponEntity> couponList = couponService.getCoupons(couponQueryParams);
 
-    List<CouponEntity> couponList = couponService.getCoupons(couponQueryParams);
+        Integer total = couponService.countCoupon(couponQueryParams);
 
-    Integer total = couponService.countCoupon(couponQueryParams);
+        Page<CouponEntity> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(couponList);
 
-    Page<CouponEntity> page = new Page<>();
-    page.setLimit(limit);
-    page.setOffset(offset);
-    page.setTotal(total);
-    page.setResults(couponList);
-
-    return ResponseEntity.status(HttpStatus.OK).body(page);
-  }
-
-  @GetMapping("/coupons/{couponID}")
-  public ResponseEntity<CouponEntity> getOneCoupon(
-          @PathVariable("couponID") Integer couponID,
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
-
-    CouponEntity coupon = couponService.getCouponByID(couponID);
-
-    if (coupon != null) {
-      return ResponseEntity.status(HttpStatus.OK).body(coupon);
-    } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-  }
-
-//  @PostMapping("coupons/create")
-  @CheckLogin
-  @PostMapping("/coupons")
-  public ResponseEntity<CouponEntity> createCoupon(
-          @RequestBody @Valid CouponReqDTO couponReqDTO,
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
-
-    Integer couponID = couponService.createCoupon(couponReqDTO);
-
-    CouponEntity coupon = couponService.getCouponByID(couponID);
-
-    return ResponseEntity.status(HttpStatus.CREATED).body(coupon);
-  }
-
-  @CheckLogin
-  @PutMapping("/coupons/{couponID}")
-  public ResponseEntity<CouponEntity> updateCoupon(
-          @PathVariable("couponID") Integer couponID,
-          @RequestBody @Valid CouponReqDTO couponReqDTO,
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource){
-
-    // 先檢查Coupon是否存在
-    CouponEntity coupon = couponService.getCouponByID(couponID);
-
-    if (coupon == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
-    // 修改優惠卷的數據
-    couponService.updateCoupon(couponID, couponReqDTO);
+    @GetMapping("/coupons/{couponID}")
+    public ResponseEntity<CouponEntity> getOneCoupon(
+            @PathVariable("couponID") Integer couponID,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
 
-    CouponEntity updateCoupon = couponService.getCouponByID(couponID);
+        CouponEntity coupon = couponService.getCouponByID(couponID);
 
-    return ResponseEntity.status(HttpStatus.OK).body(updateCoupon);
-  }
+        if (coupon != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(coupon);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
-  @CheckLogin
-  @DeleteMapping("/coupons/{couponID}")
-  public ResponseEntity<CouponEntity> deleteCoupon(
-          @PathVariable("couponID") Integer couponID,
-          @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource){
+    //  @PostMapping("coupons/create")
+    @CheckLogin
+    @PostMapping("/coupons")
+    public ResponseEntity<CouponEntity> createCoupon(
+            @RequestBody @Valid CouponReqDTO couponReqDTO,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
 
-    couponService.deleteCouponByID(couponID);
+        Integer couponID = couponService.createCoupon(couponReqDTO);
 
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-  }
+        CouponEntity coupon = couponService.getCouponByID(couponID);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(coupon);
+    }
+
+    @CheckLogin
+    @PutMapping("/coupons/{couponID}")
+    public ResponseEntity<CouponEntity> updateCoupon(
+            @PathVariable("couponID") Integer couponID,
+            @RequestBody @Valid CouponReqDTO couponReqDTO,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
+
+        // 先檢查Coupon是否存在
+        CouponEntity coupon = couponService.getCouponByID(couponID);
+
+        if (coupon == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // 修改優惠卷的數據
+        couponService.updateCoupon(couponID, couponReqDTO);
+
+        CouponEntity updateCoupon = couponService.getCouponByID(couponID);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updateCoupon);
+    }
+
+    @CheckLogin
+    @DeleteMapping("/coupons/{couponID}")
+    public ResponseEntity<CouponEntity> deleteCoupon(
+            @PathVariable("couponID") Integer couponID,
+            @RequestAttribute(AdminLoginSourceDTO.ATTRIBUTE) AdminLoginSourceDTO adminLoginSource) {
+
+        couponService.deleteCouponByID(couponID);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
