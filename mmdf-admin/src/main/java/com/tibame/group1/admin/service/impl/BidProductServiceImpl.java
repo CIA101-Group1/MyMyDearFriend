@@ -74,6 +74,7 @@ public class BidProductServiceImpl implements BidProductService {
             product.setStatus(BidProductStatus.REJECT);
             product.setLastModified(Timestamp.from(Instant.now()));
             bidProductRepository.save(product);
+            // 發送通知
             noticeService.memberNoticeCreate(
                     memberRepository.findById(product.getSellerId()).get(),
                     MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT,
