@@ -55,6 +55,7 @@ public class WalletRequestServiceImpl implements WalletRequestService {
       walletResDTO.setAccount(walletRequestEntity.getAccount());
       walletResDTO.setRequestDate(String.valueOf(walletRequestEntity.getRequestDate()));
       walletResDTO.setDoneDate(String.valueOf(walletRequestEntity.getDoneDate()));
+      walletResDTO.setWithdrawAmount(String.valueOf(walletRequestEntity.getMember().getWalletWithdrawAmount()));
       walletRequestList.add(walletResDTO);
     }
     PagesResDTO pagesResDTO = new PagesResDTO();

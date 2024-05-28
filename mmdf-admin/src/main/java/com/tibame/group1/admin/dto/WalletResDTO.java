@@ -17,4 +17,6 @@ public class WalletResDTO {
   private String requestDate;
 
   private String doneDate;
+
+  private String withdrawAmount;
 }
