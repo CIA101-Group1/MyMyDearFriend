@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的報名紀錄</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <!-- CSS -->
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        .record-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .record-table th, .record-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .record-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .record-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<th:block th:replace="~{/fragments/header}"/>
+<!-- Breadcrumb -->
+<th:block th:replace="~{/fragments/breadcrumb}"/>
+<!-- 報名紀錄區域開始 -->
+<section class="main_content_area">
+    <div class="container">
+        <div class="registration_records">
+            <div class="row">
+                <!-- Sidebar -->
+                <th:block th:replace="~{/fragments/sidebar-member-home}"/>
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content">
+                        <div class="tab-pane fade active" id="account-details">
+                            <h3 style="text-align: center;">報名紀錄</h3>
+                            <table class="record-table" id="recordsTable">
+                                <thead>
+                                <tr>
+                                    <th id="marketName">活動名稱</th>
+                                    <th id="marketLocation">地點</th>
+                                    <th id="marketStart">活動開始日期</th>
+                                    <th id="marketEnd">活動結束日期</th>
+                                    <th id="marketFee">費用</th>
+                                    <th id="applicantPopulation">目前報名人數</th>
+                                </tr>
+                                </thead>
+                                <tbody id="recordsTableBody">
+                                <!-- 报名记录将在这里显示 -->
+                                </tbody>
+                            </table>
+                            <div id="alertMessage" style="display: none; text-align: center;">查無資料</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 報名紀錄區域結束 -->
+<!-- Footer -->
+<th:block th:replace="~{/fragments/footer}"/>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // 使用 AJAX 获取报名记录
+        $.ajax({
+            url: `/api/market/allRegister`,
+            type: 'GET',
+            headers: {
+                "authorization": localStorage.getItem("authorization")
+            },
+            contentType: "application/json",
+            success: function (response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        // 清空表格
+                        $("#recordsTableBody").empty();
+
+                        // 若查無資料
+                        if (data.length === 0) {
+                            $("#alertMessage").show();
+                        } else {
+                            $("#alertMessage").hide();
+                            let recordsTableBody = $('#recordsTableBody');
+                            // 创建报名记录的 HTML 并添加到页面中
+                            data.forEach(market => {
+                                recordsTableBody.append(`
+                                <tr>
+                                    <td>${market.marketName}</td>
+                                    <td>${market.marketLocation}</td>
+                                    <td>${formatDate(market.marketStart)}</td>
+                                    <td>${formatDate(market.marketEnd)}</td>
+                                    <td>${market.marketFee}</td>
+                                    <td>${market.applicantPopulation}</td>
+                                </tr>
+                            `);
+                            });
+                        }
+                    },
+                    onError(error) {
+                        console.log(error)
+                        console.error('Error: ' + error);
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+
+        $("#closeModalBtn").click(function () {
+            $("#myModal").modal("hide");
+        });
+    });
+
+    function formatDate(dateString) {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+    }
+
+</script>
+</body>
+</html>

@@ -17,22 +17,26 @@
             background-color: #f8f9fa;
             padding-top: 50px;
         }
+
         .container {
             max-width: 1200px;
             margin: auto;
         }
+
         .market {
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
             transition: box-shadow 0.3s ease;
             cursor: pointer;
         }
+
         .market:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .market img {
             width: 100%;
             height: auto;
@@ -43,9 +47,10 @@
             display: block;
             margin: 0 auto; /* 置中 */
         }
+
         .market h2 {
             color: #333;
-            font-size: 18px; /* 调整活动标题大小 */
+            font-size: 24px; /* 變更活動標題字體大小 */
             margin-top: 0;
             margin-bottom: 10px;
             display: flex;
@@ -54,15 +59,30 @@
             text-overflow: ellipsis; /* 超出部分用省略号表示 */
             white-space: nowrap; /* 不换行 */
         }
+
         .market p {
             color: #666;
             margin-bottom: 5px;
         }
+
         .market .icons {
             margin-left: 10px;
         }
+
         .market .icons i {
             margin-right: 5px;
+        }
+
+        .widget_search form {
+            display: flex;
+        }
+
+        .widget_search input[type="text"] {
+            flex: 1;
+        }
+
+        .widget_search button {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -81,9 +101,10 @@
                             <div class="widget_title">
                                 <h3>市集搜尋</h3>
                             </div>
-                            <form action="#">
-                                <input type="text">
+                            <form id="searchForm">
+                                <input type="text" id="searchDate" placeholder="請輸入日期 (YYYY-MM-DD)">
                                 <button type="submit">搜尋</button>
+                                <button type="button" id="resetButton">重置</button>
                             </form>
                         </div>
                     </div>
@@ -95,17 +116,6 @@
                 <div class="market_toolbar_wrapper">
                     <div class="market_toolbar_btn">
                         <h4>市集活動</h4>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <div class="niceselect_option">
-                            <form class="select_option" action="#">
-                                <select name="orderby" id="short">
-                                    <option selected value="1">市集活動排序</option>
-                                    <option value="2">報名中</option>
-                                    <option value="3">即將開始報名</option>
-                                </select>
-                            </form>
-                        </div>
                     </div>
                 </div>
                 <!--market toolbar end-->
@@ -128,6 +138,7 @@
 <script>
     $(document).ready(function () {
         // AJAX get all market events
+
         $.ajax({
             url: '/api/market',
             type: 'GET',
@@ -145,12 +156,12 @@
                     $.each(market, function (index, market) {
                         let marketHtml = `
                                 <div class="col-lg-4 col-md-4 col-sm-6 col-12">
-                                    <div class="market" onclick="location.href='/detail-page-url/${market.id}'">
+                                    <div class="market" data-marketid="${market.marketId}">
                                         <img src="${market.marketImage}" alt="市集活動圖片">
+
                                         <h2>
                                             <span>${market.marketName}</span>
                                             <span class="icons">
-                                                <i class="fas fa-pencil-alt" title="我要報名"></i>
                                                 <i class="fas fa-info-circle" title="查看詳情"></i>
                                             </span>
                                         </h2>
@@ -160,6 +171,12 @@
                             `;
                         marketList.append(marketHtml);
                     });
+
+                    // Click event handling
+                    $('.market').click(function () {
+                        let marketId = $(this).data('marketid');
+                        redirectToMarketDetail(marketId);
+                    });
                 } else {
                     console.error('Error: ' + response.message);
                 }
@@ -167,12 +184,104 @@
             error: function (xhr, status, error) {
                 console.error('Error: ' + error);
             }
-
         });
 
+        // Search form submission event
+        $('#searchForm').submit(function (e) {
+            e.preventDefault();
+            let searchDate = $('#searchDate').val().trim();
 
+            // If search date is not empty
+            if (searchDate !== '') {
+                // Iterate through all market events
+                $('.market').each(function () {
+                    let marketDate = $(this).find('p').text().split(':')[1].trim(); // Get the date of the market event
+
+                    // If market event date matches the search date, show the event; otherwise, hide it
+                    if (marketDate === searchDate) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            } else {
+                // If search date is empty, show all market events
+                $('.market').show();
+            }
+
+            // Rearrange market events
+            rearrangeMarketEvents();
+        });
+
+        // Reset button click event
+        $('#resetButton').click(function () {
+            $('#searchDate').val(''); // Clear the search date
+            $('.market').show(); // Show all market events
+            rearrangeMarketEvents(); // Rearrange market events
+
+            // Reset market events to initial state
+            $.ajax({
+                url: '/api/market',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.code === "0") {
+                        console.log(response)
+                        let market = response.data;
+                        let marketList = $('#marketList');
+
+                        // Clear any existing market events
+                        marketList.empty();
+
+                        // Append each market event to the market list
+                        $.each(market, function (index, market) {
+                            let marketHtml = `
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                                    <div class="market" data-marketid="${market.marketId}">
+                                        <img src="${market.marketImage}" alt="市集活動圖片">
+
+                                        <h2>
+                                            <span>${market.marketName}</span>
+                                            <span class="icons">
+                                                <i class="fas fa-info-circle" title="查看詳情"></i>
+                                            </span>
+                                        </h2>
+                                        <p>日期: ${formatDate(market.marketStart)}</p>
+                                    </div>
+                                </div>
+                            `;
+                            marketList.append(marketHtml);
+                        });
+
+                        // Click event handling
+                        $('.market').click(function () {
+                            let marketId = $(this).data('marketid');
+                            redirectToMarketDetail(marketId);
+                        });
+                    } else {
+                        console.error('Error: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error: ' + error);
+                }
+            });
+        });
     });
-    // 格式化日期
+
+    // Rearrange market events
+    function rearrangeMarketEvents() {
+        let marketContainer = $('#marketList');
+        let visibleMarketEvents = marketContainer.find('.market:visible');
+        marketContainer.empty(); // Clear the market events container
+
+        // Reinsert visible market events into the container to maintain their order in the DOM
+        visibleMarketEvents.each(function () {
+            marketContainer.append($(this));
+        });
+    }
+
+    // Format date function
     function formatDate(dateString) {
         const year = dateString.substring(0, 4);
         const month = dateString.substring(4, 6);
@@ -180,7 +289,12 @@
         return `${year}-${month}-${day}`;
     }
 
-
+    // Redirect to market detail page
+    function redirectToMarketDetail(marketId) {
+        // Here, redirect to the corresponding market-detail page using marketId
+        window.location.href = `/market/detailById?marketId=${marketId}`;
+    }
 </script>
 </body>
 </html>
+

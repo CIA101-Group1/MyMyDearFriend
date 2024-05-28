@@ -31,6 +31,4 @@ public interface  MemberRepository extends JpaRepository<MemberEntity, Integer> 
             @Param("memberAccount") String memberAccount,
             @Param("email") String email,
             Pageable pageable);
-
-    MemberEntity findByName(String name);
 }

@@ -148,7 +148,7 @@
         // 查詢狀態變更事件
         $("#orderStatusFilter").change(function () {
             selectedStatus = $(this).val();
-            console.log(selectedStatus);
+            // console.log(selectedStatus);
             fetchOrders(selectedStatus); // 重新獲取訂單資料
         });
 
@@ -163,7 +163,6 @@
         // 初始加載全部訂單
         fetchOrders(selectedStatus);
 
-
         // 獲取訂單資料
         function fetchOrders(orderStatus) {
             // console.log(orderId);
@@ -177,7 +176,7 @@
                         let tbody = $("#orderTbody");
                         tbody.empty(); // 清空現有的表格內容
                         orders = response.data;
-                        console.log(orders);
+                        // console.log(orders);
                         filteredOrders = orders; // 初始化時設置過濾後的訂單為全部訂單
                         if (orders === null || orders.length === 0) {
                             $("#orderTbody").append(`<tr><td colspan="13">查無訂單資料</td></tr>`);

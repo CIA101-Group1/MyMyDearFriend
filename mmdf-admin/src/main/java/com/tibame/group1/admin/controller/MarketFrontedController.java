@@ -16,4 +16,9 @@ public class MarketFrontedController {
     @GetMapping("/market/detail")
     public String marketDetail() {
         return "market/market-detail";}
+
+    @GetMapping("/market/{marketId}/registrations")
+    public String marketRegistration(){
+        return "market/market-registration";}
+
 }
