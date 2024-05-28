@@ -1,15 +1,16 @@
 package com.tibame.group1.web.service.impl;
 
+import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.dto.*;
+import com.tibame.group1.db.entity.*;
+import com.tibame.group1.db.repository.MemberRepository;
 import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.common.utils.ConvertUtils;
 import com.tibame.group1.common.utils.StringUtils;
-import com.tibame.group1.db.entity.ProductCategoryEntity;
-import com.tibame.group1.db.entity.ProductEntity;
-import com.tibame.group1.db.entity.ProductImgEntity;
 import com.tibame.group1.db.repository.ProductCategoryRepository;
 import com.tibame.group1.db.repository.ProductImgRepository;
 import com.tibame.group1.db.repository.ProductRepository;
+import com.tibame.group1.web.service.NoticeService;
 import com.tibame.group1.web.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,6 +31,12 @@ import java.util.stream.Collectors;
 @Transactional(rollbackOn = Exception.class)
 @Slf4j
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private NoticeService noticeService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -149,7 +159,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductEntity getOneSellerProduct(Integer productId) {
+    public ProductEntity getOneProduct(Integer productId) {
+
+        //1.查所有商品
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
+
+        //2.查商品分類
+        ProductCategoryEntity productCategoryEntity = productCategoryRepository.findById(productEntity.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("ProductCategory with id " + productEntity.getCategoryId() + " not found"));
+        //2-2.放入商品集合
+        productEntity.setProductCategoryEntity(productCategoryEntity);
+
+        //3.查商品照片
+        List<ProductImgEntity> productImgEntityList = getProductImgListByProductId(productId);
+        //3-1.如果照片不是空值,轉成base64
+        productImgEntityList.stream()
+                .filter(productImgEntity -> productImgEntity.getImage() != null)
+                .forEach(productImgEntity -> {
+                    byte[] image = productImgEntity.getImage();
+                    String base64 = Base64.getEncoder().encodeToString(image);
+                    productImgEntity.setImageBase64(base64);
+                });
+        // 將 List 轉換為 Set
+        Set<ProductImgEntity> productImgEntitySet = new HashSet<>(productImgEntityList);
+        //3-3.放入商品集合
+        productEntity.setProductImgs(productImgEntitySet);
+
+        return productEntity;
+    }
+
+
+    public ProductEntity getProductBySellerId(Integer productId) {
 
         //1.查所有商品
         ProductEntity productEntity = productRepository.findById(productId)
@@ -220,18 +261,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /***/
-    @Override
-    public ProductEntity getOneProduct(Integer productId) {
-        Optional<ProductEntity> optional = productRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public ProductCategoryEntity getOneCategory(Integer productId) {
-        Optional<ProductCategoryEntity> optional = productCategoryRepository.findById(productId);
-        return optional.orElse(null);
-    }
-
+//    @Override
+//    public ProductEntity getOneProduct(Integer productId) {
+//        Optional<ProductEntity> optional = productRepository.findById(productId);
+//        return optional.orElse(null);
+//    }
     @Override
     public ProductImgEntity getOneProductImg(Integer productId) {
         Optional<ProductImgEntity> optional = productImgRepository.findById(productId);
@@ -334,18 +368,29 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
-    @Override
-    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
-        // 根据产品ID从数据库中获取产品对象
-        ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
-
-        // 更新产品的审核状态 ，上架
-        product.setReviewStatus(Integer.valueOf(reviewStatus));
-
-        // 保存更新后的产品对象回数据库
-        productRepository.save(product);
-    }
+//    @Override
+//    public void updateReviewStatus(int productId, String reviewStatus) throws Exception {
+//        // 根据产品ID从数据库中获取产品对象
+//        ProductEntity product = productRepository.findById(productId)
+//                .orElseThrow(() -> new Exception("Product not found with id: " + productId));
+//        MemberEntity member = memberRepository.findById(product.getSellerId()).orElse(null);
+//
+//        // 更新产品的审核状态 ，上架
+//        product.setReviewStatus(Integer.valueOf(reviewStatus));
+//
+//        // 保存更新后的产品对象回数据库
+//        productRepository.save(product);
+//
+//        if (null == member) {
+//            throw new CheckRequestErrorException("查無此會員資料");
+//        }
+//        if(reviewStatus.equals("1")) {  //通過
+//            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", "審核成功，商品可進行上下架");
+//        }else if(reviewStatus.equals("0")){  //失敗
+//            var failReason = 0;
+//            noticeService.memberNoticeCreate(member, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "審核通知", String.valueOf(failReason));
+//        }
+//    }
 
     @Override
     public void updateProductStatus(int productId, String productStatus) throws Exception {
