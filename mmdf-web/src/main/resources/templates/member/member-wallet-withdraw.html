@@ -114,6 +114,9 @@
                                 case "1":
                                     $("#modalBody").html("申請成功");
                                     $("#myModal").modal("show");
+                                    setTimeout(function () {
+                                        window.location.href = "/member/walletWithdrawHistory";
+                                    }, 2000);
                                     break;
                                 case "-1":
                                     $("#modalBody").html("該帳號不存在");
