@@ -19,7 +19,7 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
     @Override
     public WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId) {
         String sql =
-                "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, wallet_amount\n"
+                "SELECT wallet_history_id, change_time, member_id, change_amount, change_type"
                         + "FROM wallet_history WHERE wallet_history_id = :wallet_history_id";
 
         Map<String, Object> map = new HashMap<>();
@@ -38,7 +38,7 @@ public class WalletHistoryDAOImpl implements WalletHistoryDAO {
     @Override
     public List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams) {
         String sql =
-                "SELECT wallet_history_id, change_time, member_id, change_amount, change_type, wallet_amount "
+                "SELECT wallet_history_id, change_time, member_id, change_amount, change_type "
                         + "FROM wallet_history WHERE 1=1 ";
 
         Map<String, Object> map = new HashMap<>();

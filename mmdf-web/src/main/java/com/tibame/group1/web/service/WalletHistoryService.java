@@ -11,11 +11,11 @@ import java.util.List;
 @Service
 public interface WalletHistoryService {
 
-    WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId);
+  WalletHistoryEntity getWalletHistoryById(Integer walletHistoryId);
 
-    WalletCreateResDTO walletHistoryCreate(WalletCreateReqDTO req, LoginSourceDTO loginSource);
+  WalletCreateResDTO walletHistoryCreate(WalletCreateReqDTO req, LoginSourceDTO loginSource);
 
-    List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
+  List<WalletHistoryEntity> getWallets(WalletQueryParams walletQueryParams);
 
-    WalletWithdrawResDTO walletRequestCreate(WalletWithdrawReqDTO req, LoginSourceDTO loginSource);
+  WalletWithdrawResDTO walletWithdrawCreate(WalletWithdrawReqDTO req, LoginSourceDTO loginSource);
 }

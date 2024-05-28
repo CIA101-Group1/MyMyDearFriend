@@ -10,18 +10,22 @@ import com.tibame.group1.web.service.OrderService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/")
+@CacheConfig(cacheNames = "member", keyGenerator = "mmdfKeyGenerator")
 public class OrderBackendController {
 
     @Autowired private OrderService orderService;
 
     @PostMapping("order/create")
     @CheckLogin
+    @CacheEvict(allEntries = true)
     public @ResponseBody ResDTO<OrderCreateResDTO> orderCreate(
             @Valid @RequestBody OrderCreateReqDTO req,
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
@@ -57,7 +61,7 @@ public class OrderBackendController {
     @CheckLogin
     public @ResponseBody ResDTO<List<OrderResDTO>> orderGetAll(
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource,
-            @RequestParam(name = "identity", defaultValue = "BOTH"  ) OrderMemberIdentity identity)
+            @RequestParam(name = "identity", defaultValue = "BOTH" ) OrderMemberIdentity identity)
             throws CheckRequestErrorException {
         ResDTO<List<OrderResDTO>> res = new ResDTO<>();
         res.setData(orderService.orderGetAll(loginSource, identity));

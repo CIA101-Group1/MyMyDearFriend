@@ -2,6 +2,7 @@ package com.tibame.group1.web.service.impl;
 
 import com.tibame.group1.common.enums.OrderMemberIdentity;
 import com.tibame.group1.common.enums.OrderStatus;
+import com.tibame.group1.common.enums.WalletCategory;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.*;
 import com.tibame.group1.db.repository.*;
@@ -38,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired private NoticeService noticeService;
 
+    @Autowired private WalletHistoryRepository walletHistoryRepository;
+
     @Override
     public OrderCreateResDTO orderCreate(OrderCreateReqDTO req, LoginSourceDTO loginSource)
             throws CheckRequestErrorException {
@@ -69,17 +72,36 @@ public class OrderServiceImpl implements OrderService {
         order.setFee((int) (req.getPriceBeforeDiscount() * 0.03));
         order = orderRepository.save(order);
 
+        Integer buyerWalletAmount = buyer.getWalletAmount();
+        Integer sellerWalletAmount = seller.getWalletAmount();
+
         // 買賣家錢包餘額計算
-        if (buyer.getWalletAmount() < order.getPriceAfterDiscount()){
+        if (buyerWalletAmount < order.getPriceAfterDiscount()) {
             log.warn("買家錢包餘額不足");
             throw new CheckRequestErrorException("錢包餘額不足，請先儲值");
-        }else{
-            buyer.setWalletAmount(buyer.getWalletAmount() - order.getPriceAfterDiscount());
+        } else {
+            buyer.setWalletAmount(buyerWalletAmount - order.getPriceAfterDiscount());
             memberRepository.save(buyer);
         }
-
-        seller.setWalletAmount(seller.getWalletAmount() + order.getPriceBeforeDiscount() - order.getFee());
+        seller.setWalletAmount(
+                sellerWalletAmount + order.getPriceBeforeDiscount() - order.getFee());
         memberRepository.save(seller);
+
+        // 創建買家的 WalletHistoryEntity
+        WalletHistoryEntity buyerWalletHistory = new WalletHistoryEntity();
+        buyerWalletHistory.setMember(buyer); // 設置會員ID
+        buyerWalletHistory.setChangeAmount(order.getPriceAfterDiscount());
+        buyerWalletHistory.setChangeTime(new Date());
+        buyerWalletHistory.setChangeType(WalletCategory.PAYMENT);
+        walletHistoryRepository.save(buyerWalletHistory);
+
+        // 創建賣家的 WalletHistoryEntity
+        WalletHistoryEntity sellerWalletHistory = new WalletHistoryEntity();
+        sellerWalletHistory.setMember(seller); // 設置會員ID
+        sellerWalletHistory.setChangeAmount(order.getPriceBeforeDiscount() - order.getFee());
+        sellerWalletHistory.setChangeTime(new Date());
+        sellerWalletHistory.setChangeType(WalletCategory.DEPOSIT);
+        walletHistoryRepository.save(sellerWalletHistory);
 
         // 建立訂單詳情
         for (OrderBuyProductDTO buyProduct : req.getBuyProductList()) {
@@ -95,7 +117,8 @@ public class OrderServiceImpl implements OrderService {
                         buyProduct.getProductId(),
                         product.getQuantity(),
                         buyProduct.getQuantity());
-                throw new CheckRequestErrorException("商品庫存量不足，無法購買。"+ product.getName() +" 剩餘庫存: " + product.getQuantity());
+                throw new CheckRequestErrorException(
+                        "商品庫存量不足，無法購買。" + product.getName() + " 剩餘庫存: " + product.getQuantity());
             }
 
             // 扣除商品庫存
@@ -103,16 +126,23 @@ public class OrderServiceImpl implements OrderService {
             productRepository.save(product);
 
             OrderDetailEntity orderDetail = new OrderDetailEntity();
-            orderDetail.setOrderId(order.getId());
+            orderDetail.setOrderId(order.getOrderId());
             orderDetail.setProductId(buyProduct.getProductId());
             orderDetail.setQuantity(buyProduct.getQuantity());
             orderDetail.setPrice(buyProduct.getPrice());
             orderDetailRepository.save(orderDetail);
         }
+
+        // 發送通知
         noticeService.memberNoticeCreate(
-                buyer, MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT, "訂單已成立", "恭喜訂單新增成功! 您的訂單編號: "+ order.getId(), true);
+                buyer,
+                MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT,
+                "訂單已成立",
+                "恭喜訂單新增成功! 您的訂單編號: " + order.getOrderId(),
+                true);
+
         OrderCreateResDTO resDTO = new OrderCreateResDTO();
-        resDTO.setOrderId(order.getId());
+        resDTO.setOrderId(order.getOrderId());
         return resDTO;
     }
 
@@ -130,15 +160,6 @@ public class OrderServiceImpl implements OrderService {
 
         // 判斷使用者身分
         switch (identity.name()) {
-                // 取得全部訂單
-            case "ALL":
-                // 查詢訂單，檢查訂單是否存在
-                orderList = orderRepository.findAll();
-                if (orderList.isEmpty()) {
-                    log.warn("查無訂單");
-                    throw new CheckRequestErrorException("查無訂單");
-                }
-                break;
 
                 // 取得使用者全部訂單
             case "BOTH":
@@ -186,9 +207,9 @@ public class OrderServiceImpl implements OrderService {
                 throw new CheckRequestErrorException("查無會員資料");
             }
             // 查詢訂單詳情
-            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getId(), loginSource);
+            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getOrderId(), loginSource);
             // 將查詢資料轉換至 List<OrderResDTO>
-            res.setOrderId(order.getId());
+            res.setOrderId(order.getOrderId());
             res.setBuyerId(order.getBuyerId());
             res.setSellerId(order.getSellerId());
             res.setBuyerName(buyer.getName());
@@ -231,7 +252,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 將查詢資料轉換至 OrderResDTO
         OrderResDTO res = new OrderResDTO();
-        res.setOrderId(order.getId());
+        res.setOrderId(order.getOrderId());
         res.setBuyerId(order.getBuyerId());
         res.setSellerId(order.getSellerId());
         res.setMemberCouponId1(order.getMemberCouponId1());
@@ -329,7 +350,7 @@ public class OrderServiceImpl implements OrderService {
         order = orderRepository.save(order);
 
         OrderUpdateResDTO resDTO = new OrderUpdateResDTO();
-        resDTO.setOrderId(order.getId());
+        resDTO.setOrderId(order.getOrderId());
         return resDTO;
     }
 }

@@ -127,8 +127,6 @@
                         <th>加入會員時間</th>
                         <th>錢包餘額</th>
                         <th>異動中金額</th>
-                        <th>賣家功能狀態</th>
-                        <th>被評分數(總和/總筆數)</th>
                         <th>重設密碼驗證信發送時間</th>
                     </tr>
                     </thead>
@@ -214,8 +212,6 @@
                             // 插入會員資料
                             memberList.forEach(member => {
                                 const formattedAddress = member.address.replace(/_/g, "");
-                                const scoreSum = member.scoreSum !== null && member.scoreSum !== undefined ? member.scoreSum : "-";
-                                const scoreNumber = member.scoreNumber !== null && member.scoreNumber !== undefined ? member.scoreNumber : "-";
                                 const imageSrc = member.imageBase64 ? `data:image/jpeg;base64,${member.imageBase64}` : "/image/default-avatar.png";
 
                                 $("#memberTable tbody").append(`
@@ -235,8 +231,6 @@
                                         <td>${member.joinTime}</td>
                                         <td>${member.walletAmount}</td>
                                         <td>${member.walletWithdrawAmount}</td>
-                                        <td>${member.sellerStatus ? "已開通" : "未開通"}</td>
-                                        <td>${scoreSum}/${scoreNumber}</td>
                                         <td>${member.cidResetSendingTime}</td>
                                     </tr>
                                 `);

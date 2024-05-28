@@ -1,9 +1,10 @@
 package com.tibame.group1.db.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Immutable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,6 +13,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "employee_role")
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeRoleEntity {
     //嵌入式主鍵
     @EmbeddedId
@@ -21,13 +24,13 @@ public class EmployeeRoleEntity {
     @ManyToOne
     @MapsId("employeeId")
     @JoinColumn(name = "employee_id")
-    private EmployeeEntity employee;
+    private EmployeeEntity employeeId;
 
 
     @ManyToOne
     @MapsId("roleId")
     @JoinColumn(name = "role_id")
-    private RoleEntity role;
+    private RoleEntity roleId;
 
     @Setter
     @Getter
