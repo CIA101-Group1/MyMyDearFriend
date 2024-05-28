@@ -66,10 +66,10 @@ public class BidProductServiceImpl implements BidProductService {
             // 發送通知
             noticeService.memberNoticeCreate(
                     memberRepository.findById(product.getSellerId()).get(),
-                    MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT,
+                    MemberNoticeEntity.NoticeCategory.BID_PRODUCT,
                     "競標商品審核已通過",
-                    "您的競標商品：" + product.getName() + "審核已通過",
-                    true);
+                    "您的競標商品：" + product.getName() + " 審核已通過",
+                    false);
         } else if (newStatus == -1) {
             product.setStatus(BidProductStatus.REJECT);
             product.setLastModified(Timestamp.from(Instant.now()));
@@ -77,16 +77,16 @@ public class BidProductServiceImpl implements BidProductService {
             // 發送通知
             noticeService.memberNoticeCreate(
                     memberRepository.findById(product.getSellerId()).get(),
-                    MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT,
-                    "競標商品審核不通過",
-                    "您的競標商品：" + product.getName() + "審核不通過",
-                    true);
+                    MemberNoticeEntity.NoticeCategory.BID_PRODUCT,
+                    "競標商品審核未通過",
+                    "您的競標商品：" + product.getName() + " 審核未通過",
+                    false);
         }
     }
 
     @Override
     public List<BidProductEntity> findByCompositeQuery(
-            Integer categoryId, String name, List<Integer> status) {
-        return bidProductRepository.findByCompositeQuery(categoryId, name, status);
+            Integer categoryId, Integer conditionId, String name, List<Integer> status) {
+        return bidProductRepository.findByCompositeQuery(categoryId, conditionId, name, status);
     }
 }

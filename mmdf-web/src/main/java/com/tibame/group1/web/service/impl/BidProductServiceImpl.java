@@ -123,8 +123,8 @@ public class BidProductServiceImpl implements BidProductService {
 
     @Override
     public List<BidProductEntity> findByCompositeQuery(
-            Integer categoryId, String name, List<Integer> status) {
-        return bidProductRepository.findByCompositeQuery(categoryId, name, status);
+            Integer categoryId, Integer conditionId, String name, List<Integer> status) {
+        return bidProductRepository.findByCompositeQuery(categoryId, conditionId, name, status);
     }
 
     @Override
@@ -141,14 +141,47 @@ public class BidProductServiceImpl implements BidProductService {
         for (BidProductEntity product : expiredProducts) {
             product.setStatus(BidProductStatus.END);
             bidProductRepository.save(product);
-            
+
             // 找到最高出價
             Optional<BidEntity> highestBid = bidRepository.findTopByProductIdOrderByAmountDesc(product.getProductId());
 
             if (highestBid.isPresent()) {
                 // 為最高出價者創建訂單
                 bidOrderService.createOrderForHighestBid(product, highestBid);
+                // 發送通知
+                noticeService.memberNoticeCreate(
+                        memberRepository.findById(highestBid.get().getMemberId()).get(),
+                        MemberNoticeEntity.NoticeCategory.BID_PRODUCT,
+                        "競標訂單新增成功",
+                        "您在商品【"+ product.getName() + "】的競標中出價最高，訂單已成功建立。請前往付款",
+                        false);
             }
         }
+    }
+
+    @Override
+    public void closeBidEarly(Integer productId) throws CheckRequestErrorException {
+        // 獲取當前時間
+        Timestamp currentTime = Timestamp.from(Instant.now());
+
+        // 獲取對應的競標商品
+        Optional<BidProductEntity> optionalProduct = bidProductRepository.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            BidProductEntity product = optionalProduct.get();
+
+            // 更新商品結束時間
+            product.setEndTime(currentTime);
+            bidProductRepository.save(product);
+
+            // 排成器會自動幫我們產生訂單...
+        } else {
+            throw new CheckRequestErrorException("競標商品不存在");
+        }
+    }
+
+    @Override
+    public List<BidProductEntity> findAllBidProductForMember(LoginSourceDTO loginSource) {
+        return bidProductRepository.findAllBidProductForMember(loginSource.getMemberId());
     }
 }

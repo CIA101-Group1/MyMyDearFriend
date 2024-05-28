@@ -58,4 +58,9 @@ public class BidProductPageController {
     public String getCheckoutPage() {
         return "/bidproduct/bidproduct-checkout";
     }
+
+    @GetMapping("/buyer/bidproduct/record")
+    public String getBuyerBidProductRecordPage() {
+        return "/bidproduct/buyer-bidproduct-record";
+    }
 }
