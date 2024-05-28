@@ -11,14 +11,12 @@ import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.service.BidProductService;
 import com.tibame.group1.web.service.BidService;
 
-import com.tibame.group1.web.service.impl.BidProductServiceImpl;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
 
 @RestController
@@ -27,6 +25,8 @@ public class BidApiController {
 
     @Autowired private BidService bidService;
     @Autowired private BidProductService bidProductService;
+    @Autowired private BidWSController bidWSController;
+
 
     @PostMapping("/bid")
     @CheckLogin(isVerified = false)
@@ -35,6 +35,13 @@ public class BidApiController {
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
             throws DateException, IOException, CheckRequestErrorException {
         bidService.addBid(req, loginSource);
+
+        // Broadcast the bid update
+        BidMessage bidMessage = new BidMessage();
+        bidMessage.setProductId(req.getProductId());
+        bidMessage.setAmount(req.getAmount());
+        bidWSController.broadcastBidUpdate(bidMessage);
+
         return new ResDTO<>();
     }
 
