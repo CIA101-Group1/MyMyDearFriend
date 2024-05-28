@@ -33,13 +33,7 @@ public class AdminCheckLoginInterceptor implements HandlerInterceptor {
             if (null == request.getHeader(TOKEN_HEADER_NAME)) {
                 throw new AuthorizationException("登入驗證碼不可為空");
             } else {
-                header = request.getHeader(TOKEN_HEADER_NAME);
-                authorization =
-                        Arrays.stream(request.getQueryString().split("&"))
-                                .filter(s -> s.startsWith(TOKEN_HEADER_NAME))
-                                .map(s -> s.replaceAll(TOKEN_HEADER_NAME + "=", ""))
-                                .findAny()
-                                .orElse(header);
+                authorization = request.getHeader(TOKEN_HEADER_NAME);
             }
         } else {
             authorization =

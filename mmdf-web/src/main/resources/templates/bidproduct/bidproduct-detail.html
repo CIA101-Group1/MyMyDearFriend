@@ -167,14 +167,6 @@
                                 <a class="active" data-toggle="tab" href="#info" role="tab" aria-controls="info"
                                    aria-selected="false">商品描述</a>
                             </li>
-                            <li>
-                                <a data-toggle="tab" href="#sheet" role="tab" aria-controls="sheet"
-                                   aria-selected="false">出價紀錄</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#reviews" role="tab" aria-controls="sheet"
-                                   aria-selected="false">Reviews</a>
-                            </li>
                         </ul>
                     </div>
                     <div class="tab-content">
@@ -183,99 +175,99 @@
                                 <p th:text="${bidProductEntity.description}"></p>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="sheet" role="tabpanel">
-                            <div class="product_d_table">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>出價者</th>
-                                            <th>出價金額</th>
-                                            <th>出價時間</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>$2000</td>
-                                            <td>2024/05/12 23:20:53</td>
-                                        </tr>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>$1000</td>
-                                            <td>2024/05/12 13:20:23</td>
-                                        </tr>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>$900</td>
-                                            <td>2024/05/12 09:20:53</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- <div class="tab-pane fade" id="sheet" role="tabpanel"> -->
+                        <!--     <div class="product_d_table"> -->
+                        <!--         <div class="table-responsive"> -->
+                        <!--             <table class="table"> -->
+                        <!--                 <thead> -->
+                        <!--                 <tr> -->
+                        <!--                     <th>出價者</th> -->
+                        <!--                     <th>出價金額</th> -->
+                        <!--                     <th>出價時間</th> -->
+                        <!--                 </tr> -->
+                        <!--                 </thead> -->
+                        <!--                 <tbody> -->
+                        <!--                 <tr> -->
+                        <!--                     <td>abc</td> -->
+                        <!--                     <td>$2000</td> -->
+                        <!--                     <td>2024/05/12 23:20:53</td> -->
+                        <!--                 </tr> -->
+                        <!--                 <tr> -->
+                        <!--                     <td>abc</td> -->
+                        <!--                     <td>$1000</td> -->
+                        <!--                     <td>2024/05/12 13:20:23</td> -->
+                        <!--                 </tr> -->
+                        <!--                 <tr> -->
+                        <!--                     <td>abc</td> -->
+                        <!--                     <td>$900</td> -->
+                        <!--                     <td>2024/05/12 09:20:53</td> -->
+                        <!--                 </tr> -->
+                        <!--                 </tbody> -->
+                        <!--             </table> -->
+                        <!--         </div> -->
+                        <!--     </div> -->
+                        <!-- </div> -->
 
-                        <div class="tab-pane fade" id="reviews" role="tabpanel">
-                            <div class="reviews_wrapper">
-                                <h2>1 review for Donec eu furniture</h2>
-                                <div class="reviews_comment_box">
-                                    <div class="comment_thmb">
-                                        <img src="assets/img/blog/comment2.jpg" alt="">
-                                    </div>
-                                    <div class="comment_text">
-                                        <div class="reviews_meta">
-                                            <div class="star_rating">
-                                                <ul>
-                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                    <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                </ul>
-                                            </div>
-                                            <p><strong>admin </strong>- September 12, 2022</p>
-                                            <span>roadthemes</span>
-                                        </div>
-                                    </div>
+                        <!-- <div class="tab-pane fade" id="reviews" role="tabpanel"> -->
+                        <!--     <div class="reviews_wrapper"> -->
+                        <!--         <h2>1 review for Donec eu furniture</h2> -->
+                        <!--         <div class="reviews_comment_box"> -->
+                        <!--             <div class="comment_thmb"> -->
+                        <!--                 <img src="assets/img/blog/comment2.jpg" alt=""> -->
+                        <!--             </div> -->
+                        <!--             <div class="comment_text"> -->
+                        <!--                 <div class="reviews_meta"> -->
+                        <!--                     <div class="star_rating"> -->
+                        <!--                         <ul> -->
+                        <!--                             <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                             <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                             <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                             <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                             <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                         </ul> -->
+                        <!--                     </div> -->
+                        <!--                     <p><strong>admin </strong>- September 12, 2022</p> -->
+                        <!--                     <span>roadthemes</span> -->
+                        <!--                 </div> -->
+                        <!--             </div> -->
 
-                                </div>
-                                <div class="comment_title">
-                                    <h2>Add a review </h2>
-                                    <p>Your email address will not be published. Required fields are marked </p>
-                                </div>
-                                <div class="product_ratting mb-10">
-                                    <h3>Your rating</h3>
-                                    <ul>
-                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                        <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product_review_form">
-                                    <form action="#">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <label for="review_comment">Your review </label>
-                                                <textarea name="comment" id="review_comment"></textarea>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6">
-                                                <label for="author">Name</label>
-                                                <input id="author" type="text">
+                        <!--         </div> -->
+                        <!--         <div class="comment_title"> -->
+                        <!--             <h2>Add a review </h2> -->
+                        <!--             <p>Your email address will not be published. Required fields are marked </p> -->
+                        <!--         </div> -->
+                        <!--         <div class="product_ratting mb-10"> -->
+                        <!--             <h3>Your rating</h3> -->
+                        <!--             <ul> -->
+                        <!--                 <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                 <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                 <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                 <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--                 <li><a href="#"><i class="icon icon-Star"></i></a></li> -->
+                        <!--             </ul> -->
+                        <!--         </div> -->
+                        <!--         <div class="product_review_form"> -->
+                        <!--             <form action="#"> -->
+                        <!--                 <div class="row"> -->
+                        <!--                     <div class="col-12"> -->
+                        <!--                         <label for="review_comment">Your review </label> -->
+                        <!--                         <textarea name="comment" id="review_comment"></textarea> -->
+                        <!--                     </div> -->
+                        <!--                     <div class="col-lg-6 col-md-6"> -->
+                        <!--                         <label for="author">Name</label> -->
+                        <!--                         <input id="author" type="text"> -->
 
-                                            </div>
-                                            <div class="col-lg-6 col-md-6">
-                                                <label for="email">Email </label>
-                                                <input id="email" type="text">
-                                            </div>
-                                        </div>
-                                        <button type="submit">Submit</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        <!--                     </div> -->
+                        <!--                     <div class="col-lg-6 col-md-6"> -->
+                        <!--                         <label for="email">Email </label> -->
+                        <!--                         <input id="email" type="text"> -->
+                        <!--                     </div> -->
+                        <!--                 </div> -->
+                        <!--                 <button type="submit">Submit</button> -->
+                        <!--             </form> -->
+                        <!--         </div> -->
+                        <!--     </div> -->
+                        <!-- </div> -->
                     </div>
                 </div>
             </div>
@@ -316,16 +308,35 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 <script>
     const AUTH_TOKEN = localStorage.getItem("authorization");
     const PRODUCTID = $("#productId").val()
+    let countdownTimerElement = document.getElementById("countdownTimer");
 
 
     document.addEventListener("DOMContentLoaded", () => {
         updateCountdownTimer();
         setInterval(updateCountdownTimer, 1000);
         getCurrentPrice();
+        connectWS();
     })
+
+    function connectWS() {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/bidUpdate', function (messageOutput) {
+                showBidUpdate(JSON.parse(messageOutput.body));
+            });
+        });
+    }
+
+    function showBidUpdate(message) {
+        getCurrentPrice();
+    }
 
     function updateCountdownTimer() {
         // 從控制器中獲取 endTime 的值，假設它是以 "yyyy-mm-dd hh:mm:ss" 格式的字符串
@@ -336,15 +347,34 @@
         var now = new Date().getTime();
         var timeRemaining = endTimestamp - now;
 
-        // 計算天數、小時、分鐘和秒數
-        var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        if (timeRemaining > 0) {
+            // 計算天數、小時、分鐘和秒數
+            var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-        // 在頁面中顯示計時器
-        var countdownTimerElement = document.getElementById("countdownTimer");
-        countdownTimerElement.innerHTML = `${days} 天 ${hours} 時 ${minutes} 分 ${seconds} 秒 結束`;
+            // 在頁面中顯示計時器
+            countdownTimerElement.innerHTML = `${days} 天 ${hours} 時 ${minutes} 分 ${seconds} 秒 結束`;
+
+        } else if (timeRemaining < 0) {
+            countdownTimerElement.innerHTML = `競標已結束`;
+            $(".product_variant").remove();
+        } else {
+            countdownTimerElement.innerHTML = `競標未開始`;
+            $(".product_variant").remove();
+
+        }
+
+        // // 計算天數、小時、分鐘和秒數
+        // var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        // var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        // var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        // var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        //
+        // // 在頁面中顯示計時器
+        // var countdownTimerElement = document.getElementById("countdownTimer");
+        // countdownTimerElement.innerHTML = `${days} 天 ${hours} 時 ${minutes} 分 ${seconds} 秒 結束`;
     }
 
     function getCurrentPrice() {
@@ -454,6 +484,8 @@
         getBidsForProduct();
         $('#bidsModal').modal('show');
     })
+
+
 </script>
 </body>
 </html>

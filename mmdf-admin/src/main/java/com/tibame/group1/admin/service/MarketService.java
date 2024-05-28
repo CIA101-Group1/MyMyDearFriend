@@ -20,5 +20,6 @@ public interface MarketService {
     List<MarketAllResDTO> marketAll(AdminLoginSourceDTO adminLoginSource, String marketName)
         throws CheckRequestErrorException, IOException, DateException;
 
+    List<MemberRegistrationAllResDTO> findAllByMarketId(AdminLoginSourceDTO adminLoginSource, Integer marketId) throws CheckRequestErrorException;
 
 }

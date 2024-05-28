@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-TW">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>員工設定權限</title>
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body class="sb-nav-fixed">
+
+<!--header-->
+<th:block th:replace="~{/fragments/header}"/>
+
+<!-- 主要區塊 -->
+<div id="layoutSidenav">
+    <!-- 側欄選單 -->
+    <th:block th:replace="~{/fragments/sidenav}"/>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!-- 主要內容 -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <!-- 員工權限設置表單 -->
+                    <div class="card my-4">
+                        <div class="card-header">
+                            <h2 class="m-0 fw-bold">權限設置</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="employeeForm">
+                                <div class="mb-3">
+                                    <label for="employeeName" class="form-label">姓名：</label>
+                                    <input type="text" class="form-control" id="employeeName" name="employeeName" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roleName" class="form-label">管理員角色：</label>
+                                    <select class="form-select" id="roleName" name="roleName">
+                                        <option value="1">超級管理員</option>
+                                        <option value="2">客服</option>
+                                        <option value="3">活動管理員</option>
+                                        <option value="4">一般員工</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" id="saveBtn" class="btn btn-primary">儲存</button>
+                                    <button type="button" id="cancelBtn" class="btn btn-secondary">取消</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 錯誤訊息將顯示在這裡 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // 從 URL 中獲取授權和員工 ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const employeeId = urlParams.get("id");
+        const authorization = localStorage.getItem("authorization");
+
+        if (employeeId && authorization) {
+            $.ajax({
+                url: `/api/employee/detail?id=${employeeId}&authorization=${authorization}`, // 调整URL到您的端点
+                method: 'GET',
+                contentType: "application/json",
+                data: {
+                    "employeeId": employeeId
+                },
+                success(response) {
+                    if (response.code === "0") {
+                        const data = response.data;
+                        // 更新页面内容
+                        $("#employeeName").val(data.employeeName);
+                    } else {
+                        console.error("API返回错误: " + response.message);
+                    }
+                },
+                error(xhr, status, error) {
+                    alert("服务器连接失败: " + error);
+                }
+            });
+        }
+
+        $("#saveBtn").click(function () {
+            const employeeId = urlParams.get("id");
+            const roleId = $("#roleName").val();
+
+            const userData = {
+                employeeId: employeeId,
+                roleId: roleId
+            }
+
+            if (!authorization) {
+                console.error("缺少授权令牌。");
+                return;
+            }
+
+            $.ajax({
+                url: `/api/employee/role?authorization=${authorization}`,
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success(response) {
+                    console.log("AJAX请求成功，服务器响应: ", response);
+                    apiResponseJSON(response, {
+                        onSuccess(data) {
+                            console.log("成功处理响应数据: ", data);
+                            $("#modalBody").html("设置成功");
+                            $("#myModal").modal("show");
+                            setTimeout(function () {
+                                var authorization = localStorage.getItem("authorization");
+                                var url = '/employee/all';
+                                if (authorization) {
+                                    url += '?authorization=' + encodeURIComponent(authorization);
+                                }
+                                console.log('goToEmployeeAll href: ', url);
+                                window.location.href = url;
+                            }, 100000);
+                        },
+                        onError(message) {
+                            console.log("错误处理响应数据: ", message);
+                            $("#modalBody").html(message);
+                            $("#myModal").modal("show");
+                        }
+                    });
+                },
+                error(xhr, status, error) {
+                    console.error("AJAX请求失败: ", error);
+                    $("#modalBody").html("服务器连接失败: " + error);
+                    $("#myModal").modal("show");
+                }
+            });
+        });
+
+        $("#cancelBtn").click(function () {
+            var url = '/employee/all';
+            if (authorization) {
+                url += '?authorization=' + encodeURIComponent(authorization);
+            }
+            console.log('goToEmployeeAll href: ', url);
+            window.location.href = url;
+        });
+
+        $("#closeModalBtn").click(function () {
+            $("#myModal").modal("hide");
+        });
+
+    });
+</script>
+
+</body>
+</html>

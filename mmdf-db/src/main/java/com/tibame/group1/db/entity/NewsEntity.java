@@ -17,7 +17,7 @@ public class NewsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "news_id", nullable = false)
-    private Integer id;
+    private Integer newsId;
 
     @Size(max = 40)
     @NotNull
@@ -32,6 +32,8 @@ public class NewsEntity {
     @NotNull
     @Column(name = "image", nullable = false)
     private byte[] image;
+
+    private String imageBase64;
 
     @NotNull
     @Column(name = "last_modified", nullable = false)
