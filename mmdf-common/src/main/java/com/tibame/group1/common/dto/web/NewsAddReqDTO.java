@@ -13,12 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class NewsAddReqDTO {
 
-    @Size(max = 40)
-    @NotNull
+    @Size(max = 40, message = "標題：請勿超過{max}字")
+    @NotNull(message = "標題：請勿空白")
     private String title;
 
-    @Size(max = 800)
-    @NotNull
+    @Size(max = 800, message = "內容：請勿超過{max}字")
+    @NotNull(message = "內容：請勿空白")
     private String content;
 
     @NotNull
