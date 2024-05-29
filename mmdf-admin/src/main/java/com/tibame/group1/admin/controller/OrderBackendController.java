@@ -10,12 +10,15 @@ import com.tibame.group1.common.enums.OrderStatus;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/")
+@CacheConfig(cacheNames = "member", keyGenerator = "mmdfKeyGenerator")
 public class OrderBackendController {
 
     @Autowired private OrderService orderService;
@@ -38,6 +41,7 @@ public class OrderBackendController {
     }
 
     @PostMapping("order/update")
+    @CacheEvict(allEntries = true)
     public @ResponseBody ResDTO<String> orderUpdate(@RequestBody OrderUpdateReqDTO req)
             throws CheckRequestErrorException {
         ResDTO<String> res = new ResDTO<>();
