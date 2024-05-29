@@ -169,7 +169,7 @@
                 </div>
                 <div id="message-input">
                     <input type="text" id="message-text" placeholder="輸入訊息...">
-                    <input type="file" id="message-image">
+<!--                    <input type="file" id="message-image">-->
                     <button id="send-message">發送</button>
                 </div>
             </div>
@@ -185,7 +185,7 @@
         const socket = new WebSocket(websocketURL);
 
         let currentCustomerId;
-        let cannedMessages = ["Hello, how can I help you?", "Please provide more details."];
+        let cannedMessages =[];
         var serviceId;
 
         // 更新罐頭訊息下拉選單和刪除選擇框
@@ -209,7 +209,7 @@
         }
 
         // 初始化罐頭訊息
-        updateCannedMessages();
+
 
         // WebSocket onopen 事件
         socket.onopen = () => {
@@ -229,6 +229,11 @@
             switch (data.type) {
                 case 'init':
                     serviceId = data.serviceId;
+                    var cdMessage = JSON.parse(data.cdMessage);
+                    cdMessage.forEach(list =>{
+                        cannedMessages.push(list);
+                    });
+                    updateCannedMessages();
 
                 case 'getCustomer':
                     // 更新等待處理的會員清單
@@ -365,25 +370,25 @@
         }
 
         // 監聽事件：上傳圖片訊息
-        document.getElementById('message-image').addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (currentCustomerId) {
-                        const message = {
-                            type: 'service_message',
-                            memberId: currentCustomerId,
-                            message: '',
-                            image: e.target.result
-                        };
-                        socket.send(JSON.stringify(message));
-                        displayMessage(message, 'sent');
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        // document.getElementById('message-image').addEventListener('change', (event) => {
+        //     const file = event.target.files[0];
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = (e) => {
+        //             if (currentCustomerId) {
+        //                 const message = {
+        //                     type: 'service_message',
+        //                     memberId: currentCustomerId,
+        //                     message: '',
+        //                     image: e.target.result
+        //                 };
+        //                 socket.send(JSON.stringify(message));
+        //                 displayMessage(message, 'sent');
+        //             }
+        //         };
+        //         reader.readAsDataURL(file);
+        //     }
+        // });
 
         // 監聽事件：新增罐頭訊息
         document.getElementById('add-canned-message').addEventListener('click', () => {
@@ -391,6 +396,12 @@
             if (newMessage.trim() !== '') {
                 cannedMessages.push(newMessage);
                 newMessage.value = "";
+                var jsonObj = {
+                    type:'addCannedMessage',
+                    message:newMessage,
+                    serviceId:serviceId
+                }
+                socket.send(JSON.stringify(jsonObj));
                 updateCannedMessages();
             }
         });
@@ -399,7 +410,14 @@
         document.getElementById('delete-canned-message').addEventListener('click', () => {
             const index = document.getElementById('delete-canned-message-select').value;
             if (index !== '') {
+                var cdMessage = cannedMessages[index];
                 cannedMessages.splice(index, 1);
+                var jsonObj = {
+                    type:'delCannedMessage',
+                    message:cdMessage,
+                    serviceId:serviceId
+                }
+                socket.send(JSON.stringify(jsonObj));
                 updateCannedMessages();
             }
         });
