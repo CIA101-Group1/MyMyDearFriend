@@ -1,5 +1,7 @@
 package com.tibame.group1.web.service;
 
+import com.tibame.group1.common.dto.web.BidOrderPayReqDTO;
+import com.tibame.group1.common.enums.BidOrderStatus;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.BidEntity;
 import com.tibame.group1.db.entity.BidOrderEntity;
@@ -17,4 +19,12 @@ public interface BidOrderService {
     List<BidOrderEntity> findBidOrdersForBuyer(LoginSourceDTO loginSourceDTO);
 
     BidOrderEntity findById(Integer orderId) throws CheckRequestErrorException;
+
+    void payBidOrder(Integer orderId, BidOrderPayReqDTO req, LoginSourceDTO loginSource) throws CheckRequestErrorException;
+
+    void completeBidOrder(Integer orderId, LoginSourceDTO loginSource);
+
+    void cancelBidOrder(Integer orderId, LoginSourceDTO loginSource);
+
+    void updateBidOrderStatus(Integer orderId, BidOrderStatus newStatus) throws CheckRequestErrorException;
 }

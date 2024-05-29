@@ -13,17 +13,17 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     @Query("SELECT p FROM ProductEntity p WHERE p.categoryId = :categoryId")
     List<ProductEntity> findAllByCategoryId(@Param("categoryId") Integer categoryId);
 
-// Query 第一種寫法 ProductServiceImpl.java
-@Query("SELECT p FROM ProductEntity p " +
-        "WHERE (:name IS NULL OR p.name LIKE CONCAT('%', :name, '%')) " +
-        "AND (:description IS NULL OR p.description LIKE CONCAT('%', :description, '%'))"+
-        "AND (:categoryId IS NULL OR p.categoryId = :categoryId)"+
-        "AND (:reviewStatus IS NULL OR p.reviewStatus = :reviewStatus)"+
-        "AND (:productStatus IS NULL OR p.productStatus = :productStatus)")
-List<ProductEntity> findProductsByQuery(
-        @Param("name") String name, @Param("description") String description,
-        @Param("categoryId") Integer categoryId, @Param("reviewStatus") Integer reviewStatus,
-        @Param("productStatus") Integer productStatus);
+    // Query 第一種寫法 ProductServiceImpl.java
+    @Query("SELECT p FROM ProductEntity p " +
+            "WHERE (:name IS NULL OR p.name LIKE CONCAT('%', :name, '%')) " +
+            "AND (:description IS NULL OR p.description LIKE CONCAT('%', :description, '%'))" +
+            "AND (:categoryId IS NULL OR p.categoryId = :categoryId)" +
+            "AND (:reviewStatus IS NULL OR p.reviewStatus = :reviewStatus)" +
+            "AND (:productStatus IS NULL OR p.productStatus = :productStatus)")
+    List<ProductEntity> findProductsByQuery(
+            @Param("name") String name, @Param("description") String description,
+            @Param("categoryId") Integer categoryId, @Param("reviewStatus") Integer reviewStatus,
+            @Param("productStatus") Integer productStatus);
 
 // Query 第二種寫法 ProductServiceImpl.java
 //    List<ProductEntity> findByNameLikeAndDescriptionLikeAndCategoryIdAndReviewStatusAndProductStatus(String name, String description, Integer categoryId, Integer reviewStatus, Integer productStatus);
@@ -44,5 +44,6 @@ List<ProductEntity> findProductsByQuery(
 //
 //          return findAll(spec);
 //      }
+
 
 }

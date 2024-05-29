@@ -19,10 +19,13 @@ public interface BidProductService {
 
     List<BidProductEntity> findAllForSeller(LoginSourceDTO loginSource);
 
-    List<BidProductEntity> findByCompositeQuery(Integer categoryId, String name, List<Integer> status);
+    List<BidProductEntity> findByCompositeQuery(Integer categoryId, Integer conditionId, String name, List<Integer> status);
 
     List<BidProductEntity> findByStatus(Integer status);
 
     void updateExpiredBidProducts();
 
+    void closeBidEarly(Integer productId) throws CheckRequestErrorException;
+
+    List<BidProductEntity> findAllBidProductForMember(LoginSourceDTO loginSource);
 }

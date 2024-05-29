@@ -1,18 +1,20 @@
 package com.tibame.group1.admin.service.impl;
 
 import com.tibame.group1.admin.service.BidProductService;
+import com.tibame.group1.admin.service.NoticeService;
 import com.tibame.group1.common.enums.BidProductStatus;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.db.entity.BidProductEntity;
+import com.tibame.group1.db.entity.MemberNoticeEntity;
 import com.tibame.group1.db.repository.BidProductImageRepository;
 import com.tibame.group1.db.repository.BidProductRepository;
 
+import com.tibame.group1.db.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -27,9 +29,8 @@ public class BidProductServiceImpl implements BidProductService {
 
     @Autowired private BidProductRepository bidProductRepository;
     @Autowired private BidProductImageRepository bidProductImageRepository;
-
-    // @Value("${bid.product.duration.unit}")
-    // private String durationUnit;
+    @Autowired private NoticeService noticeService;
+    @Autowired private MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -47,9 +48,6 @@ public class BidProductServiceImpl implements BidProductService {
     @Override
     public void updateBidProductReviewStatus(Integer productId, Integer newStatus)
             throws CheckRequestErrorException {
-        // find existing product
-        // update it status
-        // save updated product entity
         BidProductEntity product =
                 bidProductRepository
                         .findById(productId)
@@ -61,19 +59,34 @@ public class BidProductServiceImpl implements BidProductService {
             product.setStatus(BidProductStatus.START);
             Instant now = Instant.now();
             product.setStartTime(Timestamp.from(now));
-            ChronoUnit chronoUnit = ChronoUnit.HOURS;
+            ChronoUnit chronoUnit = ChronoUnit.DAYS;
             product.setEndTime(Timestamp.from(now.plus(product.getDuration(), chronoUnit)));
             product.setLastModified(Timestamp.from(now));
+            bidProductRepository.save(product);
+            // 發送通知
+            noticeService.memberNoticeCreate(
+                    memberRepository.findById(product.getSellerId()).get(),
+                    MemberNoticeEntity.NoticeCategory.BID_PRODUCT,
+                    "競標商品審核已通過",
+                    "您的競標商品：" + product.getName() + " 審核已通過",
+                    false);
         } else if (newStatus == -1) {
             product.setStatus(BidProductStatus.REJECT);
             product.setLastModified(Timestamp.from(Instant.now()));
+            bidProductRepository.save(product);
+            // 發送通知
+            noticeService.memberNoticeCreate(
+                    memberRepository.findById(product.getSellerId()).get(),
+                    MemberNoticeEntity.NoticeCategory.BID_PRODUCT,
+                    "競標商品審核未通過",
+                    "您的競標商品：" + product.getName() + " 審核未通過",
+                    false);
         }
-        bidProductRepository.save(product);
     }
 
     @Override
     public List<BidProductEntity> findByCompositeQuery(
-            Integer categoryId, String name, List<Integer> status) {
-        return bidProductRepository.findByCompositeQuery(categoryId, name, status);
+            Integer categoryId, Integer conditionId, String name, List<Integer> status) {
+        return bidProductRepository.findByCompositeQuery(categoryId, conditionId, name, status);
     }
 }

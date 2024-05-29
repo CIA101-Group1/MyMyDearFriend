@@ -10,35 +10,35 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
-    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+        <th:block th:replace="~{/fragments/css}"/>
     <!-- CSS
  ========================= -->
-    <!--bootstrap min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
-    <!--owl carousel min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
-    <!--slick min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
-    <!--magnific popup min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
-    <!--font awesome css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
-    <!--ionicons min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
-    <!--animate css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
-    <!--jquery ui min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
-    <!--slinky menu css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
-    <!--plugins css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+<!--    &lt;!&ndash;bootstrap min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">-->
+<!--    &lt;!&ndash;owl carousel min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">-->
+<!--    &lt;!&ndash;slick min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">-->
+<!--    &lt;!&ndash;magnific popup min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">-->
+<!--    &lt;!&ndash;font awesome css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">-->
+<!--    &lt;!&ndash;ionicons min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">-->
+<!--    &lt;!&ndash;animate css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">-->
+<!--    &lt;!&ndash;jquery ui min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+<!--    &lt;!&ndash;slinky menu css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">-->
+<!--    &lt;!&ndash;plugins css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">-->
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+<!--    &lt;!&ndash; Main Style CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">-->
 
-    <!-- add member css-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!--    &lt;!&ndash; add member css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">-->
 
     <!-- FilePond CSS -->
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
@@ -49,6 +49,11 @@
             border-color: #28004D; /* 使按鈕的邊框與背景色相同 */
             color: #fff; /* 文字顏色為白色 */
         }
+
+        .error-message {
+            color: red;
+        }
+
     </style>
 
 
@@ -109,7 +114,7 @@
                                         th:text="${category.categoryName}"></option>
                             </select>
                         </div>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -120,7 +125,7 @@
                                pattern=".{1,20}"
                                data-error="格式錯誤，且長度必需在1到20之間"
                                required="required">
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -131,7 +136,7 @@
                                min="0" max="9999999999" step="1"
                                data-error="請填入0-9數字，最多10個位數"
                                required="required">
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -142,7 +147,7 @@
                                min="0" max="9999999999" step="1"
                                data-error="請填入0-9數字，最多10個位數"
                                required="required">
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -153,7 +158,7 @@
                                   pattern=".{1,200}"
                                   data-error="格式錯誤，且長度必需在1到200之間"
                                   required="required"></textarea>
-                        <div class="help-block with-errors"></div>
+                        <div class="help-block with-errors error-message"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -168,7 +173,7 @@
                             required="required"
                             data-error="請上傳圖片"
                     />
-                    <div class="help-block with-errors"></div>
+                    <div class="help-block with-errors error-message"></div>
                 </div>
 
                 <input type="submit" value="新增" class="btn btn-block custom-orange-btn"/>

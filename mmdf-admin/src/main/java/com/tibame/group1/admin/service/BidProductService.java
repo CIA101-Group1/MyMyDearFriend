@@ -15,10 +15,5 @@ public interface BidProductService {
 
     void updateBidProductReviewStatus(Integer productId, Integer newStatus) throws CheckRequestErrorException;
 
-    // void update(Integer productId, BidProductAddReqDTO req, LoginSourceDTO loginSource) throws IOException, CheckRequestErrorException;
-
-    List<BidProductEntity> findByCompositeQuery(Integer categoryId, String name, List<Integer> status);
-
-    // Integer update(EmpUpdateReqDTO req) throws CheckRequestErrorException, IOException;
-
+    List<BidProductEntity> findByCompositeQuery(Integer categoryId, Integer conditionId, String name, List<Integer> status);
 }

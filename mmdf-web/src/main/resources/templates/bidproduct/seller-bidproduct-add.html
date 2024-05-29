@@ -20,6 +20,11 @@
             width: 20%;
             height: 100%;
         }
+        .btn-primary {
+            color: #fff !important;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
     </style>
 </head>
 <body>
@@ -83,8 +88,12 @@
                                     <div class="col-sm-10">
                                         <select id="duration" name="duration" class="form-control" required>
                                             <option value="1">1天</option>
+                                            <option value="2">2天</option>
                                             <option value="3">3天</option>
+                                            <option value="4">4天</option>
                                             <option value="5">5天</option>
+                                            <option value="6">6天</option>
+                                            <option value="7">7天</option>
                                         </select>
                                         <div class="invalid-feedback"></div>
                                     </div>
@@ -105,8 +114,8 @@
                                     </div>
                                 </div>
                                 <!-- <button class="btn btn-light" type="submit">送出</button> -->
-                                <!-- <input class="btn btn-dark float-right w-25" type="submit" value="送出"> -->
-                                <button type="submit">送出</button>
+                                <input class="btn btn-primary w-100" type="submit" value="送出">
+                                <!-- <button type="submit">送出</button> -->
                             </form>
                         </div>
                     </div>

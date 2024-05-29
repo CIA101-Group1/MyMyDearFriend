@@ -60,7 +60,6 @@ public class OrderServiceImpl implements OrderService {
         order.setBuyerId(buyer.getMemberId());
         order.setSellerId(req.getSellerId());
         order.setMemberCouponId1(req.getMemberCouponId1());
-        order.setMemberCouponId2(req.getMemberCouponId2());
         order.setPriceBeforeDiscount(req.getPriceBeforeDiscount());
         order.setDiscount(req.getDiscount());
         order.setPriceAfterDiscount(req.getPriceAfterDiscount());
@@ -93,7 +92,6 @@ public class OrderServiceImpl implements OrderService {
         buyerWalletHistory.setChangeAmount(order.getPriceAfterDiscount());
         buyerWalletHistory.setChangeTime(new Date());
         buyerWalletHistory.setChangeType(WalletCategory.PAYMENT);
-        buyerWalletHistory.setWalletAmount(buyerWalletAmount - order.getPriceAfterDiscount());
         walletHistoryRepository.save(buyerWalletHistory);
 
         // 創建賣家的 WalletHistoryEntity
@@ -102,7 +100,6 @@ public class OrderServiceImpl implements OrderService {
         sellerWalletHistory.setChangeAmount(order.getPriceBeforeDiscount() - order.getFee());
         sellerWalletHistory.setChangeTime(new Date());
         sellerWalletHistory.setChangeType(WalletCategory.DEPOSIT);
-        sellerWalletHistory.setWalletAmount(sellerWalletAmount+ order.getPriceBeforeDiscount() - order.getFee());
         walletHistoryRepository.save(sellerWalletHistory);
 
         // 建立訂單詳情
@@ -128,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
             productRepository.save(product);
 
             OrderDetailEntity orderDetail = new OrderDetailEntity();
-            orderDetail.setOrderId(order.getId());
+            orderDetail.setOrderId(order.getOrderId());
             orderDetail.setProductId(buyProduct.getProductId());
             orderDetail.setQuantity(buyProduct.getQuantity());
             orderDetail.setPrice(buyProduct.getPrice());
@@ -140,11 +137,11 @@ public class OrderServiceImpl implements OrderService {
                 buyer,
                 MemberNoticeEntity.NoticeCategory.GENERAL_PRODUCT,
                 "訂單已成立",
-                "恭喜訂單新增成功! 您的訂單編號: " + order.getId(),
+                "恭喜訂單新增成功! 您的訂單編號: " + order.getOrderId(),
                 true);
 
         OrderCreateResDTO resDTO = new OrderCreateResDTO();
-        resDTO.setOrderId(order.getId());
+        resDTO.setOrderId(order.getOrderId());
         return resDTO;
     }
 
@@ -209,9 +206,9 @@ public class OrderServiceImpl implements OrderService {
                 throw new CheckRequestErrorException("查無會員資料");
             }
             // 查詢訂單詳情
-            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getId(), loginSource);
+            List<OrderDetailResDTO> orderDetailList = orderDetail(order.getOrderId(), loginSource);
             // 將查詢資料轉換至 List<OrderResDTO>
-            res.setOrderId(order.getId());
+            res.setOrderId(order.getOrderId());
             res.setBuyerId(order.getBuyerId());
             res.setSellerId(order.getSellerId());
             res.setBuyerName(buyer.getName());
@@ -254,7 +251,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 將查詢資料轉換至 OrderResDTO
         OrderResDTO res = new OrderResDTO();
-        res.setOrderId(order.getId());
+        res.setOrderId(order.getOrderId());
         res.setBuyerId(order.getBuyerId());
         res.setSellerId(order.getSellerId());
         res.setMemberCouponId1(order.getMemberCouponId1());
@@ -352,7 +349,7 @@ public class OrderServiceImpl implements OrderService {
         order = orderRepository.save(order);
 
         OrderUpdateResDTO resDTO = new OrderUpdateResDTO();
-        resDTO.setOrderId(order.getId());
+        resDTO.setOrderId(order.getOrderId());
         return resDTO;
     }
 }

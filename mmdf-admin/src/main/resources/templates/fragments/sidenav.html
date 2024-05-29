@@ -12,7 +12,7 @@
                 <!-- 錢包 -->
                 <a class="nav-link" href="offline-market.html">錢包管理</a>
                 <!-- 優惠券 -->
-                <a class="nav-link" href="offline-market.html">優惠券管理</a>
+                <a onclick="goToCouponAll()" class="nav-link">優惠券管理</a>
                 <!-- 一般商品 -->
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                    data-bs-target="#ProductCollapse" aria-expanded="false" aria-controls="collapseLayouts2">
@@ -56,12 +56,26 @@
                 <div class="collapse" id="newsCollapse" aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/news/create">新增最新消息</a>
-                        <a class="nav-link" href="/news/review">最新消息列表</a>
+                        <a class="nav-link" onclick="goToNewsAll()">最新消息管理</a>
+                        <a class="nav-link" onclick="goToAddNews()">新增最新消息</a>
                     </nav>
                 </div>
                 <!-- 客服訊息 -->
-                <a class="nav-link" href="customer-service.html">客服聊天室</a>
+
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                   data-bs-target="#collapseLayouts2" aria-expanded="false" aria-controls="collapseLayouts2">
+                    客服訊息
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </a>
+                <div class="collapse" id="collapseLayouts2" aria-labelledby="headingOne"
+                     data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" onclick="goToChatroom()" >客服聊天室</a>
+                        <a class="nav-link" onclick="goToChatroomHistory()">聊天室紀錄</a>
+                    </nav>
+                </div>
                 <!-- 平台收益 -->
                 <a class="nav-link" href="customer-service.html">查看平台收益</a>
 
@@ -112,6 +126,16 @@
         window.location.href = url;
     }
 
+    function goToWalletRequest() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/wallets/getAll';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
     function goToBidProductAll() {
         var authorization = localStorage.getItem("authorization");
         var url = '/bidproduct/list';
@@ -149,6 +173,64 @@
             url += '?authorization=' + encodeURIComponent(authorization);
         }
         console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+    function goToChatroom() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/chatroom/service';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+    function goToChatroomHistory() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/chatroom/history';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMarketAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToProductAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/product/review';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToNewsAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/news/list';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToAddNews() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/news/add';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
+        window.location.href = url;
+    }
+
+    function goToCouponAll() {
+        var authorization = localStorage.getItem("authorization");
+        var url = '/coupon/all';
+        if(authorization) {
+            url += '?authorization=' + encodeURIComponent(authorization);
+        }
+        console.log('goToMemberAll href: ', url);
         window.location.href = url;
     }
 </script>

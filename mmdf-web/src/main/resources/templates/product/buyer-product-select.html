@@ -10,35 +10,35 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!--css-->
-    <!--    <th:block th:replace="~{/fragments/css}"/>-->
+        <th:block th:replace="~{/fragments/css}"/>
     <!-- CSS
  ========================= -->
-    <!--bootstrap min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">
-    <!--owl carousel min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">
-    <!--slick min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">
-    <!--magnific popup min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">
-    <!--font awesome css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">
-    <!--ionicons min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">
-    <!--animate css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">
-    <!--jquery ui min css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">
-    <!--slinky menu css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">
-    <!--plugins css-->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">
+<!--    &lt;!&ndash;bootstrap min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/bootstrap.min.css">-->
+<!--    &lt;!&ndash;owl carousel min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/owl.carousel.min.css">-->
+<!--    &lt;!&ndash;slick min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slick.css">-->
+<!--    &lt;!&ndash;magnific popup min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/magnific-popup.css">-->
+<!--    &lt;!&ndash;font awesome css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/font.awesome.css">-->
+<!--    &lt;!&ndash;ionicons min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/ionicons.min.css">-->
+<!--    &lt;!&ndash;animate css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/animate.css">-->
+<!--    &lt;!&ndash;jquery ui min css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/jquery-ui.min.css">-->
+<!--    &lt;!&ndash;slinky menu css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/slinky.menu.css">-->
+<!--    &lt;!&ndash;plugins css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/plugins.css">-->
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">
+<!--    &lt;!&ndash; Main Style CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="/assets/FrontEnd0516/css/style.css">-->
 
-    <!-- add member css-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!--    &lt;!&ndash; add member css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">-->
 </head>
 
 <body>
@@ -57,21 +57,18 @@
                 <aside class="sidebar_widget">
                     <div class="widget_inner">
                         <div class="widget_list widget_color">
-                            <h3>商品分類</h3>
+                            <h3><strong>商品分類&#x1F43E;&#x1F43E;&#x1F43E; </strong></h3>
                             <ul>
-                                <li>
-                                    <a href="#"> JAVA系列 <span>(6)</span></a>
-                                </li>
-                                <li>
-                                    <a href="#"> SQL系列 <span>(8)</span></a>
-                                </li>
-                                <li>
-                                    <a href="#"> Servlet系列 <span>(10)</span></a>
-                                </li>
+                                <li><a th:href="@{/buyer/proCategory/getOne/1}">&#x231A;3C</a></li>
+                                <li><a th:href="@{/buyer/proCategory/getOne/2}">&#x1F6B2;家具</a></li>
+                                <li><a th:href="@{/buyer/proCategory/getOne/3}">&#x1F4BC;服飾</a></li>
+                                <li><a th:href="@{/buyer/proCategory/getOne/4}">&#x1F484;彩妝</a></li>
+                                <li><a th:href="@{/buyer/proCategory/getOne/5}">&#x1F3B0;收藏品</a></li>
+                                <li><a th:href="@{/buyer/proCategory/getOne/6}">&#x1F47E;多啦口袋</a></li>
                             </ul>
                         </div>
                         <div class="widget_list widget_compare">
-                            <h3>Compare</h3>
+                            <h3><strong> &#x1F498; 熱門商品推薦 &#x1F498; </strong></h3>
                             <div class="shop_sidebar_product">
                                 <article class="single_product">
                                     <figure>
@@ -284,7 +281,7 @@
                 </div>
                 <!--shop toolbar end-->
                 <div class="row shop_wrapper">
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-12 " th:each="product : ${productPage.content}">
+                    <div class="product_grid col-lg-4 col-md-4 col-sm-6 col-12 " th:each="product : ${productPage.content}">
                         <article class="single_product">
                             <figure>
                                 <div class="product_thumb">
@@ -300,7 +297,7 @@
                                             <li class="quick_button"><a href="#" data-toggle="modal"
                                                                         data-target="#modal_box" title="quick view"> <i
                                                     class="icon icon-Eye"></i></a></li>
-                                            <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i
+                                            <li class="wishlist"><a th:onclick="|addToFavorite(${product.productId});|" title="Add to Wishlist"><i
                                                     class="icon icon-Heart"></i></a></li>
                                             <li class="compare"><a href="#" title="Add to Compare"><i
                                                     class="icon icon-MusicMixer"></i></a></li>
@@ -317,15 +314,14 @@
                                             <li><a href="#"><i class="icon icon-Star"></i></a></li>
                                         </ul>
                                     </div>
-                                    <h4 class="product_name" th:text="${product.name}"><a
-                                            th:href="@{/buyer/product/getOne/{productId}(productId=${product.productId})}">
-                                        <span style="font-size: large;"></span></a></h4>
+                                    <h4 class="product_name" th:text="${product.name}">
+                                        <span style="font-size: large;"></span></h4>
                                     <div class="price_box">
                                         <span class="current_price" th:text="${product.price}"></span>
                                     </div>
                                     <div class="add_to_cart">
-                                        <a href="orderlist.html" title="Add to cart">加入購物車</a>
-                                    </div>
+                                        <a title="Add to cart" th:onclick="|addToCart(${product.productId}, 1);|" data-product-id="${product.productId}">加入購物車</a>
+                                    </div>'
                                 </div>
                             </figure>
                         </article>
@@ -374,7 +370,6 @@
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
 <script src="/js/api-response-utils.js"></script>
-<script src="/js/api-response-utils.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -395,60 +390,60 @@
                 success(response) {
                     apiResponseJSON(response, {
                         onSuccess(data) {
-                            console.log(data);
+                            console.log(response.code);
                             // 清空表格数据
-                            $('.single_product').empty();
+                            $('.shop_wrapper').empty();
                             if (response.code === "0") {
                                 alert('搜索成功');
+                                $('#searchModal').modal('hide');
                                 // 遍历搜索结果并显示到页面上
                                 response.data.forEach(function (product) {
-                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? 'data:image/jpg;base64,' + product.productImgs[0].imageBase64 : '';
+                                    var imageSrc = product.productImgs && product.productImgs.length > 0 ? product.productImgs[0].image : '';
 
                                     // 构建产品HTML
                                     var productHTML = `
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
-                                        <article class="single_product">
-                                            <figure>
-                                                <div class="product_thumb">
-                                                    <a class="primary_img" href="/buyer/product/getOne/${product.productId}">
-                                                        <img src="${imageSrc}" style="height: 150px;width: 150px" alt=""/>
-                                                    </a>
-                                                    <div class="action_links">
-                                                        <ul>
-                                                            <li class="quick_button"><a href="#" data-toggle="modal" data-target="#modal_box" title="quick view"><i class="icon icon-Eye"></i></a></li>
-                                                            <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i class="icon icon-Heart"></i></a></li>
-                                                            <li class="compare"><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a></li>
-                                                        </ul>
+                                        <div class="product_grid col-lg-4 col-md-4 col-sm-6 col-12 ">
+                                            <article class="single_product">
+                                                <figure>
+                                                    <div class="product_thumb">
+                                                        <a class="primary_img" href="/buyer/product/getOne/${product.productId}">
+                                                            <img src="data:image/jpg;base64,${imageSrc}" style="height: 150px;width: 150px" alt=""/>
+                                                        </a>
+                                                        <div class="action_links">
+                                                            <ul>
+                                                                <li class="quick_button"><a href="#" data-toggle="modal" data-target="#modal_box" title="quick view"><i class="icon icon-Eye"></i></a></li>
+                                                                <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i class="icon icon-Heart"></i></a></li>
+                                                                <li class="compare"><a href="#" title="Add to Compare"><i class="icon icon-MusicMixer"></i></a></li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="product_content grid_content">
-                                                    <div class="product_rating">
-                                                        <ul>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                            <li><a href="#"><i class="icon icon-Star"></i></a></li>
-                                                        </ul>
+                                                    <div class="product_content grid_content">
+                                                        <div class="product_rating">
+                                                            <ul>
+                                                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                                <li><a href="#"><i class="icon icon-Star"></i></a></li>
+                                                            </ul>
+                                                        </div>
+                                                        <h4 class="product_name">${product.name}</h4>
+                                                        <div class="price_box">
+                                                            <span class="current_price">${product.price}</span>
+                                                        </div>
+                                                        <div class="add_to_cart">
+                                                            <a title="Add to cart" th:onclick="|addToCart(${product.productId}, 1);|" data-product-id="${product.productId}">加入購物車</a>
+                                                        </div>
                                                     </div>
-                                                    <h4 class="product_name"><a href="/buyer/product/getOne/${product.productId}">${product.name}</a></h4>
-                                                    <div class="price_box">
-                                                        <span class="current_price">${product.price}</span>
-                                                    </div>
-                                                    <div class="add_to_cart">
-                                                        <a href="orderlist.html" title="Add to cart">加入購物車</a>
-                                                    </div>
-                                                </div>
-                                            </figure>
-                                        </article>
-                                    </div>
+                                                </figure>
+                                            </article>
+                                            </div>
                                 `;
-
                                     // 添加产品到搜索结果
-                                    $('.product_grid').append(productHTML);
+                                    $('.shop_wrapper').append(productHTML);
                                 });
                             } else {
-                                alert('搜索失败！' + response.message);
+                                alert('搜索不成功！' + response.message);
                                 console.log(response);
                             }
                         }
@@ -460,6 +455,8 @@
                 }
             });
         });
+
+
     });
 </script>
 

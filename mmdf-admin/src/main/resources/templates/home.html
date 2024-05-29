@@ -8,6 +8,94 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <title>MMDF 後台</title>
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /* 自定義表格樣式 */
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            white-space: nowrap; /* 不換行 */
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding-right: 2rem; /* 預留空間給倒三角形 */
+        }
+
+        .custom-select-wrapper::after {
+            content: "\f0d7"; /* Font Awesome Unicode for caret down */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(0);
+            pointer-events: none;
+        }
+    </style>
+
+    <style>
+        /* 樣式設置 */
+        .tab-container {
+            border-bottom: 1px solid #ccc;
+            display: flex;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            background-color: white;
+        }
+
+        .tab.active {
+            border-color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -21,9 +109,45 @@
     <th:block th:replace="~{/fragments/sidenav}"/>
     <!-- 主要內容 -->
     <div id="layoutSidenav_content">
+        <!-- 导航 -->
+        <div class="tab-container">
+            <!-- 初始的標籤 -->
+            <div class="tab" onclick="showTabContent('new')">內部公告</div>
+            <div class="tab" onclick="showTabContent('supplier')">各部門分機</div>
+        </div>
+
+        <!-- 標籤內容 -->
+        <div id="new" class="tab-content">
+            <h3><strong>公告:</strong></h3>
+            <p>親愛的員工，<br>
+                &nbsp &nbsp &nbsp &nbsp 我們很高興地宣布，我們的二手商城將推出一項新的政策，旨在提升我們的服務品質並保護我們的客戶和員工。<br>
+
+                從即日起，所有上架的二手商品都必須通過我們的質量檢查。這意味著，每一項商品在上架前，都需要經過我們的專業團隊進行詳細的檢查，以確保商品的品質符合我們的標準。
+
+                此外，我們也將實施新的退貨政策。如果客戶在購買商品後的30天內發現商品有任何問題，他們可以申請退貨或換貨。我們的客服團隊將會在收到申請後的48小時內回覆。
+
+                &nbsp 我們相信，這些新政策將有助於提升我們的服務品質，並贏得客戶的信任。我們期待你們的支持和配合，一起為我們的客戶提供更好的服務。<br>
+
+                感謝你們的理解和配合。<br><br>
+
+                敬祝各位同仁 &nbsp MMDF商城</p>
+        </div>
+        <div id="supplier" class="tab-content">
+            <h4>各部門分機:</h4>
+            <pre>
+                客服部門：            行銷部門：
+                張小姐：分機101       黃先生：分機401
+                李先生：分機102       高小姐：分機402
+                王小姐：分機103       吳小姐：分機403
+                採購部門：            陳小姐：分機404
+                陳先生：分機201       物流部門：
+                林小姐：分機202       鄭先生：分機301
+                                  &nbsp  蔡小姐：分機302
+            </pre>
+        </div>
         <main>
             <div class="container-fluid px-4">
-                <h2 class="mt-4">首頁</h2>
+                <img src="/image/2Logo.png" alt="Homepage Image" class="img-fluid"/>
             </div>
         </main>
     </div>
@@ -31,6 +155,35 @@
 
 <!--js-->
 <th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // 函數：顯示特定標籤的內容
+    function showTabContent(tabName) {
+        // 隱藏所有標籤內容
+        var tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(function (content) {
+            content.classList.remove('active');
+        });
+
+        // 顯示選定標籤的內容
+        var selectedTabContent = document.getElementById(tabName);
+        selectedTabContent.classList.add('active');
+
+        // 取消選定所有標籤
+        var tabs = document.querySelectorAll('.tab');
+        tabs.forEach(function (tab) {
+            tab.classList.remove('active');
+        });
+
+        // 選定並突顯選定標籤
+        var selectedTab = document.querySelector('[onclick="showTabContent(\'' + tabName + '\')"]');
+        selectedTab.classList.add('active');
+    }
+
+</script>
 
 </body>
 

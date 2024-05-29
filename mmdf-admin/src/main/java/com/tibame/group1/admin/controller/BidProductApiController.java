@@ -34,7 +34,7 @@ public class BidProductApiController {
     }
 
     @PutMapping("/bidproduct/{productId}")
-    public @ResponseBody ResDTO<?> updateReviewStatus(
+    public @ResponseBody ResDTO<?> updateBidProductReviewStatus(
             @PathVariable("productId") Integer productId,
             @RequestParam("status") Integer newReviewStatus)
             throws DateException, IOException, CheckRequestErrorException {
@@ -44,13 +44,13 @@ public class BidProductApiController {
     }
 
     @GetMapping("/bidproduct/query")
-    // @CheckLogin(isVerified = false)
     public ResDTO<List<BidProductEntity>> findByCompositeQuery(
             @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "conditionId", required = false) Integer conditionId,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "status", required = false) List<Integer> status) {
         ResDTO<List<BidProductEntity>> res = new ResDTO<>();
-        res.setData(bidProductService.findByCompositeQuery(categoryId, name, status));
+        res.setData(bidProductService.findByCompositeQuery(categoryId, conditionId, name, status));
         return res;
     }
 }
