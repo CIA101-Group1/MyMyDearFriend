@@ -201,8 +201,7 @@ public class MarketServiceImpl implements MarketService {
             // 創建賣家的 WalletHistoryEntity
             WalletHistoryEntity sellerWalletHistory = new WalletHistoryEntity();
             sellerWalletHistory.setMember(memberEntity); // 設置會員ID
-            sellerWalletHistory.setChangeAmount(
-                    memberEntity.getWalletAmount() - market.getMarketFee());
+            sellerWalletHistory.setChangeAmount(memberEntity.getWalletAmount());
             sellerWalletHistory.setChangeTime(new Date());
             sellerWalletHistory.setChangeType(WalletCategory.MARKET);
             walletHistoryRepository.save(sellerWalletHistory);
@@ -262,7 +261,7 @@ public class MarketServiceImpl implements MarketService {
         // 創建賣家的 WalletHistoryEntity
         WalletHistoryEntity sellerWalletHistory = new WalletHistoryEntity();
         sellerWalletHistory.setMember(memberEntity); // 設置會員ID
-        sellerWalletHistory.setChangeAmount(memberEntity.getWalletAmount() + marketEntity.getMarketFee());
+        sellerWalletHistory.setChangeAmount(memberEntity.getWalletAmount());
         sellerWalletHistory.setChangeTime(new Date());
         sellerWalletHistory.setChangeType(WalletCategory.REFUND);
         walletHistoryRepository.save(sellerWalletHistory);
