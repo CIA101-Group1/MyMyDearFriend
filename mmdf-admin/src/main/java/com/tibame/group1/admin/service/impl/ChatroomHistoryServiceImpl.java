@@ -20,6 +20,9 @@ public class ChatroomHistoryServiceImpl implements ChatroomHistoryService {
         //        List<ServiceChatroomEntity> chatroomEntities = new
         // ArrayList<ServiceChatroomEntity>();
         String type = reqDTO.getType();
+        if(type == null){
+            return null;
+        }
         List<ServiceChatroomEntity> ents = null;
         switch (type) {
             case "memberId":
