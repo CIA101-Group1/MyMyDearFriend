@@ -18,7 +18,7 @@ public class ProductImgEntity {
     @Column(name = "product_id")
     private Integer productId;
 
-    @Column(name = "image")
+    @Column(name = "image", columnDefinition = "MEDIUMBLOB")
     private byte[] image;
 
     @ManyToOne

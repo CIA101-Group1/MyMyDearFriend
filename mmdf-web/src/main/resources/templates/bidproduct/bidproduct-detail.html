@@ -11,6 +11,17 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
     <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .blink-animation {
+            animation: blink 1s infinite;
+        }
+    </style>
 </head>
 <body>
 <!--header-->
@@ -335,7 +346,18 @@
     }
 
     function showBidUpdate(message) {
+        // 選擇產品價格元素
+        var priceElement = $("#currentPrice");
+
+        // 將類名修改為啟動閃爍效果
+        priceElement.addClass("blink-animation");
+
         getCurrentPrice();
+
+        // 在一段時間後移除閃爍效果，避免持續閃爍
+        setTimeout(function() {
+            priceElement.removeClass("blink-animation");
+        }, 3000); // 這裡的時間可以根據需要調整
     }
 
     function updateCountdownTimer() {

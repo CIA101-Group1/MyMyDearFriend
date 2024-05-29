@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>買家競標訂單</title>
+    <title>參與中的競標</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!--css-->
@@ -33,7 +33,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content dashboard_content">
                         <div class="tab-pane fade active">
-                            <h3>買家競標訂單</h3>
+                            <h3>參與中的競標</h3>
                             <table id="bidOrderTable" class="table table-bordered dt-responsive nowrap"
                                    style="width: 100%;">
                             </table>
@@ -91,7 +91,7 @@
 
     function fetchBidOrders() {
         $.ajax({
-            url: "/api/buyer/bidorder",
+            url: "/api/buyer/bidproduct/record",
             type: "GET",
             headers: {
                 "authorization": localStorage.getItem("authorization")
@@ -101,30 +101,27 @@
                 $('#bidOrderTable').dataTable({
                     "data": response.data,
                     "columns": [
-                        {data: "orderId", title: "訂單編號"},
-                        {data: "productId", title: "商品編號"},
-                        {data: "subtotal", title: "金額"},
-                        {data: "createTime", title: "建立時間"},
-                        {data: "status", title: "訂單狀態"},
+                        {"data": "productId", title: "編號"},
                         {
-                            data: "orderId", title: "操作",
-                            render: function (data, type, row) {
-                                let viewButton = `<button><i class="fa fa-eye" aria-hidden="true" onclick="viewOrder(${data})"></i></button>`;
-                                if (row.statusCode === 1) {
-                                    return `
-                                    ${viewButton}
-                                    <form action="/bidorder/checkout/${data}"><button>付款</button></form>
-                                    `
-                                } else if (row.statusCode === 3) {
-                                    return `
-                                    ${viewButton}
-                                    <button onclick="completeOrder(${data})">完成訂單</button>
-                                    `
-                                } else {
-                                    return viewButton;
-                                }
+                            "data": "images",title: "縮圖",
+                            "render": function (data, type, full, meta) {
+                                return `<img src="data:image/jpeg;base64, ${data[0].image}" width="80px" alt="商品縮圖"/>`;
+                            }
+                        },
+                        {"data": "name", title: "商品名稱"},
+                        {"data": "startPrice", title: "起標價"},
+                        {"data": "status", title: "商品狀態"},
+                        {
+                            "data": "productId", title: "操作",
+                            "render": function (data, row, full, meta) {
+                                return `
+                                <a href="/bidproduct-detail/${data}">
+                                <input type="button" value="詳情">
+                                </a>
+                                `;
                             }
                         }
+
                     ],
                     "columnDefs": [
                         {
@@ -219,49 +216,6 @@
                 console.error(err);
             }
         });
-    }
-
-    function goCheckout(orderId) {
-        $.ajax({
-            url: `/bidorder/${orderId}`,
-            type: "GET",
-            headers: {
-                "authorization": localStorage.getItem("authorization")
-            },
-            success: function (response) {
-                console.log(response);
-            },
-            error: function (err) {
-                console.error(err);
-            }
-        });
-    }
-
-    function completeOrder(orderId) {
-        if (confirm("確定要完成嗎？")) {
-            $.ajax({
-                url: `/api/bidorder/${orderId}`,
-                type: "PUT",
-                headers: {
-                    "authorization": localStorage.getItem("authorization"),
-                },
-                data: {
-                    status: "COMPLETED"
-                },
-                success: function (response) {
-                    console.log(response)
-                    if (response.code === "0") {
-                        alert("操作成功");
-                        location.reload();
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function (err) {
-                    console.error(err);
-                }
-            });
-        }
     }
 
 </script>
