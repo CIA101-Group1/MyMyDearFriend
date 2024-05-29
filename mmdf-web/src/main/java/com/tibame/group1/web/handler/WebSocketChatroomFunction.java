@@ -147,7 +147,7 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
                 //                System.out.println(latestMessageRedis);
                 JsonObject latestMessageDTO = gson.fromJson(latestMessageRedis, JsonObject.class);
                 if (latestMessageDTO != null) {
-                    if (latestMessageDTO.get("img")!=null || !"".equals(latestMessageDTO.get("img").toString())){
+                    if (latestMessageDTO.get("img")!=null){
                         dto.setLatestMessage("圖片");
                     } else {
                         String latestMessage = latestMessageDTO.get("message").getAsString();
