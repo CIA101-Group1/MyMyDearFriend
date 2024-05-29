@@ -227,6 +227,11 @@
 
                                 // 插入市集資料
                                 data.forEach(market => {
+                                    let applicantPopulation = market.applicantPopulation;
+                                    if (applicantPopulation === null || applicantPopulation === undefined) {
+                                        applicantPopulation = 0;
+                                    }
+
                                     $("#marketTable tbody").append(`
                                      <tr>
                                         <td>${market.marketId}</td>
@@ -235,7 +240,7 @@
                                         <td>${formatDate(market.marketStart)}</td>
                                         <td>${formatDate(market.startDate)}</td>
                                         <td>${formatDate(market.endDate)}</td>
-                                        <td>${market.applicantPopulation}</td>
+                                        <td>${applicantPopulation}</td>
                                         <td>${convertStatusToChinese(market.marketStatus)}</td>
                                         <td><img class="preview-image" src="${market.marketImage}" alt="Market Image"></td>
                                         <td><button class="btn btn-primary detail-button" data-market-id="${market.marketId}">詳細資料</button>
@@ -330,7 +335,7 @@
             case 1:
                 return "尚未上架";
             case 2:
-                return "以上架";
+                return "已上架";
             case 3:
                 return "報名已結束";
             default:
@@ -340,4 +345,3 @@
 </script>
 </body>
 </html>
-
