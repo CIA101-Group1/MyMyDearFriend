@@ -6,6 +6,11 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>我的報名紀錄</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <!-- CSS -->
@@ -171,9 +176,12 @@
                 data: JSON.stringify(userData),
                 success(response) {
                     apiResponseJSON(response, {
-                        onSuccess(data) {
+                        onSuccess() {
                             $("#modalBody").html("取消報名成功");
                             $("#myModal").modal("show");
+                            $("#myModal").on('hidden.bs.modal', function () {
+                                location.reload(); // 在模态框关闭后刷新页面
+                            });
                         },
                         onError(message) {
                             $("#modalBody").html(message);
@@ -215,8 +223,6 @@
                 return "未知狀態";
         }
     }
-
-
 </script>
 </body>
 </html>
