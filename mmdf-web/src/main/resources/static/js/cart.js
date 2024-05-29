@@ -158,7 +158,7 @@ function getMiniCart() {
                             </div>
                             <div class="cart_info">
                                 <input id="productId" value="${cartItem.productId}" type="hidden" />
-                                <a href="#">${cartItem.productName}</a>
+                                <a href="/buyer/product/getOne/${cartItem.productId}">${cartItem.productName}</a>
                                 <p>${cartItem.quantity} x <span> $${cartItem.price} </span></p>
                             </div>
                             <div class="cart_remove">

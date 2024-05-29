@@ -146,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResDTO> orderGetAll(LoginSourceDTO loginSource, OrderMemberIdentity identity)
+    public List<OrderResDTO> orderGetAll(LoginSourceDTO loginSource, OrderMemberIdentity identity, OrderStatus orderStatus)
             throws CheckRequestErrorException {
         List<OrderEntity> orderList = new ArrayList<>();
         List<OrderResDTO> resList = new ArrayList<>();
@@ -157,15 +157,19 @@ public class OrderServiceImpl implements OrderService {
             throw new CheckRequestErrorException("查無會員資料");
         }
 
+        Byte status = null;
+        if (orderStatus != OrderStatus.ALL) {
+            status = orderStatus.getCode();
+        }
+
         // 判斷使用者身分
         switch (identity.name()) {
-
                 // 取得使用者全部訂單
             case "BOTH":
                 // 查詢訂單，檢查訂單是否存在
                 orderList =
-                        orderRepository.findBySellerIdOrBuyerIdOrderByCreateTimeDesc(
-                                user.getMemberId(), user.getMemberId());
+                        orderRepository.findBySellerIdOrBuyerId(
+                                user.getMemberId(), user.getMemberId(), status);
                 if (orderList.isEmpty()) {
                     log.warn("查無訂單");
                     throw new CheckRequestErrorException("查無訂單");
@@ -175,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
                 // 取得 Buyer 全部訂單
             case "BUYER":
                 // 查詢訂單，檢查訂單是否存在
-                orderList = orderRepository.findByBuyerIdOrderByCreateTimeDesc(user.getMemberId());
+                orderList = orderRepository.findByBuyerId(user.getMemberId(), status);
                 if (orderList.isEmpty()) {
                     log.warn("查無訂單");
                     throw new CheckRequestErrorException("查無訂單");
@@ -185,7 +189,7 @@ public class OrderServiceImpl implements OrderService {
                 // 取得 Seller 全部訂單
             case "SELLER":
                 // 查詢訂單，檢查訂單是否存在
-                orderList = orderRepository.findBySellerIdOrderByCreateTimeDesc(user.getMemberId());
+                orderList = orderRepository.findBySellerId(user.getMemberId(), status);
                 if (orderList.isEmpty()) {
                     log.warn("查無訂單");
                     throw new CheckRequestErrorException("查無訂單");
