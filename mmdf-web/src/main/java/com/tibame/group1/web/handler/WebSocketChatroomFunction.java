@@ -145,10 +145,14 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
                 //                System.out.println(lastIndex);
                 String latestMessageRedis = listOps.index(key, lastIndex);
                 //                System.out.println(latestMessageRedis);
-                MessageDTO latestMessageDTO = gson.fromJson(latestMessageRedis, MessageDTO.class);
+                JsonObject latestMessageDTO = gson.fromJson(latestMessageRedis, JsonObject.class);
                 if (latestMessageDTO != null) {
-                    String latestMessage = latestMessageDTO.getMessage();
-                    dto.setLatestMessage(latestMessage);
+                    if (latestMessageDTO.get("img")!=null || !"".equals(latestMessageDTO.get("img").toString())){
+                        dto.setLatestMessage("圖片");
+                    } else {
+                        String latestMessage = latestMessageDTO.get("message").getAsString();
+                        dto.setLatestMessage(latestMessage);
+                    }
                 }
                 friendsInfo.add(dto);
             }

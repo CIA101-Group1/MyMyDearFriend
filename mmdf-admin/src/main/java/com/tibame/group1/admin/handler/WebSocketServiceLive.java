@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.tibame.group1.admin.dto.*;
 import com.tibame.group1.admin.service.JwtService;
+import com.tibame.group1.db.entity.CannedMessageEntity;
 import com.tibame.group1.db.entity.ServiceChatroomEntity;
+import com.tibame.group1.db.repository.CannedMessageRepository;
 import com.tibame.group1.db.repository.ServiceChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
@@ -31,6 +33,8 @@ public class WebSocketServiceLive implements WebSocketHandler {
     @Autowired private JwtService jwtService;
 
     @Autowired private ServiceChatroomRepository serviceChatroomRepository;
+
+    @Autowired private CannedMessageRepository cannedMessageRepository;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {}
@@ -72,8 +76,11 @@ public class WebSocketServiceLive implements WebSocketHandler {
             services.put(dto.getEmployeeId(),session);
             servicesId.put(session,dto.getEmployeeId());
             Map<String,String> init = new HashMap<>();
+            List<String> list = cannedMessageRepository.getMessageByServiceId(dto.getEmployeeId());
+            String listJson = gson.toJson(list);
             init.put("type","init");
             init.put("serviceId",servicesId.get(session).toString());
+            init.put("cdMessage",listJson);
             session.sendMessage(new TextMessage(gson.toJson(init)));
         }
 
@@ -145,6 +152,21 @@ public class WebSocketServiceLive implements WebSocketHandler {
 //            souerDTO.setType("getChatHistory");
             session.sendMessage(new TextMessage(gson.toJson(resp)));
         return;
+        }
+        if ("addCannedMessage".equals(type)){
+            CannedMessageEntity cdEnt = new CannedMessageEntity();
+            cdEnt.setServiceId(jsonObj.get("serviceId").getAsInt());
+            cdEnt.setMessage(jsonObj.get("message").getAsString());
+            cdEnt = cannedMessageRepository.save(cdEnt);
+            return;
+        }
+        if ("delCannedMessage".equals(type)){
+            Integer serviceId = jsonObj.get("serviceId").getAsInt();
+            String cdMessage =jsonObj.get("message").getAsString();
+            System.out.println(cdMessage + "----" + serviceId);
+            cannedMessageRepository.deleteByServiceIdAndMessage(serviceId,cdMessage);
+
+            return;
         }
         System.out.println("沒有方法");
     }

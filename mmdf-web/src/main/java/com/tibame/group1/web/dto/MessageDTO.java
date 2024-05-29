@@ -15,5 +15,5 @@ public class MessageDTO {
     private String Integer;
     private String message;
     private Timestamp date;//XXX
-    private String img;
+    private byte[] img;
 }

@@ -53,7 +53,6 @@ public class RedisAndSQLConnectSeviceImpl implements RedisAndSQLConnectSevice {
                 ListOperations opsList = redisTemplate.opsForList();
                 for (MessageEntity messageEnt : messages) {
                     // ------阻擋存入已重複的訊息------//
-
                     redis.setMessage(messageEnt.getMessage());
                     redis.setReceiver(messageEnt.getReceiver());
                     redis.setSender(messageEnt.getSender());

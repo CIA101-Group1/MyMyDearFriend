@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // socketInit.send(JSON.stringify({"type": "sendChatWebsocket"}));
     }
 
-    socketChat.onopen = (event) =>{
+    socketChat.onopen = (event) => {
         const authorization = localStorage.getItem('authorization');
         socketChat.send(JSON.stringify({"type": "init", "authorization": authorization}));
         console.log('connected - chat');
@@ -61,17 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // const socketChat = new WebSocket(chat);
     socketChat.onmessage = (chat) => {
         const jsonObj = JSON.parse(chat.data);
-    console.log("取得續錫:" + jsonObj.type);
+        console.log("取得續錫:" + jsonObj.type);
 
         if (jsonObj.type === "getHistory") {
             console.log('get history');
-            loadChatHistory(jsonObj.message,jsonObj.sender);
+            loadChatHistory(jsonObj.message, jsonObj.sender);
         }
         if (jsonObj.type === "chat") {
 
         }
         if (jsonObj.type === 'newMessage') {
-            displayMessage(jsonObj.message, 'received');
+            if (jsonObj.img) {
+                displayImg(jsonObj.img, 'received');
+            } else {
+                displayMessage(jsonObj.message, 'received');
+            }
             updateLatestMessage(jsonObj.sender, jsonObj.message);
             // 如果當前聊天對象不是發送訊息的人，則顯示提醒並將好友移到最頂部
             console.log("取得資料")
@@ -108,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 移動好友項目至最頂部
     function moveFriendToTop(friend) {
         // const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
-        const listItem = document.getElementById(friend+"info");
+        const listItem = document.getElementById(friend + "info");
         if (listItem) {
             friendList.prepend(listItem);
         }
@@ -116,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 加載好友列表
     function loadFriends(friends) {
-        if(friends === undefined || friends === null) {
+        if (friends === undefined || friends === null) {
             return;
         }
         friends.forEach(friend => {
@@ -163,13 +167,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 加載聊天歷史記錄
-    function loadChatHistory(friendMessages,memberId) {
+    function loadChatHistory(friendMessages, memberId) {
         // 這裡可以加入獲取聊天記錄的程式碼
         chatMessages.innerHTML = '';
         var messages = JSON.parse(friendMessages);
         messages.forEach(message => {
             var messageJson = JSON.parse(message);
             console.log(messageJson.message);
+            if (messageJson.img) {
+                displayImg(messageJson.img, messageJson.sender == memberId ? 'sent' : 'received')
+                return;
+            }
             displayMessage(messageJson.message, messageJson.sender == memberId ? 'sent' : 'received');
         });
     }
@@ -183,12 +191,30 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    function displayImg(message, type) {
+        // const div = document.createElement('div');
+        const img = document.createElement('img');
+        var blob = new Blob([new Uint8Array(message)], { type: 'image/*' })
+        img.classList.add('message', type);
+        img.src = URL.createObjectURL(blob);
+        img.alt = '圖片';
+        // img.style.maxWidth = '20%';
+        // img.style.maxHeight = '20%';
+        chatMessages.appendChild(img);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
     // 點擊發送按鈕
     sendButton.addEventListener('click', () => {
         const message = messageInput.value;
         if (message && currentChat) {
             displayMessage(message, 'sent');
-            socketChat.send(JSON.stringify({type: 'chat', message: message, receiver: currentChat, memberId: memberId}));
+            socketChat.send(JSON.stringify({
+                type: 'chat',
+                message: message,
+                receiver: currentChat,
+                memberId: memberId
+            }));
             var pid = document.getElementById(currentChat);
             pid.textContent = message;
             // socketInit.send(JSON.stringify({"type": "getFriends"}));
@@ -197,18 +223,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 選擇檔案
-    fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
-        if (file && currentChat) {
+    // document.getElementById('fileInput').addEventListener('change', (event) => {
+    //     const file = event.target.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = (e) => {
+    //             if (currentChat) {
+    //                 const message = {
+    //                     type: 'chat',
+    //                     memberId: memberId,
+    //                     receiver: currentChat,
+    //                     message: '',
+    //                     image: e.target.result
+    //                 };
+    //                 socketChat.send(JSON.stringify(message));
+    //                 displayImg(message, 'sent');
+    //             }
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // });
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
             const reader = new FileReader();
-            reader.onload = () => {
-                const base64 = reader.result;
-                socket.send(JSON.stringify({type: 'file', content: base64, fileName: file.name, to: currentChat}));
-            };
+            reader.onload = function (e) {
+                const div = document.createElement('div');
+                div.classList.add('message', "sent");
+                const image = document.createElement('img');
+                image.classList.add('modal-content');
+                image.src = e.target.result;
+                // document.getElementById('imageContainer').appendChild(image);
+                div.appendChild(image);
+                chatMessages.appendChild(div);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                const imageData = event.target.result;
+                console.log(imageData);
+                console.log(currentChat);
+                const message = {
+                    type: 'chat',
+                    img: image.src,
+                    message: "",
+                    receiver: currentChat,
+                    memberId: memberId
+
+                };
+                socketChat.send(JSON.stringify(message));
+            }
+
             reader.readAsDataURL(file);
         }
     });
+    // 選擇檔案
+    // fileInput.addEventListener('change', () => {
+    //     const file = fileInput.files[0];
+    //     if (file && currentChat) {
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             const base64 = reader.result;
+    //             socket.send(JSON.stringify({type: 'file', content: base64, fileName: file.name, to: currentChat}));
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // });
 
     // // 點擊好友欄按鈕
     // toggleFriendsList.addEventListener('click', () => {
@@ -241,6 +318,13 @@ document.addEventListener('DOMContentLoaded', () => {
     messageInput.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             sendButton.click();
+        }
+    });
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file && !file.type.startsWith('image/')) {
+            alert('只能上傳圖片檔案');
+            event.target.value = ''; // 清空選擇的文件
         }
     });
     loadFriends();
