@@ -144,15 +144,16 @@ function getMiniCart() {
             "authorization": localStorage.getItem("authorization")
         },
         success(response) {
-            let cartList = response.data;
-            let total = 0;
-            let count = 0;
+            if(response.code == 0){
+                let cartList = response.data;
+                let total = 0;
+                let count = 0;
 
-            cartList.forEach(function (cartItem) {
-                count++;
-                total += cartItem.subtotal;
-                $("div.cart_gallery").append(
-                    `<div class="cart_item">
+                cartList.forEach(function (cartItem) {
+                    count++;
+                    total += cartItem.subtotal;
+                    $("div.cart_gallery").append(
+                        `<div class="cart_item">
                             <div class="cart_img">
                                 <a ><img id="cart_image" src="data:image/jpeg;base64,${cartItem.imageBase64}" alt="商品圖片" style="height: 50px;width: 50px"/></a>
                             </div>
@@ -165,16 +166,16 @@ function getMiniCart() {
                                 <a id="mini_cart_remove"><i class="ion-ios-close-outline"></i></a>
                             </div>
                         </div>`
-                );
-            });
-            $("span.price").text("$" + total);
-            if(count === 0){
-                $("a#cart_count").html(`<i class="icon icon-FullShoppingCart"></i>`);
-            }else {
-                $("a#cart_count").html(`<i class="icon icon-FullShoppingCart"></i>
+                    );
+                });
+                $("span.price").text("$" + total);
+                if(count === 0){
+                    $("a#cart_count").html(`<i class="icon icon-FullShoppingCart"></i>`);
+                }else {
+                    $("a#cart_count").html(`<i class="icon icon-FullShoppingCart"></i>
                 <span id="count" class="item_count">${count}</span>`);
+                }
             }
-
         },
         error(xhr, status, error) {
             console.error("There was a problem :", error);
@@ -198,41 +199,42 @@ function getCart() {
             "authorization": localStorage.getItem("authorization")
         },
         success(response) {
-            let cartList = response.data;
-            let total = 0;
-            let sellers = {};
+            if(response.code == 0){
+                let cartList = response.data;
+                let total = 0;
+                let sellers = {};
 
-            // 按照sellerId分類購物車項目
-            cartList.forEach(function (cartItem) {
-                total += cartItem.subtotal;
-                if (!sellers[cartItem.sellerId]) {
-                    sellers[cartItem.sellerId] = [];
-                }
-                sellers[cartItem.sellerId].push(cartItem);
-            });
+                // 按照sellerId分類購物車項目
+                cartList.forEach(function (cartItem) {
+                    total += cartItem.subtotal;
+                    if (!sellers[cartItem.sellerId]) {
+                        sellers[cartItem.sellerId] = [];
+                    }
+                    sellers[cartItem.sellerId].push(cartItem);
+                });
 
-            // 清空現有的購物車表格
-            $("#cart_tbody").empty();
+                // 清空現有的購物車表格
+                $("#cart_tbody").empty();
 
-            // 生成各個seller的表格
-            for (let sellerId in sellers) {
-                let items = sellers[sellerId];
-                let sellerTotal = 0;
+                // 生成各個seller的表格
+                for (let sellerId in sellers) {
+                    let items = sellers[sellerId];
+                    let sellerTotal = 0;
 
-                // 為每個賣家插入分類行
-                $("#cart_tbody").append(
-                    `<tr>
+                    // 為每個賣家插入分類行
+                    $("#cart_tbody").append(
+                        `<tr>
                         <td colspan="1" class="seller">
                         <input type="checkbox" id="checkbox${sellerId}" class="seller-checkbox form-check-input" data-seller-id="${sellerId}" style="margin-right: 20px">
                         <label class="form-check-label" for="checkbox${sellerId}">賣家: ${items[0].sellerName}</label></td>
                         <td colspan="5"></td>
                     </tr>`
-                );
+                    );
 
-                items.forEach(function (cartItem) {
-                    sellerTotal += cartItem.subtotal;
-                    $("#cart_tbody").append(
-                        `<tr data-seller-id="${sellerId}">
+                    items.forEach(function (cartItem) {
+                        sellerTotal += cartItem.subtotal;
+                        $("#cart_tbody").append(
+                            `<tr data-seller-id="${sellerId}">
                             <td class="product_thumb">
                                 <a><img id="cart_image" src="data:image/jpeg;base64,${cartItem.imageBase64}" alt="商品圖片" style="height: 80px;width: 80px"/></a>
                             </td>
@@ -250,15 +252,16 @@ function getCart() {
                                 <a id="remove"><i class="fa fa-trash-o"></i></a>
                             </td>
                         </tr>`
-                    );
+                        );
+                    });
+                }
+
+                // 監聽賣家選擇框的點擊事件，確保只能勾選一個賣家
+                $(".seller-checkbox").on('change', function() {
+                    $(".seller-checkbox").not(this).prop('checked', false);
+                    updateSelectedSellerTotal();
                 });
             }
-
-            // 監聽賣家選擇框的點擊事件，確保只能勾選一個賣家
-            $(".seller-checkbox").on('change', function() {
-                $(".seller-checkbox").not(this).prop('checked', false);
-                updateSelectedSellerTotal();
-            });
         },
         error(xhr, status, error) {
             console.error("There was a problem :", error);
