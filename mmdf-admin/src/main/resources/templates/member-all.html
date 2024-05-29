@@ -90,14 +90,14 @@
                             <option value="false">未驗證</option>
                         </select>
                     </div>
-<!--                    <div class="col-md-3 custom-select-wrapper">-->
-<!--                        <label for="sellerStatusFilter" style="margin-bottom: 5px;">賣家功能狀態</label>-->
-<!--                        <select id="sellerStatusFilter" class="form-control">-->
-<!--                            <option value="">所有</option>-->
-<!--                            <option value="true">已開通</option>-->
-<!--                            <option value="false">未開通</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
+                    <!--                    <div class="col-md-3 custom-select-wrapper">-->
+                    <!--                        <label for="sellerStatusFilter" style="margin-bottom: 5px;">賣家功能狀態</label>-->
+                    <!--                        <select id="sellerStatusFilter" class="form-control">-->
+                    <!--                            <option value="">所有</option>-->
+                    <!--                            <option value="true">已開通</option>-->
+                    <!--                            <option value="false">未開通</option>-->
+                    <!--                        </select>-->
+                    <!--                    </div>-->
                     <div class="col-md-3 custom-select-wrapper-input">
                         <label for="searchInput" style="margin-bottom: 5px;">單筆會員搜尋</label>
                         <input type="text" id="searchInput" class="form-control"
@@ -231,7 +231,7 @@
                                         <td>${member.joinTime}</td>
                                         <td>${member.walletAmount}</td>
                                         <td>${member.walletWithdrawAmount}</td>
-                                        <td>${member.cidResetSendingTime}</td>
+                                        <td>${member.cidResetSendingTime ? member.cidResetSendingTime : "-"}</td>
                                     </tr>
                                 `);
                             });
