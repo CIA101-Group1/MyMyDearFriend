@@ -223,7 +223,7 @@
             const userData = {
                 marketId: $("#marketId").val(),
                 marketName: $("#marketName").val(),
-                marketDescription: $("#marketDescription").val(),
+                marketDescription: formatDescription($("#marketDescription").val()), // 格式化活動說明
                 marketLocation: $("#marketLocation").val(),
                 marketStart: formatDateToYMD($("#marketStart").val()),
                 marketEnd: formatDateToYMD($("#marketEnd").val()),
@@ -352,6 +352,11 @@
             const month = dateStr.substring(4, 6);
             const day = dateStr.substring(6, 8);
             return `${year}-${month}-${day}`;
+        }
+
+        // 格式化活動說明
+        function formatDescription(description) {
+            return description.replace(/\n/g, "<br>");
         }
 
         $("#cancelBtn").click(function () {

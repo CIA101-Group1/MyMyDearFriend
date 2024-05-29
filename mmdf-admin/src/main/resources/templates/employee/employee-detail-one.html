@@ -79,6 +79,16 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="roleName" class="form-label">管理員名稱：</label>
+                                    <input type="text" class="form-control" id="roleName"
+                                           name="roleName" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roleDescription" class="form-label">管理員權限說明：</label>
+                                    <input type="text" class="form-control" id="roleDescription"
+                                           name="roleDescription" readonly>
+                                </div>
+                                <div class="mb-3">
                                     <button type="button" id="cancelBtn" class="btn btn-primary">返回</button>
                                 </div>
                             </form>
@@ -135,6 +145,8 @@
                     const dateOnly = data.employeeCreateTime.substring(0, 8);
                     $("#employeeCreateTime").val(formatDate(dateOnly));
                     $("#employeeStatus").val(data.employeeStatus);
+                    $("#roleName").val(data.roleName);
+                    $("#roleDescription").val(data.roleDescription);
                 } else {
                     console.error("API returned an error: " + response.message);
                 }

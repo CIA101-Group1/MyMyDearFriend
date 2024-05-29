@@ -232,6 +232,8 @@ public class MarketServiceImpl implements MarketService {
         dto.setPhone(entity.getMemberId().getPhone());
         dto.setEmail(entity.getMemberId().getEmail());
         dto.setCity(entity.getMemberId().getCity());
+        dto.setParticipateDate(DateUtils.dateToSting(entity.getParticipateDate()));
+        dto.setStatus(entity.getStatus());
         return dto;
     }
 }

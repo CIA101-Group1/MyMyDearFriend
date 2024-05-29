@@ -43,6 +43,19 @@ public class MarketBackendController {
         return res;
     }
 
+    //取消報名
+    @PostMapping("/market/cancel")
+    @CheckLogin(isVerified = false)
+    public @ResponseBody ResDTO<MarketCancelResDTO> cancelRegistration(
+            @Valid @RequestBody MarketRegistrationReqDTO marketRegistrationReq,
+            @RequestAttribute(LoginSourceDTO.ATTRIBUTE)LoginSourceDTO loginSource
+    ) throws CheckRequestErrorException{
+        ResDTO<MarketCancelResDTO> res = new ResDTO<>();
+        res.setData(marketService.cancelRegistration(marketRegistrationReq,loginSource));
+        return res;
+    }
+
+
     @GetMapping("/market/allRegister")
     @CheckLogin(isVerified = true)
     public @ResponseBody ResDTO<List<MarketRegistrationResDTO>> findAllByMemberId(

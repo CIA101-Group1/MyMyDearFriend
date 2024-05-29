@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MarketRegistrationResDTO {
-   // private Integer marketId;
+    private Integer marketId;
 
     private String marketName;
 
@@ -21,17 +21,7 @@ public class MarketRegistrationResDTO {
 
     private Integer applicantPopulation;
 
-//    private String status;
-//
-//    @AllArgsConstructor
-//    @Getter
-//    public enum Status {
-//        PAY_SUCCESS("1", "報名成功，已付款"),
-//
-//        PAY_NO_SUCCESS("-1", "報名成功，尚未付款");
-//
-//        private final String code;
-//
-//        private final String message;
-//    }
+    private String participateDate;
+
+    private Integer status;
 }
