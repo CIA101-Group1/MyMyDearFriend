@@ -71,6 +71,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (null == employee) {
             throw new CheckRequestErrorException("查無此員工資料");
         }
+        EmployeeRoleEntity employeeRoleEntities =
+                employeeRoleRepository.findRoleIdByEmployeeId(adminLoginSource.getEmployeeId());
+
         EmployeeDetailResDTO resDTO = new EmployeeDetailResDTO();
         resDTO.setEmployeeId(employee.getEmployeeId());
         resDTO.setEmployeeAccount(employee.getEmployeeAccount());
@@ -84,6 +87,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                         ? ""
                         : DateUtils.dateToSting(employee.getEmployeeCreateTime()));
         resDTO.setEmployeeStatus(employee.getEmployeeStatus());
+        resDTO.setRoleName(employeeRoleEntities.getRoleId().getRoleName());
+        resDTO.setRoleDescription(employeeRoleEntities.getRoleId().getRoleDescription());
         return resDTO;
     }
 

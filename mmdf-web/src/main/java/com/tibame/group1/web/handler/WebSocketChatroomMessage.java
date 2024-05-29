@@ -46,8 +46,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
     @Autowired private JwtService jwtService;
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        }
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {}
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
@@ -58,21 +57,20 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
 
         if (!memberSession.containsKey(session)) {
             //            System.out.println("進入檢查會員");
-            //===================================================================//
-            //System.out.println(jsonObj.get("memberId").getAsInt());            //
-            //LoginSourceDTO loginSourceDTO = new LoginSourceDTO();              //
-            //loginSourceDTO.setMemberId(jsonObj.get("memberId").getAsInt());    //
+            // ===================================================================//
+            // System.out.println(jsonObj.get("memberId").getAsInt());            //
+            // LoginSourceDTO loginSourceDTO = new LoginSourceDTO();              //
+            // loginSourceDTO.setMemberId(jsonObj.get("memberId").getAsInt());    //
             // loginSourceDTO.setName(jsonObj.get("name").getAsString());        //
             // sessionMap.put(session, loginSourceDTO);                          //
             // ==================================正式的用法========================//
-            String authorization = jsonObj.get("authorization").getAsString();   //
-            Integer memberId = jwtService.decodeLogin(authorization).getMemberId();  //
-            memberSession.put(session, memberId);                                //
+            String authorization = jsonObj.get("authorization").getAsString(); //
+            Integer memberId = jwtService.decodeLogin(authorization).getMemberId(); //
+            memberSession.put(session, memberId); //
             // ==================================================================//
         }
 
         Integer memberId = memberSession.get(session);
-
 
         // ============= 將會員資料送至Map ============//
         if ("init".equals(type)) {
@@ -125,20 +123,24 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
             //            Integer roomId = chatroomRepository.findByRoom(receiver, sender);
 
             // ---------------------------------------//
-            Integer roomId = chatroomRepository.findByRoom(receiver,sender);
+            Integer roomId = chatroomRepository.findByRoom(receiver, sender);
             Date date = new Date();
             Timestamp time = new Timestamp(date.getTime());
             chatroomRepository.updateNewMessageDate(roomId);
-            MessageDTO messageDTO =
-                    gson.fromJson(message.getPayload().toString(), MessageDTO.class);
+            MessageDTO messageDTO = new MessageDTO();
+            if (jsonObj.get("img") != null) {
+                byte[] imageBytes =
+                        Base64.getDecoder().decode(jsonObj.get("img").getAsString().split(",")[1]);
+                messageDTO.setImg(imageBytes);
+            }
             messageDTO.setSender(sender);
             messageDTO.setDate(time);
             messageDTO.setRoomId(roomId);
             messageDTO.setType("newMessage");
             messageDTO.setMessage(jsonObj.get("message").getAsString());
-            messageSaveRedis(messageDTO,sender);
+            messageSaveRedis(messageDTO, sender);
 
-//            isMemberOnline(sender, message, messageDTO);
+            //            isMemberOnline(sender, message, messageDTO);
             isMemberOnline(receiver, message, messageDTO);
 
             //            List<WebSocketSession> receiverSessionAll =
@@ -231,10 +233,11 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
         return false;
     }
 
-    private void messageSaveRedis(MessageDTO message,Integer memberId) {
+    private void messageSaveRedis(MessageDTO message, Integer memberId) {
         //        String messageString = message.getPayload().toString();
-        System.out.println("會員編號：" + message.getSender() + " -> 正在儲存傳送訊息的快取 ");
         ChatroomRedisEntity redisMessage = new ChatroomRedisEntity();
+        System.out.println("會員編號：" + message.getSender() + " -> 正在儲存傳送訊息的快取 ");
+        redisMessage.setImg(message.getImg());
         redisMessage.setMessage(message.getMessage());
         redisMessage.setType("newMessage");
         redisMessage.setDate(message.getDate());
@@ -246,8 +249,7 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
         //        redisMessage.setSender(sender);
         String redisMessageJson = gson.toJson(redisMessage);
         ListOperations ops = redisTemplate.opsForList();
-        String memberIdKey =
-                "chatroom:" + memberId + ":" + redisMessage.getRoomId();
+        String memberIdKey = "chatroom:" + memberId + ":" + redisMessage.getRoomId();
         ops.rightPush(memberIdKey, redisMessageJson);
         System.out.println("會員編號：" + message.getSender() + " -> 完成儲存傳送訊息的快取!");
     }
@@ -255,11 +257,9 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
     private void isMemberOnline(
             Integer memberId, WebSocketMessage<?> message, MessageDTO messageDTO)
             throws IOException {
-        ConcurrentLinkedQueue<WebSocketSession> receiverSessionAll =
-                sessions.get(memberId);
+        ConcurrentLinkedQueue<WebSocketSession> receiverSessionAll = sessions.get(memberId);
         if (messageDTO.getSender().equals(memberId)) {
             System.out.println("會員編號：" + memberId + " -> 正在傳送訊息");
-
         }
         if (receiverSessionAll != null) {
             Integer count = 0;
@@ -272,17 +272,18 @@ public class WebSocketChatroomMessage implements WebSocketHandler {
                     }
                 }
             }
-            if (count>0){
-                messageSaveRedis(messageDTO,memberId);
+            if (count > 0) {
+                messageSaveRedis(messageDTO, memberId);
             }
             return;
         } else {
             if (messageDTO.getSender() == memberId) {
                 System.out.println("會員編號：" + memberId + " -> 喔歐~對方不在家，先方在信箱好了");
             }
-            // MessageDTO messageDTO =gson.fromJson(message.getPayload().toString(),MessageDTO.class);
+            // MessageDTO messageDTO
+            // =gson.fromJson(message.getPayload().toString(),MessageDTO.class);
             MessageEntity messageEntity = new MessageEntity();
-            //messageEntity.setImg(messageDTO.getImg());
+            messageEntity.setImg(messageDTO.getImg());
             messageEntity.setMessage(messageDTO.getMessage());
             messageEntity.setSender(messageDTO.getSender());
             messageEntity.setReceiver(messageDTO.getReceiver());

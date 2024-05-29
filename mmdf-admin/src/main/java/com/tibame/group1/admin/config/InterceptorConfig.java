@@ -13,8 +13,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Autowired private AdminCheckLoginInterceptor adminCheckLoginInterceptor;
 
-    @Autowired
-    private PermissionInterceptor permissionInterceptor;
+    @Autowired private PermissionInterceptor permissionInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -29,13 +28,18 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/employee/login",
                         "/api/employee/login",
                         "/permission");
-          registry.addInterceptor(permissionInterceptor).addPathPatterns("/**").excludePathPatterns( "/home",
-                  "/static/**",
-                  "/assets/**",
-                  "/image/**",
-                  "/js/**",
-                  "/employee/login",
-                  "/api/employee/login",
-                  "/permission");
+        registry.addInterceptor(permissionInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/home",
+                        "/static/**",
+                        "/assets/**",
+                        "/image/**",
+                        "/js/**",
+                        "/employee/login",
+                        "/api/employee/login",
+                        "/permission",
+                        "/employee/detailOne",
+                        "/api/employee/detailOne");
     }
 }

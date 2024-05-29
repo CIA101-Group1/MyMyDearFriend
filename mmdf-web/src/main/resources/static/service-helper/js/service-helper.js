@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
             var h1text = document.getElementById("text-primarys");
             const id = jsonObj.memberId;
             sendServiceMemberId = id;
-            h1text.innerText = '專員客服';
+            h1text.innerText = '客服專員';
+            addMessage("已接通客服專員，請輸入您的問題", 'helper')
             switchWebSocket();
             socket.close();
         }

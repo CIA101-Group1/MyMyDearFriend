@@ -8,12 +8,15 @@ import com.tibame.group1.web.service.MarketService;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CacheConfig(cacheNames = "member", keyGenerator = "mmdfKeyGenerator")
 public class MarketBackendController {
     @Autowired private MarketService marketService;
 
@@ -34,6 +37,7 @@ public class MarketBackendController {
 
     @PostMapping("/market/register")
     @CheckLogin(isVerified = false)
+    @CacheEvict(allEntries = true)
     public @ResponseBody ResDTO<MemberRegistrationResDTO> registerMemberToMarket(
             @Valid @RequestBody MarketRegistrationReqDTO marketRegistrationReq,
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource)
@@ -42,6 +46,20 @@ public class MarketBackendController {
         res.setData(marketService.registerMemberToMarket(marketRegistrationReq,loginSource));
         return res;
     }
+
+    //取消報名
+    @PostMapping("/market/cancel")
+    @CheckLogin(isVerified = false)
+    @CacheEvict(allEntries = true)
+    public @ResponseBody ResDTO<MarketCancelResDTO> cancelRegistration(
+            @Valid @RequestBody MarketRegistrationReqDTO marketRegistrationReq,
+            @RequestAttribute(LoginSourceDTO.ATTRIBUTE)LoginSourceDTO loginSource
+    ) throws CheckRequestErrorException{
+        ResDTO<MarketCancelResDTO> res = new ResDTO<>();
+        res.setData(marketService.cancelRegistration(marketRegistrationReq,loginSource));
+        return res;
+    }
+
 
     @GetMapping("/market/allRegister")
     @CheckLogin(isVerified = true)

@@ -203,6 +203,10 @@
             findData.type = 'month';
             // from.submit();
         }
+        if(findData.type == null){
+            alert("資料不可為空");
+            return;
+        }
         findData.memberId = memberId;
         findData.dateStar = dateStar;
         findData.dateEnd = dateEnd;
