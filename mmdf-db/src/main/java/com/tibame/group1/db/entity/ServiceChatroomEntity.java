@@ -2,10 +2,7 @@ package com.tibame.group1.db.entity;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -14,13 +11,14 @@ import lombok.Setter;
 @Setter
 public class ServiceChatroomEntity {
 	@Id
-	@Column(name="messageId")
+	@Column(name="message_Id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer messageId;//存入SQL用
 	
-	@Column(name="customerId")
+	@Column(name="customer_Id")
 	private Integer customerId;
 	
-	@Column(name="serviceId")
+	@Column(name="service_Id")
 	private Integer serviceId;
 	
 	@Column(name="message")
@@ -31,4 +29,5 @@ public class ServiceChatroomEntity {
 	
 	@Column(name="message_date")
 	private Timestamp date;
+
 }

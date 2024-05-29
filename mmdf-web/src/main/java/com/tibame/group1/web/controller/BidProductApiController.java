@@ -91,17 +91,27 @@ public class BidProductApiController {
     // @CheckLogin(isVerified = false)
     public ResDTO<List<BidProductEntity>> findByCompositeQuery(
             @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "conditionId", required = false) Integer conditionId,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "status", required = false) List<Integer> status) {
         ResDTO<List<BidProductEntity>> res = new ResDTO<>();
-        res.setData(bidProductService.findByCompositeQuery(categoryId, name, status));
+        res.setData(bidProductService.findByCompositeQuery(categoryId, conditionId, name, status));
         return res;
     }
 
-    // @GetMapping("/bidproduct")
-    // public ResDTO<List<BidProductEntity>> findAllByStatus(@RequestParam("status") Integer status) {
-    //     ResDTO<List<BidProductEntity>> res = new ResDTO<>();
-    //     res.setData(bidProductService.findByStatus(status));
-    //     return res;
-    // }
+    @PutMapping("/bidproduct/closeBidEarly/{productId}")
+    public @ResponseBody ResDTO<?> closeBidEarly(@PathVariable("productId") Integer productId)
+            throws CheckRequestErrorException {
+        bidProductService.closeBidEarly(productId);
+        return new ResDTO<>();
+    }
+
+    @GetMapping("/buyer/bidproduct/record")
+    @CheckLogin
+    public ResDTO<List<BidProductEntity>> findAllBuyerBidProductRecord(
+            @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
+        ResDTO<List<BidProductEntity>> res = new ResDTO<>();
+        res.setData(bidProductService.findAllBidProductForMember(loginSource));
+        return res;
+    }
 }

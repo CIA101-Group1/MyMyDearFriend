@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>客服歷史聊天紀錄</title>
+    <th:block th:replace="~{/fragments/css}"/>
+    <style>
+        /*body {*/
+        /*    font-family: 'Arial', sans-serif;*/
+        /*    background-color: #f4f4f9;*/
+        /*    color: #333;*/
+        /*    margin: 0;*/
+        /*    padding: 20px;*/
+        /*}*/
+        #containerAll {
+            display: flex;
+        }
+
+        #containerHistory {
+            max-width: 80vh;
+            /*display: flex;*/
+            /*margin: 0 auto;*/
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #title {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        #searchForm {
+            margin-bottom: 0;
+
+        }
+
+        #searchForm label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        #searchForm input[type="text"],
+        #searchForm input[type="date"],
+        #searchForm input[type="month"],
+        #searchForm input[type="submit"] {
+
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+        }
+
+        #searchForm input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #searchForm input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #chatTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #chatTable, #chatTable th, #chatTable td {
+            border: 1px solid #ddd;
+        }
+
+        #chatTable th, #chatTable td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        #chatTable th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #chatTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #A {
+            flex: 15.8%
+        }
+
+        #containerHistory {
+            flex: 42.1%
+        }
+
+        #B {
+            flex: 42.1%
+        }
+
+        /*#send{*/
+        /*    margin: 10px;*/
+        /*}*/
+        #dateStar, #dateEnd {
+            display: flex;
+            flex: 1;
+        }
+    </style>
+    <th:block th:replace="~{/fragments/css}"/>
+</head>
+<body>
+<th:block th:replace="~{/fragments/header}"/>
+<div id="containerAll">
+    <div id="A">
+        <th:block th:replace="~{/fragments/sidenav}"/>
+    </div>
+    <div id="containerHistory">
+        <h1 id="title">歷史聊天紀錄</h1>
+
+        <!-- 需要加判斷-->
+        <!--        <form id="searchForm" th:action="@{/chatroom/history}" method="post">-->
+        <input type="hidden" id="hiddenInput" name="type" value="">
+        <label for="memberId">會員 ID :</label>
+        <input type="text" id="memberId" name="memberId">
+
+        <label>指定日期 :</label>
+        <!--            <input type="text" id="memberIdAndDate" name="memberIdAndDate" placeholder="Member ID">-->
+        <input type="date" id="dateStar" name="dateStar">
+        <input type="date" id="dateEnd" name="dateEnd">
+
+        <label for="dateOnly">指定月份 :</label>
+        <input type="month" id="dateOnly" name="month">
+        <br>
+        <input id="send" type="submit" value="搜尋">
+        <!--        </form>-->
+    </div>
+    <div id="B">
+        <table id="chatTable">
+            <thead>
+            <tr>
+                <th id="thMemberId">會員 ID</th>
+                <th id="thEmployeeId">客服 ID</th>
+                <th id="thDate">日期</th>
+                <th id="thSender">發送者</th>
+                <th id="thMessage">訊息</th>
+            </tr>
+            </thead>
+            <tbody>
+<!--            <tr th:each="chat : ${chatRecords}">-->
+<!--                <td th:text="${chat.memberId}" id="tdMemberId">Member ID</td>-->
+<!--                <td th:text="${chat.serivceId}" id="tdEmployeeId">Employee ID</td>-->
+<!--                <td th:text="${chat.date}" id="tdDate">Date</td>-->
+<!--                <td th:text="${chat.message_type}" id="tdSender">Sender</td>-->
+<!--                <td th:text="${chat.message}" id="tdMessage">Message</td>-->
+<!--            </tr>-->
+            </tbody>
+        </table>
+    </div>
+</div>
+<th:block th:replace="~{/fragments/js}"/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/js/api-response-utils.js"></script>
+<script>
+    document.getElementById('send').addEventListener('click', function (event) {
+        event.preventDefault();
+        let findData = {};
+        var memberId = document.getElementById("memberId").value;
+        var dateStar = document.getElementById("dateStar").value;
+        var dateEnd = document.getElementById("dateEnd").value;
+        var month = document.getElementById("dateOnly").value;
+        var from = document.getElementById("searchForm");
+        var monthInt ;
+        var yearInt ;
+        if (month) {
+            monthInt = month.split("-")[1];
+            yearInt = month.split("-")[0];
+        }else{
+            monthInt = 0;
+            yearInt = 0;
+        }
+
+        console.log(from);
+        // from.url = "/service/history/message";
+        // from.method = "POST";
+        // from.headers=JSON.stringify({"authorization":localStorage.getItem("authorization")});
+
+        if (memberId != "" && dateStar != "" && dateEnd != "") {
+            findData.type = 'memberIdAndDate'
+            // from.submit();
+        } else if (memberId != "" && month != "") {
+            findData.type = 'memberAndMonth'
+            // from.submit();
+        } else if (dateEnd != "" && dateStar != "") {
+            findData.type = 'date'
+            // from.submit();
+        } else if (memberId != "") {
+            findData.type = 'memberId';
+            // from.submit();
+        } else if (month != "") {
+            findData.type = 'month';
+            // from.submit();
+        }
+        findData.memberId = memberId;
+        findData.dateStar = dateStar;
+        findData.dateEnd = dateEnd;
+        findData.month = monthInt;
+        findData.year = yearInt;
+        console.log(findData);
+        const authorization = localStorage.getItem("authorization");
+        $.ajax({
+            url: `/api/chatroom/history?authorization=${authorization}`,
+            type: 'POST',
+            contentType: "application/json",
+            data: JSON.stringify(findData),
+            success(response) {
+                apiResponseJSON(response, {
+                    onSuccess(data) {
+                        console.log(data);
+                        $('#chatTable tbody').empty();
+                        if (response.code === "0") {
+                            alert('搜尋成功');
+                            data.forEach(chat => {
+                                console.log(chat.message);
+                                var getDate = toDate(chat.date);
+                                $('#chatTable tbody').append(
+                                    `
+                                    <tr>
+                                        <td> ${chat.memberId} </td>
+                                        <td> ${chat.serviceId} </td>
+                                        <td> ${getDate}</td>
+                                        <td> ${chat.message_type}</td>
+                                        <td> ${chat.message} </td>
+                                    </tr>
+                                    `
+                                );
+                            });
+                        } else {
+                            alert('搜尋失敗');
+                        }
+                    },
+                    onError(AA){
+                        console.log(AA);
+                    }
+                });
+
+            },
+            error: function (xhr, status, error) {
+                alert('搜尋失敗');
+            }
+        });
+        document.getElementById("memberId").value ="";
+        document.getElementById("dateStar").value="";
+        document.getElementById("dateEnd").value="";
+        document.getElementById("dateOnly").value="";
+
+        function toDate(time){
+            const date = new Date(time);
+            // 將日期時間轉換為目標時區，這裡假設目標時區為 UTC+12
+            const targetTimezoneOffset = 8 * 60; // UTC+12的分鐘數
+            const localTimezoneOffset = date.getTimezoneOffset(); // 獲取當地時區的分鐘數
+            const timezoneDifference = targetTimezoneOffset - localTimezoneOffset; // 計算時區差
+
+            // 調整時間
+            date.setMinutes(date.getMinutes() + timezoneDifference);
+
+            // 格式化日期時間為所需的字串格式
+            const formattedDateTime = date.toISOString().slice(0, 19).replace('T', ' ');
+            return formattedDateTime;
+        }
+
+
+    });
+</script>
+</body>
+</html>

@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import com.tibame.group1.db.entity.ChatroomEntity;
 import com.tibame.group1.db.repository.ChatroomRepository;
 import com.tibame.group1.db.repository.MemberRepository;
-import com.tibame.group1.web.dto.FriendInfoDTO;
-import com.tibame.group1.web.dto.LoginSourceDTO;
-import com.tibame.group1.web.dto.MemberFriendsDTO;
-import com.tibame.group1.web.dto.MessageDTO;
+import com.tibame.group1.web.dto.*;
 import com.tibame.group1.web.service.JwtService;
 import com.tibame.group1.web.service.RedisAndSQLConnectSevice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +51,21 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
         String type = jsonObj.get("type").getAsString();
 
         // ============ 檢查是否有會員資訊 ============//
-//        System.out.println("判斷檢查會員");
+        //        System.out.println("判斷檢查會員");
         if (!sessionMap.containsKey(session)) {
-//            System.out.println("進入檢查會員");
-            System.out.println(jsonObj.get("memberId").getAsInt());
-            LoginSourceDTO loginSourceDTO = new LoginSourceDTO();
-            loginSourceDTO.setMemberId(jsonObj.get("memberId").getAsInt());
-            loginSourceDTO.setName(jsonObj.get("name").getAsString());
-            sessionMap.put(session, loginSourceDTO);
-            // ==================================正式的用法====================================//
-            //            String authorization = jsonObj.get("authorization").getAsString(); //
-            //            LoginSourceDTO loginSource = jwtService.decodeLogin(authorization);//
-            //            sessionMap.put(session, loginSource);                              //
-            // ==============================================================================//
+            //            System.out.println("進入檢查會員");
+            //===================================================================//
+            //System.out.println(jsonObj.get("memberId").getAsInt());            //
+            //LoginSourceDTO loginSourceDTO = new LoginSourceDTO();              //
+            //loginSourceDTO.setMemberId(jsonObj.get("memberId").getAsInt());    //
+            // loginSourceDTO.setName(jsonObj.get("name").getAsString());        //
+            // sessionMap.put(session, loginSourceDTO);                          //
+            // ==================================正式的用法========================//
+            String authorization = jsonObj.get("authorization").getAsString();   //
+            LoginSourceDTO loginSource = jwtService.decodeLogin(authorization);  //
+            System.out.println("會員編號："+loginSource.getMemberId()+" -> 歡迎 " + loginSource.getName()+" 到此一遊");
+            sessionMap.put(session, loginSource);                                //
+            // ==================================================================//
         }
 
         Integer memberId = sessionMap.get(session).getMemberId();
@@ -86,15 +85,15 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
         if ("init".equals(type)) {
             System.out.println("會員編號：" + memberId + " -> 正在聊天室初始化...");
 
-
             // ------------ 檢查Reids是否有重複資料 ------------//
             Set<String> keys = redisTemplate.keys("chatroom" + ":" + memberId + ":*");
             if (keys == null || keys.size() == 0) {
-                System.out.println("會員編號：" + memberId + " -> 正在聊天室讀寫快取...");
+                System.out.println("\033[0;33m"+"會員編號："+ "\033[0m" + memberId + " -> 正在聊天室讀寫快取...");
                 initAndDestroyData.redisGetSqlData(memberId);
             }
 
             System.out.println("會員編號：" + memberId + " -> 聊天室初始化完成!");
+
             return;
         }
 
@@ -118,32 +117,37 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
             List<ChatroomEntity> roomEnt = chatroomRepository.findMemberFriends(memberId);
             List<Integer> friendsId = new ArrayList<>();
             for (ChatroomEntity friend : roomEnt) {
-                if (friend.getUserA() == memberId) {
+
+                if (friend.getUserA().equals(memberId)) {
                     friendsId.add(friend.getUserB());
                 } else {
-                    friendsId.add(friend.getUserB());
+                    friendsId.add(friend.getUserA());
                 }
             }
             List<FriendInfoDTO> friendsInfo = new ArrayList<>();
-            ListOperations<String,String> listOps = redisTemplate.opsForList();
+            ListOperations<String, String> listOps = redisTemplate.opsForList();
             for (Integer friendId : friendsId) {
                 FriendInfoDTO dto = new FriendInfoDTO();
                 dto.setId(friendId);
                 dto.setName(memberRepository.findById(friendId).get().getName());
+                dto.setQuestionId(memberId);
                 byte[] avatarBytes = memberRepository.findById(friendId).get().getImage();
                 if (avatarBytes != null) {
                     String avatarBase64 = Base64.getEncoder().encodeToString(avatarBytes);
                     dto.setAvatar("data:image/*;base64," + avatarBase64);
                 }
-                String key = "chatroom:"+memberId+":"+chatroomRepository.findByRoom(memberId,friendId);
-                long lastIndex = listOps.size(key)-1;
-//                System.out.println(lastIndex);
-                String latestMessageRedis = listOps.index(key,lastIndex);
-//                System.out.println(latestMessageRedis);
-                MessageDTO latestMessageDTO = gson.fromJson(latestMessageRedis,MessageDTO.class);
+                String key =
+                        "chatroom:"
+                                + memberId
+                                + ":"
+                                + chatroomRepository.findByRoom(memberId, friendId);
+                long lastIndex = listOps.size(key) - 1;
+                //                System.out.println(lastIndex);
+                String latestMessageRedis = listOps.index(key, lastIndex);
+                //                System.out.println(latestMessageRedis);
+                MessageDTO latestMessageDTO = gson.fromJson(latestMessageRedis, MessageDTO.class);
                 if (latestMessageDTO != null) {
-                    String latestMessage =
-                            latestMessageDTO.getMessage();
+                    String latestMessage = latestMessageDTO.getMessage();
                     dto.setLatestMessage(latestMessage);
                 }
                 friendsInfo.add(dto);
@@ -153,6 +157,14 @@ public class WebSocketChatroomFunction implements WebSocketHandler {
             memberFriendsDTO.setFriends(friendsInfo);
             session.sendMessage(new TextMessage(gson.toJson(memberFriendsDTO)));
         }
+
+//        if("sendChatWebsocket".equals(type)){
+//            ChatroomInit initChat = new ChatroomInit();
+//            initChat.setMemberId(memberId);
+////            initChat.setType("sendChatWebsocket");
+//            session.sendMessage(new TextMessage(gson.toJson(initChat)));
+//            return;
+//        }
     }
 
     @Override

@@ -17,65 +17,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const init = "ws://" + window.location.host + "/chatroom";
     const chat = "ws://" + window.location.host + "/message";
-
+    // var memberId = null;
     const socketInit = new WebSocket(init);
     const socketChat = new WebSocket(chat);
-    const memberId = 1001;
-    <!--============ 初始化、好友列表、提醒 ============ -->
+    let memberId;
+
+    // var socketChat = null;
     socketInit.onopen = (event) => {
         console.log('connected - init');
-        socketInit.send(JSON.stringify({"type": "init", "memberId": "1001", "name": 'tester'}));
+        const authorization = localStorage.getItem('authorization');
+        socketInit.send(JSON.stringify({"type": "init", "authorization": authorization}));
         socketInit.send(JSON.stringify({"type": "getFriends"}));
+        // socketInit.send(JSON.stringify({"type": "sendChatWebsocket"}));
     }
 
+    socketChat.onopen = (event) =>{
+        const authorization = localStorage.getItem('authorization');
+        socketChat.send(JSON.stringify({"type": "init", "authorization": authorization}));
+        console.log('connected - chat');
+    }
+
+    <!--============ 初始化、好友列表、提醒 ============ -->
     socketInit.onmessage = (event) => {
-        var jsonObj = JSON.parse(event.data);
+        const jsonObj = JSON.parse(event.data);
         if (jsonObj.type === "getFriends") {
             loadFriends(jsonObj.friends);
+
         }
+        // console.log(jsonObj.type);
+        // if(jsonObj.type === "sendChatOk") {
+        //     // socketChat = new WebSocket(chat);
+        //     socketChat.onopen = (event) => {
+        //
+        //         memberId = jsonObj.memberId;
+        //         console.log('connected - chat');
+        //
+        //
+        //     }
+        // }
     }
 
     <!--============ 傳送訊息、讀取歷史紀錄 ============-->
-    socketChat.onopen = (event) => {
-        console.log('connected - chat');
-        socketChat.send(JSON.stringify({"type": "init","memberId":memberId}));
+    // const socketChat = new WebSocket(chat);
+    socketChat.onmessage = (chat) => {
+        const jsonObj = JSON.parse(chat.data);
+    console.log("取得續錫:" + jsonObj.type);
 
-    }
-    socketChat.onmessage = (event) => {
-        const jsonObj = JSON.parse(event.data);
         if (jsonObj.type === "getHistory") {
             console.log('get history');
-            loadChatHistory(jsonObj.message);
+            loadChatHistory(jsonObj.message,jsonObj.sender);
         }
         if (jsonObj.type === "chat") {
 
         }
-        // if (message.type === 'newMessage') {
-        //     displayMessage(message.content, 'received');
-        //     updateLatestMessage(message.from, message.content);
-        //     // 如果當前聊天對象不是發送訊息的人，則顯示提醒並將好友移到最頂部
-        //     if (message.from !== currentChat) {
-        //         markUnread(message.from);
-        //         moveFriendToTop(message.from);
-        //     }
-        // }
+        if (jsonObj.type === 'newMessage') {
+            displayMessage(jsonObj.message, 'received');
+            updateLatestMessage(jsonObj.sender, jsonObj.message);
+            // 如果當前聊天對象不是發送訊息的人，則顯示提醒並將好友移到最頂部
+            console.log("取得資料")
+            if (jsonObj.sender !== currentChat) {
+                markUnread(jsonObj.sender);
+                moveFriendToTop(jsonObj.sender);
+            }
+        }
     };
     <!--============ 方法區域 ============-->
 
     // 更新最新訊息
     function updateLatestMessage(friend, message) {
-        const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
+        // const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
+        const listItem = document.getElementById(friend);
         if (listItem) {
-            const latestMessage = listItem.querySelector('.latest-message');
-            if (latestMessage) {
-                latestMessage.textContent = message;
-            }
+            listItem.textContent = message;
+            // const latestMessage = listItem.querySelector('.latest-message');
+            // if (latestMessage) {
+            //     latestMessage.textContent = message;
+            // }
         }
     }
 
     // 標記未讀訊息
     function markUnread(friend) {
-        const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
+        // const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
+        const listItem = document.getElementById(friend);
         if (listItem) {
             listItem.classList.add('unread');
         }
@@ -83,7 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 移動好友項目至最頂部
     function moveFriendToTop(friend) {
-        const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
+        // const listItem = document.querySelector(`#friendList li[data-friend="${friend}"]`);
+        const listItem = document.getElementById(friend+"info");
         if (listItem) {
             friendList.prepend(listItem);
         }
@@ -91,18 +116,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 加載好友列表
     function loadFriends(friends) {
-        // 這裡可以加入獲取好友列表的程式碼
-        // const friends = [
-        //     { name: '好友A', avatar: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg', id: '001', latestMessage: '最新訊息A' },
-        //     { name: '好友B', avatar: 'https://example.com/avatarB.jpg', id: '002', latestMessage: '最新訊息B' },
-        //     { name: '好友C', avatar: 'https://example.com/avatarC.jpg', id: '003', latestMessage: '最新訊息C' }
-        // ];
-
+        if(friends === undefined || friends === null) {
+            return;
+        }
         friends.forEach(friend => {
+            var friendId = friend.id;
             const li = document.createElement('li');
             li.dataset.friend = friend.name;
+            li.id = friendId + "info";
             const img = document.createElement('img');
             img.src = friend.avatar;
+            img.classList.add('chatroomIMG');
             const div = document.createElement('div');
             div.classList.add('friend-info');
             const spanName = document.createElement('span');
@@ -112,7 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
             spanId.classList.add('id');
             spanId.textContent = `ID: ${friend.id}`;
             const p = document.createElement('p');
-            p.id = `{friend.id}`.trim();
+            // p.id = `${friend.id}`.trim();
+            p.id = friendId;
             p.classList.add('latest-message');
             p.textContent = friend.latestMessage;
             console.log(friend.latestMessage);
@@ -128,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentChat = chatWithId.textContent.split(":")[1].trim();
                 socketChat.send(JSON.stringify({"type": "getHistory", "friendId": friend.id, "memberId": memberId}));
                 // loadChatHistory(friend.name);
-                friendsList.classList.remove('open');
+                // friendsList.classList.remove('open');
                 // 移除未讀標記
                 li.classList.remove('unread');
             });
@@ -136,14 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     // 加載聊天歷史記錄
-    function loadChatHistory(friendMessages) {
+    function loadChatHistory(friendMessages,memberId) {
         // 這裡可以加入獲取聊天記錄的程式碼
         chatMessages.innerHTML = '';
-        // const messages = [
-        //     { sender: '好友A', content: '嗨！' },
-        //     { sender: '我', content: '你好！' }
-        // ];
         var messages = JSON.parse(friendMessages);
         messages.forEach(message => {
             var messageJson = JSON.parse(message);
@@ -168,8 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage(message, 'sent');
             socketChat.send(JSON.stringify({type: 'chat', message: message, receiver: currentChat, memberId: memberId}));
             var pid = document.getElementById(currentChat);
-            pid.remove();
-            socketInit.send(JSON.stringify({"type": "getFriends"}));
+            pid.textContent = message;
+            // socketInit.send(JSON.stringify({"type": "getFriends"}));
             messageInput.value = '';
 
         }
@@ -188,17 +210,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 點擊好友欄按鈕
-    toggleFriendsList.addEventListener('click', () => {
-        friendsList.classList.toggle('open');
-    });
-
-    // 點擊收回好友欄按鈕
-    closeFriendsListButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            friendsList.classList.remove('open');
-        });
-    });
+    // // 點擊好友欄按鈕
+    // toggleFriendsList.addEventListener('click', () => {
+    //     friendsList.classList.toggle('open');
+    // });
+    //
+    // // 點擊收回好友欄按鈕
+    // closeFriendsListButtons.forEach(button => {
+    //     button.addEventListener('click', () => {
+    //         friendsList.classList.remove('open');
+    //     });
+    // });
     // function addListener() {
     //     var container = document.getElementById("row");
     //     container.addEventListener("click", function (e) {
@@ -216,5 +238,15 @@ document.addEventListener('DOMContentLoaded', () => {
     //
 
     // 加載好友列表
-    // loadFriends();
+    messageInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendButton.click();
+        }
+    });
+    loadFriends();
 });
+
+
+
+
+
