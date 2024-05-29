@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
             memberRepository.save(buyer);
         }
         seller.setWalletAmount(
-                sellerWalletAmount + order.getPriceBeforeDiscount() - order.getFee());
+                sellerWalletAmount + (order.getPriceBeforeDiscount() - order.getFee()));
         memberRepository.save(seller);
 
         // 創建買家的 WalletHistoryEntity
