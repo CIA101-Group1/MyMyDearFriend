@@ -387,6 +387,10 @@
                                     $("#modalBody").html("查無此會員資料");
                                     $("#myModal").modal("show");
                                     break;
+                                case "-3":
+                                    $("#modalBody").html("該EMAIL已存在，請重試");
+                                    $("#myModal").modal("show");
+                                    break;
                             }
                         },
                         onError(message) {

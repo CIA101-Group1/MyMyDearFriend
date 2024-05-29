@@ -17,6 +17,8 @@ public class MemberEditResDTO {
 
         EXIST_ACCOUNT("-1", "該帳號已存在"),
 
+        EXIST_EMAIL("-3", "該EMAIL已存在"),
+
         MEMBER_NOTFOUND("-2", "查無此會員資料");
 
         private final String code;
