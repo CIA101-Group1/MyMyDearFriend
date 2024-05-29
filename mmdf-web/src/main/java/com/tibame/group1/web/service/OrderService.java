@@ -1,6 +1,7 @@
 package com.tibame.group1.web.service;
 
 import com.tibame.group1.common.enums.OrderMemberIdentity;
+import com.tibame.group1.common.enums.OrderStatus;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.web.dto.*;
 
@@ -11,7 +12,7 @@ public interface OrderService {
     OrderResDTO orderGetById(Integer orderId, LoginSourceDTO loginSource)
             throws CheckRequestErrorException;
 
-    List<OrderResDTO> orderGetAll(LoginSourceDTO loginSource, OrderMemberIdentity identity)
+    List<OrderResDTO> orderGetAll(LoginSourceDTO loginSource, OrderMemberIdentity identity, OrderStatus orderStatus)
             throws CheckRequestErrorException;
 
     List<OrderDetailResDTO> orderDetail(Integer orderId, LoginSourceDTO loginSource)

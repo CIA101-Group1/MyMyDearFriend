@@ -2,6 +2,7 @@ package com.tibame.group1.web.controller;
 
 import com.tibame.group1.common.dto.ResDTO;
 import com.tibame.group1.common.enums.OrderMemberIdentity;
+import com.tibame.group1.common.enums.OrderStatus;
 import com.tibame.group1.common.exception.CheckRequestErrorException;
 import com.tibame.group1.web.annotation.CheckLogin;
 import com.tibame.group1.web.dto.*;
@@ -61,10 +62,11 @@ public class OrderBackendController {
     @CheckLogin
     public @ResponseBody ResDTO<List<OrderResDTO>> orderGetAll(
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource,
-            @RequestParam(name = "identity", defaultValue = "BOTH" ) OrderMemberIdentity identity)
+            @RequestParam(name = "identity", defaultValue = "BOTH" ) OrderMemberIdentity identity,
+            @RequestParam(name = "orderStatus", required = false) OrderStatus orderStatus)
             throws CheckRequestErrorException {
         ResDTO<List<OrderResDTO>> res = new ResDTO<>();
-        res.setData(orderService.orderGetAll(loginSource, identity));
+        res.setData(orderService.orderGetAll(loginSource, identity, orderStatus));
         return res;
     }
 
