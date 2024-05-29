@@ -352,6 +352,12 @@
             const messageText = document.getElementById('message-text').value;
             sendMessage(messageText);
         });
+        document.getElementById('send-message').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                const messageText = document.getElementById('message-text').value;
+                sendMessage(messageText);
+            }
+        });
 
         // 發送訊息
         function sendMessage(text) {
@@ -364,8 +370,9 @@
                     serviceId: serviceId
                 };
                 socket.send(JSON.stringify(message));
+                document.getElementById("message-text").value="";
                 console.log("VIEW - ready!");
-                displayMessage(text, 'sent');
+                displayMessage(text, 'received');
             }
         }
 
