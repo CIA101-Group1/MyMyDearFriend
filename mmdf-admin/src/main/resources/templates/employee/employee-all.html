@@ -162,7 +162,7 @@
                                                 <td>${employee.employeeAccount}</td>
                                                 <td>${employee.employeeName}</td>
                                                 <td>${formatDate(employee.employeeCreateTime)}</td>
-                                                <td>${employee.employeeStatus}</td>
+                                                <td>${convertStatusToChinese(employee.employeeStatus)}</td>
                                                 <td>
                                                 <button class="btn btn-primary detail-button" data-employee-id="${employee.employeeId}">詳細資料</button>
                                                 <button class="btn btn-secondary set-permissions-button" data-employee-id="${employee.employeeId}">設置權限</button>
@@ -242,6 +242,18 @@
         const month = dateString.substring(4, 6);
         const day = dateString.substring(6, 8);
         return `${year}-${month}-${day}`;
+    }
+
+    // 將員工狀態轉換為中文
+    function convertStatusToChinese(Status) {
+        switch (parseInt(Status)) { // 將 marketStatus 轉換為整數進行比對
+            case 0:
+                return "停用";
+            case 1:
+                return "啟用";
+            default:
+                return "未知狀態";
+        }
     }
 </script>
 </body>

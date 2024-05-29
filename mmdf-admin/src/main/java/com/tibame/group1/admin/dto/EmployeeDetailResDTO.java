@@ -25,4 +25,8 @@ public class EmployeeDetailResDTO {
     private String employeeCreateTime;
 
     private Integer employeeStatus;
+
+    private String roleName;
+
+    private String roleDescription;
 }

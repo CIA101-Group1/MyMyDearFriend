@@ -92,6 +92,9 @@
                                     localStorage.setItem("authorization", response.data.authorization);
                                     window.location.href = "/home";
                                     break;
+                                case "-2":
+                                    alert("帳號已停權");
+                                    break;
                                 case "-1":
                                     alert("帳號或密碼錯誤，請重試");
                                     break;
