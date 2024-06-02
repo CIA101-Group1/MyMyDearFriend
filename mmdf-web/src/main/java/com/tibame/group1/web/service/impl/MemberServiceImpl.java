@@ -382,6 +382,7 @@ public class MemberServiceImpl implements MemberService {
                 return resDTO;
             }
             member.setCid(CommonUtils.encryptToMD5(req.getNewCid()));
+            member.setCidResetVerifyUUID(null);
             memberRepository.save(member);
             resDTO.setStatus(MemberCidResetResDTO.Status.RESET_CID_SUCCESS.getCode());
             return resDTO;
