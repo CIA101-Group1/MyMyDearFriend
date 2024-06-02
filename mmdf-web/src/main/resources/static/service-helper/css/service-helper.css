@@ -60,9 +60,9 @@
 /*}*/
 div.container_helper{
     height: 100vh;
-    width: 100vh;
+    width: 80%;
     border:60vh;
-    margin-right: 20vh;
-    margin-left: 20vh;
-    align-items: center;
+    margin-right: 50vh;
+    margin-left: 5%;
+    /*align-items: center;*/
 }

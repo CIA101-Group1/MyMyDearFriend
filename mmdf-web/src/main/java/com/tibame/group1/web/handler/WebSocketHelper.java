@@ -116,8 +116,8 @@ public class WebSocketHelper implements WebSocketHandler {
         System.out.println((endTime - starTime) / 1_000_000 + " 毫秒");
         List<String> sendMessage = new ArrayList<>();
         String m1 = "小麥不知道你在說甚麼，可以簡單形容給小麥聽嗎?";
-        String m2 = "小麥聽不懂你在說甚麼，你可以傳送 -> 客服專員 <-，會有比小麥厲害的人跟你回答。";
-        String m3 = "小麥放棄了，你可以傳送 -> 客服專員 <- 會有真人客服與你聯繫。";
+        String m2 = "小麥聽不懂你在說甚麼，你可以傳送 -> 專員客服 <-，會有比小麥厲害的人跟你回答。";
+        String m3 = "小麥放棄了，你可以傳送 -> 專員客服 <- 會有真人客服與你聯繫。";
         String m4 = "這是甚麼東西阿~可以講清楚一點，給小麥知道嗎?";
         sendMessage.add(m1);
         sendMessage.add(m2);
