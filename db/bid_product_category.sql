@@ -1,0 +1,10 @@
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (1, '電子產品');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (2, '時尚服飾');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (3, '家具家居');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (4, '運動休閒');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (5, '書籍文具');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (6, '玩具娛樂');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (7, '美容保健');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (8, '汽機車零件');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (9, '家庭用品');
+INSERT INTO mmdf.bid_product_category (category_id, category_name) VALUES (10, '寵物用品');

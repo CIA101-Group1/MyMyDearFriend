@@ -1,0 +1,1 @@
+insert into member_chatroom(member_a_id, member_b_id, date) values(7,9,now());
