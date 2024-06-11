@@ -26,10 +26,9 @@ public class BidProductEntity {
     @Column(name = "product_id", nullable = false)
     private Integer productId;
 
-    // @NotNull
-    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    // @JoinColumn(name = "seller_id", nullable = false)
-    // private MemberEntity seller;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "seller_id", nullable = false, insertable = false, updatable = false)
+    private MemberEntity seller;
 
     @NotNull
     @Column(name = "seller_id", nullable = false)

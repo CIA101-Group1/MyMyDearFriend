@@ -1,10 +1,11 @@
 package com.tibame.group1.web.service.impl;
 
-
 import com.tibame.group1.db.dao.MemberCouponDAO;
 import com.tibame.group1.db.entity.CouponEntity;
 import com.tibame.group1.common.enums.CouponEffectCategory;
 import com.tibame.group1.db.entity.MemberCouponEntity;
+import com.tibame.group1.db.repository.MemberCouponRepository;
+import com.tibame.group1.web.dto.LoginSourceDTO;
 import com.tibame.group1.web.dto.MemberCouponItem;
 import com.tibame.group1.web.dto.MemberCouponReqDTO;
 import com.tibame.group1.web.service.MemberCouponService;
@@ -13,19 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class MemberCouponServiceImpl implements MemberCouponService {
 
-    @Autowired
-    private MemberCouponDAO memberCouponDAO;
+    @Autowired private MemberCouponDAO memberCouponDAO;
+    @Autowired private MemberCouponRepository memberCouponRepository;
 
-
-    //創建訂單
-    /**
-     * 這邊的Usetime雖然是預設紀錄當下時間
-     * 但實際應該是實體那邊要設為可以Null
-     * 當會員使用優惠卷，用修改的方式紀錄當下使用時間*/
+    // 創建訂單
+    /** 這邊的Usetime雖然是預設紀錄當下時間 但實際應該是實體那邊要設為可以Null 當會員使用優惠卷，用修改的方式紀錄當下使用時間 */
     @Transactional
     @Override
     public Integer createCoupon(Integer memberID, MemberCouponReqDTO memberCouponReqDTO) {
@@ -57,7 +55,11 @@ public class MemberCouponServiceImpl implements MemberCouponService {
             lastSerialCouponID = memberCouponEntity.getSerialCouponID();
         }
 
+        return lastSerialCouponID;
+    }
 
-    return lastSerialCouponID;
-}
+    @Override
+    public List<MemberCouponEntity> getAllMemberCouponByMemberId(LoginSourceDTO loginSource) {
+        return memberCouponRepository.getAllMemberCouponByMemberId(loginSource.getMemberId());
+    }
 }

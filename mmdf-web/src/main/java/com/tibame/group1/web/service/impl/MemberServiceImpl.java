@@ -165,10 +165,13 @@ public class MemberServiceImpl implements MemberService {
             member.setPhone(req.getPhone());
         }
         if (null != req.getEmail()) {
-            if (!req.getEmail().equals(member.getEmail())) {
-                member.setIsVerified(false);
-                member.setEmail(req.getEmail());
+            MemberEntity member2 = memberRepository.findByEmail(req.getEmail());
+            if (null != member2 && !member2.getEmail().equals(member.getEmail())) {
+                resDTO.setStatus(MemberEditResDTO.Status.EXIST_EMAIL.getCode());
+                return resDTO;
             }
+            member.setIsVerified(false);
+            member.setEmail(req.getEmail());
         }
         if (null != req.getCity()) {
             member.setCity(req.getCity());

@@ -107,7 +107,7 @@ public class BidProductApiController {
     }
 
     @GetMapping("/buyer/bidproduct/record")
-    @CheckLogin
+    @CheckLogin(isVerified = false)
     public ResDTO<List<BidProductEntity>> findAllBuyerBidProductRecord(
             @RequestAttribute(LoginSourceDTO.ATTRIBUTE) LoginSourceDTO loginSource) {
         ResDTO<List<BidProductEntity>> res = new ResDTO<>();

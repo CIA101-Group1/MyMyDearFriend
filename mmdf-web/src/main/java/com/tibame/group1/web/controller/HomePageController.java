@@ -29,7 +29,7 @@ public class HomePageController {
 
         Page<ProductEntity> productPage = productService.productGetAll(PageRequest.of(0, 4));
         model.addAttribute("productPage", productPage);
-        return "home";
+        return "/home";
     }
 
     @GetMapping({"/news/{newsId}"})

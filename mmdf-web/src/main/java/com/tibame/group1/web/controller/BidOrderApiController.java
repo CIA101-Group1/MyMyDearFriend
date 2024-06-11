@@ -56,7 +56,7 @@ public class BidOrderApiController {
 
     // updateForPaid
     @PutMapping("/bidorder/pay/{orderId}")
-    @CheckLogin
+    @CheckLogin(isVerified = false)
     @CacheEvict(allEntries = true)
     public @ResponseBody ResDTO<?> payBidOrder(
             @PathVariable("orderId") Integer orderId,
@@ -72,7 +72,8 @@ public class BidOrderApiController {
     // updateForDeliver
 
     @PutMapping("/bidorder/{orderId}")
-    @CheckLogin
+    @CheckLogin(isVerified = false)
+    @CacheEvict(allEntries = true)
     public @ResponseBody ResDTO<?> updateBidOrderStatus(
             @PathVariable("orderId") Integer orderId,
             @RequestParam("status") BidOrderStatus newStatus)

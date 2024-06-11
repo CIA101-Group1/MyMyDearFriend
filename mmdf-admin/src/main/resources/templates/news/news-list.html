@@ -79,6 +79,12 @@
                     "data": response.data,
                     "columns": [
                         {data: "newsId", title: "編號"},
+                        {
+                            data: "image", title: "圖片",
+                            render: function (data, type, full, meta) {
+                                return `<img src="data:image/jpeg;base64, ${data}" style="height: 80px; display: block;margin: 0 auto;" alt="圖片"/>`;
+                            }
+                        },
                         {data: "title", title: "標題"},
                         {data: "content", title: "內容"},
                         {data: "lastModified", title: "最近更新時間"},
@@ -113,7 +119,7 @@
                         //     width: "10px",
                         // },
                         {
-                            targets: 1,
+                            targets: 2,
                             createdCell: function (td, cellData, rowData, row, col) {
                                 $(td).css({
                                     "white-space": "nowrap",
@@ -125,7 +131,7 @@
                             width: "10%",
                         },
                         {
-                            targets: 2,
+                            targets: 3,
                             createdCell: function (td, cellData, rowData, row, col) {
                                 $(td).css({
                                     "white-space": "nowrap",

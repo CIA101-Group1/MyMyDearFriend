@@ -1,5 +1,6 @@
 package com.tibame.group1.db.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tibame.group1.common.enums.CouponStackCategory;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class CouponReqDTO {
     private Integer number;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateStart;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateEnd;
 
     @NotNull

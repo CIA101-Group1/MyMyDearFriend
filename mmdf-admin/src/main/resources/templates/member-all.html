@@ -231,7 +231,7 @@
                                         <td>${member.joinTime}</td>
                                         <td>${member.walletAmount}</td>
                                         <td>${member.walletWithdrawAmount}</td>
-                                        <td>${member.cidResetSendingTime}</td>
+                                        <td>${member.cidResetSendingTime ? member.cidResetSendingTime : "-"}</td>
                                     </tr>
                                 `);
                             });

@@ -99,7 +99,6 @@ public class BidProductServiceImpl implements BidProductService {
         bidProduct.setDescription(req.getDescription());
         bidProduct.setStartPrice(req.getStartPrice());
         bidProduct.setDuration(req.getDuration());
-        bidProduct.setStatus(BidProductStatus.END);
         bidProduct.setLastModified(Timestamp.from(Instant.now()));
         Integer productId2 = bidProductRepository.save(bidProduct).getProductId();
 

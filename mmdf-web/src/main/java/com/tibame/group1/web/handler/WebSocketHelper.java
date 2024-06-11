@@ -52,7 +52,7 @@ public class WebSocketHelper implements WebSocketHandler {
 
             String question = jsonObj.get("message").getAsString();
             System.out.println(question);
-            if("專員客服".equals(question)){
+            if("客服專員".equals(question)){
                 Map<String,String> messageType = new HashMap<>();
                 messageType.put("type","serviceLive");
                 messageType.put("memberId",sessionMap.get(session).toString());

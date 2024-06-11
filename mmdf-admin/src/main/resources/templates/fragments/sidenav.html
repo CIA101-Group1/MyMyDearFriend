@@ -10,7 +10,7 @@
                 <!-- 會員 -->
                 <a onclick="goToMemberAll()" class="nav-link">會員資料查詢</a>
                 <!-- 錢包 -->
-                <a class="nav-link" href="offline-market.html">錢包管理</a>
+                <a onclick="goToWalletRequest()" class="nav-link" >錢包管理</a>
                 <!-- 優惠券 -->
                 <a onclick="goToCouponAll()" class="nav-link">優惠券管理</a>
                 <!-- 一般商品 -->
@@ -18,13 +18,13 @@
                    data-bs-target="#ProductCollapse" aria-expanded="false" aria-controls="collapseLayouts2">
                     一般商城管理
                     <div class="sb-sidenav-collapse-arrow">
-                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down" ></i>
                     </div>
                 </a>
                 <div class="collapse" id="ProductCollapse" aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" >一般商品查詢</a>
+                        <a class="nav-link" onclick="goToProductAll()">一般商品查詢</a>
                         <a class="nav-link" onclick="goToOrderAll()">訂單管理</a>
                     </nav>
                 </div>

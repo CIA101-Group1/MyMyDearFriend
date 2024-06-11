@@ -47,6 +47,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>商品編號：</strong><span id="productId"></span></p>
+                <p><strong>賣家：</strong><span id="seller"></span></p>
                 <p><strong>商品名稱：</strong><span id="name"></span></p>
                 <p><strong>商品描述：</strong><span id="description"></span></p>
                 <p><strong>商品分類：</strong><span id="category"></span></p>
@@ -130,6 +131,7 @@
                                 return `<img src="data:image/jpeg;base64, ${data[0].image}" style="height: 80px; display: block;margin: 0 auto;" alt="商品縮圖"/>`;
                             }
                         },
+                        {data: "seller.name", title: "賣家"},
                         {data: "name", title: "商品名稱"},
                         {data: "category.categoryName", title: "商品分類"},
                         {data: "condition.conditionName", title: "商品狀況"},
@@ -165,7 +167,7 @@
                             width: "10%",
                         },
                         {
-                            targets: 2,
+                            targets: 3,
                             createdCell: function (td, cellData, rowData, row, col) {
                                 $(td).css({
                                     "white-space": "nowrap",
@@ -177,7 +179,7 @@
                             width: "20%",
                         },
                         {
-                            targets: 8,
+                            targets: 9,
                             width: "10px",
                             responsivePriority: 1,
                         }
@@ -207,6 +209,7 @@
             success: function (response) {
                 const product = response.data;
                 $('#productId').text(product.productId);
+                $('#seller').text(product.seller.name);
                 $('#name').text(product.name);
                 $('#description').text(product.description);
                 $('#category').text(product.category.categoryName);

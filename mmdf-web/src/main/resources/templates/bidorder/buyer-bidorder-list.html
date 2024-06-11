@@ -58,7 +58,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>訂單編號：</strong><span id="orderId"></span></p>
-                <p><strong>商品編號：</strong><span id="productId"></span><a class="text-primary" id="productLink" href="">查看商品</a></p>
+                <p><strong>商品編號：</strong><span id="bidProductId"></span><a class="text-primary" id="productLink" href="">查看商品</a></p>
                 <p><strong>買家編號：</strong><span id="buyerId"></span></p>
                 <p><strong>小計：</strong><span id="subtotal"></span></p>
                 <p><strong>優惠金額：</strong><span id="discount"></span></p>
@@ -203,7 +203,7 @@
                 console.log(response);
                 const order = response.data;
                 $('#orderId').text(order.orderId);
-                $('#productId').text(order.productId);
+                $('#bidProductId').text(order.productId);
                 $('#productLink').attr("href", `/bidproduct-detail/${order.productId}`)
                 $('#buyerId').text(order.buyerId);
                 $('#subtotal').text(order.subtotal);

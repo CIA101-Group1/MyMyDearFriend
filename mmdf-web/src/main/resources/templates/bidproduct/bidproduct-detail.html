@@ -103,6 +103,10 @@
                     <form action="#">
                         <input type="hidden" id="productId" th:value="${bidProductEntity.productId}">
                         <h1><a href="#" th:text="${bidProductEntity.name}"></a></h1>
+                        <span>賣家: <span href="#" th:text="${bidProductEntity.getSeller().getName()}"></span></span>
+                        <!-- <form action="/chatroom/add-friend"> -->
+                        <!--     <input type="submit" value="聊聊"> -->
+                        <!-- </form> -->
 
                         <!-- <div class=" product_ratting"> -->
                         <!--     <ul> -->
@@ -441,7 +445,7 @@
                     } else {
                         bids.forEach(bid => {
                             html += `<tr>
-                            <td>${bid.member.memberAccount}</td>
+                            <td>${bid.member.name}</td>
                             <td>${bid.amount}</td>
                             <td>${bid.bidTime}</td>
                         </tr>`;
